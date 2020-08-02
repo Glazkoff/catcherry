@@ -1,6 +1,10 @@
 <template>
   <div class="home">
-    <p>Компонент Home</p>
+    <p>
+      <i18n path="startMsg">
+        <span place="title">{{ $t("projectTitle") }}</span>
+      </i18n>
+    </p>
   </div>
 </template>
 
