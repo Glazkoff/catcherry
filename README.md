@@ -1,34 +1,43 @@
 # fishka
 
-## Project setup
+## Ссылки
+
+- [Макет в Фигме](https://www.figma.com/file/xNlbSw5qeABBaTI40tbzvN/%D0%A4%D0%B8%D1%88%D0%BA%D0%B0?node-id=0%3A1)
+- [Jira](https://fishka.atlassian.net/)
+## Установка проекта
+
 ```
 npm install
 ```
 
-### Compiles and hot-reloads for development
+### Компиляция и хот-релоад для разработки
+
 ```
 npm run serve
 ```
 
-### Compiles and minifies for production
+### Компиляция и минификация для продкшена
+
 ```
 npm run build
 ```
 
-### Run your unit tests
+### Запустить unit-тесты
+
 ```
 npm run test:unit
 ```
 
-### Run your end-to-end tests
+### Запустить end-to-end тесты
+
 ```
 npm run test:e2e
 ```
 
-### Lints and fixes files
+### Исправление и проверка красоты кода
+
 ```
 npm run lint
 ```
 
-### Customize configuration
-See [Configuration Reference](https://cli.vuejs.org/config/).
+
