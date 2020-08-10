@@ -3,7 +3,7 @@
 ## Ссылки
 
 - [Макет в Фигме](https://www.figma.com/file/xNlbSw5qeABBaTI40tbzvN/%D0%A4%D0%B8%D1%88%D0%BA%D0%B0?node-id=0%3A1)
-- [Jira](https://fishka.atlassian.net/)
+
 ## Установка проекта
 
 ```
@@ -39,5 +39,3 @@ npm run test:e2e
 ```
 npm run lint
 ```
-
-
