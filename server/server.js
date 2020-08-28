@@ -2,10 +2,12 @@
  * cd ./server
  * sequelize init
  * npm install --save apollo-server-express@1 graphql-tools graphql express body-parser
+ * npm i pg pg-hstore
  */
 
 const express = require("express");
 const bodyParser = require("body-parser");
+const faker = require("faker");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 
@@ -13,33 +15,20 @@ const { makeExecutableSchema } = require("graphql-tools");
  * Пример для создания точки Graphql
  */
 
-// Немного данных для примера
-const books = [
-  {
-    title: "Harry Potter and the Sorcerer's stone",
-    author: "J.K. Rowling",
-  },
-  {
-    title: "Jurassic Park",
-    author: "Michael Crichton",
-  },
-];
-
 // Схема GraphQL в форме строки
-const typeDefs = `
-  type Query { books: [Book] }
-  type Book { title: String, author: String }
-`;
+const typeDefs = require("./schema");
 
 // Резолверы
-const resolvers = {
-  Query: { books: () => books },
-};
+const resolvers = require("./resolvers");
+
+// База данных
+const db = require("./models/index");
 
 // Соедняем всё в схему
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
+  context: { db },
 });
 
 // Инициализация express-приложения
@@ -47,14 +36,42 @@ const app = express();
 const PORT = 3000;
 
 // Точка входа GraphQL
-app.use("/graphql", bodyParser.json(), graphqlExpress({ schema }));
+app.use(
+  "/graphql",
+  bodyParser.json(),
+  graphqlExpress({ schema, context: { db } })
+);
 
 // GraphiQL, визуальный редактор для запросов
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 
+// Работа со статическими файлами
+app.use(express.static("./public"));
+
+// Корневой путь API
 app.get("/", (req, res) => res.send("Серверная часть проекта ФИШКА"));
 
-app.listen(PORT, () => {
-  // console.log(`Сервер запущен на http://localhost:${PORT}`);
-  console.log(`Graphiql запущен на http://localhost:${PORT}/graphiql`);
+db.sequelize.sync().then(async () => {
+  console.log(
+    await db.users.create({
+      name: faker.name.firstName(),
+    })
+  );
+  // db.users
+  //   .create({
+  //     name: faker.name.firstName(),
+  //   })
+  //   .then(
+  //     (res) => {
+  //       console.log(res);
+  //     },
+  //     (err) => {
+  //       console.log(err);
+  //     }
+  //   );
+  app.listen(PORT, () => {
+    console.log(
+      `Сервер (Graphiql) запущен на http://localhost:${PORT}/graphiql`
+    );
+  });
 });
