@@ -57,18 +57,6 @@ db.sequelize.sync().then(async () => {
       name: faker.name.firstName(),
     })
   );
-  // db.users
-  //   .create({
-  //     name: faker.name.firstName(),
-  //   })
-  //   .then(
-  //     (res) => {
-  //       console.log(res);
-  //     },
-  //     (err) => {
-  //       console.log(err);
-  //     }
-  //   );
   app.listen(PORT, () => {
     console.log(
       `Сервер (Graphiql) запущен на http://localhost:${PORT}/graphiql`
