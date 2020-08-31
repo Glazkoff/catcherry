@@ -3,6 +3,12 @@
  * sequelize init
  * npm install --save apollo-server-express@1 graphql-tools graphql express body-parser
  * npm i pg pg-hstore
+ *
+ * Ссылки на статьи:
+ * https://medium.com/valtech-ch/setup-a-graphql-api-with-apollo-2-0-sequelize-and-express-js-608d1365d776
+ * https://medium.com/codingthesmartway-com-blog/apollo-server-2-introduction-efc4026f5654
+ * https://markomatic.me/blog/node-express-sequelize-pg-graphql/
+ * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
  */
 
 const express = require("express");
