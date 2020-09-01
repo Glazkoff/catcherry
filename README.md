@@ -49,6 +49,7 @@ npm run lint
 - Vuex
 - vue-apollo
 - graphql
+- apollo-boost
 
 
 ### Бэкенд

@@ -16,6 +16,7 @@ const bodyParser = require("body-parser");
 const faker = require("faker");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
+const cors = require("cors");
 
 /**
  * Пример для создания точки Graphql
@@ -40,6 +41,9 @@ const schema = makeExecutableSchema({
 // Инициализация express-приложения
 const app = express();
 const PORT = 3000;
+
+// Настройка CORS политики для разработки
+app.use(cors());
 
 // Точка входа GraphQL
 app.use(
