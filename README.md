@@ -39,3 +39,17 @@ npm run test:e2e
 ```
 npm run lint
 ```
+
+## Библиотеки, используемые в проекте
+
+### Фронтенд
+
+- Vue
+- Vue Router
+- Vuex
+- vue-apollo
+- graphql
+- apollo-boost
+
+
+### Бэкенд

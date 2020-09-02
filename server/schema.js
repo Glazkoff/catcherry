@@ -13,5 +13,6 @@ type Query {
 
 type Mutation {
   createUser(name: String!): User!
+  deleteUser(id: ID!): Int!
 }
 `;
