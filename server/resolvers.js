@@ -1,6 +1,9 @@
 module.exports = {
   Query: {
     users: (parent, args, { db }, info) => db.users.findAll(),
+    user: (parent, args, { db }, info) => {
+      return db.users.findOne({ where: { id: args.id } });
+    },
   },
   Mutation: {
     createUser: (parent, { name }, { db }, info) =>
@@ -18,11 +21,11 @@ module.exports = {
     //       },
     //     }
     //   ),
-    // deleteUser: (parent, { id }, { db }, info) =>
-    //   db.users.destroy({
-    //     where: {
-    //       id: id,
-    //     },
-    //   }),
+    deleteUser: async (parent, args, { db }, info) =>
+      db.users.destroy({
+        where: {
+          id: args.id,
+        },
+      }),
   },
 };

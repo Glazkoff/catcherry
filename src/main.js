@@ -9,7 +9,7 @@ import { createHttpLink } from "apollo-link-http";
 import { i18n } from "./plugins/i18n";
 import FlagIcon from "vue-flag-icon";
 Vue.use(FlagIcon);
-Vue.config.productionTip = true;
+Vue.config.productionTip = process.env.NODE_ENV === "development";
 
 // Заголовки с получением токена из localstorage
 const getHeaders = () => {
