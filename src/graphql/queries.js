@@ -10,9 +10,10 @@ export const USERS_QUERY = gql`
 `;
 
 export const CREATE_USER_QUERY = gql`
-  mutation {
-    createUser(name: "Nikita") {
+  mutation($name: String!) {
+    createUser(name: $name) {
       id
+      name
     }
   }
 `;
