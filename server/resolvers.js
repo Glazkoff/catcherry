@@ -2,8 +2,9 @@ module.exports = {
   Query: {
     users: (parent, args, { db }, info) =>
       db.users.findAll({ order: [["id", "ASC"]] }),
-    user: (parent, args, { db }, info) =>
-      db.users.findOne({ where: { id: args.id } }),
+    user: (parent, args, { db }, info) => {
+      return db.users.findOne({ where: { id: args.id } });
+    },
   },
   Mutation: {
     createUser: (parent, { name }, { db }, info) =>
