@@ -15,6 +15,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       body: {
         type: DataTypes.JSONB,
+        allowNull: false,
       },
       authorId: {
         type: DataTypes.INTEGER,
