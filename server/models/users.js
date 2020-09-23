@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       patricity: {
         type: DataTypes.STRING(255),
-        allowNull: false
+        allowNull: true
       },
       gender: {
         type: DataTypes.STRING(255),
