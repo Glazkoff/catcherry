@@ -1,18 +1,18 @@
 module.exports = {
   Query: {
     users: (parent, args, { db }, info) =>
-      db.users.findAll({ order: [["id", "ASC"]] }),
+      db.Users.findAll({ order: [["id", "ASC"]] }),
     user: (parent, args, { db }, info) => {
-      return db.users.findOne({ where: { id: args.id } });
+      return db.Users.findOne({ where: { id: args.id } });
     },
   },
   Mutation: {
     createUser: (parent, { name }, { db }, info) =>
-      db.users.create({
+      db.Users.create({
         name: name,
       }),
     updateUser: (parent, { name, id }, { db }, info) =>
-      db.users.update(
+      db.Users.update(
         {
           name: name,
         },
@@ -23,7 +23,7 @@ module.exports = {
         }
       ),
     deleteUser: async (parent, args, { db }, info) =>
-      db.users.destroy({
+      db.Users.destroy({
         where: {
           id: args.id,
         },
