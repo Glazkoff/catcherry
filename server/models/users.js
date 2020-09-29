@@ -20,6 +20,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         as: "tasksUser",
       });
+      Users.hasMany(models.Points, {
+        foreignKey: "userId",
+        as: "points",
+      });
+      Users.hasMany(models.Posts, {
+        foreignKey: "authorId",
+        as: "posts",
+      });
+      Users.hasOne(models.Administrators, {
+        foreignKey: "userId",
+        as: "users",
+      });
     }
   }
   Users.init(
