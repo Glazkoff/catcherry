@@ -8,6 +8,18 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "ownerId",
         as: "organizations",
       });
+      Users.hasMany(models.Notifications, {
+        foreignKey: "authorId",
+        as: "notificationUser",
+      });
+      Users.hasMany(models.ReadNotification, {
+        foreignKey: "userId",
+        as: "readNotificationUser",
+      });
+      Users.hasMany(models.ReadNotification, {
+        foreignKey: "userId",
+        as: "tasksUser",
+      });
     }
   }
   Users.init(

@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Organizations.belongsTo(models.OrganizationsTypes, {
         foreignKey: "organizationTypeId",
-        as: "organizationTypeId",
+        as: "organizationType",
       });
       Organizations.hasMany(models.Teams, {
         onDelete: "cascade",
