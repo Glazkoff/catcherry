@@ -12,6 +12,10 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "teamId",
         as: "customization",
       });
+      Teams.hasMany(models.Notifications, {
+        foreignKey: "teamId",
+        as: "notification",
+      });
     }
   }
   Teams.init(
