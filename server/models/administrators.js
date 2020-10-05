@@ -8,6 +8,13 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      // FIXME: добавить явное указание внешнего ключа, как в примере ниже (Файл usersinteams.js)
+      /**
+        UsersInTeams.belongsTo(models.Users, {
+          foreignKey: "userId",
+          as: "user",
+        });
+      */
       Administrators.belongsTo(models.Users);
     }
   }
