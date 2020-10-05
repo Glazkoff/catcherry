@@ -1,5 +1,5 @@
 {
-  "name": "fishka",
+  "name": "catcherry",
   "version": "0.1.0",
   "private": true,
   "scripts": {
@@ -13,6 +13,7 @@
     "apollo-boost": "^0.4.9",
     "apollo-server-express": "^1.4.0",
     "body-parser": "^1.19.0",
+    "chalk": "^4.1.0",
     "core-js": "^3.6.5",
     "cors": "^2.8.5",
     "express": "^4.17.1",
@@ -48,6 +49,7 @@
     "node-sass": "^4.12.0",
     "prettier": "^1.19.1",
     "sass-loader": "^8.0.2",
+    "sequelize-cli": "^6.2.0",
     "vue-template-compiler": "^2.6.11"
   },
   "eslintConfig": {

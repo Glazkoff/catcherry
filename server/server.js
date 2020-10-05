@@ -13,7 +13,9 @@
 
 const express = require("express");
 const bodyParser = require("body-parser");
-const faker = require("faker");
+const faker = require("faker/locale/en");
+const chalk = require("chalk");
+
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
@@ -61,15 +63,48 @@ app.use(express.static("./public"));
 // Корневой путь API
 app.get("/", (req, res) => res.send("Серверная часть проекта ФИШКА"));
 
-db.sequelize.sync().then(async () => {
+db.sequelize.sync({ alter: true }).then(async () => {
   console.log(
-    await db.users.create({
+    await db.Users.create({
       name: faker.name.firstName(),
+    }),
+    await db.Organizations.create({
+      name: faker.name.firstName(),
+      ownerId: 3,
+      organizationTypeId: 1,
+      maxTeamsLimit: 0,
+    })
+  );
+  // console.log(
+  //   await db.Organizations.findOne({
+  //     where: {
+  //       id: 1,
+  //     },
+  //     include: [
+  //       {
+  //         model: db.Users,
+  //         as: "user",
+  //       },
+  //     ],
+  //   })
+  // );
+  console.log(
+    await db.Users.findOne({
+      where: {
+        id: 3,
+      },
+      include: [
+        {
+          model: db.Organizations,
+          as: "organizations",
+        },
+      ],
     })
   );
   app.listen(PORT, () => {
     console.log(
-      `Сервер (Graphiql) запущен на http://localhost:${PORT}/graphiql`
+      chalk.yellow(`Сервер (Graphiql) запущен на`),
+      chalk.cyan(`http://localhost:${PORT}/graphiql`)
     );
   });
 });
