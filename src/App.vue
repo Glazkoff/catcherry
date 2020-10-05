@@ -24,6 +24,7 @@ h1 {
   color: purple;
 }
 h1,
+h4,
 p {
   font-family: sans-serif;
 }
