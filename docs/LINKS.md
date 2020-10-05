@@ -10,6 +10,9 @@
 - [[ENG] Handling authentication in GraphQL – Part 1: Introduction](https://blog.pusher.com/handling-authentication-in-graphql/)
 - [[ENG] Handling authentication in GraphQL – Part 2: JWT](https://blog.pusher.com/handling-authentication-in-graphql-jwt/)
 - [[ENG] Handling authentication in GraphQL – Part 3: Auth0](https://blog.pusher.com/handling-authentication-in-graphql-auth0/)
+
+## Статьи по теме "Работа с GraphQL и Apollo"
+
 - [[ENG] Setup a GraphQL API with Apollo 2.0 Sequelize and Express.js](https://medium.com/valtech-ch/setup-a-graphql-api-with-apollo-2-0-sequelize-and-express-js-608d1365d776)
 - [[ENG] Apollo Server 2 Introduction](https://medium.com/codingthesmartway-com-blog/apollo-server-2-introduction-efc4026f5654)
 - [[ENG] START WITH A GRAPHQL API, APOLLO, SEQUELIZE, POSTGRESQL, NODE.JS AND EXPRESS.JS](https://markomatic.me/blog/node-express-sequelize-pg-graphql/)
