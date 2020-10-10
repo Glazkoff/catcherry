@@ -2,6 +2,7 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
 import Account from "../components/Account.vue";
+import UserInOrganization from "../components/UserInOrganization.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -14,6 +15,11 @@ const routes = [
     path: "/account",
     name: "Account",
     component: Account,
+  },
+  {
+    path: "/user_org",
+    name: "UserInOrganization",
+    component: UserInOrganization,
   },
   // {
   //   path: "/about",
