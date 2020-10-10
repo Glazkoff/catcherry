@@ -1,6 +1,9 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import Account from "../components/Account.vue";
+import UserInOrganization from "../components/UserInOrganization.vue";
+import ListRequest from "../components/ListRequest.vue";
 Vue.use(VueRouter);
 
 const routes = [
@@ -8,6 +11,21 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+  },
+  {
+    path: "/account",
+    name: "Account",
+    component: Account,
+  },
+  {
+    path: "/user_org",
+    name: "UserInOrganization",
+    component: UserInOrganization,
+  },
+  {
+    path: "/list_req",
+    name: "ListReguest",
+    component: ListRequest,
   },
   // {
   //   path: "/about",
