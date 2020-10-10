@@ -1,9 +1,22 @@
 <template>
   <div class="search_organization">
     <div class="tabs">
-      <input type="radio" name="tab-btn" id="tab-btn-1" value="" checked />
+      <input
+        type="radio"
+        name="tab-btn"
+        id="tab-btn-1"
+        value=""
+        @click="tabFirst = true"
+        checked
+      />
       <label for="tab-btn-1">По названию</label>
-      <input type="radio" name="tab-btn" id="tab-btn-2" value="" />
+      <input
+        type="radio"
+        name="tab-btn"
+        id="tab-btn-2"
+        value=""
+        @click="tabFirst = false"
+      />
       <label for="tab-btn-2">По номеру</label>
 
       <div id="content-1">
@@ -12,6 +25,7 @@
           <input
             type="text"
             placeholder="Название организации"
+            v-model="search"
             class="formControl"
           /><br />
           <button class="btn">Найти</button>
@@ -23,6 +37,7 @@
           <input
             type="number"
             placeholder="Номер организации"
+            v-model="search"
             class="formControl"
           /><br />
           <button class="btn">Найти</button>
@@ -31,13 +46,28 @@
     </div>
     <div class="result_organization">
       <h2>Результат:</h2>
-      <div v-for="organization in organizations" :key="organization.id">
-        <div class="result_card">
-          <h4>Заявка на вступление в команду {{ organization.name }}</h4>
-          <span>Номер: 3535251</span><br />
-          <span>Владелец: {{ organization.owner }}</span
-          ><br />
-          <button class="btn">Подать заявку</button>
+      <div v-if="tabFirst">
+        <div v-for="(item, index) in searchOrgName" :key="index">
+          <div class="result_card">
+            <h4>Заявка на вступление в команду {{ item.name }}</h4>
+            <span>Номер: {{ item.id }}</span
+            ><br />
+            <span>Владелец: {{ item.owner }}</span
+            ><br />
+            <button class="btn">Подать заявку</button>
+          </div>
+        </div>
+      </div>
+      <div v-else style="color: gray;">
+        <div v-for="(item, index) in searchOrgIndex" :key="index">
+          <div class="result_card">
+            <h4>Заявка на вступление в команду {{ item.name }}</h4>
+            <span>Номер: {{ item.id }}</span
+            ><br />
+            <span>Владелец: {{ item.owner }}</span
+            ><br />
+            <button class="btn">Подать заявку</button>
+          </div>
         </div>
       </div>
     </div>
@@ -49,12 +79,36 @@ export default {
   name: "UserInOrganization",
   data() {
     return {
+      search: "",
+      tabFirst: true,
       organizations: [
-        { id: 1, name: "FFFF", owner: "Иванов" },
-        { id: 2, name: "sss", owner: "Петров" },
-        { id: 3, name: "FFgggFF", owner: "Сидоров" },
+        { id: "13223", name: "Лютики", owner: "Иванов" },
+        { id: "24311", name: "Цветочки", owner: "Петров" },
+        { id: "38909", name: "Ад", owner: "Сидоров" },
       ],
     };
+  },
+  computed: {
+    searchOrgName() {
+      let obj = this.organizations;
+      let newArray = [];
+      const search = this.search.toLowerCase();
+      for (let key in obj) {
+        let el = obj[key];
+        if (el.name.toLowerCase().indexOf(search) != -1) newArray.push(el);
+      }
+      return newArray;
+    },
+    searchOrgIndex() {
+      let obj = this.organizations;
+      let newArray = [];
+      const search = this.search;
+      for (let key in obj) {
+        let el = obj[key];
+        if (el.id.toLowerCase().indexOf(search) != -1) newArray.push(el);
+      }
+      return newArray;
+    },
   },
 };
 </script>
