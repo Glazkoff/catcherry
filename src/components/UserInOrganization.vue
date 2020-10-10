@@ -31,17 +31,12 @@
     </div>
     <div class="result_organization">
       <h2>Результат:</h2>
-      <div>
+      <div v-for="organization in organizations" :key="organization.id">
         <div class="result_card">
-          <h4>Организация ИП Вебмастер</h4>
+          <h4>Заявка на вступление в команду {{ organization.name }}</h4>
           <span>Номер: 3535251</span><br />
-          <span>Владелец: Иванов И.И.</span><br />
-          <button class="btn">Подать заявку</button>
-        </div>
-        <div class="result_card">
-          <h4>Организация ИП Вебмастер</h4>
-          <span>Номер: 3535251</span><br />
-          <span>Владелец: Иванов И.И.</span><br />
+          <span>Владелец: {{ organization.owner }}</span
+          ><br />
           <button class="btn">Подать заявку</button>
         </div>
       </div>
@@ -52,6 +47,15 @@
 <script>
 export default {
   name: "UserInOrganization",
+  data() {
+    return {
+      organizations: [
+        { id: 1, name: "FFFF", owner: "Иванов" },
+        { id: 2, name: "sss", owner: "Петров" },
+        { id: 3, name: "FFgggFF", owner: "Сидоров" },
+      ],
+    };
+  },
 };
 </script>
 
