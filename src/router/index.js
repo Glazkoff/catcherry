@@ -4,6 +4,9 @@ import Home from "../views/Home.vue";
 import Account from "../components/Account.vue";
 import UserInOrganization from "../components/UserInOrganization.vue";
 import ListRequest from "../components/ListRequest.vue";
+import Authentication from "../components/Authentication.vue";
+import Registration from "../components/Registration.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -26,6 +29,14 @@ const routes = [
     path: "/list_req",
     name: "ListReguest",
     component: ListRequest,
+    path: "/auth",
+    name: "Authentication",
+    component: Authentication,
+  },
+  {
+    path: "/registration",
+    name: "Registration",
+    component: Registration,
   },
   // {
   //   path: "/about",
