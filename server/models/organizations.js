@@ -12,10 +12,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "ownerId",
         as: "user",
       });
-      Organizations.belongsTo(models.OrganizationsTypes, {
-        foreignKey: "organizationTypeId",
-        as: "organizationType",
-      });
+      // FIXME: раскомментирование вызывает ошибку
+      // Organizations.belongsTo(models.OrganizationsTypes, {
+      //   foreignKey: "organizationTypeId",
+      //   as: "organizationType",
+      // });
       Organizations.hasMany(models.Teams, {
         onDelete: "cascade",
         foreignKey: "organizationId",

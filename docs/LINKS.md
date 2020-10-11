@@ -10,6 +10,8 @@
 - [[ENG] Handling authentication in GraphQL – Part 1: Introduction](https://blog.pusher.com/handling-authentication-in-graphql/)
 - [[ENG] Handling authentication in GraphQL – Part 2: JWT](https://blog.pusher.com/handling-authentication-in-graphql-jwt/)
 - [[ENG] Handling authentication in GraphQL – Part 3: Auth0](https://blog.pusher.com/handling-authentication-in-graphql-auth0/)
+- [[ENG] JWT + Cookies in Node JS(REST)](https://dev.to/mr_cea/remaining-stateless-jwt-cookies-in-node-js-3lle)
+- [[ENG] How to authenticate using GraphQL Cookies and JWT](https://flaviocopes.com/graphql-auth-apollo-jwt-cookies/) - очень важная статья. Продемонстрирован принцип разделения REST API и GraphQL, а также работа с HttpOnly Cookies
 
 ## Статьи по теме "Работа с GraphQL и Apollo"
 

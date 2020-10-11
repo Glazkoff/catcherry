@@ -73,3 +73,10 @@ db.sequelize.sync({ alter: true }).then(async () => {
     );
   });
 });
+
+/* TODO:
+  Рекомендую использовать следующие библиотеки
+  (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)
+  - const expressJwt = require("express-jwt");
+  - const bcrypt = require("bcrypt")
+*/
