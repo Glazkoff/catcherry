@@ -1,11 +1,20 @@
 <template>
   <div class="home">
-    <p>Компонент Home</p>
+    <p>
+      <i18n path="startMsg">
+        <span place="title">{{ $t("projectTitle") }}</span>
+      </i18n>
+    </p>
+    <TestGraphql></TestGraphql>
   </div>
 </template>
 
 <script>
+import TestGraphql from "@/components/TestGraphql.vue";
 export default {
   name: "Home",
+  components: {
+    TestGraphql,
+  },
 };
 </script>

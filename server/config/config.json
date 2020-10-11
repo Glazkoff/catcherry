@@ -1,0 +1,23 @@
+{
+  "development": {
+    "username": "polywebage_fishk",
+    "password": "Fishka2020",
+    "database": "polywebage_fishk",
+    "host": "pg2.sweb.ru",
+    "dialect": "postgres"
+  },
+  "test": {
+    "username": "polywebage_fishk",
+    "password": "Fishka2020",
+    "database": "polywebage_fishk",
+    "host": "pg2.sweb.ru",
+    "dialect": "postgres"
+  },
+  "production": {
+    "username": "polywebage_fishk",
+    "password": "Fishka2020",
+    "database": "polywebage_fishk",
+    "host": "pg2.sweb.ru",
+    "dialect": "postgres"
+  }
+}
