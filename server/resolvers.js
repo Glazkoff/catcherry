@@ -1,13 +1,24 @@
+require("dotenv").config({ path: "../.env" });
+const jwt = require("jsonwebtoken");
+
+// TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
-  // TODO: Никита
-  // TODO: Функция генерации токенов (принмает данные, которые мы заносим в токен )
-  // TODO: генерируем рефреш-токен
-  // TODO: генерируем JWT токен (в токен заносим общедоступные данные)
+  // TODO: (DONE) генерируем рефреш-токен
+  let refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
+    expiresIn: 100 * 60 * 60 * 24,
+  });
+
+  // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
+  let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
+    expiresIn: 100 * 60 * 60 * 24 * 365,
+  });
+
   // TODO: записать в Cookie HttpOnly рефреш-токен
-  // TODO: возвращать объект с двумя полями (refreshToken, authToken)
+
+  // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
   return {
-    refreshToken: "refreshToken",
-    authToken: "refreshToken",
+    refreshToken,
+    accessToken,
   };
 }
 
