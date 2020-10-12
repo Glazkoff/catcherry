@@ -2,9 +2,6 @@ require("dotenv").config({ path: "../.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
-// //
-// const salt = bcrypt.genSaltSync(process.env.SALT_ROUNDS);
-
 // TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
   // TODO: (DONE) генерируем рефреш-токен
@@ -16,8 +13,6 @@ function generateTokens(user) {
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: 100 * 60 * 60 * 24 * 365,
   });
-
-  // TODO: записать в Cookie HttpOnly рефреш-токен
 
   // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
   return {
@@ -44,6 +39,7 @@ module.exports = {
       // TODO: добавляем данные в БД
       // TODO: создание хэша bcrypt https://www.npmjs.com/package/bcrypt
       // TODO: Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+      // TODO: записать в Cookie HttpOnly рефреш-токен
       // TODO: отправить в ответ оба токена
       /** FIXME: удалить пример запросов
        * mutation($username: String!, $email: String!, $password: String!) {
@@ -58,9 +54,10 @@ module.exports = {
        */
       return "DO SIGN UP PLEASE";
     },
-    logIn: async (parent, { login, password }, { db }, info) => {
+    logIn: async (parent, { login, password }, ctx, info) => {
+      console.log("!!!!!!!!!!!");
       // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
-      let user = await db.Users.findOne({
+      let user = await ctx.db.Users.findOne({
         where: {
           login,
         },
@@ -71,6 +68,13 @@ module.exports = {
       } else if (bcrypt.compareSync(password, user.password)) {
         // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
         let tokens = generateTokens(user.dataValues);
+
+        // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
+        ctx.res.cookie("refreshToken", tokens.refreshToken, {
+          httpOnly: true,
+          maxAge: 1000 * 60 * 60 * 24 * 365,
+        });
+
         // TODO: (DONE) отправить в ответ оба токен
         return tokens;
       } else {

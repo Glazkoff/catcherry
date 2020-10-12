@@ -16,7 +16,7 @@ const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
 const bcrypt = require("bcrypt");
 const chalk = require("chalk");
-
+const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
@@ -45,6 +45,9 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
+// Настройка парсинга Cookie
+app.use(cookieParser());
+
 // Настройка CORS политики для разработки
 app.use(cors());
 
@@ -52,7 +55,10 @@ app.use(cors());
 app.use(
   "/graphql",
   bodyParser.json(),
-  graphqlExpress({ schema, context: { db } })
+  graphqlExpress((_, res) => ({
+    schema,
+    context: { res, db },
+  }))
 );
 
 // GraphiQL, визуальный редактор для запросов
