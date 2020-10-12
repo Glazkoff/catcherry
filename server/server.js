@@ -14,6 +14,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
+const bcrypt = require("bcrypt");
 const chalk = require("chalk");
 
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
@@ -67,6 +68,15 @@ app.get("/", (req, res) => res.send("Серверная часть проект�
 
 db.sequelize.sync({ alter: true }).then(async () => {
   app.listen(PORT, () => {
+    // db.Users.destroy({ where: {} });
+    // const salt = bcrypt.genSaltSync(10);
+    // for (let index = 0; index < 10; index++) {
+    //   db.Users.create({
+    //     name: faker.name.findName(),
+    //     login: faker.random.word(),
+    //     password: bcrypt.hashSync("nikita", salt),
+    //   });
+    // }
     console.log(
       chalk.yellow(`Сервер (Graphiql) запущен на`),
       chalk.cyan(`http://localhost:${PORT}/graphiql`)

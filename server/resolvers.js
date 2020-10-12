@@ -1,5 +1,9 @@
 require("dotenv").config({ path: "../.env" });
 const jwt = require("jsonwebtoken");
+const bcrypt = require("bcrypt");
+
+// //
+// const salt = bcrypt.genSaltSync(process.env.SALT_ROUNDS);
 
 // TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
@@ -54,13 +58,24 @@ module.exports = {
        */
       return "DO SIGN UP PLEASE";
     },
-    logIn: async (parent, args, { db }, info) => {
-      // TODO: Никита
-      // TODO: сравниваем логин с БД, если нет - ошибка
-      // TODO: проверяем через bcrypt пароль, не совпадает - ошибка
-      // TODO: Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
-      // TODO: отправить в ответ оба токен
-      return "DO LOG IN PLEASE";
+    logIn: async (parent, { login, password }, { db }, info) => {
+      // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
+      let user = await db.Users.findOne({
+        where: {
+          login,
+        },
+      });
+      // TODO: (DONE) проверяем через bcrypt пароль, не совпадает - ошибка
+      if (!user) {
+        return null;
+      } else if (bcrypt.compareSync(password, user.password)) {
+        // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+        let tokens = generateTokens(user.dataValues);
+        // TODO: (DONE) отправить в ответ оба токен
+        return tokens;
+      } else {
+        return null;
+      }
     },
     /*
       [Ниже] Мутации работы с пользователями (Users)     
