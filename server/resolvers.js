@@ -8,13 +8,17 @@ const salt = bcrypt.genSaltSync(10);
 // TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
   // TODO: (DONE) генерируем рефреш-токен
-  let refreshToken = jwt.sign(user, process.env.REFRESH_TOKEN_SECRET, {
-    expiresIn: 100 * 60 * 60 * 24,
-  });
+  let refreshToken = jwt.sign(
+    { userId: user.id },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: 100 * 60 * 60 * 24 * 365,
+    }
+  );
 
   // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 100 * 60 * 60 * 24 * 365,
+    expiresIn: 100 * 60 * 60 * 24,
   });
 
   // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
@@ -45,7 +49,6 @@ module.exports = {
         name,
         password: hashPassword,
       });
-      console.log(user);
 
       // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
       let tokens = generateTokens(user.dataValues);
@@ -55,12 +58,11 @@ module.exports = {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365,
       });
-      console.log(res);
       return tokens;
     },
-    logIn: async (parent, { login, password }, ctx, info) => {
+    logIn: async (parent, { login, password }, { res, db }, info) => {
       // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
-      let user = await ctx.db.Users.findOne({
+      let user = await db.Users.findOne({
         where: {
           login,
         },
@@ -73,7 +75,7 @@ module.exports = {
         let tokens = generateTokens(user.dataValues);
 
         // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
-        ctx.res.cookie("refreshToken", tokens.refreshToken, {
+        res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 365,
         });
@@ -82,6 +84,34 @@ module.exports = {
         return tokens;
       } else {
         return null;
+      }
+    },
+    updateAccessToken: async (parent, {}, { req, res, db }, info) => {
+      let refreshToken = req.cookies.refreshToken;
+      if (
+        !refreshToken ||
+        !jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+      ) {
+        return {
+          error: {
+            errorStatus: 401,
+            message: "Refresh token is absent",
+          },
+        };
+      } else {
+        let userId = jwt.decode(refreshToken).userId;
+        let user = await db.Users.findOne({ where: { id: userId } });
+        let accessToken = jwt.sign(
+          user.dataValues,
+          process.env.ACCESS_TOKEN_SECRET,
+          {
+            expiresIn: 100 * 60 * 60 * 24,
+          }
+        );
+        return {
+          // TODO: выпустить токен
+          accessToken,
+        };
       }
     },
     /*

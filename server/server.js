@@ -55,9 +55,9 @@ app.use(cors());
 app.use(
   "/graphql",
   bodyParser.json(),
-  graphqlExpress((_, res) => ({
+  graphqlExpress((req, res) => ({
     schema,
-    context: { res, db },
+    context: { req, res, db },
   }))
 );
 
@@ -72,23 +72,26 @@ app.get("/", (req, res) => res.send("Серверная часть проект�
 
 // TODO: добавить заполнение фейковыми данными
 
-db.sequelize.sync({ alter: true }).then(async () => {
-  app.listen(PORT, () => {
-    // db.Users.destroy({ where: {} });
-    // const salt = bcrypt.genSaltSync(10);
-    // for (let index = 0; index < 10; index++) {
-    //   db.Users.create({
-    //     name: faker.name.findName(),
-    //     login: faker.random.word(),
-    //     password: bcrypt.hashSync("nikita", salt),
-    //   });
-    // }
-    console.log(
-      chalk.yellow(`Сервер (Graphiql) запущен на`),
-      chalk.cyan(`http://localhost:${PORT}/graphiql`)
-    );
+db.sequelize
+  // .sync({ alter: true })
+  .sync()
+  .then(async () => {
+    app.listen(PORT, () => {
+      // db.Users.destroy({ where: {} });
+      // const salt = bcrypt.genSaltSync(10);
+      // for (let index = 0; index < 10; index++) {
+      //   db.Users.create({
+      //     name: faker.name.findName(),
+      //     login: faker.random.word(),
+      //     password: bcrypt.hashSync("nikita", salt),
+      //   });
+      // }
+      console.log(
+        chalk.yellow(`Сервер (Graphiql) запущен на`),
+        chalk.cyan(`http://localhost:${PORT}/graphiql`)
+      );
+    });
   });
-});
 
 /* TODO: рекомендую использовать следующие библиотеки
   (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)
