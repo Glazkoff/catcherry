@@ -2,6 +2,9 @@ require("dotenv").config({ path: "../.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+// Соль для шифрования bcrypt
+const salt = bcrypt.genSaltSync(10);
+
 // TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
   // TODO: (DONE) генерируем рефреш-токен
@@ -33,29 +36,29 @@ module.exports = {
     /*
       [Ниже] Мутации регистрации и авторизации
     */
-    signUp: async (parent, args, { db }, info) => {
-      // TODO: Фёдор
-      // TODO: временно закоменнтировать allowNull: false в полях, которые не используются
-      // TODO: добавляем данные в БД
-      // TODO: создание хэша bcrypt https://www.npmjs.com/package/bcrypt
-      // TODO: Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
-      // TODO: записать в Cookie HttpOnly рефреш-токен
-      // TODO: отправить в ответ оба токена
-      /** FIXME: удалить пример запросов
-       * mutation($username: String!, $email: String!, $password: String!) {
-       *   signUp(username: $username, email: $email, password: $password)
-       *  }
-       *
-       * {
-       *    "username": "Nikita",
-       *    "email": "dasd@adsd.ew",
-       *    "password": "ewqwewqeq321231231"
-       * }
-       */
-      return "DO SIGN UP PLEASE";
+    signUp: async (parent, { name, login, password }, { res, db }, info) => {
+      let hashPassword = bcrypt.hashSync(password, salt);
+
+      // TODO: (DONE) добавляем данные в БД
+      let user = await db.Users.create({
+        login,
+        name,
+        password: hashPassword,
+      });
+      console.log(user);
+
+      // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+      let tokens = generateTokens(user.dataValues);
+
+      // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
+      res.cookie("refreshToken", tokens.refreshToken, {
+        httpOnly: true,
+        maxAge: 1000 * 60 * 60 * 24 * 365,
+      });
+      console.log(res);
+      return tokens;
     },
     logIn: async (parent, { login, password }, ctx, info) => {
-      console.log("!!!!!!!!!!!");
       // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
       let user = await ctx.db.Users.findOne({
         where: {

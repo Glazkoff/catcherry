@@ -1,5 +1,5 @@
 module.exports = `
-type LogInTokens {
+type JWTTokens {
   refreshToken: String!
   accessToken: String!
 }
@@ -23,8 +23,8 @@ type Mutation {
   deleteUser(id: ID!): Int!
   updateUser(name: String!, id: ID!): [Int]!
 
-  signUp(username: String!, email: String!, password: String!): String
-  logIn(login: String!, password: String!): LogInTokens
+  signUp(name: String!, login: String!, password: String!): JWTTokens
+  logIn(login: String!, password: String!): JWTTokens
 }
 `;
 
