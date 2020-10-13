@@ -1,4 +1,5 @@
 import Vue from "vue";
+import Vuelidate from "vuelidate";
 import App from "./App.vue";
 import router from "./router";
 import store from "./store";
@@ -8,6 +9,7 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { i18n } from "./plugins/i18n";
 import FlagIcon from "vue-flag-icon";
+Vue.use(Vuelidate);
 Vue.use(FlagIcon);
 Vue.config.productionTip = process.env.NODE_ENV === "development";
 
