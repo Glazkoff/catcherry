@@ -10,7 +10,7 @@
  * https://markomatic.me/blog/node-express-sequelize-pg-graphql/
  * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
  */
-
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");

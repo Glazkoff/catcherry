@@ -1,5 +1,19 @@
 import gql from "graphql-tag";
 
+// (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
+
+export const SIGN_UP = gql`
+  mutation($name: String!, $login: String!, $password: String!) {
+    signUp(name: $name, login: $login, password: $password) {
+      accessToken
+      error {
+        errorStatus
+      }
+    }
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {
     createUser(name: $name) {

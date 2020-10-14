@@ -1,8 +1,8 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Authentication from "../components/Authentication.vue";
-import Registration from "../components/Registration.vue";
+import Home from "@/views/Home.vue";
+import Authentication from "@/views/Authentication.vue";
+import Registration from "@/views/Registration.vue";
 Vue.use(VueRouter);
 
 const routes = [
