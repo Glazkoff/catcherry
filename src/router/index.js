@@ -6,6 +6,7 @@ import UserInOrganization from "../components/UserInOrganization.vue";
 import ListRequest from "../components/ListRequest.vue";
 import Authentication from "../components/Authentication.vue";
 import Registration from "../components/Registration.vue";
+import OnePostList from "../components/OnePostList.vue";
 
 Vue.use(VueRouter);
 
@@ -29,6 +30,8 @@ const routes = [
     path: "/list_req",
     name: "ListReguest",
     component: ListRequest,
+  },
+  {
     path: "/auth",
     name: "Authentication",
     component: Authentication,
@@ -37,6 +40,11 @@ const routes = [
     path: "/registration",
     name: "Registration",
     component: Registration,
+  },
+  {
+    path: "/onepostlist",
+    name: "OnePostList",
+    component: OnePostList,
   },
   // {
   //   path: "/about",
