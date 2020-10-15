@@ -1,0 +1,123 @@
+<template>
+    <div class="list">
+        <div class="notification">
+            <div class="header">
+                <span>Header</span>
+                <div class="icon">
+                    <svg aria-hidden="true" focusable="false" data-prefix="fal" data-icon="times" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" class="svg-inline--fa fa-times fa-w-10 fa-2x">
+                        <path fill="white" d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z">
+                        </path>
+                    </svg>
+                </div>
+                 
+            </div>
+            <div class="main">
+                <p>Lorem ipsum dolor sit amet consectetur adipisicing elit. Expedita excepturi, sed repellat voluptatem aperiam ipsa quasi odio delectus ducimus. Eum assumenda autem tenetur numquam a sit aliquid ea natus incidunt!
+                </p>
+                <div class="blockForButton">
+                    <button>Button</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</template>
+
+<script>
+export default {
+  name: 'Notification',
+  data() {
+    return {
+    
+    }
+  },
+  methods: {
+    
+  }
+}
+</script>
+
+<style>
+.list{
+    height: 100%;
+    width: 320px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+.notification{
+    width: 15rem;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    min-height: 8rem;
+    border-radius: .5rem;
+    background-color: #fff;
+    box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08), 0px 20px 32px rgba(96, 97, 112, 0.24);
+}
+
+.header{
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    height: 2rem;
+    border-top-left-radius: .5rem;
+    border-top-right-radius: .5rem;
+    background: #D2BBEA;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+
+.header span{  
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 1.15rem;
+    line-height: 2rem;
+    color: #FFFFFF;
+}
+
+.icon{
+    margin-right: -0.6rem;
+    cursor: pointer;
+    width: 1.7rem;
+    height: 1.7rem;
+}
+
+.main{
+    width: 100%;
+    padding-right: 1rem;
+    padding-left: 1rem;
+}
+.main p{
+    font-family: Montserrat;
+    font-style: normal;
+    font-weight: normal;
+    font-size: .8rem;
+    line-height: .95rem;
+}
+
+.blockForButton{
+    text-align: center;
+}
+.blockForButton button{
+    width: 7.5rem;
+    height: 2.4rem;
+    border-radius: 0.3rem;
+    font-size: .9rem;
+    line-height: 2.1rem;
+    display: inline-block;
+    background: rgba(138, 110, 167, 0.22);
+    border: 1px solid #64507A;
+    box-sizing: border-box;
+    font-family: Montserrat;
+    font-weight: 600;
+    text-align: center;
+    color: #514163;
+    cursor: pointer;
+    transition: all .2s ease-out;  
+  
+}
+.blockForButton button:hover{
+    background: #fff; 
+}
+</style>
