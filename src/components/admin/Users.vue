@@ -1,13 +1,21 @@
 <template>
     <div class="main">
-        <popup v-if="isShowModalEdit" @close="isShowModalEdit = false">
-            <h3 slot="header">Редактировать пользователя</h3>
+        <popup @answer="closePopup" v-if="isShowModalEdit" :user='users[index]'>
+            <h3 slot="header">Редактирование пользователя {{ nameOfUser }}</h3>
+            <p slot="action">Сохранить</p>
+            <div slot="body">
+                <form>
+                    <input v-model="surname">
+                </form>
+            </div>
         </popup>
-        <popup v-if="isShowModalDelete" @close="isShowModalDelete = false">
-            <h3 slot="header">Вы действительно хотите удалить пользователя </h3>
+        <popup @answer="closePopup" v-if="isShowModalDelete">
+            <h3 slot="header">Вы действительно хотите удалить пользователя {{ nameOfUser }}?</h3>
+            <p slot="action">Удалить</p>
         </popup>
         <h2>Список пользователей</h2>
-        <table>
+        <h6 v-if="users.length==0">К сожалению, пока пользователей нет</h6>
+        <table v-if="users.length>0">
             <tr v-for="user in users" :key="user.id">
                 <td>{{ user.id }}.</td>
                 <td>{{ user.surname }} {{ user.name }} {{ user.patricity }}</td>
@@ -27,6 +35,9 @@ export default {
     components: { popup },
   data() {
     return {
+        nameOfUser: '',
+        index: 0,
+        oneUser: {},
         isShowModalEdit: false,
         isShowModalDelete: false,
         users: [{
@@ -57,8 +68,23 @@ export default {
   },
   methods: {
       showModalDelete(user) {
-          this.isShowModalDelete = true;
-          this.$emit('ModalDelete', user);
+        this.nameOfUser = `${user.surname} ${user.name} ${user.patricity}`,
+        this.isShowModalDelete = true;
+        this.index = this.users.findIndex(el => el.id === user.id);
+        this.oneUser = user;
+      },
+      showModalEdit(user) {
+        this.nameOfUser = `${user.surname} ${user.name} ${user.patricity}`,
+        console.log(user);
+        this.isShowModalEdit = true;
+      },
+      closePopup(ans) {
+          this.isShowModalDelete = false;
+          this.isShowModalEdit = false;
+          if (ans.ans) {
+              this.index = this.users.findIndex(el => el.id === this.oneUser.id);
+              this.users.splice(this.index, 1);
+          }
       }
   },
 };

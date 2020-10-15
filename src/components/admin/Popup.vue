@@ -3,10 +3,9 @@
         <div class="modal-mask">
           <div class="modal-wrapper">
             <div class="modal-container">
-
+              <!-- <h1>{{user.name}}</h1> -->
               <div class="modal-header">
-                <slot name="header">
-                </slot>
+                <h2><slot name="header"></slot></h2>
               </div>
 
               <div class="modal-body">
@@ -15,11 +14,8 @@
               </div>
 
               <div class="modal-footer">
-                <slot name="footer">
-                  <button class="modal-default-button" @click="$emit('close')">
-                    OK
-                  </button>
-                </slot>
+                <button class="modal-default-button" @click="onDelete()"><slot name="action"></slot></button>
+                <button class="modal-default-button" @click="onCancel()">Отменить</button>
               </div>
             </div>
           </div>
@@ -29,7 +25,15 @@
 
 <script>
     export default {
-        
+        props: ['user'],
+        methods: {
+          onCancel() {
+            this.$emit('answer', {ans: false});
+          },
+          onDelete() {
+            this.$emit('answer', {ans: true});
+          }
+        }
     }
 </script>
 
@@ -54,28 +58,35 @@
     .modal-container {
         width: 50vw;
         margin: 0px auto;
-        padding: 20px 30px;
+        padding: 2%;
         background-color: #fff;
         border-radius: 10px;
         box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
         transition: all 0.3s ease;
     }
 
-    .modal-header h3 {
+    .modal-header {
         margin-top: 0;
-        color: #42b983;
+        h2 {
+          text-align: center;
+        }
     }
 
     .modal-body {
         margin: 20px 0;
     }
 
-    .modal-default-button {
-        float: right;
-    }
-
     .modal-enter {
         opacity: 0;
+    }
+
+    .modal-footer {
+      display: flex;
+      justify-content: space-between;
+      button {
+        width: 100%;
+        margin: 0 5%;
+      }
     }
 
     .modal-leave-active {
