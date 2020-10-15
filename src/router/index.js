@@ -1,11 +1,13 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
-import Account from "../components/Account.vue";
-import UserInOrganization from "../components/UserInOrganization.vue";
-import ListRequest from "../components/ListRequest.vue";
-import Authentication from "../components/Authentication.vue";
-import Registration from "../components/Registration.vue";
+import Home from "@/views/Home.vue";
+
+import User from "@/components/account/User.vue";
+import Account from "@/components/account/Account.vue";
+import UserInOrganization from "@/components/account/UserInOrganization.vue";
+import ListRequest from "@/components/account/ListRequest.vue";
+import Authentication from "@/components/Authentication.vue";
+import Registration from "@/components/Registration.vue";
 
 Vue.use(VueRouter);
 
@@ -16,19 +18,28 @@ const routes = [
     component: Home,
   },
   {
-    path: "/account",
-    name: "Account",
-    component: Account,
+    path: "/user/:id",
+    name: "User",
+    component: User,
+    children: [
+      {
+        path: "",
+        name: "Account",
+        component: Account,
+      },
+      {
+        path: "user_org",
+        name: "UserInOrganization",
+        component: UserInOrganization,
+      },
+      {
+        path: "list_req",
+        name: "ListReguest",
+        component: ListRequest,
+      },
+    ],
   },
   {
-    path: "/user_org",
-    name: "UserInOrganization",
-    component: UserInOrganization,
-  },
-  {
-    path: "/list_req",
-    name: "ListReguest",
-    component: ListRequest,
     path: "/auth",
     name: "Authentication",
     component: Authentication,
