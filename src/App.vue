@@ -5,6 +5,7 @@
       <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
     </div>
     <h1>{{ $t("welcomeMsg") }}</h1>
+    <hr />
     <router-view></router-view>
   </div>
 </template>
