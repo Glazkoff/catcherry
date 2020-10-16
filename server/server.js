@@ -63,44 +63,9 @@ app.use(express.static("./public"));
 // Корневой путь API
 app.get("/", (req, res) => res.send("Серверная часть проекта ФИШКА"));
 
+// TODO: добавить заполнение фейковыми данными
+
 db.sequelize.sync({ alter: true }).then(async () => {
-  console.log(
-    await db.Users.create({
-      name: faker.name.firstName(),
-    }),
-    await db.Organizations.create({
-      name: faker.name.firstName(),
-      ownerId: 3,
-      organizationTypeId: 1,
-      maxTeamsLimit: 0,
-    })
-  );
-  // console.log(
-  //   await db.Organizations.findOne({
-  //     where: {
-  //       id: 1,
-  //     },
-  //     include: [
-  //       {
-  //         model: db.Users,
-  //         as: "user",
-  //       },
-  //     ],
-  //   })
-  // );
-  console.log(
-    await db.Users.findOne({
-      where: {
-        id: 3,
-      },
-      include: [
-        {
-          model: db.Organizations,
-          as: "organizations",
-        },
-      ],
-    })
-  );
   app.listen(PORT, () => {
     console.log(
       chalk.yellow(`Сервер (Graphiql) запущен на`),
