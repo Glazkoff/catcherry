@@ -14,7 +14,7 @@ export default {
         return {
             requests: [{
                     id: 1,
-                    img: "/src/assets/logo.png",
+                    img: "",
                     name: "Иван Иванов",
                     email: "ivan@gmail.com",
                     phone: "89345385749",

@@ -2,7 +2,7 @@
 <div class="request">
     <div class="head">
         <div>
-            <img :src="request.img" alt="photo">
+            <img src="../../assets/logo.png" alt="photo">
             <span>{{request.name}}</span>
         </div>
         <div>
@@ -64,5 +64,10 @@ export default {
 
 .down {
     margin: 0.7em;
+}
+
+.request .head img {
+    width: 5%;
+    margin-right: 1em;
 }
 </style>
