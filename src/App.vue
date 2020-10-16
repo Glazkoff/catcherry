@@ -8,6 +8,7 @@
     <nav>
       <router-link to="/user/156">Профиль</router-link>
     </nav>
+    <hr />
     <router-view></router-view>
   </div>
 </template>
