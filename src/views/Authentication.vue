@@ -47,6 +47,7 @@
 import { required, minLength } from "vuelidate/lib/validators";
 import { LOG_IN } from "@/graphql/queries.js";
 export default {
+  // TODO: добавить защиту роутов
   name: "Authentication",
   data() {
     return {
@@ -83,7 +84,6 @@ export default {
             },
           })
           .then((resp) => {
-            console.log(resp);
             this.authLoading = false;
             if (resp.data.logIn && !resp.data.logIn.error) {
               this.$store.commit(
@@ -93,7 +93,7 @@ export default {
               this.$router.push("/");
             } else {
               // TODO: добавить обработку ошибок
-              console.log("ERROR");
+              console.error("ERROR");
             }
           })
           .catch((error) => {

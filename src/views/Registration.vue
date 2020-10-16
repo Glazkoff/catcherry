@@ -79,6 +79,7 @@ import {
 } from "@/graphql/queries.js";
 
 export default {
+  // TODO: добавить защиту роутов
   name: "Registration",
   data() {
     return {
@@ -118,7 +119,6 @@ export default {
           login: this.$v.login.$model,
           password: this.$v.password.$model,
         };
-        console.log(userData);
         // TODO: Отправлять данные
         this.signUpLoading = true;
         this.$apollo
@@ -140,7 +140,7 @@ export default {
               this.$router.push("/");
             } else {
               // TODO: добавить обработку ошибок
-              console.log("ERROR");
+              console.error("ERROR");
             }
           })
           .catch((error) => {
