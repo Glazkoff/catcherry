@@ -15,6 +15,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
 const chalk = require("chalk");
+const helmet = require("helmet");
 
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
@@ -44,8 +45,7 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
-// Настройка CORS политики для разработки
-app.use(cors());
+app.use(helmet());
 
 // Точка входа GraphQL
 app.use(
