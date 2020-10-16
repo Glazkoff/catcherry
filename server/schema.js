@@ -15,5 +15,10 @@ type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(name: String!, id: ID!): [Int]!
+
+  signUp(username: String!, email: String!, password: String!): String
+  logIn(email: String!, password: String!): String
 }
 `;
+
+// FIXME: удалить createUser / заменить на signUp
