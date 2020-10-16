@@ -3,10 +3,14 @@
 ## Как запустить проект?
 
 Если установлен Node.js (https://nodejs.org/ru/)
+
 Запускаем два терминала (из корня проекта):
+
 Для разработки фронтенда - npm run serve
+
 Для бэкенда - node ./server/server.js
-Для разработки бэкенда - ./nodemon server/server.js
+
+Для разработки бэкенда - nodemon ./server/server.js
  
 
 ## Ссылки
