@@ -8,14 +8,14 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Organizations.belongsTo(models.Users, {
-        foreignKey: "ownerId",
-        as: "user",
-      });
-      Organizations.belongsTo(models.OrganizationsTypes, {
-        foreignKey: "organizationTypeId",
-        as: "organizationType",
-      });
+      // Organizations.belongsTo(models.Users, {
+      //   foreignKey: "ownerId",
+      //   as: "user",
+      // });
+      // Organizations.belongsTo(models.OrganizationsTypes, {
+      //   foreignKey: "organizationTypeId",
+      //   as: "organizationType",
+      // });
       Organizations.hasMany(models.Teams, {
         onDelete: "cascade",
         foreignKey: "organizationId",
