@@ -20,7 +20,7 @@ module.exports = (sequelize, DataTypes) => {
   }
   Administrators.init(
     {
-      userId: DataTypes.INTEGER
+      userId: DataTypes.INTEGER,
       // allowNull: false,
     },
     {

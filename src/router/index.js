@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
-import Home from "../views/Home.vue";
+
+import Home from "@/views/Home.vue";
 import AdminPanel from "../views/AdminPanel.vue";
 import Dashboard from "@/components/admin/Dashboard.vue";
 import Users from "@/components/admin/Users.vue";
@@ -50,6 +51,8 @@ const routes = [
     path: "/list_req",
     name: "ListReguest",
     component: ListRequest,
+  },
+  {
     path: "/auth",
     name: "Authentication",
     component: Authentication,

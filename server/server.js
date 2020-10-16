@@ -10,12 +10,13 @@
  * https://markomatic.me/blog/node-express-sequelize-pg-graphql/
  * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
  */
-
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
+const bcrypt = require("bcrypt");
 const chalk = require("chalk");
-
+const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
@@ -44,6 +45,9 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
+// Настройка парсинга Cookie
+app.use(cookieParser());
+
 // Настройка CORS политики для разработки
 app.use(cors());
 
@@ -51,7 +55,10 @@ app.use(cors());
 app.use(
   "/graphql",
   bodyParser.json(),
-  graphqlExpress({ schema, context: { db } })
+  graphqlExpress((req, res) => ({
+    schema,
+    context: { req, res, db },
+  }))
 );
 
 // GraphiQL, визуальный редактор для запросов
@@ -65,11 +72,29 @@ app.get("/", (req, res) => res.send("Серверная часть проект�
 
 // TODO: добавить заполнение фейковыми данными
 
-db.sequelize.sync({ alter: true }).then(async () => {
-  app.listen(PORT, () => {
-    console.log(
-      chalk.yellow(`Сервер (Graphiql) запущен на`),
-      chalk.cyan(`http://localhost:${PORT}/graphiql`)
-    );
+db.sequelize
+  // .sync({ alter: true })
+  .sync()
+  .then(async () => {
+    app.listen(PORT, () => {
+      // db.Users.destroy({ where: {} });
+      // const salt = bcrypt.genSaltSync(10);
+      // for (let index = 0; index < 10; index++) {
+      //   db.Users.create({
+      //     name: faker.name.findName(),
+      //     login: faker.random.word(),
+      //     password: bcrypt.hashSync("nikita", salt),
+      //   });
+      // }
+      console.log(
+        chalk.yellow(`Сервер (Graphiql) запущен на`),
+        chalk.cyan(`http://localhost:${PORT}/graphiql`)
+      );
+    });
   });
-});
+
+/* TODO: рекомендую использовать следующие библиотеки
+  (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)
+  - const expressJwt = require("express-jwt");
+  - const bcrypt = require("bcrypt")
+*/
