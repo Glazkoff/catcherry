@@ -35,6 +35,15 @@ export const CREATE_USER_QUERY = gql`
   }
 `;
 
+export const ONE_USER_QUERY = gql`
+  query {
+    user(id:156) {
+      id
+      name
+    }
+  }
+`;
+
 export const USERS_QUERY = gql`
   query {
     users {

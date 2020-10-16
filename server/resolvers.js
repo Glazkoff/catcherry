@@ -30,11 +30,11 @@ function generateTokens(user) {
 
 module.exports = {
   Query: {
-    users: (parent, args, { db }, info) =>
-      db.Users.findAll({ order: [["id", "ASC"]] }),
-    user: (parent, args, { db }, info) => {
-      return db.Users.findOne({ where: { id: args.id } });
-    },
+    // users: (parent, args, { db }, info) =>
+    //   db.Users.findAll({ order: [["id", "ASC"]] }),
+    // user: (parent, args, { db }, info) => {
+    //   return db.Users.findOne({ where: { id: args.id } });
+    // },
   },
   Mutation: {
     /*
