@@ -3,7 +3,6 @@
         <div class="modal-mask">
           <div class="modal-wrapper">
             <div class="modal-container">
-              <!-- <h1>{{user.name}}</h1> -->
               <div class="modal-header">
                 <h2><slot name="header"></slot></h2>
               </div>
@@ -14,7 +13,7 @@
               </div>
 
               <div class="modal-footer">
-                <button class="modal-default-button" @click="onDelete()"><slot name="action"></slot></button>
+                <slot name="action"></slot>
                 <button class="modal-default-button" @click="onCancel()">Отменить</button>
               </div>
             </div>
@@ -29,9 +28,6 @@
         methods: {
           onCancel() {
             this.$emit('answer', {ans: false});
-          },
-          onDelete() {
-            this.$emit('answer', {ans: true});
           }
         }
     }
