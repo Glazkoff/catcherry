@@ -5,12 +5,15 @@
       <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
     </div>
     <h1>{{ $t("welcomeMsg") }}</h1>
+    <top-bar></top-bar>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import TopBar from './components/TopBar.vue'
 export default {
+  components:{TopBar},
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
