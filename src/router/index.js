@@ -21,6 +21,28 @@ const routes = [
     component: Home,
   },
   {
+    path: "/user/:id",
+    name: "User",
+    component: User,
+    children: [
+      {
+        path: "",
+        name: "Account",
+        component: Account,
+      },
+      {
+        path: "user_org",
+        name: "UserInOrganization",
+        component: UserInOrganization,
+      },
+      {
+        path: "list_req",
+        name: "ListReguest",
+        component: ListRequest,
+      },
+    ],
+  },
+  {
     path: "/admin",
     name: "Admin",
     component: AdminPanel,
