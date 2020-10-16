@@ -1,61 +1,71 @@
 <template>
-  <form @submit.prevent="submit">
-    <h1>Регистрация</h1>
-    <p>* - обязательное поле</p>
-    <label>Фамилия Имя Отчество</label><br />
-    <input
-      type="text"
-      v-model.trim="$v.fullName.$model"
-      placeholder="Иванов Иван Иванович"
-      class="formControl"
-    />
-    <div v-if="$v.fullName.$error" class="error">
-      <span v-if="!$v.fullName.required">FullName is required</span>
-      <span v-else-if="!$v.fullName.alpha"
-        >FullName accepts only alphabet characters.</span
-      >
-    </div>
-    <br />
-    <!-- TODO: добавить обработку даты рождения -->
-    <!-- <label>Дата рождения</label><br />
+  <div>
+    <form @submit.prevent="submit">
+      <h1>Регистрация</h1>
+      <p>* - обязательное поле</p>
+      <label>Фамилия Имя Отчество</label><br />
+      <input
+        :disabled="signUpLoading"
+        type="text"
+        v-model.trim="$v.fullName.$model"
+        placeholder="Иванов Иван Иванович"
+        class="formControl"
+      />
+      <div v-if="$v.fullName.$error" class="error">
+        <span v-if="!$v.fullName.required">FullName is required</span>
+        <span v-else-if="!$v.fullName.alpha"
+          >FullName accepts only alphabet characters.</span
+        >
+      </div>
+      <br />
+      <!-- TODO: добавить обработку даты рождения -->
+      <!-- <label>Дата рождения</label><br />
     <input type="date" v-model.trim="$v.birthday.$model" class="formControl" />
     <div v-if="$v.birthday.$error" class="error">
       <span v-if="!$v.birthday.required">Birthday is required</span>
     </div>
     <br /> -->
-    <label>Логин</label><br />
-    <input
-      type="text"
-      v-model.trim="$v.login.$model"
-      placeholder="login"
-      class="formControl"
-    />
-    <div v-if="$v.login.$error" class="error">
-      <span v-if="!$v.login.required">Login is required</span>
-      <span v-else-if="!$v.login.email">Login must be an email</span>
-    </div>
-    <br />
-    <label>Пароль</label><br />
-    <input
-      type="password"
-      v-model.trim="$v.password.$model"
-      placeholder="password"
-      class="formControl"
-    />
-    <div v-if="$v.password.$error" class="error">
-      <span v-if="!$v.password.required">Password is required</span>
-      <span v-else-if="!$v.password.minLength"
-        >Password must have at least
-        {{ $v.password.$params.minLength.min }} letters.</span
-      >
-    </div>
-    <br />
-    <input type="submit" value="Зарегистрироваться" /><br />
-    <p>
-      Уже есть аккаунт?
-      <a href="/auth">Войти!</a>
-    </p>
-  </form>
+      <label>Логин</label><br />
+      <input
+        :disabled="signUpLoading"
+        type="text"
+        v-model.trim="$v.login.$model"
+        placeholder="login"
+        class="formControl"
+      />
+      <div v-if="$v.login.$error" class="error">
+        <span v-if="!$v.login.required">Login is required</span>
+        <span v-else-if="!$v.login.email">Login must be an email</span>
+      </div>
+      <br />
+      <label>Пароль</label><br />
+      <input
+        type="password"
+        :disabled="signUpLoading"
+        v-model.trim="$v.password.$model"
+        placeholder="password"
+        class="formControl"
+      />
+      <div v-if="$v.password.$error" class="error">
+        <span v-if="!$v.password.required">Password is required</span>
+        <span v-else-if="!$v.password.minLength"
+          >Password must have at least
+          {{ $v.password.$params.minLength.min }} letters.</span
+        >
+      </div>
+      <br />
+      <input
+        :disabled="signUpLoading"
+        type="submit"
+        value="Зарегистрироваться"
+      /><br />
+      <p>
+        Уже есть аккаунт?
+        <a href="/auth">Войти!</a>
+      </p>
+    </form>
+    <h1>{{ signUpLoading }}</h1>
+  </div>
 </template>
 
 <script>
@@ -77,6 +87,7 @@ export default {
       birthday: "",
       login: "",
       password: "",
+      signUpLoading: false,
     };
   },
   validations: {
@@ -110,7 +121,7 @@ export default {
         };
         console.log(userData);
         // TODO: Отправлять данные
-
+        this.signUpLoading = true;
         this.$apollo
           .mutate({
             mutation: SIGN_UP,
@@ -119,27 +130,23 @@ export default {
               login: userData.login,
               password: userData.password,
             },
-            //   update: (cache, { data: { updateUser } }) => {
-            //     let data = cache.readQuery({ query: USERS_QUERY });
-            //     data.users.find(
-            //       (el) => el.id === this.editUser.id
-            //     ).name = this.editUser.name;
-            //     cache.writeQuery({ query: USERS_QUERY, data });
-            //     console.log(updateUser);
-            //   },
-            //   optimisticResponse: {
-            //     __typename: "Mutation",
-            //     createUser: {
-            //       __typename: "User",
-            //       id: -1,
-            //       name: this.editUser.name,
-            //     },
-            //   },
           })
-          .then((data) => {
-            console.log(data);
+          .then((resp) => {
+            if (!resp.data.signUp.error) {
+              this.$store.commit(
+                "SET_ACCESS_TOKEN",
+                resp.data.signUp.accessToken
+              );
+              this.signUpLoading = false;
+              this.$router.push("/");
+            } else {
+              this.signUpLoading = false;
+              // TODO: добавить обработку ошибок
+              console.log("ERROR");
+            }
           })
           .catch((error) => {
+            this.signUpLoading = false;
             console.error(error);
           });
       }
