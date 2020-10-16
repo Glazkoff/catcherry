@@ -29,18 +29,18 @@
         </popup>
         <h2>Список пользователей</h2>
         <h6 v-if="users.length==0">К сожалению, пока пользователей нет</h6>
-        <input v-model="findString" type="text" placeholder="Поиск по пользователям">
-        <table v-if="users.length>0">
-            <tr v-for="user in filterUser" :key="user.id">
-                <td>{{ user.id }}.</td>
-                <td>{{ user.surname }} {{ user.name }} {{ user.patricity }}</td>
-                <td>{{ user.gender }}</td>
-                <td>{{ user.login }}</td>
-                <td>{{ user.password }}</td>
-                <td><button @click="showModalEdit(user)">Редактировать</button></td>
-                <td><button @click="showModalDelete(user)">Удалить</button></td>
-            </tr>
-        </table>
+        <div v-if="users.length>0">
+            <input v-model="findString" type="text" placeholder="Поиск по пользователям">
+            <div class="oneUser" v-for="user in filterUser" :key="user.id">
+                <p>{{ user.id }}.</p>
+                <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
+                <p>{{ user.gender }}</p>
+                <p>{{ user.login }}</p>
+                <p>{{ user.password }}</p>
+                <button @click="showModalEdit(user)">Редактировать</button>
+                <button @click="showModalDelete(user)">Удалить</button>
+            </div>
+        </div>
         <minialert v-if="isShowAlertEdit"><p slot="title">Вы успешно изменили пользователя</p></minialert>
         <minialert v-if="isShowAlertDelete"><p slot="title">Вы успешно удалили пользователя</p></minialert>
     </div>
@@ -142,5 +142,10 @@ export default {
     button {
         width: 100%;
         margin: 0 5%;
+    }
+    .oneUser {
+        display: grid;
+        grid-template-columns: 5% 25% 10% 15% 15% 15% 15%;
+        grid-template-rows: 1fr;
     }
 </style>

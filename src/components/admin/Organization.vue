@@ -16,17 +16,17 @@
         </popup>
         <h2>Список организаций</h2>
         <h6 v-if="organizations.length==0">К сожалению, пока пользователей нет</h6>
-        <input v-model="findString" type="text" placeholder="Поиск по организациям">
-        <table v-if="organizations.length>0">
-            <tr v-for="organization in filterOrganization" :key="organization.id">
-                <td>{{ organization.id }}.</td>
-                <td>{{ organization.name }}</td>
-                <td>{{ organization.ownerId }}</td>
-                <td>{{ organization.organizationType }}</td>
-                <td><button @click="showModalEdit(organization)">Редактировать</button></td>
-                <td><button @click="showModalDelete(organization)">Удалить</button></td>
-            </tr>
-        </table>
+        <div v-if="organizations.length>0">
+            <input v-model="findString" type="text" placeholder="Поиск по организациям">
+            <div class="oneOrganization" v-for="organization in filterOrganization" :key="organization.id">
+                <p>{{ organization.id }}.</p>
+                <p>{{ organization.name }}</p>
+                <p>{{ organization.ownerId }}</p>
+                <p>{{ organization.organizationType }}</p>
+                <button @click="showModalEdit(organization)">Редактировать</button>
+                <button @click="showModalDelete(organization)">Удалить</button>
+            </div>
+        </div>
         <minialert v-if="isShowAlertEdit"><p slot="title">Вы успешно изменили орагнизацию</p></minialert>
         <minialert v-if="isShowAlertDelete"><p slot="title">Вы успешно удалили организацию</p></minialert>
     </div>
@@ -119,5 +119,10 @@
     button {
         width: 100%;
         margin: 0 5%;
+    }
+    .oneOrganization {
+        display: grid;
+        grid-template-columns: 5% 25% 20% 20% 15% 15%;
+        grid-template-rows: 1fr;
     }
 </style>
