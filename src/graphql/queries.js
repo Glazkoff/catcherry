@@ -13,6 +13,18 @@ export const SIGN_UP = gql`
   }
 `;
 
+export const LOG_IN = gql`
+  mutation($login: String!, $password: String!) {
+    logIn(login: $login, password: $password) {
+      accessToken
+      error {
+        errorStatus
+        message
+      }
+    }
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {

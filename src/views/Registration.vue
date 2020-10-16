@@ -61,10 +61,9 @@
       /><br />
       <p>
         Уже есть аккаунт?
-        <a href="/auth">Войти!</a>
+        <router-link tag="a" to="/auth">Войти!</router-link>
       </p>
     </form>
-    <h1>{{ signUpLoading }}</h1>
   </div>
 </template>
 
@@ -106,7 +105,7 @@ export default {
     },
     password: {
       required,
-      minLength: minLength(8),
+      minLength: minLength(6),
     },
   },
   methods: {
@@ -132,15 +131,14 @@ export default {
             },
           })
           .then((resp) => {
+            this.signUpLoading = false;
             if (!resp.data.signUp.error) {
               this.$store.commit(
                 "SET_ACCESS_TOKEN",
                 resp.data.signUp.accessToken
               );
-              this.signUpLoading = false;
               this.$router.push("/");
             } else {
-              this.signUpLoading = false;
               // TODO: добавить обработку ошибок
               console.log("ERROR");
             }
