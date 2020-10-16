@@ -15,7 +15,10 @@ module.exports = (sequelize, DataTypes) => {
           as: "user",
         });
       */
-      Administrators.belongsTo(models.Users);
+      Administrators.belongsTo(models.Users, {
+        foreignKey: "userId",
+        as: "user",
+      });
     }
   }
   Administrators.init(
