@@ -14,7 +14,7 @@
 
               <div class="modal-footer">
                 <slot name="action"></slot>
-                <button class="modal-default-button" @click="onCancel()">Отменить</button>
+                <button class="modal-default-button" @click="onCancel()"><i18n path="cancel"><span place="title">{{ $t("cancel") }}</span></i18n></button>
               </div>
             </div>
           </div>

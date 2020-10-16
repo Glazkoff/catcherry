@@ -1,44 +1,44 @@
 <template>
     <div class="main">
         <popup @answer="closePopup" v-if="isShowModalEdit" :user='users[index]'>
-            <h3 slot="header">Редактирование пользователя {{ nameOfUser }}</h3>
+            <h3 slot="header"><i18n path="editUser"><span place="title">{{ $t("editUser") }}</span></i18n> {{ nameOfUser }}</h3>
             <div slot="body">
                 <form>
                     <label for="surname">Фамилия</label>
-                    <input name="surname" v-model="oneUser.surname" placeholder="Фамилия" required>
+                    <input name="surname" v-model.trim="oneUser.surname" placeholder="Фамилия" required>
                     <label for="name">Имя</label>
-                    <input name="name" v-model="oneUser.name" placeholder="Имя" required>
+                    <input name="name" v-model.trim="oneUser.name" placeholder="Имя" required>
                     <label for="surname">Отчество (при наличии)</label>
-                    <input name="patricity" v-model="oneUser.patricity" placeholder="Отчество" required>
+                    <input name="patricity" v-model.trim="oneUser.patricity" placeholder="Отчество" required>
                     <label for="surname">Пол</label>
-                    <select name="gender" v-model="oneUser.gender" required>
+                    <select name="gender" v-model.trim="oneUser.gender" required>
                         <option>Мужской</option>
                         <option>Женский</option>
                     </select>
                     <label for="login">Логин</label>
-                    <input name="login" v-model="oneUser.login" placeholder="Логин" required>
+                    <input name="login" v-model.trim="oneUser.login" placeholder="Логин" required>
                     <label for="password">Пароль</label>
-                    <input name="password" v-model="oneUser.password" placeholder="Пароль" required>
+                    <input name="password" v-model.trim="oneUser.password" placeholder="Пароль" required>
                 </form>
             </div>
-            <button slot="action" class="modal-default-button" @click="closePopup({ans: true, action: 'edit', user: oneUser})">Сохранить</button>
+            <button slot="action" class="modal-default-button" @click="closePopup({ans: true, action: 'edit', user: oneUser})"><i18n path="save"><span place="title">{{ $t("save") }}</span></i18n></button>
         </popup>
         <popup @answer="closePopup" v-if="isShowModalDelete">
-            <h3 slot="header">Вы действительно хотите удалить пользователя {{ nameOfUser }}?</h3>
-            <button slot="action" class="modal-default-button" @click="closePopup({ans: true, action: 'delete'})">Удалить</button>
+            <h3 slot="header"><i18n path="deleteQuestion"><span place="title">{{ $t("deleteQuestion") }}</span></i18n> {{ nameOfUser }}?</h3>
+            <button slot="action" class="modal-default-button" @click="closePopup({ans: true, action: 'delete'})"><i18n path="delete"><span place="title">{{ $t("delete") }}</span></i18n></button>
         </popup>
-        <h2>Список пользователей</h2>
+        <h2><i18n path="listUser"><span place="title">{{ $t("listUser") }}</span></i18n></h2>
         <h6 v-if="users.length==0">К сожалению, пока пользователей нет</h6>
         <div v-if="users.length>0">
-            <input v-model="findString" type="text" placeholder="Поиск по пользователям">
+            <input v-model.trim="findString" type="text" placeholder='Поиск по пользователям'>
             <div class="oneUser" v-for="user in filterUser" :key="user.id">
                 <p>{{ user.id }}.</p>
                 <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
                 <p>{{ user.gender }}</p>
                 <p>{{ user.login }}</p>
                 <p>{{ user.password }}</p>
-                <button @click="showModalEdit(user)">Редактировать</button>
-                <button @click="showModalDelete(user)">Удалить</button>
+                <button @click="showModalEdit(user)"><i18n path="edit"><span place="title">{{ $t("edit") }}</span></i18n></button>
+                <button @click="showModalDelete(user)"><i18n path="delete"><span place="title">{{ $t("delete") }}</span></i18n></button>
             </div>
         </div>
         <minialert v-if="isShowAlertEdit"><p slot="title">Вы успешно изменили пользователя</p></minialert>
