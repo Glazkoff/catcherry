@@ -78,14 +78,14 @@ db.sequelize
   .then(async () => {
     app.listen(PORT, () => {
       // db.Users.destroy({ where: {} });
-      // const salt = bcrypt.genSaltSync(10);
-      // for (let index = 0; index < 10; index++) {
-      //   db.Users.create({
-      //     name: faker.name.findName(),
-      //     login: faker.random.word(),
-      //     password: bcrypt.hashSync("nikita", salt),
-      //   });
-      // }
+      const salt = bcrypt.genSaltSync(10);
+      for (let index = 0; index < 10; index++) {
+        db.Users.create({
+          name: faker.name.findName(),
+          login: faker.random.word(),
+          password: bcrypt.hashSync("nikita", salt),
+        });
+      }
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)

@@ -12,15 +12,15 @@ type jwt {
 
 type User {
   id: ID!
-  name: String!
-  login: String!
-  password: String!
+  name: String
+  login: String
+  password: String
   createdAt: String!
   updatedAt: String!
 }
 
 type Query { 
-  users: [User]! 
+  users: [User!] 
   user(id: ID!): User
 }
 
