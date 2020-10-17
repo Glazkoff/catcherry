@@ -1,11 +1,12 @@
 <template>
   <div id="app">
+    <div><top-bar></top-bar></div>
     <div class="locales">
       <a @click="setLocale('en')"><flag iso="us"></flag></a>
       <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
     </div>
     <h1>{{ $t("welcomeMsg") }}</h1>
-    <top-bar></top-bar>
+    
     <router-view></router-view>
   </div>
 </template>

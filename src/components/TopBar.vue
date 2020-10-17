@@ -5,12 +5,14 @@
 
   <ul>
   <label for="gepleasurprised">
-  <li class="nav-logo">CATCHERRY</li>
+  
   <li class="icon right">
   <a>☰</a>
   </li>
   </label>
+  
   <input type="checkbox" id="gepleasurprised" style="display: none;" />
+  <li class="nav-logo">CATCHERRY</li>
   <li><a href="#">Главная</a></li>
   <li><a href="#">Личный кабинет</a></li>
   <li><a href="#">Команда</a></li>
@@ -70,17 +72,12 @@
 
 
 header{
-    display: flex;
     width: 100%;
     background: #8C030E;
-    position: fixed;
-  top: 0;
   min-height: 2em;
-    z-index: 1030;
-    box-sizing: border-box;
     justify-content: center;
      padding-top: 20px;
-    padding-bottom: 20px;
+    padding-bottom: 60px;
    
  }
 
@@ -116,12 +113,17 @@ font-size: 12px;
 line-height: 15px;
 color: #FFFFFF;
 }
-@media screen and (max-width: 1064px){
+@media screen and (max-width: 1090px){
   nav ul li:not(:nth-child(1)) {display: none;}
+  nav ul .nav-logo {display:  inline-block !important;}
   nav ul li.icon {display: inline-block;}
   label { cursor: pointer;}
   #gepleasurprised:checked ~ li { float: none; display: block;}
   .nav-exit {margin-left: 0.8em;}
   #gepleasurprised:checked ~ li a.nav-name {display: none;}
+}
+@media screen and (max-width: 350px){
+  .nav-logo {font-size: 24px;}
+
 }
 </style>
