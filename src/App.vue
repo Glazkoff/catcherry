@@ -7,7 +7,7 @@
     </div>
     <h1>{{ $t("welcomeMsg") }}</h1>
     <nav>
-      <router-link to="/user/156">Профиль</router-link>
+      <router-link to="/user/136">Профиль</router-link>
     </nav>
     <hr />
     <router-view></router-view>

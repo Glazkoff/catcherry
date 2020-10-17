@@ -24,6 +24,19 @@ const routes = [
     name: "Home",
     component: Home,
   },
+  // FIXME: [Фёдор]
+  /*
+    * Возможно, стоит рассмотреть следующий вариант:
+    path: "/users",
+    name: "User",
+    component: User,
+    children: [
+      {
+        path: "/:id",
+        name: "Account",
+        component: Account,
+      },
+  */
   {
     path: "/user/:id",
     name: "User",
@@ -64,21 +77,6 @@ const routes = [
         component: Organization,
       },
     ],
-  },
-  {
-    path: "/account",
-    name: "Account",
-    component: Account,
-  },
-  {
-    path: "/user_org",
-    name: "UserInOrganization",
-    component: UserInOrganization,
-  },
-  {
-    path: "/list_req",
-    name: "ListReguest",
-    component: ListRequest,
   },
   {
     path: "/auth",
