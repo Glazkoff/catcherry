@@ -15,9 +15,9 @@
 </template>
 
 <script>
-import TopBar from './components/TopBar.vue'
+import TopBar from "@/components/TopBar.vue";
 export default {
-  components:{TopBar},
+  components: { TopBar },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
