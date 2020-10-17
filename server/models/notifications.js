@@ -8,6 +8,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+
+      
       Notifications.belongsTo(models.Teams);
       Notifications.belongsTo(models.Users);
       Notifications.hasMany(models.ReadNotification, {
@@ -32,15 +34,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       forAllUsers: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       forAllOrganization: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       forAllTeam: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {
