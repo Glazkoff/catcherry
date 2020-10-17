@@ -37,8 +37,8 @@ module.exports = {
     },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
-    notification: (parent, args, { db }, info) => 
-      db.Notifications.findOne({ where: { id: args.id } })
+    notification: (parent, args, { db }, info) =>
+      db.Notifications.findOne({ where: { id: args.id } }),
   },
   Mutation: {
     /*
@@ -162,14 +162,19 @@ module.exports = {
         authorId: authorId,
         teamId: teamId,
       }),
-    updateNotification: (parent, { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id }, { db }, info) =>
+    updateNotification: (
+      parent,
+      { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
+      { db },
+      info
+    ) =>
       db.Notifications.update(
         {
           body: body,
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam:forAllTeam,
+          forAllTeam: forAllTeam,
         },
         {
           where: {

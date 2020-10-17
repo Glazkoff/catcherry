@@ -2,15 +2,19 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Home from "@/views/Home.vue";
+
+import Authentication from "@/views/Authentication.vue";
+import Registration from "@/views/Registration.vue";
+
 import AdminPanel from "@/views/AdminPanel.vue";
 import Dashboard from "@/components/admin/Dashboard.vue";
 import Users from "@/components/admin/Users.vue";
 import Organization from "@/components/admin/Organization.vue";
-import Account from "@/components/Account.vue";
-import UserInOrganization from "@/components/UserInOrganization.vue";
-import ListRequest from "@/components/ListRequest.vue";
-import Authentication from "@/views/Authentication.vue";
-import Registration from "@/views/Registration.vue";
+
+import User from "@/components/account/User.vue";
+import Account from "@/components/account/Account.vue";
+import UserInOrganization from "@/components/account/UserInOrganization.vue";
+import ListRequest from "@/components/account/ListRequest.vue";
 
 Vue.use(VueRouter);
 
