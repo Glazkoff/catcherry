@@ -1,5 +1,6 @@
 <template>
   <div id="app">
+    <div><top-bar></top-bar></div>
     <div class="locales">
       <a @click="setLocale('en')"><flag iso="us"></flag></a>
       <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
@@ -14,7 +15,9 @@
 </template>
 
 <script>
+import TopBar from './components/TopBar.vue'
 export default {
+  components:{TopBar},
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
