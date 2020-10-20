@@ -1,14 +1,18 @@
 <template>
-<div>
-    <h3>Участники</h3>
-    <hr>
-    <div v-for="member in members" :key="member.id" class="member">
-        <TeamMemberItem :member="member" />
+<div class="every">
+    <NavBar class="navig" />
+    <div class="partic">
+        <h3>Участники</h3>
+        <hr>
+        <div v-for="member in members" :key="member.id" class="member">
+            <TeamMemberItem :member="member" />
+        </div>
     </div>
 </div>
 </template>
 
 <script>
+import NavBar from "./NavBar";
 import TeamMemberItem from "./TeamMemberItem.vue";
 export default {
     data() {
@@ -33,6 +37,7 @@ export default {
     },
     components: {
         TeamMemberItem,
+        NavBar,
     }
 
 }
@@ -43,5 +48,18 @@ export default {
     border: 1px solid black;
     padding: 1rem;
     margin: 1rem;
+}
+
+.every {
+    display: flex;
+    justify-content: baseline;
+}
+
+.navig {
+    width: 15%;
+}
+
+.partic {
+    width: 50%;
 }
 </style>
