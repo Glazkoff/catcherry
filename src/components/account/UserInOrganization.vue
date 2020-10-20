@@ -1,5 +1,28 @@
 <template>
   <div class="search_organization account-view">
+    <popup @answer="closePopup" v-if="isShowModalEdit">
+      <h3 slot="header">Организация "{{ nameOfOrganization }}"</h3>
+      <div slot="body">
+        {{ oneOrganization.name }}
+        <span
+          >Вы можете вступить в организацию или сразу вступить в команду</span
+        >
+        <h3>Участие в командах</h3>
+        <hr />
+        <h3>Заявки в команды</h3>
+        <hr />
+        <h5>Поиск команды</h5>
+        <input type="text" class="form-text" placeholder="Название команды" />
+        <h3>Команды</h3>
+      </div>
+      <button
+        slot="action"
+        class="modal-default-button"
+        @click="isShowModalEdit=false"
+      >
+        Закрыть
+      </button>
+    </popup>
     <h1>Поиск организации</h1>
     <div class="tabs">
       <input
@@ -24,9 +47,9 @@
         <h3>Введите название организации</h3>
         <form @submit.prevent="checkForm">
           <input
+            v-model="findString"
             type="text"
-            placeholder="Название организации"
-            v-model="search"
+            placeholder="Поиск по организациям"
             class="form-control"
           /><br />
           <button class="btn btn-primary">Найти</button>
@@ -47,17 +70,20 @@
     </div>
     <div class="result_organization">
       <h2>Список организаций</h2>
-      <hr>
+      <hr />
       <div v-if="tabFirst">
-        <div v-for="(item, index) in searchOrgName" :key="index">
-          <div class="result_card">
-            <h4>Заявка на вступление в команду {{ item.name }}</h4>
-            <span>Номер: {{ item.id }}</span
-            ><br />
-            <span>Владелец: {{ item.owner }}</span
-            ><br />
-            <button class="btn-link">Подробнее</button>
-          </div>
+        <div
+          class="oneOrganization"
+          v-for="organization in filterOrganization"
+          :key="organization.id"
+        >
+          <p>№{{ organization.id }}</p>
+          <p><b>{{ organization.name }}</b></p>
+          <p>{{ organization.owner }}</p>
+          <p>{{ organization.organizationType }}</p>
+          <button @click="showModalEdit(organization)" class="btn-link">
+            Подробнее
+          </button>
         </div>
       </div>
       <div v-else style="color: gray;">
@@ -68,7 +94,9 @@
             ><br />
             <span>Владелец: {{ item.owner }}</span
             ><br />
-            <button class="btn-link">Подробнее</button>
+            <button class="btn-link" @click="showModalEdit(item)">
+              Подробнее
+            </button>
           </div>
         </div>
       </div>
@@ -77,12 +105,17 @@
 </template>
 
 <script>
+import popup from "@/components/account/Popup.vue";
 export default {
   name: "UserInOrganization",
+  components: { popup },
   data() {
     return {
-      search: "",
+      findString: "",
+      oneOrganization: {},
+      nameOfOrganization: "",
       tabFirst: true,
+      isShowModalEdit: false,
       organizations: [
         { id: "13223", name: "Лютики", owner: "Иванов" },
         { id: "24311", name: "Цветочки", owner: "Петров" },
@@ -90,16 +123,28 @@ export default {
       ],
     };
   },
+  methods: {
+    showModalEdit(organization) {
+      (this.nameOfOrganization = organization.name),
+        (this.isShowModalEdit = true);
+      this.index = this.organizations.findIndex(
+        (el) => el.id === organization.id
+      );
+      this.oneOrganization = Object.assign(this.oneOrganization, organization);
+    },
+  },
   computed: {
-    searchOrgName() {
-      let obj = this.organizations;
-      let newArray = [];
-      const search = this.search.toLowerCase();
-      for (let key in obj) {
-        let el = obj[key];
-        if (el.name.toLowerCase().indexOf(search) != -1) newArray.push(el);
+    filterOrganization() {
+      if (this.findString !== "") {
+        return this.organizations.filter((el) => {
+          return (
+            el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+              -1 && el.name !== ""
+          );
+        });
+      } else {
+        return this.organizations;
       }
-      return newArray;
     },
     searchOrgIndex() {
       let obj = this.organizations;
