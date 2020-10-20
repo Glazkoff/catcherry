@@ -30,4 +30,9 @@ export default {
     display: block;
   }
 }
+
+.account-view {
+  float: right;
+  width: 80%;
+}
 </style>

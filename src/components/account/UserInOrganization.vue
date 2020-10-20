@@ -1,5 +1,6 @@
 <template>
-  <div class="search_organization">
+  <div class="search_organization account-view">
+    <h1>Поиск организации</h1>
     <div class="tabs">
       <input
         type="radio"
@@ -26,9 +27,9 @@
             type="text"
             placeholder="Название организации"
             v-model="search"
-            class="formControl"
+            class="form-control"
           /><br />
-          <button class="btn">Найти</button>
+          <button class="btn btn-primary">Найти</button>
         </form>
       </div>
       <div id="content-2">
@@ -38,14 +39,15 @@
             type="number"
             placeholder="Номер организации"
             v-model="search"
-            class="formControl"
+            class="form-control"
           /><br />
-          <button class="btn">Найти</button>
+          <button class="btn btn-primary">Найти</button>
         </form>
       </div>
     </div>
     <div class="result_organization">
-      <h2>Результат:</h2>
+      <h2>Список организаций</h2>
+      <hr>
       <div v-if="tabFirst">
         <div v-for="(item, index) in searchOrgName" :key="index">
           <div class="result_card">
@@ -54,7 +56,7 @@
             ><br />
             <span>Владелец: {{ item.owner }}</span
             ><br />
-            <button class="btn">Подать заявку</button>
+            <button class="btn-link">Подробнее</button>
           </div>
         </div>
       </div>
@@ -66,7 +68,7 @@
             ><br />
             <span>Владелец: {{ item.owner }}</span
             ><br />
-            <button class="btn">Подать заявку</button>
+            <button class="btn-link">Подробнее</button>
           </div>
         </div>
       </div>

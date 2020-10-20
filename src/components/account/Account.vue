@@ -1,12 +1,12 @@
 <template>
-  <div>
+  <div class="account-view">
     <h4 v-if="this.$apollo.queries.user.loading">Загружается...</h4>
-    <i>AAA User {{ $route.params.id }}</i>
+    <h1>Профиль</h1>
     <div v-if="editUser.isEdit">
       <label for="editUserName"
         >Редактирование пользователя #{{ editUser.id }}
       </label>
-      <form @submit.prevent="checkForm">
+      <form @submit.prevent="checkForm" class="form-group">
         <h1>Личный кабинет</h1>
         <p>* - обязательное поле</p>
         <span v-if="errors.length">
@@ -20,21 +20,21 @@
           type="text"
           v-model="editUser.name"
           placeholder="Иванов"
-          class="formControl"
+          class="form-text"
         /><br />
         <label>Имя</label><br />
         <input
           type="text"
           v-model="editUser.surname"
           placeholder="Иванов"
-          class="formControl"
+          class="form-text"
         /><br />
         <label>Отчество</label><br />
         <input
           type="text"
           v-model="editUser.patricity"
           placeholder="Иванов"
-          class="formControl"
+          class="form-text"
         /><br />
         <label>Пол</label><br />
         <input
@@ -42,34 +42,34 @@
           name="gender"
           value="male"
           v-model="editUser.gender"
-          class="formControl"
+          class="form-check"
         /><label>Мужской</label><br />
         <input
           type="radio"
           name="gender"
           value="female"
           v-model="editUser.gender"
-          class="formControl"
+          class="form-ckeck"
         /><label>Женский</label><br />
         <input
           type="radio"
           name="gender"
           value="none"
           v-model="editUser.gender"
-          class="formControl"
+          class="form-check"
         /><label>Не указан</label><br />
         <label>Дата рождения</label><br />
         <input
           type="date"
           v-model="editUser.birthday"
-          class="formControl"
+          class="form-text"
         /><br />
         <label>Логин</label><br />
         <input
           type="text"
           v-model="editUser.login"
           placeholder="login"
-          class="formControl"
+          class="form-text"
         /><br />
         <button class="btn" @click="toSaveEditUser()">Сохранить</button>
         <p>
@@ -81,12 +81,12 @@
     <div v-if="!editUser.isEdit">
       <ul>
         <li>{{ user.id }}</li>
-        <li>{{ user.name }}</li>
-        <li>{{ user.surname }}</li>
-        <li>{{ user.patricity }}</li>
-        <li>{{ user.gender }}</li>
-        <li>{{ dateUser(user.birthday) }}</li>
-        <li>{{ user.login }}</li>
+        <li>Фамилия: {{ user.name }}</li>
+        <li>Имя: {{ user.surname }}</li>
+        <li>Отчество: {{ user.patricity }}</li>
+        <li>Пол: {{ user.gender }}</li>
+        <li>Дата рождения: {{ dateUser(user.birthday) }}</li>
+        <li>Логин: {{ user.login }}</li>
         <button @click="toEditUser(user)">Редактировать</button>
       </ul>
     </div>
@@ -105,11 +105,7 @@ export default {
   data() {
     return {
       errors: [],
-      fullName: null,
-      birthday: null,
-      login: null,
-      password: null,
-      newUser: "",
+      userId: 111,
       editUser: {
         isEdit: false,
         name: "",
@@ -191,24 +187,42 @@ export default {
             login: this.editUser.login,
             id: this.editUser.id,
           },
-          // update: (cache, { data: { updateUser } }) => {
-          //   let data = cache.readQuery({ query: USERS_QUERY });
-          //   data.user.name = this.editUser.name;
-          //   data.user.surname = this.editUser.surname;
-          //   data.user.patricity = this.editUser.patricity;
-          //   cache.writeQuery({ query: USERS_QUERY, data });
-          //   console.log(updateUser);
-          // },
-          // optimisticResponse: {
-          //   __typename: "Mutation",
-          //   createUser: {
-          //     __typename: "User",
-          //     id: -1,
-          //     name: this.editUser.name,
-          //     surname: this.editUser.surname,
-          //   patricity: this.editUser.patricity,
-          //   },
-          // },
+          update: (cache, { data: { updateUser } }) => {
+            let data = cache.readQuery({ query: USERS_QUERY });
+            data.users.find(
+              (el) => el.id === this.editUser.id
+            ).name = this.editUser.name;
+            data.users.find(
+              (el) => el.id === this.editUser.id
+            ).surname = this.editUser.surname;
+            data.users.find(
+              (el) => el.id === this.editUser.id
+            ).patricity = this.editUser.patricity;
+            data.users.find(
+              (el) => el.id === this.editUser.id
+            ).gender = this.editUser.gender;
+            data.users.find(
+              (el) => el.id === this.editUser.id
+            ).birthday = this.editUser.birthday;
+            data.users.find(
+              (el) => el.id === this.editUser.id
+            ).login = this.editUser.login;
+            cache.writeQuery({ query: USERS_QUERY, data });
+            console.log(updateUser);
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createUser: {
+              __typename: "User",
+              id: -1,
+              name: this.editUser.name,
+              surname: this.editUser.surname,
+              patricity: this.editUser.patricity,
+              gender: this.editUser.gender,
+              birthday: this.editUser.birthday,
+              login: this.editUser.login,
+            },
+          },
         })
         .then((data) => {
           console.log(data);
@@ -251,7 +265,6 @@ export default {
         });
     },
   },
-  computed: {},
 };
 </script>
 <style></style>
