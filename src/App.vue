@@ -6,7 +6,8 @@
     </div>
     <h1>{{ $t("welcomeMsg") }}</h1>
     <nav>
-      <router-link to="/user/156">Профиль</router-link>
+      <!-- FIXME: сделать id пользователя динамическим -->
+      <router-link to="/user/111">Профиль</router-link>
     </nav>
     <hr />
     <router-view></router-view>

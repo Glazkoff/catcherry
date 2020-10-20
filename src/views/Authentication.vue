@@ -73,7 +73,7 @@ export default {
         let userData = {
           login: this.$v.login.$model,
           password: this.$v.password.$model,
-        };
+        }; 
         this.$apollo
           .mutate({
             mutation: LOG_IN,

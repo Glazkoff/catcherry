@@ -12,7 +12,11 @@ type jwt {
 
 type User {
   id: ID!
-  name: String
+  name: String!
+  surname: String
+  patricity: String
+  gender: String
+  birthday: String
   login: String
   password: String
   createdAt: String!
@@ -49,7 +53,7 @@ type Query {
 type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(name: String!, id: ID!): [Int]!
+  updateUser(name: String!, surname: String, patricity: String, gender: String, birthday: String, login: String, id: ID!): [Int]!
 
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
