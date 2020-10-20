@@ -3,8 +3,18 @@ import gql from "graphql-tag";
 // (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 
 export const SIGN_UP = gql`
-  mutation($name: String!, $login: String!, $password: String!) {
-    signUp(name: $name, login: $login, password: $password) {
+  mutation(
+    $name: String!
+    $login: String!
+    $password: String!
+    $fingerprint: String!
+  ) {
+    signUp(
+      name: $name
+      login: $login
+      password: $password
+      fingerprint: $fingerprint
+    ) {
       accessToken
       error {
         errorStatus
@@ -14,8 +24,8 @@ export const SIGN_UP = gql`
 `;
 
 export const LOG_IN = gql`
-  mutation($login: String!, $password: String!) {
-    logIn(login: $login, password: $password) {
+  mutation($login: String!, $password: String!, $fingerprint: String!) {
+    logIn(login: $login, password: $password, fingerprint: $fingerprint) {
       accessToken
       error {
         errorStatus
@@ -37,7 +47,7 @@ export const CREATE_USER_QUERY = gql`
 
 export const ONE_USER_QUERY = gql`
   query {
-    user(id:156) {
+    user(id: 156) {
       id
       name
     }

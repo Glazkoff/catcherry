@@ -88,7 +88,14 @@ export default {
       login: "",
       password: "",
       signUpLoading: false,
+      fingerprint: "",
     };
+  },
+  async created() {
+    const fp = await this.$fingerprint.load();
+    const result = await fp.get();
+    const visitorId = result.visitorId;
+    this.fingerprint = visitorId;
   },
   validations: {
     fullName: {
@@ -128,6 +135,7 @@ export default {
               name: userData.name,
               login: userData.login,
               password: userData.password,
+              fingerprint: this.fingerprint,
             },
           })
           .then((resp) => {

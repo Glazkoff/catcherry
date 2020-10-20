@@ -29,8 +29,8 @@ type Mutation {
   deleteUser(id: ID!): Int!
   updateUser(name: String!, id: ID!): [Int]!
 
-  signUp(name: String!, login: String!, password: String!): jwt
-  logIn(login: String!, password: String!): jwt
+  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
+  logIn(login: String!, password: String!, fingerprint:String!): jwt
   updateAccessToken: jwt!
 }
 `;

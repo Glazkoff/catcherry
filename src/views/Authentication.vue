@@ -54,7 +54,14 @@ export default {
       login: "",
       password: "",
       authLoading: false,
+      fingerprint: "",
     };
+  },
+  async created() {
+    const fp = await this.$fingerprint.load();
+    const result = await fp.get();
+    const visitorId = result.visitorId;
+    this.fingerprint = visitorId;
   },
   validations: {
     login: {
@@ -66,7 +73,7 @@ export default {
     },
   },
   methods: {
-    logIn() {
+    async logIn() {
       if (this.$v.$invalid) {
         this.$v.$touch();
       } else {
@@ -81,6 +88,7 @@ export default {
             variables: {
               login: userData.login,
               password: userData.password,
+              fingerprint: this.fingerprint,
             },
           })
           .then((resp) => {
