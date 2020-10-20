@@ -1,13 +1,13 @@
 module.exports = `
 type User {
   id: ID!
-  name: String!
+  name: String
   createdAt: String!
   updatedAt: String!
 }
 
 type Query { 
-  users: [User]! 
+  users: [User!] 
   user(id: ID!): User
 }
 
