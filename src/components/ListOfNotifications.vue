@@ -53,11 +53,13 @@ export default {
   },
   methods: {
     onDelete(object){
-      console.log(object);
-      console.log(object.id);
-      console.log(this.notifications.find(
+      // console.log(object);
+      // console.log(object.id);
+      let index = this.notifications.findIndex(
               (el) => el.id === object.id
-            ));
+            );
+      // console.log(index);
+      this.notifications.splice(index, 1);
     }
   }
 }
