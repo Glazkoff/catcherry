@@ -6,7 +6,7 @@ import UserInOrganization from "../components/UserInOrganization.vue";
 import ListRequest from "../components/ListRequest.vue";
 import Authentication from "../components/Authentication.vue";
 import Registration from "../components/Registration.vue";
-import Notification from "../components/Notification.vue";
+import ListOfNotifications from "../components/ListOfNotifications.vue";
 
 Vue.use(VueRouter);
 
@@ -43,8 +43,8 @@ const routes = [
   },
   {
     path: "/notification",
-    name: "Notification",
-    component: Notification,
+    name: "ListOfNotifications",
+    component: ListOfNotifications,
   },
   // {
   //   path: "/about",
