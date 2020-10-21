@@ -19,7 +19,6 @@ const helmet = require("helmet");
 
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
-const cors = require("cors");
 
 /**
  * Пример для создания точки Graphql

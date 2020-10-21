@@ -29,6 +29,8 @@ const routes = [
     path: "/list_req",
     name: "ListReguest",
     component: ListRequest,
+  },
+  {
     path: "/auth",
     name: "Authentication",
     component: Authentication,
