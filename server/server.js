@@ -65,7 +65,7 @@ app.get("/", (req, res) => res.send("Серверная часть проект�
 
 // TODO: добавить заполнение фейковыми данными
 
-db.sequelize.sync({ alter: true }).then(async () => {
+db.sequelize.sync().then(async () => {
   app.listen(PORT, () => {
     console.log(
       chalk.yellow(`Сервер (Graphiql) запущен на`),

@@ -1,6 +1,6 @@
 <template>
     <div class="list">
-        <notification @ping="onPing" v-for="notification in notifications" :key="notification.id" :notification="notification" ></notification>
+        <notification @delete="onDelete" v-for="notification in notifications" :key="notification.id" :notification="notification" ></notification>
     </div>
 </template>
 
@@ -52,8 +52,12 @@ export default {
     }
   },
   methods: {
-    onPing(message){
-      console.log(message);
+    onDelete(object){
+      console.log(object);
+      console.log(object.id);
+      console.log(this.notifications.find(
+              (el) => el.id === object.id
+            ));
     }
   }
 }
