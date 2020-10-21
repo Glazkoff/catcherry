@@ -1,94 +1,97 @@
 <template>
   <div class="account-view">
     <h4 v-if="this.$apollo.queries.user.loading">Загружается...</h4>
-    <h1>Профиль</h1>
-    <div v-if="editUser.isEdit">
-      <label for="editUserName"
-        >Редактирование пользователя #{{ editUser.id }}
-      </label>
-      <form @submit.prevent="checkForm" class="form-group">
-        <h1>Личный кабинет</h1>
-        <p>* - обязательное поле</p>
-        <span v-if="errors.length">
-          <b>Пожалуйста исправьте указанные ошибки:</b>
-          <ul>
-            <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-          </ul>
-        </span>
-        <label>Фамилия</label><br />
-        <input
-          type="text"
-          v-model="editUser.name"
-          placeholder="Иванов"
-          class="form-text"
-        /><br />
-        <label>Имя</label><br />
-        <input
-          type="text"
-          v-model="editUser.surname"
-          placeholder="Иванов"
-          class="form-text"
-        /><br />
-        <label>Отчество</label><br />
-        <input
-          type="text"
-          v-model="editUser.patricity"
-          placeholder="Иванов"
-          class="form-text"
-        /><br />
-        <label>Пол</label><br />
-        <input
-          type="radio"
-          name="gender"
-          value="male"
-          v-model="editUser.gender"
-          class="form-check"
-        /><label>Мужской</label><br />
-        <input
-          type="radio"
-          name="gender"
-          value="female"
-          v-model="editUser.gender"
-          class="form-ckeck"
-        /><label>Женский</label><br />
-        <input
-          type="radio"
-          name="gender"
-          value="none"
-          v-model="editUser.gender"
-          class="form-check"
-        /><label>Не указан</label><br />
-        <label>Дата рождения</label><br />
-        <input
-          type="date"
-          v-model="editUser.birthday"
-          class="form-text"
-        /><br />
-        <label>Логин</label><br />
-        <input
-          type="text"
-          v-model="editUser.login"
-          placeholder="login"
-          class="form-text"
-        /><br />
-        <button class="btn" @click="toSaveEditUser()">Сохранить</button>
-        <p>
-          <a href="#" @click="toDeleteUser(user)">Удалить аккаунт</a>
-        </p>
-      </form>
-    </div>
+    <h4 v-if="!user">Такого пользователя нет в системе.</h4>
+    <div v-if="user">
+      <h1>Профиль</h1>
+      <div v-if="editUser.isEdit">
+        <label for="editUserName"
+          >Редактирование пользователя #{{ editUser.id }}
+        </label>
+        <form @submit.prevent="checkForm" class="form-group">
+          <h1>Личный кабинет</h1>
+          <p>* - обязательное поле</p>
+          <span v-if="errors.length">
+            <b>Пожалуйста исправьте указанные ошибки:</b>
+            <ul>
+              <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
+            </ul>
+          </span>
+          <label>Фамилия</label><br />
+          <input
+            type="text"
+            v-model="editUser.name"
+            placeholder="Иванов"
+            class="form-text"
+          /><br />
+          <label>Имя</label><br />
+          <input
+            type="text"
+            v-model="editUser.surname"
+            placeholder="Иванов"
+            class="form-text"
+          /><br />
+          <label>Отчество</label><br />
+          <input
+            type="text"
+            v-model="editUser.patricity"
+            placeholder="Иванов"
+            class="form-text"
+          /><br />
+          <label>Пол</label><br />
+          <input
+            type="radio"
+            name="gender"
+            value="male"
+            v-model="editUser.gender"
+            class="form-check"
+          /><label>Мужской</label><br />
+          <input
+            type="radio"
+            name="gender"
+            value="female"
+            v-model="editUser.gender"
+            class="form-ckeck"
+          /><label>Женский</label><br />
+          <input
+            type="radio"
+            name="gender"
+            value="none"
+            v-model="editUser.gender"
+            class="form-check"
+          /><label>Не указан</label><br />
+          <label>Дата рождения</label><br />
+          <input
+            type="date"
+            v-model="editUser.birthday"
+            class="form-text"
+          /><br />
+          <label>Логин</label><br />
+          <input
+            type="text"
+            v-model="editUser.login"
+            placeholder="login"
+            class="form-text"
+          /><br />
+          <button class="btn" @click="toSaveEditUser()">Сохранить</button>
+          <p>
+            <a href="#" @click="toDeleteUser(user)">Удалить аккаунт</a>
+          </p>
+        </form>
+      </div>
 
-    <div v-if="!editUser.isEdit">
-      <ul>
-        <li>{{ user.id }}</li>
-        <li>Фамилия: {{ user.name }}</li>
-        <li>Имя: {{ user.surname }}</li>
-        <li>Отчество: {{ user.patricity }}</li>
-        <li>Пол: {{ user.gender }}</li>
-        <li>Дата рождения: {{ dateUser(user.birthday) }}</li>
-        <li>Логин: {{ user.login }}</li>
-        <button @click="toEditUser(user)">Редактировать</button>
-      </ul>
+      <div v-if="!editUser.isEdit">
+        <ul>
+          <li>{{ user.id }}</li>
+          <li>Фамилия: {{ user.name }}</li>
+          <li>Имя: {{ user.surname }}</li>
+          <li>Отчество: {{ user.patricity }}</li>
+          <li>Пол: {{ user.gender }}</li>
+          <li>Дата рождения: {{ dateUser(user.birthday) }}</li>
+          <li>Логин: {{ user.login }}</li>
+          <button @click="toEditUser(user)">Редактировать</button>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
@@ -105,7 +108,6 @@ export default {
   data() {
     return {
       errors: [],
-      userId: 111,
       editUser: {
         isEdit: false,
         name: "",
@@ -121,8 +123,8 @@ export default {
   apollo: {
     user: {
       query: ONE_USER_QUERY,
-      variables: {
-        id: 111, // FIXME: сделать id пользователя динамическим
+      variables() {
+        return { id: this.$route.params.id };
       },
     },
   },
@@ -188,26 +190,15 @@ export default {
             id: this.editUser.id,
           },
           update: (cache, { data: { updateUser } }) => {
-            let data = cache.readQuery({ query: USERS_QUERY });
-            data.users.find(
-              (el) => el.id === this.editUser.id
-            ).name = this.editUser.name;
-            data.users.find(
-              (el) => el.id === this.editUser.id
-            ).surname = this.editUser.surname;
-            data.users.find(
-              (el) => el.id === this.editUser.id
-            ).patricity = this.editUser.patricity;
-            data.users.find(
-              (el) => el.id === this.editUser.id
-            ).gender = this.editUser.gender;
-            data.users.find(
-              (el) => el.id === this.editUser.id
-            ).birthday = this.editUser.birthday;
-            data.users.find(
-              (el) => el.id === this.editUser.id
-            ).login = this.editUser.login;
-            cache.writeQuery({ query: USERS_QUERY, data });
+            let data = cache.readQuery({
+              query: ONE_USER_QUERY,
+              variables() {
+                return { id: this.$route.params.id };
+              },
+            }); //FIXME: разобраться с кэшем для отображение измененных данных 
+            console.log(data);
+            data.user.name = this.editUser.name;
+            cache.writeQuery({ query: ONE_USER_QUERY, data });
             console.log(updateUser);
           },
           optimisticResponse: {
@@ -216,11 +207,6 @@ export default {
               __typename: "User",
               id: -1,
               name: this.editUser.name,
-              surname: this.editUser.surname,
-              patricity: this.editUser.patricity,
-              gender: this.editUser.gender,
-              birthday: this.editUser.birthday,
-              login: this.editUser.login,
             },
           },
         })

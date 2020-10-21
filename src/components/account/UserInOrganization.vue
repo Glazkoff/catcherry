@@ -18,7 +18,7 @@
       <button
         slot="action"
         class="modal-default-button"
-        @click="isShowModalEdit=false"
+        @click="isShowModalEdit = false"
       >
         Закрыть
       </button>
@@ -78,7 +78,9 @@
           :key="organization.id"
         >
           <p>№{{ organization.id }}</p>
-          <p><b>{{ organization.name }}</b></p>
+          <p>
+            <b>{{ organization.name }}</b>
+          </p>
           <p>{{ organization.owner }}</p>
           <p>{{ organization.organizationType }}</p>
           <button @click="showModalEdit(organization)" class="btn-link">

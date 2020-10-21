@@ -35,7 +35,7 @@ export const CREATE_USER_QUERY = gql`
 `;
 
 export const ONE_USER_QUERY = gql`
-  query getUser($id: ID!) {
+  query($id: ID!) {
     user(id: $id) {
       id
       name
