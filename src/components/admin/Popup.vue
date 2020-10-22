@@ -31,12 +31,13 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  transition: opacity 0.5s ease;
 }
 
 .modal-container {
@@ -46,7 +47,7 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 .modal-header {

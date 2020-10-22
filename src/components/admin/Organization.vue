@@ -1,35 +1,5 @@
 <template>
   <div class="main">
-    <!-- <popup v-if="isShowModalEdit">
-      <h3 slot="header">
-        Редактирование организации "{{ nameOfOrganization }}"
-      </h3>
-      <div slot="body">
-        <form>
-          <label for="name">Название</label>
-          <input
-            name="name"
-            v-model="oneOrganization.name"
-            placeholder="Название"
-            required
-          />
-        </form>
-      </div>
-      <button
-        slot="action"
-        class="modal-default-button"
-        @click="
-          closePopup({
-            ans: true,
-            action: 'edit',
-            organization: oneOrganization
-          })
-        "
-      >
-        Сохранить
-      </button>
-    </popup> -->
-
     <popup v-if="isShowFullInformation">
       <h3 v-if="!isShowModalDelete && !isShowModalEdit" slot="header">
         Организация "{{ oneOrganization.name }}"
