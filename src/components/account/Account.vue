@@ -42,21 +42,21 @@
           <input
             type="radio"
             name="gender"
-            value="male"
+            value="Мужской"
             v-model="editUser.gender"
             class="form-check"
           /><label>Мужской</label><br />
           <input
             type="radio"
             name="gender"
-            value="female"
+            value="Женский"
             v-model="editUser.gender"
             class="form-ckeck"
           /><label>Женский</label><br />
           <input
             type="radio"
             name="gender"
-            value="none"
+            value="null"
             v-model="editUser.gender"
             class="form-check"
           /><label>Не указан</label><br />
@@ -73,7 +73,7 @@
             placeholder="login"
             class="form-text"
           /><br />
-          <button class="btn" @click="toSaveEditUser()">Сохранить</button>
+          <button class="btn" @click="toSaveEditUser(user)">Сохранить</button>
           <p>
             <a href="#" @click="toDeleteUser(user)">Удалить аккаунт</a>
           </p>
@@ -87,7 +87,7 @@
           <li>Имя: {{ user.surname }}</li>
           <li>Отчество: {{ user.patricity }}</li>
           <li>Пол: {{ user.gender }}</li>
-          <li>Дата рождения: {{ dateUser(user.birthday) }}</li>
+          <li>Дата рождения: {{ new Date(user.birthday) }}</li>
           <li>Логин: {{ user.login }}</li>
           <button @click="toEditUser(user)">Редактировать</button>
         </ul>
@@ -130,13 +130,13 @@ export default {
   },
 
   methods: {
-    dateUser(date) {
-      var options = {
-        day: "numeric",
-        month: "long",
-      };
-      return new Date(date).toLocaleString("ru", options);
-    },
+    // dateUser(date) {
+    //   var options = {
+    //     day: "numeric",
+    //     month: "long",
+    //   };
+    //   return new Date(date).toLocaleString("ru", options);
+    // },
 
     validFullName: function(str) {
       var regularExpression = /^[A-zА-яЁё]+$/;
@@ -175,7 +175,7 @@ export default {
       e.preventDefault();
     },
 
-    toSaveEditUser() {
+    toSaveEditUser(user) {
       this.editUser.isEdit = false;
       this.$apollo
         .mutate({
@@ -189,28 +189,35 @@ export default {
             login: this.editUser.login,
             id: this.editUser.id,
           },
-          update: (cache, { data: { updateUser } }) => {
-            let data = cache.readQuery({
-              query: ONE_USER_QUERY,
-              variables() {
-                return { id: this.$route.params.id };
-              },
-            }); //FIXME: разобраться с кэшем для отображение измененных данных 
-            console.log(data);
-            data.user.name = this.editUser.name;
-            cache.writeQuery({ query: ONE_USER_QUERY, data });
-            console.log(updateUser);
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createUser: {
-              __typename: "User",
-              id: -1,
-              name: this.editUser.name,
-            },
-          },
+          // update: (cache, { data: { updateUser } }) => {
+          //   let data = cache.readQuery({
+          //     query: ONE_USER_QUERY,
+          //     variables() {
+          //       return { id: this.$route.params.id };
+          //     },
+          //   }); //FIXME: разобраться с кэшем для отображение измененных данных
+          //   console.log(data);
+          //   data.user.name = this.editUser.name;
+          //   cache.writeQuery({ query: ONE_USER_QUERY, data });
+          //   console.log(updateUser);
+          // },
+          // optimisticResponse: {
+          //   __typename: "Mutation",
+          //   createUser: {
+          //     __typename: "User",
+          //     id: -1,
+          //     name: this.editUser.name,
+          //   },
+          // },
         })
         .then((data) => {
+          let editUser = user;
+          editUser.name = this.editUser.name;
+          editUser.surname = this.editUser.surname;
+          editUser.patricity = this.editUser.patricity;
+          editUser.gender = this.editUser.gender;
+          editUser.birthday = this.editUser.birthday;
+          editUser.login = this.editUser.login;
           console.log(data);
         })
         .catch((error) => {

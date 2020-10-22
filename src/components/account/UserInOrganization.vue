@@ -87,6 +87,10 @@
             Подробнее
           </button>
         </div>
+        <div v-if="filterOrganization ==''">
+          <h4>Такой организации нет!</h4>
+          <button class="btn btn-primary">Создать</button>
+        </div>
       </div>
       <div v-else style="color: gray;">
         <div v-for="(item, index) in searchOrgIndex" :key="index">
