@@ -11,6 +11,7 @@ import UserInOrganization from "@/components/UserInOrganization.vue";
 import ListRequest from "@/components/ListRequest.vue";
 import Authentication from "@/views/Authentication.vue";
 import Registration from "@/views/Registration.vue";
+import CreatePost from "@/components/CreatePost.vue";
 
 Vue.use(VueRouter);
 
@@ -63,6 +64,11 @@ const routes = [
     path: "/registration",
     name: "Registration",
     component: Registration,
+  },
+  {
+    path: "/createpost",
+    name: "CreatePost",
+    component: CreatePost,
   },
   // {
   //   path: "/about",
