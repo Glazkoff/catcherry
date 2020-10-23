@@ -7,7 +7,7 @@
             <h3>Участники</h3>
             <hr>
             <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
-                <TeamMemberItem :userInTeam="userInTeam" />
+                <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
             </div>
         </div>
     </div>
@@ -20,7 +20,7 @@ import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
 
 import {
     USERS_IN_TEAMS_QUERY,
-    // DELETE_IN_TEAMS_QUERY
+    DELETE_IN_TEAMS_QUERY
 } from "@/graphql/queries";
 
 export default {
@@ -38,6 +38,34 @@ export default {
         TeamMemberItem,
         NavBar,
     },
+    methods: {
+        toDeleteUser(id) {
+            this.$apollo
+                .mutate({
+                    mutation: DELETE_IN_TEAMS_QUERY,
+                    variables: {
+                        id,
+                    },
+                    update: (cache) => {
+                        let data = cache.readQuery({
+                            query: USERS_IN_TEAMS_QUERY
+                        });
+                        let index = data.usersInTeams.findIndex((el) => el.id == id);
+                        data.usersInTeams.splice(index, 1);
+                        cache.writeQuery({
+                            query: USERS_IN_TEAMS_QUERY,
+                            data
+                        });
+                    },
+                })
+                .then((data) => {
+                    console.log(data);
+                })
+                .catch((error) => {
+                    console.error(error);
+                });
+        },
+    }
 
 }
 </script>

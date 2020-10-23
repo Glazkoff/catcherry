@@ -21,7 +21,7 @@
 
                 <div class="modal-footer">
                     <slot name="footer">
-                        <button type="submit" class="modal-avtive-button">Удалить</button>
+                        <button type="submit" class="modal-avtive-button" @click="$emit('del')">Удалить</button>
                         <button type="submit" class="modal-default-button" @click="$emit('close')">Отмена</button>
                     </slot>
                 </div>

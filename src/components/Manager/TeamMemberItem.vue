@@ -3,7 +3,7 @@
     <img src="" alt="photo">
     <p>{{userInTeam.status}}</p>
     <button type="submit" @click="showModal = true">Удалить участника</button>
-    <Popup v-if="showModal" @close="showModal = false" :userInTeam="userInTeam" />
+    <Popup v-if="showModal" @close="showModal = false" :userInTeam="userInTeam" @del="$emit('delete', userInTeam.id)" />
 
 </div>
 </template>
@@ -20,7 +20,7 @@ export default {
     },
     components: {
         Popup,
-    }
+    },
 
 }
 </script>
