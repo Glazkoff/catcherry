@@ -37,8 +37,11 @@ module.exports = {
     },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
-    notification: (parent, args, { db }, info) => 
-      db.Notifications.findOne({ where: { id: args.id } })
+    notification: (parent, args, { db }, info) =>
+      db.Notifications.findOne({ where: { id: args.id } }),
+
+    getPointsUser: (parent, args, { db }, info) =>
+      db.Points.findOne({ where: { userId: args.userId } }),
   },
   Mutation: {
     /*
@@ -162,14 +165,19 @@ module.exports = {
         authorId: authorId,
         teamId: teamId,
       }),
-    updateNotification: (parent, { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id }, { db }, info) =>
+    updateNotification: (
+      parent,
+      { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
+      { db },
+      info
+    ) =>
       db.Notifications.update(
         {
           body: body,
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam:forAllTeam,
+          forAllTeam: forAllTeam,
         },
         {
           where: {
@@ -179,6 +187,37 @@ module.exports = {
       ),
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
+        where: {
+          id: args.id,
+        },
+      }),
+    /*
+      [Ниже] Мутации работы с баллами (PointsOperstion)     
+    */
+    createPointOperation: (parent, { pointAccountId, delta }, { db }, info) =>
+      db.PointsOperations.create({
+        pointAccountId: pointAccountId,
+        delta: delta,
+      }),
+    updatePointOperation: (
+      parent,
+      { pointAccountId, delta, id },
+      { db },
+      info
+    ) =>
+      db.PointsOperations.update(
+        {
+          pointAccountId: pointAccountId,
+          delta: delta,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      ),
+    deletePointOperation: (parent, args, { db }, info) =>
+      db.PointsOperations.destroy({
         where: {
           id: args.id,
         },
