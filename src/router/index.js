@@ -7,6 +7,7 @@ import ListRequest from "../components/ListRequest.vue";
 import Authentication from "../components/Authentication.vue";
 import Registration from "../components/Registration.vue";
 import DetailedPost from "../components/DetailedPost.vue";
+import FeedOfPosts from "../components/FeedOfPosts.vue";
 
 Vue.use(VueRouter);
 
@@ -45,6 +46,11 @@ const routes = [
     path: "/detailedpost",
     name: "DetailedPost",
     component: DetailedPost,
+   },
+  {
+    path: "/feed",
+    name: "FeedOfPosts",
+    component: FeedOfPosts,
   },
   // {
   //   path: "/about",
