@@ -16,11 +16,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "organizationTypeId",
         as: "organizationType",
       });
-      Organizations.hasMany(models.Teams, {
-        onDelete: "cascade",
-        foreignKey: "organizationId",
-        as: "teams",
-      });
+      // Organizations.hasMany(models.Teams, {
+      //   onDelete: "cascade",
+      //   foreignKey: "organizationId",
+      //   as: "teams",
+      // });
     }
   }
   Organizations.init(

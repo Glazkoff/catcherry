@@ -15,6 +15,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
 const chalk = require("chalk");
+const bcrypt = require("bcrypt");
 
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
@@ -66,10 +67,38 @@ app.get("/", (req, res) => res.send("Серверная часть проект�
 // TODO: добавить заполнение фейковыми данными
 
 db.sequelize.sync({ alter: true }).then(async () => {
-  app.listen(PORT, () => {
+  app.listen(PORT, async () => {
     console.log(
       chalk.yellow(`Сервер (Graphiql) запущен на`),
       chalk.cyan(`http://localhost:${PORT}/graphiql`)
     );
   });
 });
+async function addOrg() {
+  db.Notifications.destroy({ where: {} });
+  db.Teams.destroy({ where: {} });
+  let type = await db.OrganizationsTypes.create({
+    name: faker.name.findName(),
+  });
+  const salt = bcrypt.genSaltSync(10);
+  let user = await db.Users.create({
+    name: faker.name.findName(),
+    login: faker.random.word(),
+    password: bcrypt.hashSync("nikita", salt),
+  });
+  let organization = await db.Organizations.create({
+    name: faker.name.findName(),
+    ownerId: user.dataValues.id,
+    organizationTypeId: type.dataValues.id,
+    maxTeamsLimit: faker.random.number(),
+  });
+  for (let index = 0; index < 3; index++) {
+    let team = await db.Teams.create({
+      name: faker.name.findName(),
+      organizationId: organization.dataValues.id,
+      description: faker.lorem.paragraph(),
+      maxUsersLimit: faker.random.number(),
+    });
+    console.log(team);
+  }
+}

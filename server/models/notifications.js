@@ -8,8 +8,6 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-
-      
       Notifications.belongsTo(models.Teams);
       Notifications.belongsTo(models.Users);
       Notifications.hasMany(models.ReadNotification, {
