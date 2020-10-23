@@ -3,6 +3,9 @@
     <form @submit.prevent="logIn">
       <h1>Вход</h1>
       <p>* - обязательное поле</p>
+      <div v-if="loginPasswordError" class="error">
+        <span>Ошибка ввода логина или пароля!</span>
+      </div>
       <label>Логин *</label><br />
       <input
         :disabled="authLoading"
@@ -10,6 +13,7 @@
         v-model.trim="$v.login.$model"
         placeholder="Введите логин"
         class="formControl"
+        @input="hideErrors()"
       />
       <div v-if="$v.login.$error" class="error">
         <span v-if="!$v.login.required">Login is required</span>
@@ -22,6 +26,7 @@
         v-model.trim="$v.password.$model"
         placeholder="Введите пароль"
         class="formControl"
+        @input="hideErrors()"
       />
       <div v-if="$v.password.$error" class="error">
         <span v-if="!$v.password.required">Password is required</span>
@@ -55,6 +60,7 @@ export default {
       password: "",
       authLoading: false,
       fingerprint: "",
+      loginPasswordError: false,
     };
   },
   async created() {
@@ -73,9 +79,13 @@ export default {
     },
   },
   methods: {
+    hideErrors() {
+      this.loginPasswordError = false;
+    },
     async logIn() {
       if (this.$v.$invalid) {
         this.$v.$touch();
+        this.hideErrors();
       } else {
         this.authLoading = true;
         let userData = {
@@ -101,7 +111,8 @@ export default {
               this.$router.push("/");
             } else {
               // TODO: добавить обработку ошибок
-              console.error("ERROR");
+              this.loginPasswordError = true;
+              // console.error("ERROR");
             }
           })
           .catch((error) => {

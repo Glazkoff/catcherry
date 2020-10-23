@@ -42,7 +42,7 @@ import {
   USERS_QUERY,
   UPDATE_USER_QUERY,
   DELETE_USER_QUERY,
-} from "../graphql/queries";
+} from "@/graphql/queries";
 export default {
   name: "TestGraphql",
   apollo: {

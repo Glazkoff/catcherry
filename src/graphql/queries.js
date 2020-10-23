@@ -35,6 +35,18 @@ export const LOG_IN = gql`
   }
 `;
 
+export const UPDATE_TOKENS = gql`
+  mutation($fingerprint: String!) {
+    updateTokens(fingerprint: $fingerprint) {
+      accessToken
+      error {
+        errorStatus
+        message
+      }
+    }
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {

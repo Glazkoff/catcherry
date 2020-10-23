@@ -14,7 +14,7 @@ function generateTokens(user) {
 
   // Генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 100 * 60 * 60 * 24,
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
   });
 
   // Возвращаем объект с двумя полями (refreshToken, accessToken)
@@ -25,27 +25,61 @@ function generateTokens(user) {
 }
 
 async function addRefreshSession(db, userId, refreshToken, fingerprint) {
-  let sessionsCount = await db.RefreshSessions.count({
-    where: {
+  try {
+    // Задаём объект сессии
+    let USER_OBJECT = {
       userId,
-    },
-  });
-  if (sessionsCount > 5) {
-    await db.RefreshSessions.destroy({
+      refreshToken,
+      // ua,
+      fingerprint,
+      // ip: ip
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
+    };
+
+    // Находим предыдущую сессию на этом клиенте
+    let prevSession = await db.RefreshSessions.findOne({
       where: {
-        userId,
+        fingerprint,
       },
     });
+
+    // Если нет предыдущая сессия на этом клиенте, создаём новую для клиента
+    if (!prevSession) {
+      // Считаем количество клиентов (сессий) для пользователя
+      let sessionsCount = await db.RefreshSessions.count({
+        where: {
+          userId,
+        },
+      });
+
+      // Если количество клиентов для пользователя больше 5, удаляем все сессии
+      if (sessionsCount > 5) {
+        await db.RefreshSessions.destroy({
+          where: {
+            userId,
+          },
+        });
+      }
+
+      // Создаём новую сессию
+      let res = await db.RefreshSessions.create(USER_OBJECT);
+      return res;
+    }
+    // Если есть предыдущие сессии, удаляем и создаём ещё раз
+    else {
+      await db.RefreshSessions.destroy({
+        where: {
+          userId,
+          fingerprint,
+        },
+      });
+      let sessionsUpdate = await db.RefreshSessions.create(USER_OBJECT);
+      return sessionsUpdate;
+    }
+  } catch (error) {
+    // Возвращаем ошибку в случае возникновения
+    return error;
   }
-  let res = await db.RefreshSessions.create({
-    userId,
-    refreshToken,
-    // ua,
-    fingerprint,
-    // ip: ip
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
-  });
-  return res;
 }
 
 module.exports = {
@@ -89,7 +123,7 @@ module.exports = {
       // Записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365,
+        maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
       });
       return tokens;
     },
@@ -123,7 +157,7 @@ module.exports = {
         // Записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 365,
+          maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
         });
 
         // Отправить в ответ оба токен
@@ -132,33 +166,72 @@ module.exports = {
         return null;
       }
     },
-    updateAccessToken: async (parent, {}, { req, res, db }, info) => {
-      let refreshToken = req.cookies.refreshToken;
-      if (
-        !refreshToken ||
-        !jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
-      ) {
+    updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
+      // let refreshToken = req.cookies.refreshToken;
+      // TODO: заменить
+      let refreshToken = "be332aae-d88f-4e40-96d6-16120c2caf13";
+
+      let refreshSession = await db.RefreshSessions.findOne({
+        where: {
+          fingerprint,
+          refreshToken,
+        },
+      });
+      console.log(refreshSession);
+      if (!refreshSession) {
         return {
           error: {
-            errorStatus: 401,
-            message: "Refresh token is absent",
+            errorStatus: 404,
+            message: "Session not found!",
           },
         };
       } else {
-        let userId = jwt.decode(refreshToken).userId;
-        let user = await db.Users.findOne({ where: { id: userId } });
+        let user = await db.Users.findOne({
+          where: { id: refreshSession.userId },
+        });
+
+        let tokens = generateTokens(user.dataValues);
+
         let accessToken = jwt.sign(
           user.dataValues,
           process.env.ACCESS_TOKEN_SECRET,
           {
-            expiresIn: 100 * 60 * 60 * 24,
+            expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
           }
         );
+        // res.cookie("refreshToken", tokens.refreshToken, {
+        //   httpOnly: true,
+        //   maxAge: 1000 * 60 * 60 * 24 * 365,
+        // });
         return {
-          // TODO: выпустить токен
-          accessToken,
+          accessToken: tokens.accessToken,
         };
       }
+      // if (
+      //   !refreshToken ||
+      //   !jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
+      // ) {
+      //   return {
+      //     error: {
+      //       errorStatus: 401,
+      //       message: "Refresh token is absent",
+      //     },
+      //   };
+      // } else {
+      //   let userId = jwt.decode(refreshToken).userId;
+      //   let user = await db.Users.findOne({ where: { id: userId } });
+      //   let accessToken = jwt.sign(
+      //     user.dataValues,
+      //     process.env.ACCESS_TOKEN_SECRET,
+      //     {
+      //       expiresIn: 100 * 60 * 60 * 24,
+      //     }
+      //   );
+      //   return {
+      //     // TODO: выпустить токен
+      //     accessToken,
+      //   };
+      // }
     },
     /*
       [Ниже] Мутации работы с пользователями (Users)     
@@ -174,7 +247,7 @@ module.exports = {
         },
         {
           where: {
-            id: id,
+            id,
           },
         }
       ),
