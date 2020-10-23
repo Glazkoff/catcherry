@@ -39,6 +39,11 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
+    
+    usersInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({ order: [["id", "ASC"]] }),
+    userInTeam: (parent, args, { db }, info) =>
+      db.UsersInTeams.findOne({ where: { id: args.id } }),
   },
   Mutation: {
     /*
@@ -184,6 +189,20 @@ module.exports = {
       ),
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
+        where: {
+          id: args.id,
+        },
+      }),
+    
+      createUserInTeam: (parent, { userId, teamId, status, roleId}, { db }, info) =>
+      db.UsersInTeams.create({
+        userId: userId,
+        teamId: teamId,
+        status: status,
+        roleId:roleId
+      }),
+    deleteUserInTeam: (parent, args, { db }, info) =>
+      db.UsersInTeams.destroy({
         where: {
           id: args.id,
         },

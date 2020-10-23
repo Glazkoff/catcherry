@@ -1,19 +1,22 @@
 <template>
-<div class="every">
-    <NavBar class="navig" />
-    <div class="partic">
-        <h3>Участники</h3>
-        <hr>
-        <div v-for="member in members" :key="member.id" class="member">
-            <TeamMemberItem :member="member" />
+<div>
+    <h1>Команда ""</h1>
+    <div class="every">
+        <NavBar class="navig" />
+        <div class="partic">
+            <h3>Участники</h3>
+            <hr>
+            <div v-for="member in members" :key="member.id" class="member">
+                <TeamMemberItem :member="member" />
+            </div>
         </div>
     </div>
 </div>
 </template>
 
 <script>
-import NavBar from "./NavBar";
-import TeamMemberItem from "./TeamMemberItem.vue";
+import NavBar from "@/components/Manager/NavBar";
+import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
 export default {
     data() {
         return {
