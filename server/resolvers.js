@@ -35,6 +35,11 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
+    organizations: (parent, args, { db }, info) =>
+      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+    organization: (parent, args, { db }, info) => {
+      return db.Organizations.findOne({ where: { id: args.id } });
+    },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
@@ -163,6 +168,47 @@ module.exports = {
       // TODO: добавить резолвер login
       return "DO LOG IN";
     },
+    /*
+      [Ниже] Мутации работы с организациями (Organization)     
+    */
+    createOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit },
+      { db },
+      info
+    ) =>
+      db.Organizations.create({
+        name: name,
+        ownerId: ownerId,
+        organizationTypeId: organizationTypeId,
+        maxTeamsLimit: maxTeamsLimit,
+      }),
+    updateOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit, id },
+      { db },
+      info
+    ) =>
+      db.Organizations.update(
+        {
+          name: name,
+          ownerId: ownerId,
+          organizationTypeId: organizationTypeId,
+          maxTeamsLimit: maxTeamsLimit,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      ),
+    deleteOrganization: (parent, args, { db }, info) =>
+      db.Organizations.destroy({
+        where: {
+          id: args.id,
+        },
+      }),
+
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */

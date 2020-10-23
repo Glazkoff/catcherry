@@ -89,3 +89,42 @@ export const DELETE_USER_QUERY = gql`
     deleteUser(id: $id)
   }
 `;
+
+export const CREATE_ORGANIZATION = gql`
+  mutation(
+    $name: String!
+    $ownerId: Int
+    $organizationTypeId: Int
+    $maxTeamsLimit: Int
+  ) {
+    createOrganization(
+      name: $name
+      ownerId: $ownerId
+      organizationTypeId: $organizationTypeId
+      maxTeamsLimit: $maxTeamsLimit
+    )
+  }
+`;
+
+export const ORGS_QUERY = gql`
+  query {
+    organizations {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+    }
+  }
+`;
+export const ONE_ORG_QUERY = gql`
+  query($id: ID!) {
+    organization(id: $id) {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+    }
+  }
+`;

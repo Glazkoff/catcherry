@@ -1,6 +1,6 @@
 <template>
   <div class="search_organization account-view">
-    <popup @answer="closePopup" v-if="isShowModalEdit">
+    <popup v-if="isShowModalEdit">
       <h3 slot="header">Организация "{{ nameOfOrganization }}"</h3>
       <div slot="body">
         {{ oneOrganization.name }}
@@ -14,14 +14,13 @@
         <h5>Поиск команды</h5>
         <input type="text" class="form-text" placeholder="Название команды" />
         <h3>Команды</h3>
-      </div>
-      <button
-        slot="action"
-        class="modal-default-button"
+        <button
+        class="modal-default-button btn btn-secondary"
         @click="isShowModalEdit = false"
       >
         Закрыть
       </button>
+      </div>
     </popup>
     <h1>Поиск организации</h1>
     <div class="tabs">
@@ -87,7 +86,7 @@
             Подробнее
           </button>
         </div>
-        <div v-if="filterOrganization ==''">
+        <div v-if="filterOrganization == ''">
           <h4>Такой организации нет!</h4>
           <button class="btn btn-primary">Создать</button>
         </div>
@@ -112,22 +111,32 @@
 
 <script>
 import popup from "@/components/account/Popup.vue";
+import { ORGS_QUERY, ONE_ORG_QUERY } from "@/graphql/queries";
 export default {
   name: "UserInOrganization",
   components: { popup },
   data() {
     return {
       findString: "",
+      search: 0,
       oneOrganization: {},
       nameOfOrganization: "",
       tabFirst: true,
       isShowModalEdit: false,
-      organizations: [
-        { id: "13223", name: "Лютики", owner: "Иванов" },
-        { id: "24311", name: "Цветочки", owner: "Петров" },
-        { id: "38909", name: "Ад", owner: "Сидоров" },
-      ],
     };
+  },
+  apollo: {
+    organizations: {
+      query: ORGS_QUERY,
+    },
+    organization: {
+      query: ONE_ORG_QUERY,
+      variables() {
+        return {
+          id: this.$route.params.id,
+        };
+      },
+    },
   },
   methods: {
     showModalEdit(organization) {

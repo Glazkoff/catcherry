@@ -22,6 +22,17 @@ type User {
   createdAt: String!
   updatedAt: String!
 }
+
+type Organization {
+  id: ID!
+  name: String!
+  ownerId: Int
+  organizationTypeId: Int
+  maxTeamsLimit: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
 input NotificationBody {
   header: String!
   text: String!
@@ -45,6 +56,9 @@ type Notification {
 type Query { 
   users: [User!] 
   user(id: ID!): User
+
+  organizations: [Organization!]
+  organization(id: ID!): Organization
   
   notifications: [Notification]!
   notification(id: ID!): Notification
@@ -58,6 +72,10 @@ type Mutation {
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
+
+  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
+  updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
+  deleteOrganization(id: ID!): Int!
 
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt
