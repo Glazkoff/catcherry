@@ -10,6 +10,8 @@
 
 <script>
 import Popup from "@/components/Manager/Popup.vue";
+// import DELETE_IN_TEAMS_QUERY from "@/graphql/queries";
+
 export default {
     props: ['userInTeam'],
     data() {
@@ -20,7 +22,7 @@ export default {
     },
     components: {
         Popup,
-    }
+    },
 
 }
 </script>
