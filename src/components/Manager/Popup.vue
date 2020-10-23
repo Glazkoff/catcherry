@@ -14,7 +14,7 @@
 
                 <div class="modal-body">
                     <slot name="body">
-                        <p>{{member.name}}</p>
+                        <p>{{userInTeam.status}}</p>
                         <img src="" alt="photo">
                     </slot>
                 </div>
@@ -33,7 +33,7 @@
 
 <script>
 export default {
-    props: ['member'],
+    props: ['userInTeam'],
 };
 </script>
 

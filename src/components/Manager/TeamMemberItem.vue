@@ -1,9 +1,9 @@
 <template>
 <div class="user">
     <img src="" alt="photo">
-    <p>{{member.name}}</p>
+    <p>{{userInTeam.status}}</p>
     <button type="submit" @click="showModal = true">Удалить участника</button>
-    <Popup v-if="showModal" @close="showModal = false" :member="member" />
+    <Popup v-if="showModal" @close="showModal = false" :userInTeam="userInTeam" />
 
 </div>
 </template>
@@ -11,7 +11,7 @@
 <script>
 import Popup from "@/components/Manager/Popup.vue";
 export default {
-    props: ['member'],
+    props: ['userInTeam'],
     data() {
         return {
             showModal: false,

@@ -64,3 +64,22 @@ export const DELETE_USER_QUERY = gql`
     deleteUser(id: $id)
   }
 `;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
+export const USERS_IN_TEAMS_QUERY = gql`
+  query {
+    usersInTeams {
+      id,
+      userId, 
+      teamId,
+      status,
+      roleId,
+    }
+  }
+`;
+
+export const DELETE_IN_TEAMS_QUERY = gql`
+  mutation($id: ID!) {
+    deleteUserInTeam(id: $id)
+  }
+`;

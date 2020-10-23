@@ -6,8 +6,8 @@
         <div class="partic">
             <h3>Участники</h3>
             <hr>
-            <div v-for="member in members" :key="member.id" class="member">
-                <TeamMemberItem :member="member" />
+            <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
+                <TeamMemberItem :userInTeam="userInTeam" />
             </div>
         </div>
     </div>
@@ -17,31 +17,27 @@
 <script>
 import NavBar from "@/components/Manager/NavBar";
 import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
+
+import {
+    USERS_IN_TEAMS_QUERY,
+    // DELETE_IN_TEAMS_QUERY
+} from "@/graphql/queries";
+
 export default {
+
+    apollo: {
+        usersInTeams: {
+            query: USERS_IN_TEAMS_QUERY,
+        },
+    },
+
     data() {
-        return {
-            members: [{
-                    id: 1,
-                    img: "",
-                    name: "Иван Иванов",
-                },
-                {
-                    id: 2,
-                    img: " ",
-                    name: "Иван Иванов",
-                },
-                {
-                    id: 3,
-                    img: " ",
-                    name: "Иван Иванов",
-                },
-            ],
-        }
+        return {}
     },
     components: {
         TeamMemberItem,
         NavBar,
-    }
+    },
 
 }
 </script>
