@@ -1,5 +1,6 @@
 <template>
 <div>
+  <i>AAA</i>
 <div v-if="editUser.isEdit">
     <form @submit.prevent="checkForm">
     <h1>Личный кабинет</h1>
@@ -72,7 +73,7 @@ import {
   USERS_QUERY,
   UPDATE_USER_QUERY,
   DELETE_USER_QUERY
-} from "../graphql/queries";
+} from "@/graphql/queries";
 export default {
   name: "Account",
   apollo: {

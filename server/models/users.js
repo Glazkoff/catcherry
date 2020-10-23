@@ -64,6 +64,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       password: {
+        // TODO: вспомнить, почему binary
+        // type: DataTypes.STRING.BINARY,
         type: DataTypes.STRING,
         allowNull: true,
       },

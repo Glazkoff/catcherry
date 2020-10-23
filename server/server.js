@@ -10,13 +10,18 @@
  * https://markomatic.me/blog/node-express-sequelize-pg-graphql/
  * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
  */
-
+require("dotenv").config({ path: "../.env" });
 const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
+const bcrypt = require("bcrypt");
 const chalk = require("chalk");
+<<<<<<< HEAD
 const bcrypt = require("bcrypt");
 
+=======
+const cookieParser = require("cookie-parser");
+>>>>>>> f7f02858bbfe657a0f04e24bdbecb06482ad47af
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
@@ -45,6 +50,9 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
+// Настройка парсинга Cookie
+app.use(cookieParser());
+
 // Настройка CORS политики для разработки
 app.use(cors());
 
@@ -52,7 +60,10 @@ app.use(cors());
 app.use(
   "/graphql",
   bodyParser.json(),
-  graphqlExpress({ schema, context: { db } })
+  graphqlExpress((req, res) => ({
+    schema,
+    context: { req, res, db },
+  }))
 );
 
 // GraphiQL, визуальный редактор для запросов
@@ -102,3 +113,8 @@ async function addOrg() {
     console.log(team);
   }
 }
+/* TODO: рекомендую использовать следующие библиотеки
+  (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)
+  - const expressJwt = require("express-jwt");
+  - const bcrypt = require("bcrypt")
+*/
