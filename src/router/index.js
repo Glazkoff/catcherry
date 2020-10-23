@@ -6,7 +6,7 @@ import UserInOrganization from "../components/UserInOrganization.vue";
 import ListRequest from "../components/ListRequest.vue";
 import Authentication from "../components/Authentication.vue";
 import Registration from "../components/Registration.vue";
-import OnePostList from "../components/OnePostList.vue";
+import FeedOfPosts from "../components/FeedOfPosts.vue";
 
 Vue.use(VueRouter);
 
@@ -42,9 +42,9 @@ const routes = [
     component: Registration,
   },
   {
-    path: "/onepostlist",
-    name: "OnePostList",
-    component: OnePostList,
+    path: "/feed",
+    name: "FeedOfPosts",
+    component: FeedOfPosts,
   },
   // {
   //   path: "/about",

@@ -1,38 +1,34 @@
 <template>
   <div class="container">
     <img src="../assets/placeholder.png" alt="placeholder" />
-    <h2>{{ this.headline }}</h2>
-    <p>{{ this.date }}</p>
+    <h2>{{ post.header }}</h2>
+    <p>{{ post.date }}</p>
     <p>
-      {{ this.body }}
+      {{ post.body}}
     </p>
-    <button v-on:click="onLike()">Лайк</button>
-    <button v-on:click="onComment()">Коммент</button>
-    <button v-on:click="onRepost()">Репост</button>
+    <button v-on:click="onLike(post.id)">Лайк</button>
+    <button v-on:click="onComment(post.id)">Коммент</button>
+    <button v-on:click="onShare(post.id)">Репост</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "OnePostList",
+  props: ["post"],
   data() {
     return {
-      errors: [],
-      headline: "Новая срочная новость из отдела техподдержки",
-      date: "29.09.2020 17:00",
-      body:
-        "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?",
-    };
+      };
   },
   methods: {
-    onLike() {
-      console.log("Нажата кнопка лайка");
+    onLike(id) {
+      this.$emit("like", {id: id});
     },
-    onComment() {
-      console.log("Нажата кнопка комментария");
+    onComment(id) {
+      this.$emit("comment", {id: id});
     },
-    onRepost() {
-      console.log("Нажата кнопка репоста");
+    onShare(id) {
+      this.$emit("share", {id: id});
     },
   },
 };
@@ -41,7 +37,8 @@ export default {
 <style scoped>
 .container {
   border: 1px solid #b1b1b1;
-  margin: 5%;
+  margin-bottom: 4rem;
+  width: 58rem;
   position: relative;
   box-sizing: border-box;
   overflow: hidden;
