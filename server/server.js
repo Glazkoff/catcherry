@@ -101,11 +101,11 @@ db.sequelize
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
       );
       console.log(
-        chalk.magenta(`Клиентская часть запущена на`),
+        chalk.green(`Клиентская часть запущена на`),
         chalk.cyan(`http://localhost:${PORT}/`)
       );
       console.log(
-        chalk.green(`Статические файлы доступны на`),
+        chalk.blueBright(`Статические файлы доступны на`),
         chalk.cyan(`http://localhost:${PORT}/public/...`)
       );
     });
