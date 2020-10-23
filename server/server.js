@@ -74,7 +74,7 @@ app.get("/", (req, res) => res.send("Серверная часть проект�
 
 db.sequelize.sync({ alter: true }).then(async () => {
   app.listen(PORT, async () => {
-    addOrg()
+    addOrg();
     console.log(
       chalk.yellow(`Сервер (Graphiql) запущен на`),
       chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -111,8 +111,6 @@ async function addOrg() {
       description: faker.lorem.paragraph(),
       maxUsersLimit: faker.random.number(),
     });
-    console.log(team);
-    console.log(role);
   }
   let usersinteams = await db.UsersInTeams.create({
     userId: user.dataValues.id,
@@ -124,12 +122,16 @@ async function addOrg() {
     userId: user.dataValues.id,
     pointQuantity: faker.random.number(),
   });
-  let pointsoperations = await db.PointsOperations.create({
-    pointAccountId: pointsuser.dataValues.id,
-    delta: faker.random.number(),
-    operationDescription: faker.lorem.paragraph(),
-  });
-  console.log(pointsoperations);
+  let pointsoperations;
+  for (let index = 0; index < 3; index++) {
+    pointsoperations = await db.PointsOperations.create({
+      pointAccountId: pointsuser.dataValues.id,
+      delta: faker.random.number(),
+      operationDescription: faker.lorem.paragraph(),
+    });
+  }
+  // console.log(pointsoperations);
+  // console.log(pointsuser);
 }
 /* TODO: рекомендую использовать следующие библиотеки
   (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)

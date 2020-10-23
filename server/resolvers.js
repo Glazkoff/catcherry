@@ -1,9 +1,12 @@
 require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const chalk = require("chalk");
+const sequelize = require("sequelize");
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
+
+const Op = sequelize.Op;
 
 // TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
@@ -42,6 +45,23 @@ module.exports = {
 
     getPointsUser: (parent, args, { db }, info) =>
       db.Points.findOne({ where: { userId: args.userId } }),
+    
+    
+    //Функция поиска операций для конкретного пользователя
+    getOperationPointsUser: async (parent, args, { db }, info) => {
+      let points = await db.Points.findOne({
+        attributes: [],
+        include: [
+          {
+            model: db.PointsOperations,
+            as: "pointsOperations",
+            attributes: ["pointAccountId", "delta", "operationDescription"],
+          },
+        ],
+        where: { userId: args.userId },
+      });
+      return points.pointsOperations;
+    },
   },
   Mutation: {
     /*

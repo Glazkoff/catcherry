@@ -50,6 +50,7 @@ type PointOperations{
   delta: Int!
   operationDescription: String
 }
+
 type Query { 
   users: [User!] 
   user(id: ID!): User
@@ -58,6 +59,7 @@ type Query {
   notification(id: ID!): Notification
 
   getPointsUser(userId: Int!): PointsUser
+  getOperationPointsUser(userId: Int!): [PointOperations]
 }
 
 type Mutation {
