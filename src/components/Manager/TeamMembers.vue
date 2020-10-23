@@ -18,7 +18,10 @@
 import NavBar from "@/components/Manager/NavBar";
 import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
 
-import USERS_IN_TEAMS_QUERY from "@/graphql/queries";
+import {
+    USERS_IN_TEAMS_QUERY,
+    // DELETE_IN_TEAMS_QUERY
+} from "@/graphql/queries";
 
 export default {
 
