@@ -16,6 +16,7 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
+import EditTeam from "@/components/Manager/EditTeam.vue";
 
 Vue.use(VueRouter);
 
@@ -94,6 +95,12 @@ const routes = [
     name: "TeamMembers",
     component: TeamMembers,
   },
+        {
+    path: "/manager/team_edit",
+    name: "EditTeam",
+    component: EditTeam,
+  },
+    
   // {
   //   path: "/about",
   //   name: "About",

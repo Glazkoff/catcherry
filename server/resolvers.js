@@ -41,7 +41,10 @@ module.exports = {
       db.Notifications.findOne({ where: { id: args.id } }),
     
     usersInTeams: (parent, args, { db }, info) =>
-      db.UsersInTeams.findAll({ order: [["id", "ASC"]] }),
+      db.UsersInTeams.findAll({
+        order: [["id", "ASC"]]
+      // , include: [{ model: user, as: "user", attributes: ["id", "name"] }]
+      }),
     userInTeam: (parent, args, { db }, info) =>
       db.UsersInTeams.findOne({ where: { id: args.id } }),
   },

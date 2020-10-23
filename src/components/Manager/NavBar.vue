@@ -7,7 +7,7 @@
         <router-link to="">Заявки на вхождение</router-link>
     </p>
     <p>
-        <router-link to="">Редактирование</router-link>
+        <router-link to="/manager/team_edit">Редактирование</router-link>
     </p>
 </nav>
 </template>
