@@ -17,8 +17,6 @@ type User {
   name: String
   login: String
   password: String
-  createdAt: String
-  updatedAt: String
   surname: String
   patricity: String
   birthday: String
@@ -55,6 +53,10 @@ type Query {
   notification(id: ID!): Notification
 }
 type Mutation {
+  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
+  logIn(login: String!, password: String!, fingerprint:String!): jwt
+  updateTokens(fingerprint:String!): jwt!
+
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String!, name: String!, patricity: String, gender: String!, login: String!): [Int]!
@@ -62,10 +64,6 @@ type Mutation {
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
-
-  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
-  logIn(login: String!, password: String!, fingerprint:String!): jwt
-  updateTokens(fingerprint:String!): jwt!
 }
 `;
 

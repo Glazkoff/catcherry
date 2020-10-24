@@ -1,13 +1,24 @@
 <template>
-    <div class="adminPanel">
-        <div class="leftMenu">
-            <router-link class="a" to="/admin"><i18n path="systemStatistics"><span place="title">{{ $t("listUser") }}</span></i18n></router-link>
-            <router-link class="a" to="/admin/users"><i18n path="listUser"><span place="title">{{ $t("listUser") }}</span></i18n></router-link>
-            <router-link to="/admin/organization"><i18n path="listOrganization"><span place="title">{{ $t("listUser") }}</span></i18n></router-link>
-        </div>
-        <div class="main">
-            <router-view></router-view>
-        </div>
+  <div class="adminPanel">
+    <div class="leftMenu">
+      <router-link class="a" to="/admin"
+        ><i18n path="systemStatistics"
+          ><span place="title">{{ $t("listUser") }}</span></i18n
+        ></router-link
+      >
+      <router-link class="a" to="/admin/users"
+        ><i18n path="listUser"
+          ><span place="title">{{ $t("listUser") }}</span></i18n
+        ></router-link
+      >
+      <router-link to="/admin/organization"
+        ><i18n path="listOrganization"
+          ><span place="title">{{ $t("listUser") }}</span></i18n
+        ></router-link
+      >
+    </div>
+    <div class="main">
+      <router-view></router-view>
     </div>
     <div class="main">
       <router-view></router-view>

@@ -1,22 +1,6 @@
 require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
-// Соль для шифрования bcrypt
-const salt = bcrypt.genSaltSync(10);
-
-// Функция генерации токенов (принмает данные, которые мы заносим в токен )
-function generateTokens(user) {
-  // Генерируем рефреш-токен
-  let refreshToken = jwt.sign(
-    { userId: user.id },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: 100 * 60 * 60 * 24 * 365,
-    }
-  );
-
-  // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
 const { v4 } = require("uuid");
 
 // Соль для шифрования bcrypt
@@ -104,7 +88,7 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
-    deletedUsers: (parent, args, { db }, info) => 
+    deletedUsers: (parent, args, { db }, info) =>
       db.Users.findAll({ order: [["id", "ASC"]], paranoid: false }),
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
@@ -121,11 +105,9 @@ module.exports = {
       { res, db },
       info
     ) => {
-      console.log("QQQQQQQQQQQQQQQQQQQQQq");
       let hashPassword = bcrypt.hashSync(password, salt);
 
       // Добавляем данные в БД
-
       let user = await db.Users.create({
         login,
         name,
@@ -156,49 +138,52 @@ module.exports = {
       { res, db },
       info
     ) => {
-      console.log("!!!!!!!!!!!!!");
-      // Сравниваем логин с БД, если нет - ошибка
-      let user = await db.Users.findOne({
-        where: {
-          login,
+      console.log(login, password, fingerprint);
+      return {
+        errror: {
+          errorStatus: 401,
+          message: "Incorrect login or password!",
         },
-      });
-      // Проверяем через bcrypt пароль, не совпадает - ошибка
-      if (!user) {
-        return {
-          errror: {
-            errorStatus: 401,
-            message: "Incorrect login or password!",
-          },
-        };
-      } else if (bcrypt.compareSync(password, user.password)) {
-        // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
-        let tokens = generateTokens(user.dataValues);
-
-        // Добавляем сессию в БД
-        await addRefreshSession(
-          db,
-          user.dataValues.id,
-          tokens.refreshToken,
-          fingerprint
-        );
-
-        // Записать в Cookie HttpOnly рефреш-токен
-        res.cookie("refreshToken", tokens.refreshToken, {
-          httpOnly: true,
-          maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
-        });
-
-        // Отправить в ответ оба токен
-        return tokens;
-      } else {
-        return {
-          errror: {
-            errorStatus: 401,
-            message: "Incorrect login or password!",
-          },
-        };
-      }
+      };
+      // // Сравниваем логин с БД, если нет - ошибка
+      // let user = await db.Users.findOne({
+      //   where: {
+      //     login,
+      //   },
+      // });
+      // // Проверяем через bcrypt пароль, не совпадает - ошибка
+      // if (!user) {
+      //   return {
+      //     errror: {
+      //       errorStatus: 401,
+      //       message: "Incorrect login or password!",
+      //     },
+      //   };
+      // } else if (bcrypt.compareSync(password, user.password)) {
+      //   // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+      //   let tokens = generateTokens(user.dataValues);
+      //   // Добавляем сессию в БД
+      //   await addRefreshSession(
+      //     db,
+      //     user.dataValues.id,
+      //     tokens.refreshToken,
+      //     fingerprint
+      //   );
+      //   // Записать в Cookie HttpOnly рефреш-токен
+      //   res.cookie("refreshToken", tokens.refreshToken, {
+      //     httpOnly: true,
+      //     maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
+      //   });
+      //   // Отправить в ответ оба токен
+      //   return tokens;
+      // } else {
+      //   return {
+      //     errror: {
+      //       errorStatus: 401,
+      //       message: "Incorrect login or password!",
+      //     },
+      //   };
+      // }
     },
     updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
       // let refreshToken = req.cookies.refreshToken;
@@ -274,7 +259,12 @@ module.exports = {
       db.Users.create({
         name: name,
       }),
-    updateUser: (parent, { surname, name, patricity, gender, login, id}, { db }, info) =>
+    updateUser: (
+      parent,
+      { surname, name, patricity, gender, login, id },
+      { db },
+      info
+    ) =>
       db.Users.update(
         {
           surname: surname,
