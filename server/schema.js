@@ -55,8 +55,8 @@ type Mutation {
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
-  signUp(name: String!, login: String!, password: String!): jwt
-  logIn(login: String!, password: String!): jwt
+  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
+  logIn(login: String!, password: String!, fingerprint:String!): jwt
   updateAccessToken: jwt!
 }
 `;
