@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <img src="../assets/placeholder.png" alt="placeholder" />
-    <h2>{{ post.header }}</h2>
+    <router-link :to="{ name: 'Posts', params: { id: post.id},}">{{post.header}}</router-link>
     <p>{{ post.date }}</p>
     <p>
       {{ post.body}}
@@ -43,7 +43,9 @@ export default {
   box-sizing: border-box;
   overflow: hidden;
 }
+.header{
 
+}
 .container img {
   margin-right: 5%;
   float: left;

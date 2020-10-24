@@ -9,7 +9,7 @@
       </p>
       <button v-on:click="onLike()">Лайк</button>
       <button v-on:click="onComment()">Коммент</button>
-      <button v-on:click="onRepost()">Репост</button>
+      <button v-on:click="onShare()">Репост</button>
       <div class="postComments">
         <div v-for="comment in comments" :key="comment.id">
           <p>{{ comment.author }}</p>
@@ -31,10 +31,14 @@
 <script>
 export default {
   name: "DetailedPost",
+  computed: {
+    id() {
+      return this.$route.params.id
+    }
+  },
   data() {
     return {
       message: null,
-      errors: [],
       post: {
         headline: "Новая срочная новость из отдела техподдержки",
         date: "29.09.2020 17:00",
@@ -64,7 +68,7 @@ export default {
     onComment() {
       console.log("Нажата кнопка комментария");
     },
-    onRepost() {
+    onShare() {
       console.log("Нажата кнопка репоста");
     },
     onAddComment() {

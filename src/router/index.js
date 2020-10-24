@@ -43,8 +43,8 @@ const routes = [
     component: Registration,
   },
   {
-    path: "/detailedpost",
-    name: "DetailedPost",
+    path: "/posts/:id",
+    name: "Posts",
     component: DetailedPost,
    },
   {
