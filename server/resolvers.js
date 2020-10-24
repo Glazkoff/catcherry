@@ -42,11 +42,14 @@ module.exports = {
     
     usersInTeams: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
-        order: [["id", "ASC"]]
-      // , include: [{ model: user, as: "user", attributes: ["id", "name"] }]
+        order: [["id", "ASC"]],
+      include: [ { model: db.Users, as: 'user'} ]
       }),
     userInTeam: (parent, args, { db }, info) =>
-      db.UsersInTeams.findOne({ where: { id: args.id } }),
+      db.UsersInTeams.findOne({
+        where: { id: args.id },
+        include: [ { model: db.Users, as: 'user' } ]
+      }),
   },
   Mutation: {
     /*

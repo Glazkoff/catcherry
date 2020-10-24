@@ -25,6 +25,7 @@ type UserInTeam {
   teamId: ID!
   status: String!
   roleId: ID!
+  user:User!
   createdAt: String!
   updatedAt: String!
 }

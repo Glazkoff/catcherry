@@ -14,7 +14,7 @@
 
                 <div class="modal-body">
                     <slot name="body">
-                        <p>{{userInTeam.status}}</p>
+                        <p>{{userInTeam.user.name}}</p>
                         <img src="" alt="photo">
                     </slot>
                 </div>

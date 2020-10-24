@@ -74,6 +74,10 @@ export const USERS_IN_TEAMS_QUERY = gql`
       teamId,
       status,
       roleId,
+      user {
+        id,
+        name
+      }
     }
   }
 `;
