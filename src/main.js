@@ -9,6 +9,9 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { i18n } from "./plugins/i18n";
 import FlagIcon from "vue-flag-icon";
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
+Vue.prototype.$fingerprint = FingerprintJS;
+
 Vue.use(Vuelidate);
 Vue.use(FlagIcon);
 Vue.config.productionTip = process.env.NODE_ENV === "development";

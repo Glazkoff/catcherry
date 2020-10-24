@@ -5,9 +5,9 @@ const bcrypt = require("bcrypt");
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
 
-// TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
+// Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
-  // TODO: (DONE) генерируем рефреш-токен
+  // Генерируем рефреш-токен
   let refreshToken = jwt.sign(
     { userId: user.id },
     process.env.REFRESH_TOKEN_SECRET,
@@ -17,15 +17,50 @@ function generateTokens(user) {
   );
 
   // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
+const { v4 } = require("uuid");
+
+// Соль для шифрования bcrypt
+const salt = bcrypt.genSaltSync(10);
+
+// Функция генерации токенов (принмает данные, которые мы заносим в токен )
+function generateTokens(user) {
+  // Генерируем рефреш-токен
+  let refreshToken = v4();
+
+  // Генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
     expiresIn: 100 * 60 * 60 * 24,
   });
 
-  // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
+  // Возвращаем объект с двумя полями (refreshToken, accessToken)
   return {
     refreshToken,
     accessToken,
   };
+}
+
+async function addRefreshSession(db, userId, refreshToken, fingerprint) {
+  let sessionsCount = await db.RefreshSessions.count({
+    where: {
+      userId,
+    },
+  });
+  if (sessionsCount > 5) {
+    await db.RefreshSessions.destroy({
+      where: {
+        userId,
+      },
+    });
+  }
+  let res = await db.RefreshSessions.create({
+    userId,
+    refreshToken,
+    // ua,
+    fingerprint,
+    // ip: ip
+    expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
+  });
+  return res;
 }
 
 module.exports = {
@@ -46,47 +81,74 @@ module.exports = {
     /*
       [Ниже] Мутации регистрации и авторизации
     */
-    signUp: async (parent, { name, login, password }, { res, db }, info) => {
+    signUp: async (
+      parent,
+      { name, login, password, fingerprint },
+      { res, db },
+      info
+    ) => {
       let hashPassword = bcrypt.hashSync(password, salt);
 
-      // TODO: (DONE) добавляем данные в БД
+      // Добавляем данные в БД
+
       let user = await db.Users.create({
         login,
         name,
         password: hashPassword,
       });
 
-      // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+      // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
       let tokens = generateTokens(user.dataValues);
 
-      // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
+      // Добавляем сессию в БД
+      await addRefreshSession(
+        db,
+        user.dataValues.id,
+        tokens.refreshToken,
+        fingerprint
+      );
+
+      // Записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
         maxAge: 1000 * 60 * 60 * 24 * 365,
       });
       return tokens;
     },
-    logIn: async (parent, { login, password }, { res, db }, info) => {
-      // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
+    logIn: async (
+      parent,
+      { login, password, fingerprint },
+      { res, db },
+      info
+    ) => {
+      // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
           login,
         },
       });
-      // TODO: (DONE) проверяем через bcrypt пароль, не совпадает - ошибка
+      // Проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
         return null;
       } else if (bcrypt.compareSync(password, user.password)) {
-        // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+        // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
         let tokens = generateTokens(user.dataValues);
 
-        // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
+        // Добавляем сессию в БД
+        await addRefreshSession(
+          db,
+          user.dataValues.id,
+          tokens.refreshToken,
+          fingerprint
+        );
+
+        // Записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
           maxAge: 1000 * 60 * 60 * 24 * 365,
         });
 
-        // TODO: (DONE) отправить в ответ оба токен
+        // Отправить в ответ оба токен
         return tokens;
       } else {
         return null;

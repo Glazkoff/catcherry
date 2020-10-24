@@ -16,14 +16,14 @@ export default {
           ],
           borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
           borderWidth: 1,
-          data: [4, 2]
-        }
-      ]
+          data: [4, 2],
+        },
+      ],
     },
     options: {
       responsive: true,
-      maintainAspectRatio: false
-    }
+      maintainAspectRatio: false,
+    },
   }),
 
   mounted() {

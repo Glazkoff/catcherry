@@ -6,10 +6,15 @@
 
 ## Статьи по теме "Регистрация и авторизация"
 
+- [[RUS] Про токены, JSON Web Tokens (JWT), аутентификацию и авторизацию. Token-Based Authentication](https://gist.github.com/zmts/802dc9c3510d79fd40f9dc38a12bccfc)
 - [[RUS] Полное руководство по управлению JWT во фронтенд-клиентах (GraphQL)](https://medium.com/nuances-of-programming/%D0%BF%D0%BE%D0%BB%D0%BD%D0%BE%D0%B5-%D1%80%D1%83%D0%BA%D0%BE%D0%B2%D0%BE%D0%B4%D1%81%D1%82%D0%B2%D0%BE-%D0%BF%D0%BE-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D0%B8%D1%8E-jwt-%D0%B2%D0%BE-%D1%84%D1%80%D0%BE%D0%BD%D1%82%D0%B5%D0%BD%D0%B4-%D0%BA%D0%BB%D0%B8%D0%B5%D0%BD%D1%82%D0%B0%D1%85-graphql-b9b5103062a3)
 - [[ENG] Handling authentication in GraphQL – Part 1: Introduction](https://blog.pusher.com/handling-authentication-in-graphql/)
 - [[ENG] Handling authentication in GraphQL – Part 2: JWT](https://blog.pusher.com/handling-authentication-in-graphql-jwt/)
 - [[ENG] Handling authentication in GraphQL – Part 3: Auth0](https://blog.pusher.com/handling-authentication-in-graphql-auth0/)
+- [[ENG] JWT + Cookies in Node JS(REST)](https://dev.to/mr_cea/remaining-stateless-jwt-cookies-in-node-js-3lle)
+- [[ENG] How to authenticate using GraphQL Cookies and JWT](https://flaviocopes.com/graphql-auth-apollo-jwt-cookies/) - очень важная статья. Продемонстрирован принцип разделения REST API и GraphQL, а также работа с HttpOnly Cookies
+- [[ENG] Refresh token with JWT authentication in Node.js](https://solidgeargroup.com/en/refresh-token-with-jwt-authentication-node-js/)
+- [[ENG] Solution! GraphQL Server Not Setting JWT Cookie](https://dev.to/doylecodes/graphql-server-not-setting-jwt-cookie-1gme) - интересный вариант использования "ctx.response.cookie"
 
 ## Статьи по теме "Работа с GraphQL и Apollo"
 

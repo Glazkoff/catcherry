@@ -1,5 +1,41 @@
 import gql from "graphql-tag";
 
+// (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
+
+export const SIGN_UP = gql`
+  mutation(
+    $name: String!
+    $login: String!
+    $password: String!
+    $fingerprint: String!
+  ) {
+    signUp(
+      name: $name
+      login: $login
+      password: $password
+      fingerprint: $fingerprint
+    ) {
+      accessToken
+      error {
+        errorStatus
+      }
+    }
+  }
+`;
+
+export const LOG_IN = gql`
+  mutation($login: String!, $password: String!, $fingerprint: String!) {
+    logIn(login: $login, password: $password, fingerprint: $fingerprint) {
+      accessToken
+      error {
+        errorStatus
+        message
+      }
+    }
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {
     createUser(name: $name) {
