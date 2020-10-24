@@ -16,11 +16,6 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 
-import Account from "@/components/Account.vue";
-import UserInOrganization from "@/components/UserInOrganization.vue";
-import ListRequest from "@/components/ListRequest.vue";
-
-
 Vue.use(VueRouter);
 
 import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";

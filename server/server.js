@@ -49,23 +49,24 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
-// Поддержка режима HTML5 History для SPA
-app.use(history());
-
-// Работа со статическими файлами
-app.use(express.static(path.join(__dirname, "../dist")));
-
-// Работа со статическими файлами
-app.use("/public", express.static(path.join(__dirname, "/public")));
-
 // Использование сжатия gzip
-app.use(compression());
+// app.use(compression());
 
 // Настройка парсинга Cookie
 app.use(cookieParser());
 
 // Настройка CORS политики для разработки
 app.use(cors());
+
+// Поддержка режима HTML5 History для SPA
+// Все указанные выше запросы обрабатываются без history
+// app.use(history());
+
+// Работа со статическими файлами
+// app.use(express.static(path.join(__dirname, "../dist")));
+
+// Работа со статическими файлами
+// app.use("/public", express.static(path.join(__dirname, "/public")));
 
 // Точка входа GraphQL
 app.use(
@@ -87,7 +88,7 @@ db.sequelize
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
-      // db.Users.destroy({ where: {} });
+      db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
       //   db.Users.create({

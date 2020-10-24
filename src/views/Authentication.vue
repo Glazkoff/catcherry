@@ -45,15 +45,19 @@
       </p>
     </form>
     <h1>{{ authLoading }}</h1>
+    <hr />
+    <TestGraphql></TestGraphql>
   </div>
 </template>
 
 <script>
+import TestGraphql from "@/components/TestGraphql.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import { LOG_IN } from "@/graphql/queries.js";
 export default {
   // TODO: добавить защиту роутов
   name: "Authentication",
+  components: { TestGraphql },
   data() {
     return {
       login: "",
@@ -102,6 +106,7 @@ export default {
             },
           })
           .then((resp) => {
+            console.log("AUTH", resp);
             this.authLoading = false;
             if (resp.data.logIn && !resp.data.logIn.error) {
               this.$store.commit(

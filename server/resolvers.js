@@ -104,6 +104,7 @@ module.exports = {
       { res, db },
       info
     ) => {
+      console.log("QQQQQQQQQQQQQQQQQQQQQq");
       let hashPassword = bcrypt.hashSync(password, salt);
 
       // Добавляем данные в БД
@@ -137,6 +138,7 @@ module.exports = {
       { res, db },
       info
     ) => {
+      console.log("!!!!!!!!!!!!!");
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
@@ -145,7 +147,12 @@ module.exports = {
       });
       // Проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
-        return null;
+        return {
+          errror: {
+            errorStatus: 401,
+            message: "Incorrect login or password!",
+          },
+        };
       } else if (bcrypt.compareSync(password, user.password)) {
         // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
         let tokens = generateTokens(user.dataValues);
@@ -167,7 +174,12 @@ module.exports = {
         // Отправить в ответ оба токен
         return tokens;
       } else {
-        return null;
+        return {
+          errror: {
+            errorStatus: 401,
+            message: "Incorrect login or password!",
+          },
+        };
       }
     },
     updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
@@ -196,13 +208,13 @@ module.exports = {
 
         let tokens = generateTokens(user.dataValues);
 
-        let accessToken = jwt.sign(
-          user.dataValues,
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
-          }
-        );
+        // let accessToken = jwt.sign(
+        //   user.dataValues,
+        //   process.env.ACCESS_TOKEN_SECRET,
+        //   {
+        //     expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN,
+        //   }
+        // );
         // res.cookie("refreshToken", tokens.refreshToken, {
         //   httpOnly: true,
         //   maxAge: 1000 * 60 * 60 * 24 * 365,
