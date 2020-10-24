@@ -21,7 +21,7 @@ type User {
   patricity: String
   birthday: String
   gender: String
-  deleteAt: Int
+  deletedAt: String
 }
 input NotificationBody {
   header: String!
@@ -53,7 +53,7 @@ type Query {
 type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(id: ID!, surname: String!, name: String!, patricity: String, gender: String!, login: String!): [Int]!
+  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!

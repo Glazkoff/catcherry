@@ -27,7 +27,6 @@ export const ONE_USER_QUERY = gql`
       birthday
       gender
       login
-      password
     }
   }
 `;
@@ -47,11 +46,11 @@ export const USERS_QUERY = gql`
 export const UPDATE_USER_QUERY = gql`
   mutation(
     $id: ID!
-    $surname: String!
-    $name: String!
+    $surname: String
+    $name: String
     $patricity: String
-    $gender: String!
-    $login: String!
+    $gender: String
+    $login: String
   ) {
     updateUser(
       id: $id

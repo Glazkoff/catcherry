@@ -50,13 +50,6 @@
             placeholder="Логин"
             required
           />
-          <label for="password">Пароль</label>
-          <input
-            name="password"
-            v-model.trim="$v.user.password.$model"
-            placeholder="Пароль"
-            required
-          />
           <div class="btn-group">
             <button
               class="modal-default-button"
@@ -121,7 +114,7 @@
         <p>Пол: {{ user.gender }}</p>
         <p>Дата рождения: {{ new Date(user.birthday) }}</p>
         <p>Логин: {{ user.login }}</p>
-        <p>Пароль: {{ user.password }}</p>
+        <p>Дата создания: {{ new Date(user.createdAt).toGMTString() }}</p>
         <div class="btn-group">
           <button @click="showModalEdit()">Редактировать</button>
           <button @click="showModalDelete()">Удалить</button>
@@ -164,13 +157,16 @@
     <minialert v-if="isShowAlertDelete"
       ><p slot="title">Вы успешно удалили пользователя</p></minialert
     >
+    <minialert v-if="isError"
+      ><p slot="title">Произошла какая-то ошибка. Извините</p></minialert
+    >
   </div>
 </template>
 
 <script>
 import popup from "@/components/admin/Popup.vue";
 import minialert from "@/components/admin/MiniAlert.vue";
-import { required, minLength } from "vuelidate/lib/validators";
+import { required } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
   DELETE_USER_QUERY,
@@ -196,6 +192,7 @@ export default {
   data() {
     return {
       nameOfUser: "",
+      isError: false,
       isShowFullInformation: false,
       index: 0,
       userId: -1,
@@ -226,10 +223,6 @@ export default {
       },
       login: {
         required
-      },
-      password: {
-        required,
-        minLength: minLength(2)
       }
     }
   },
@@ -265,16 +258,22 @@ export default {
         })
         .then(data => {
           console.log(data);
+          this.isShowFullInformation = false;
+          this.isShowModalDelete = false;
+          this.isShowAlertDelete = true;
+          setTimeout(() => {
+            this.isShowAlertDelete = false;
+          }, 3000);
         })
         .catch(error => {
           console.error(error);
+          this.isShowFullInformation = false;
+          this.isShowModalDelete = false;
+          this.isError = true;
+          setTimeout(() => {
+            this.isError = false;
+          }, 3000);
         });
-      this.isShowFullInformation = false;
-      this.isShowModalDelete = false;
-      this.isShowAlertDelete = true;
-      setTimeout(() => {
-        this.isShowAlertDelete = false;
-      }, 3000);
     },
     showModalEdit() {
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
@@ -327,14 +326,19 @@ export default {
         })
         .then(data => {
           console.log(data);
+          this.isShowAlertEdit = true;
+          setTimeout(() => {
+            this.isShowAlertEdit = false;
+          }, 3000);
         })
         .catch(error => {
           console.error(error);
+          this.isShowFullInformation = false;
+          this.isError = true;
+          setTimeout(() => {
+            this.isError = false;
+          }, 3000);
         });
-      this.isShowAlertEdit = true;
-      setTimeout(() => {
-        this.isShowAlertEdit = false;
-      }, 3000);
     }
   },
   computed: {
