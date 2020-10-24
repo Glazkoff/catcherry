@@ -69,45 +69,54 @@ const routes = [
     children: [
       {
         path: "",
-        component: Dashboard,
+        component: Dashboard
       },
       {
         path: "users",
-        component: Users,
+        component: Users
       },
       {
         path: "organization",
-        component: Organization,
-      },
-    ],
+        component: Organization
+      }
+    ]
   },
   {
     path: "/account",
     name: "Account",
-    component: Account,
+    component: Account
   },
   {
     path: "/user_org",
     name: "UserInOrganization",
-    component: UserInOrganization,
+    component: UserInOrganization
   },
   {
     path: "/list_req",
     name: "ListReguest",
-    component: ListRequest,
+    component: ListRequest
   },
   {
     path: "/auth",
     name: "Authentication",
+<<<<<<< HEAD
     component: Authentication,
     beforeEnter: ifNotAuthenticated,
+=======
+    component: Authentication
+>>>>>>> 85fcf609ded0eadc849b8684e065fe9417909000
   },
   {
     path: "/registration",
     name: "Registration",
+<<<<<<< HEAD
     component: Registration,
     beforeEnter: ifNotAuthenticated,
   },
+=======
+    component: Registration
+  }
+>>>>>>> 85fcf609ded0eadc849b8684e065fe9417909000
   // {
   //   path: "/about",
   //   name: "About",
@@ -122,7 +131,7 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 export default router;
