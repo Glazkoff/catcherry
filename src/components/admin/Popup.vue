@@ -6,16 +6,8 @@
           <div class="modal-header">
             <h2><slot name="header"></slot></h2>
           </div>
-
           <div class="modal-body">
             <slot name="body"> </slot>
-          </div>
-
-          <div class="modal-footer">
-            <slot name="action"></slot>
-            <button class="modal-default-button" @click="onCancel()">
-              Отменить
-            </button>
           </div>
         </div>
       </div>
@@ -25,12 +17,7 @@
 
 <script>
 export default {
-  props: ["user"],
-  methods: {
-    onCancel() {
-      this.$emit("answer", { ans: false });
-    },
-  },
+  props: ["user"]
 };
 </script>
 
@@ -44,12 +31,13 @@ export default {
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
 
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  transition: opacity 0.5s ease;
 }
 
 .modal-container {
@@ -59,7 +47,7 @@ export default {
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
+  transition: all 0.5s ease;
 }
 
 .modal-header {

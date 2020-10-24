@@ -2,6 +2,21 @@ require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 
+// Соль для шифрования bcrypt
+const salt = bcrypt.genSaltSync(10);
+
+// Функция генерации токенов (принмает данные, которые мы заносим в токен )
+function generateTokens(user) {
+  // Генерируем рефреш-токен
+  let refreshToken = jwt.sign(
+    { userId: user.id },
+    process.env.REFRESH_TOKEN_SECRET,
+    {
+      expiresIn: 100 * 60 * 60 * 24 * 365,
+    }
+  );
+
+  // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
 const { v4 } = require("uuid");
 
 // Соль для шифрования bcrypt
@@ -55,6 +70,8 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
+    deletedUsers: (parent, args, { db }, info) => 
+      db.Users.findAll({ order: [["id", "ASC"]], paranoid: false }),
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
@@ -73,6 +90,7 @@ module.exports = {
       let hashPassword = bcrypt.hashSync(password, salt);
 
       // Добавляем данные в БД
+
       let user = await db.Users.create({
         login,
         name,
@@ -171,10 +189,14 @@ module.exports = {
       db.Users.create({
         name: name,
       }),
-    updateUser: (parent, { name, id }, { db }, info) =>
+    updateUser: (parent, { surname, name, patricity, gender, login, id}, { db }, info) =>
       db.Users.update(
         {
+          surname: surname,
           name: name,
+          patricity: patricity,
+          gender: gender,
+          login: login,
         },
         {
           where: {

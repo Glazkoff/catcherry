@@ -27,7 +27,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Home
   },
   // FIXME: [Фёдор]
   /*
@@ -71,43 +71,43 @@ const routes = [
     children: [
       {
         path: "",
-        component: Dashboard,
+        component: Dashboard
       },
       {
         path: "users",
-        component: Users,
+        component: Users
       },
       {
         path: "organization",
-        component: Organization,
-      },
-    ],
+        component: Organization
+      }
+    ]
   },
   {
     path: "/account",
     name: "Account",
-    component: Account,
+    component: Account
   },
   {
     path: "/user_org",
     name: "UserInOrganization",
-    component: UserInOrganization,
+    component: UserInOrganization
   },
   {
     path: "/list_req",
     name: "ListReguest",
-    component: ListRequest,
+    component: ListRequest
   },
   {
     path: "/auth",
     name: "Authentication",
-    component: Authentication,
+    component: Authentication
   },
   {
     path: "/registration",
     name: "Registration",
-    component: Registration,
-  },
+    component: Registration
+  }
   // {
   //   path: "/about",
   //   name: "About",
@@ -122,7 +122,7 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 export default router;

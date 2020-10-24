@@ -12,7 +12,7 @@ export default {
           label: "Половое распределение команды Catcherry",
           backgroundColor: [
             "rgba(255, 99, 132, 0.2)",
-            "rgba(54, 162, 235, 0.2)",
+            "rgba(54, 162, 235, 0.2)"
           ],
           borderColor: ["rgba(255, 99, 132, 1)", "rgba(54, 162, 235, 1)"],
           borderWidth: 1,
@@ -28,6 +28,6 @@ export default {
 
   mounted() {
     this.renderChart(this.chartdata, this.options);
-  },
+  }
 };
 </script>

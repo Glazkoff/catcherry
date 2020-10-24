@@ -83,17 +83,23 @@ app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 // TODO: добавить заполнение фейковыми данными
 
 db.sequelize
+  // .sync({ force: true })
   // .sync({ alter: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
-      // for (let index = 0; index < 10; index++) {
+
+      // for (let index = 0; index < 20; index++) {
       //   db.Users.create({
-      //     name: faker.name.findName(),
+      //     surname: faker.name.lastName(),
+      //     name: faker.name.firstName(),
+      //     patricity: faker.name.firstName(),
       //     login: faker.random.word(),
       //     password: bcrypt.hashSync("nikita", salt),
+      //     gender: 'Мужской',
+      //     birthday: faker.date.past()
       //   });
       // }
       console.log(
