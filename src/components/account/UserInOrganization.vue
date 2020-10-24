@@ -14,6 +14,13 @@
         <h5>Поиск команды</h5>
         <input type="text" class="form-text" placeholder="Название команды" />
         <h3>Команды</h3>
+        <div class="oneTeam" v-for="team in teams" :key="team.id">
+          
+          <p> №{{ team.id }}</p><p>
+           <b>{{ team.name }}</b>
+          </p>
+          <span>{{team.description}}</span>
+        </div>
         <button
           class="modal-default-button btn btn-secondary"
           @click="isShowModalEdit = false"
@@ -87,7 +94,7 @@
           </button>
         </div>
         <div v-if="filterOrganization == ''">
-          <h4>Такой организации нет!</h4>
+          <h4>Организации не найдены</h4>
           <button class="btn btn-primary" @click="isAddOrganization = true">
             Создать
           </button>
@@ -198,6 +205,8 @@ import {
   ORGS_QUERY,
   ONE_ORG_QUERY,
   CREATE_ORGANIZATION,
+  TEAMS_QUERY,
+  TEAM_IN_ORG_QUERY,
 } from "@/graphql/queries";
 import { required } from "vuelidate/lib/validators";
 export default {
@@ -214,7 +223,8 @@ export default {
       isShowAlertAdd: false,
       isAddOrganization: false,
       name: "",
-      ownerId: 1,
+      ownerId: 124,
+      organizationId: 7,
       organizationTypeId: 1,
       maxTeamsLimit: 1,
       signUpLoading: false,
@@ -229,6 +239,17 @@ export default {
       variables() {
         return {
           id: this.$route.params.id,
+        };
+      },
+    },
+    teams: {
+      query: TEAMS_QUERY,
+    },
+    team: {
+      query: TEAM_IN_ORG_QUERY,
+      variables() {
+        return {
+          organizationId: this.organizationId,
         };
       },
     },
@@ -261,7 +282,6 @@ export default {
       if (this.$v.$invalid) {
         this.$v.$touch();
       } else {
-        console.log(this.ownerId);
         this.signUpLoading = true;
         this.$apollo
           .mutate({
@@ -271,6 +291,22 @@ export default {
               ownerId: this.ownerId,
               organizationTypeId: this.organizationTypeId,
               maxTeamsLimit: this.maxTeamsLimit,
+            },
+            update: (cache, { data: { createOrganization } }) => {
+              let data = cache.readQuery({ query: ORGS_QUERY });
+              data.organizations.push(createOrganization);
+              cache.writeQuery({ query: ORGS_QUERY, data });
+            },
+            optimisticResponse: {
+              __typename: "Mutation",
+              createOrganization: {
+                __typename: "Organization",
+                id: -1,
+                name: this.name,
+                ownerId: this.ownerId,
+                organizationTypeId: this.organizationTypeId,
+                maxTeamsLimit: this.maxTeamsLimit,
+              },
             },
           })
           .then((resp) => {
@@ -335,7 +371,10 @@ body {
   text-align: left;
   background-color: #fff;
 }
-
+.oneTeam p{
+  display: inline-block;
+  margin-right: 10px;
+}
 .tabs {
   font-size: 0;
   max-width: 350px;

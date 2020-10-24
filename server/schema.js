@@ -33,6 +33,16 @@ type Organization {
   updatedAt: String!
 }
 
+type Team {
+  id: ID!
+  organizationId: Int
+  name: String!
+  description: String
+  maxUsersLimit: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
 input NotificationBody {
   header: String!
   text: String!
@@ -59,6 +69,9 @@ type Query {
 
   organizations: [Organization!]
   organization(id: ID!): Organization
+
+  teams: [Team!]
+  team(organizationId: Int): Team
   
   notifications: [Notification]!
   notification(id: ID!): Notification
@@ -76,6 +89,8 @@ type Mutation {
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
+
+  createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
 
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt

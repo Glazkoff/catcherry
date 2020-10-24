@@ -130,3 +130,45 @@ export const ONE_ORG_QUERY = gql`
     }
   }
 `;
+
+export const CREATE_TEAM = gql`
+  mutation(
+    $organizationId: Int
+    $name: String!
+    $description: String
+    $maxUsersLimit: Int
+  ) {
+    createTeam(
+      organizationId: $organizationId
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+    ) {
+      id
+    }
+  }
+`;
+
+export const TEAMS_QUERY = gql`
+  query {
+    teams {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
+export const TEAM_IN_ORG_QUERY = gql`
+  query($organizationId: Int) {
+    team(organizationId: $organizationId) {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
