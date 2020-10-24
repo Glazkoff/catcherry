@@ -64,7 +64,7 @@ export default {
       password: "",
       authLoading: false,
       fingerprint: "",
-      loginPasswordError: false,
+      loginPasswordError: false
     };
   },
   async created() {
@@ -75,12 +75,12 @@ export default {
   },
   validations: {
     login: {
-      required,
+      required
     },
     password: {
       required,
-      minLength: minLength(6),
-    },
+      minLength: minLength(6)
+    }
   },
   methods: {
     hideErrors() {
@@ -94,7 +94,7 @@ export default {
         this.authLoading = true;
         let userData = {
           login: this.$v.login.$model,
-          password: this.$v.password.$model,
+          password: this.$v.password.$model
         };
         this.$apollo
           .mutate({
@@ -102,31 +102,35 @@ export default {
             variables: {
               login: userData.login,
               password: userData.password,
-              fingerprint: this.fingerprint,
-            },
+              fingerprint: this.fingerprint
+            }
           })
-          .then((resp) => {
+          .then(resp => {
             console.log("AUTH", resp);
             this.authLoading = false;
             if (resp.data.logIn && !resp.data.logIn.error) {
-              this.$store.commit(
-                "SET_ACCESS_TOKEN",
-                resp.data.logIn.accessToken
-              );
-              this.$router.push("/");
+              if (resp.data.logIn.accessToken !== null) {
+                this.$store.commit(
+                  "SET_ACCESS_TOKEN",
+                  resp.data.logIn.accessToken
+                );
+                this.$router.push("/");
+              } else {
+                this.loginPasswordError = true;
+              }
             } else {
               // TODO: добавить обработку ошибок
               this.loginPasswordError = true;
               // console.error("ERROR");
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.authLoading = false;
             console.error(error);
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

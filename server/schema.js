@@ -1,6 +1,4 @@
 module.exports = `
-scalar Date
-
 type Error {
   errorStatus: Int!
   message: String!
@@ -17,11 +15,6 @@ type User {
   name: String
   login: String
   password: String
-  surname: String
-  patricity: String
-  birthday: String
-  gender: String
-  deleteAt: Int
   createdAt: String!
   updatedAt: String!
 }
@@ -44,14 +37,15 @@ type Notification {
   createdAt: String!
   updatedAt: String!
 }
+
 type Query { 
   users: [User!] 
   user(id: ID!): User
-  deletedUsers: [User!]
   
   notifications: [Notification]!
   notification(id: ID!): Notification
 }
+
 type Mutation {
   signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
   logIn(login: String!, password: String!, fingerprint:String!): jwt
@@ -59,7 +53,7 @@ type Mutation {
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(id: ID!, surname: String!, name: String!, patricity: String, gender: String!, login: String!): [Int]!
+  updateUser(name: String!, id: ID!): [Int]!
 
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!

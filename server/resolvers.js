@@ -88,8 +88,6 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
-    deletedUsers: (parent, args, { db }, info) =>
-      db.Users.findAll({ order: [["id", "ASC"]], paranoid: false }),
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
@@ -139,51 +137,45 @@ module.exports = {
       info
     ) => {
       console.log(login, password, fingerprint);
-      return {
-        errror: {
-          errorStatus: 401,
-          message: "Incorrect login or password!",
+      // Сравниваем логин с БД, если нет - ошибка
+      let user = await db.Users.findOne({
+        where: {
+          login,
         },
-      };
-      // // Сравниваем логин с БД, если нет - ошибка
-      // let user = await db.Users.findOne({
-      //   where: {
-      //     login,
-      //   },
-      // });
-      // // Проверяем через bcrypt пароль, не совпадает - ошибка
-      // if (!user) {
-      //   return {
-      //     errror: {
-      //       errorStatus: 401,
-      //       message: "Incorrect login or password!",
-      //     },
-      //   };
-      // } else if (bcrypt.compareSync(password, user.password)) {
-      //   // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
-      //   let tokens = generateTokens(user.dataValues);
-      //   // Добавляем сессию в БД
-      //   await addRefreshSession(
-      //     db,
-      //     user.dataValues.id,
-      //     tokens.refreshToken,
-      //     fingerprint
-      //   );
-      //   // Записать в Cookie HttpOnly рефреш-токен
-      //   res.cookie("refreshToken", tokens.refreshToken, {
-      //     httpOnly: true,
-      //     maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
-      //   });
-      //   // Отправить в ответ оба токен
-      //   return tokens;
-      // } else {
-      //   return {
-      //     errror: {
-      //       errorStatus: 401,
-      //       message: "Incorrect login or password!",
-      //     },
-      //   };
-      // }
+      });
+      // Проверяем через bcrypt пароль, не совпадает - ошибка
+      if (!user) {
+        return {
+          errror: {
+            errorStatus: 401,
+            message: "Incorrect login or password!",
+          },
+        };
+      } else if (bcrypt.compareSync(password, user.password)) {
+        // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+        let tokens = generateTokens(user.dataValues);
+        // Добавляем сессию в БД
+        await addRefreshSession(
+          db,
+          user.dataValues.id,
+          tokens.refreshToken,
+          fingerprint
+        );
+        // Записать в Cookie HttpOnly рефреш-токен
+        res.cookie("refreshToken", tokens.refreshToken, {
+          httpOnly: true,
+          maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
+        });
+        // Отправить в ответ оба токен
+        return tokens;
+      } else {
+        return {
+          errror: {
+            errorStatus: 401,
+            message: "Incorrect login or password!",
+          },
+        };
+      }
     },
     updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
       // let refreshToken = req.cookies.refreshToken;
@@ -259,19 +251,10 @@ module.exports = {
       db.Users.create({
         name: name,
       }),
-    updateUser: (
-      parent,
-      { surname, name, patricity, gender, login, id },
-      { db },
-      info
-    ) =>
+    updateUser: (parent, { name, id }, { db }, info) =>
       db.Users.update(
         {
-          surname: surname,
           name: name,
-          patricity: patricity,
-          gender: gender,
-          login: login,
         },
         {
           where: {
@@ -285,17 +268,6 @@ module.exports = {
           id: args.id,
         },
       }),
-    /*
-      [Ниже] Мутации регистрации и авторизации
-    */
-    signUp: async (parent, args, { db }, info) => {
-      // TODO: добавить резолвер signup
-      return "DO SIGN UP";
-    },
-    logIn: async (parent, args, { db }, info) => {
-      // TODO: добавить резолвер login
-      return "DO LOG IN";
-    },
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */

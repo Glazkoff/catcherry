@@ -1,161 +1,87 @@
 <template>
   <div class="main">
-    <popup v-if="isShowFullInformation">
-      <h3 slot="header" v-if="isShowModalEdit">
-        <i18n path="editUser"
-          ><span place="title">{{ $t("editUser") }}</span></i18n
-        >
-        {{ fullName }}
-      </h3>
-      <div slot="body" v-if="isShowModalEdit">
-        <form @submit.prevent="saveUserOnPopup()">
+    <popup @answer="closePopup" v-if="isShowModalEdit" :user="users[index]">
+      <h3 slot="header">Редактирование пользователя {{ nameOfUser }}</h3>
+      <div slot="body">
+        <form>
           <label for="surname">Фамилия</label>
           <input
             name="surname"
-            v-model.trim="$v.user.surname.$model"
-            @blur="$v.user.surname.$touch()"
+            v-model="oneUser.surname"
             placeholder="Фамилия"
+            required
           />
-          <div v-if="$v.user.surname.$error" class="error">
-            <span v-if="!$v.user.surname.required"
-              >Данное поле обязательно</span
-            >
-            <span v-else-if="!$v.user.surname.alpha"
-              >Поле должно содержать только буквы</span
-            >
-          </div>
           <label for="name">Имя</label>
           <input
             name="name"
-            v-model.trim="$v.user.name.$model"
+            v-model="oneUser.name"
             placeholder="Имя"
             required
           />
-          <label for="patricity">Отчество (при наличии)</label>
+          <label for="surname">Отчество (при наличии)</label>
           <input
             name="patricity"
-            v-model.trim="$v.user.patricity.$model"
+            v-model="oneUser.patricity"
             placeholder="Отчество"
             required
           />
-          <label for="gender">Пол</label>
-          <select name="gender" v-model.trim="$v.user.gender.$model" required>
+          <label for="surname">Пол</label>
+          <select name="gender" v-model="oneUser.gender" required>
             <option>Мужской</option>
             <option>Женский</option>
           </select>
           <label for="login">Логин</label>
           <input
             name="login"
-            v-model.trim="$v.user.login.$model"
+            v-model="oneUser.login"
             placeholder="Логин"
             required
           />
           <label for="password">Пароль</label>
           <input
             name="password"
-            v-model.trim="$v.user.password.$model"
+            v-model="oneUser.password"
             placeholder="Пароль"
             required
           />
-          <div class="btn-group">
-            <button
-              class="modal-default-button"
-              :disabled="$v.user.$invalid"
-              @click="saveUserOnPopup()"
-            >
-              <i18n path="save"
-                ><span>{{ $t("save") }}</span></i18n
-              >
-            </button>
-            <button @click="cancelModal()">
-              <i18n path="cancel"
-                ><span place="title">{{ $t("cancel") }}</span></i18n
-              >
-            </button>
-          </div>
         </form>
       </div>
-
-      <h3 slot="header" v-if="isShowModalDelete">
-        <i18n path="deleteQuestion"
-          ><span place="title">{{ $t("deleteQuestion") }}</span></i18n
-        >
-        {{ fullName }}?
-      </h3>
-      <div slot="body" v-if="isShowModalDelete" class="btn-group">
-        <button
-          @click="deleteUser()"
-          slot="action"
-          class="modal-default-button"
-        >
-          <i18n path="delete"
-            ><span place="title">{{ $t("delete") }}</span></i18n
-          >
-        </button>
-        <button @click="cancelModal()">
-          <i18n path="cancel"
-            ><span place="title">{{ $t("cancel") }}</span></i18n
-          >
-        </button>
-      </div>
-
-      <h3
-        slot="header"
-        v-if="!isShowModalDelete && !isShowModalEdit && $apollo.loading"
+      <button
+        slot="action"
+        class="modal-default-button"
+        @click="closePopup({ ans: true, action: 'edit', user: oneUser })"
       >
-        Загрузка...
-      </h3>
-      <h3
-        slot="header"
-        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
-      >
-        Пользователь {{ user.surname }} {{ user.name }} {{ user.patricity }}
-      </h3>
-      <div
-        slot="body"
-        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
-      >
-        <p>Фамилия: {{ user.surname }}</p>
-        <p>Имя: {{ user.name }}</p>
-        <p>Отчетсво: {{ user.patricity }}</p>
-        <p>Пол: {{ user.gender }}</p>
-        <p>Дата рождения: {{ new Date(user.birthday) }}</p>
-        <p>Логин: {{ user.login }}</p>
-        <p>Пароль: {{ user.password }}</p>
-        <div class="btn-group">
-          <button @click="showModalEdit()">Редактировать</button>
-          <button @click="showModalDelete()">Удалить</button>
-          <button @click="cancelFullInformation()">
-            <i18n path="cancel"
-              ><span place="title">{{ $t("cancel") }}</span></i18n
-            >
-          </button>
-        </div>
-      </div>
+        Сохранить
+      </button>
     </popup>
-
-    <h2>
-      <i18n path="listUser"
-        ><span place="title">{{ $t("listUser") }}</span></i18n
+    <popup @answer="closePopup" v-if="isShowModalDelete">
+      <h3 slot="header">
+        Вы действительно хотите удалить пользователя {{ nameOfUser }}?
+      </h3>
+      <button
+        slot="action"
+        class="modal-default-button"
+        @click="closePopup({ ans: true, action: 'delete' })"
       >
-    </h2>
-    <h3 v-if="$apollo.loading">
-      Загрузка...
-    </h3>
-    <div v-if="!$apollo.loading">
-      <h6 v-if="users.length == 0">К сожалению, пока пользователей нет</h6>
-      <div>
-        <input
-          v-model.trim="findString"
-          type="text"
-          placeholder="Поиск по пользователям"
-        />
-        <div class="oneUser" v-for="user in filterUser" :key="user.id">
-          <p>{{ user.id }}.</p>
-          <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
-          <p>{{ user.login }}</p>
-          <button @click="showFullInformation(user.id)">Подробнее</button>
-        </div>
+        Удалить
+      </button>
+    </popup>
+    <h2>Список пользователей</h2>
+    <h6 v-if="users.length == 0">К сожалению, пока пользователей нет</h6>
+    <div v-if="users.length > 0">
+      <input
+        v-model="findString"
+        type="text"
+        placeholder="Поиск по пользователям"
+      />
+      <div class="oneUser" v-for="user in filterUser" :key="user.id">
+        <p>{{ user.id }}.</p>
+        <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
+        <p>{{ user.gender }}</p>
+        <p>{{ user.login }}</p>
+        <p>{{ user.password }}</p>
+        <button @click="showModalEdit(user)">Редактировать</button>
+        <button @click="showModalDelete(user)">Удалить</button>
       </div>
     </div>
     <minialert v-if="isShowAlertEdit"
@@ -170,186 +96,84 @@
 <script>
 import popup from "@/components/admin/Popup.vue";
 import minialert from "@/components/admin/MiniAlert.vue";
-import { required, minLength } from "vuelidate/lib/validators";
-import {
-  USERS_QUERY,
-  DELETE_USER_QUERY,
-  UPDATE_USER_QUERY,
-  ONE_USER_QUERY
-} from "@/graphql/queries";
 
 export default {
   components: { minialert, popup },
-  apollo: {
-    users: {
-      query: USERS_QUERY
-    },
-    user: {
-      query: ONE_USER_QUERY,
-      variables() {
-        return {
-          id: this.userId
-        };
-      }
-    }
-  },
   data() {
     return {
       nameOfUser: "",
-      isShowFullInformation: false,
       index: 0,
-      userId: -1,
-      fullName: "",
+      oneUser: {},
       isShowAlertDelete: false,
       isShowAlertEdit: false,
       isShowModalEdit: false,
       isShowModalDelete: false,
-      findString: ""
+      findString: "",
+      users: [
+        {
+          id: 1,
+          name: "Иван",
+          surname: "Иванов",
+          patricity: "Иванович",
+          gender: "Мужской",
+          birthday: new Date(),
+          login: "ivanovIvan",
+          password: "123456",
+          createAt: new Date(),
+          updateAt: new Date()
+        },
+        {
+          id: 2,
+          name: "Петр",
+          surname: "Петров",
+          patricity: "Петрович",
+          gender: "Мужской",
+          birthday: new Date(),
+          login: "ivanovIvan",
+          password: "123456",
+          createAt: new Date(),
+          updateAt: new Date()
+        }
+      ]
     };
   },
-  validations: {
-    user: {
-      surname: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
-      },
-      name: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
-      },
-      patricity: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
-      },
-      gender: {
-        required
-      },
-      login: {
-        required
-      },
-      password: {
-        required,
-        minLength: minLength(2)
-      }
-    }
-  },
   methods: {
-    showFullInformation(id) {
-      this.userId = id;
-      this.isShowFullInformation = true;
+    showModalDelete(user) {
+      (this.nameOfUser = `${user.surname} ${user.name} ${user.patricity}`),
+        (this.isShowModalDelete = true);
+      this.index = this.users.findIndex(el => el.id === user.id);
+      this.oneUser = user;
     },
-    cancelFullInformation() {
-      this.isShowFullInformation = false;
-    },
-    cancelModal() {
-      this.isShowModalEdit = false;
-      this.isShowModalDelete = false;
-    },
-    showModalDelete() {
-      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
-      this.isShowModalDelete = true;
-    },
-    deleteUser() {
-      this.$apollo
-        .mutate({
-          mutation: DELETE_USER_QUERY,
-          variables: {
-            id: this.user.id
-          },
-          update: cache => {
-            let data = cache.readQuery({ query: USERS_QUERY });
-            let index = data.users.findIndex(el => el.id == this.user.id);
-            data.users.splice(index, 1);
-            cache.writeQuery({ query: USERS_QUERY, data });
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-      this.isShowFullInformation = false;
-      this.isShowModalDelete = false;
-      this.isShowAlertDelete = true;
-      setTimeout(() => {
-        this.isShowAlertDelete = false;
-      }, 3000);
-    },
-    showModalEdit() {
-      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
+    showModalEdit(user) {
+      (this.nameOfUser = `${user.surname} ${user.name} ${user.patricity}`),
+        console.log(user);
+      this.oneUser = Object.assign(this.oneUser, user);
       this.isShowModalEdit = true;
     },
-    saveUserOnPopup() {
-      console.log(this.user);
+    closePopup(ans) {
+      this.isShowModalDelete = false;
       this.isShowModalEdit = false;
-      this.$apollo
-        .mutate({
-          mutation: UPDATE_USER_QUERY,
-          variables: {
-            id: this.user.id,
-            surname: this.user.surname,
-            name: this.user.name,
-            patricity: this.user.patricity,
-            gender: this.user.gender,
-            login: this.user.login
-          },
-          update: (cache, { data: { updateUser } }) => {
-            let data = cache.readQuery({ query: USERS_QUERY });
-            data.users.find(
-              el => el.id === this.user.id
-            ).surname = this.user.surname;
-            data.users.find(el => el.id === this.user.id).name = this.user.name;
-            data.users.find(
-              el => el.id === this.user.id
-            ).patricity = this.user.patricity;
-            data.users.find(
-              el => el.id === this.user.id
-            ).gender = this.user.gender;
-            data.users.find(
-              el => el.id === this.user.id
-            ).login = this.user.login;
-            cache.writeQuery({ query: USERS_QUERY, data });
-            console.log(updateUser);
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createUser: {
-              __typename: "User",
-              id: -1,
-              surname: this.user.surname,
-              name: this.user.name,
-              patricity: this.user.patricity,
-              gender: this.user.gender,
-              login: this.user.login
-            }
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-      this.isShowAlertEdit = true;
-      setTimeout(() => {
-        this.isShowAlertEdit = false;
-      }, 3000);
+      if (ans.ans && ans.action === "delete") {
+        this.index = this.users.findIndex(el => el.id === this.oneUser.id);
+        this.users.splice(this.index, 1);
+        this.isShowAlertDelete = true;
+        setTimeout(() => {
+          this.isShowAlertDelete = false;
+        }, 3000);
+      } else if (ans.ans && ans.action === "edit") {
+        this.index = this.users.findIndex(el => el.id === this.oneUser.id);
+        this.users.splice(this.index, 1, ans.user);
+        this.isShowAlertEdit = true;
+        setTimeout(() => {
+          this.isShowAlertEdit = false;
+        }, 3000);
+      }
     }
   },
   computed: {
     filterUser() {
       if (this.findString !== "") {
         return this.users.filter(el => {
-          if (el.surname === undefined || el.surname === null) {
-            el.surname = " ";
-          }
-          if (el.name === undefined || el.name === null) {
-            el.name = " ";
-          }
-          if (el.patricity === undefined || el.patricity === null) {
-            el.patricity = " ";
-          }
           return (
             (el.surname.toLowerCase().indexOf(this.findString.toLowerCase()) !==
               -1 &&
@@ -372,23 +196,13 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
 button {
   width: 100%;
-  margin: 0 2%;
+  margin: 0 5%;
 }
 .oneUser {
   display: grid;
   grid-template-columns: 5% 25% 10% 15% 15% 15% 15%;
   grid-template-rows: 1fr;
-}
-
-input,
-select {
-  display: block;
 }
 </style>
