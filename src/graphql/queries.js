@@ -102,7 +102,9 @@ export const CREATE_ORGANIZATION = gql`
       ownerId: $ownerId
       organizationTypeId: $organizationTypeId
       maxTeamsLimit: $maxTeamsLimit
-    )
+    ) {
+      id
+    }
   }
 `;
 

@@ -15,11 +15,11 @@
         <input type="text" class="form-text" placeholder="Название команды" />
         <h3>Команды</h3>
         <button
-        class="modal-default-button btn btn-secondary"
-        @click="isShowModalEdit = false"
-      >
-        Закрыть
-      </button>
+          class="modal-default-button btn btn-secondary"
+          @click="isShowModalEdit = false"
+        >
+          Закрыть
+        </button>
       </div>
     </popup>
     <h1>Поиск организации</h1>
@@ -88,7 +88,9 @@
         </div>
         <div v-if="filterOrganization == ''">
           <h4>Такой организации нет!</h4>
-          <button class="btn btn-primary">Создать</button>
+          <button class="btn btn-primary" @click="isAddOrganization = true">
+            Создать
+          </button>
         </div>
       </div>
       <div v-else style="color: gray;">
@@ -106,15 +108,101 @@
         </div>
       </div>
     </div>
+
+    <popup v-if="isAddOrganization">
+      <h3 slot="header">
+        Регистрация организации
+      </h3>
+      <div slot="body">
+        <form @submit.prevent="submit">
+          <p>* - обязательное поле</p>
+          <label>Название организации</label><br />
+          <input
+            :disabled="signUpLoading"
+            type="text"
+            v-model.trim="$v.name.$model"
+            placeholder="Организация 'Техностек'"
+            class="form-control form-text"
+          />
+          <div v-if="$v.name.$error" class="error">
+            <span v-if="!$v.name.required">Organization name is required</span>
+            <span v-else-if="!$v.name.alpha"
+              >Organization name accepts only alphabet characters.</span
+            >
+          </div>
+          <br />
+          <label>Руководитель организации</label><br />
+          <input
+            :disabled="signUpLoading"
+            type="number"
+            v-model.trim="$v.ownerId.$model"
+            placeholder="Owner ID"
+            class="form-control form-text"
+          />
+          <div v-if="$v.ownerId.$error" class="error">
+            <span v-if="!$v.ownerId.required">Owner is required</span>
+          </div>
+          <br />
+          <label>Тип организации</label><br />
+          <input
+            type="number"
+            :disabled="signUpLoading"
+            v-model.trim="$v.organizationTypeId.$model"
+            placeholder="Organization type"
+            class="form-control form-text"
+          />
+          <div v-if="$v.organizationTypeId.$error" class="error">
+            <span v-if="!$v.organizationTypeId.required"
+              >Type of organization is required</span
+            >
+          </div>
+          <br />
+          <label>Количество команд</label><br />
+          <input
+            :disabled="signUpLoading"
+            type="number"
+            v-model.trim="$v.maxTeamsLimit.$model"
+            placeholder="Limit"
+            class="form-control form-text"
+          />
+          <div v-if="$v.maxTeamsLimit.$error" class="error">
+            <span v-if="!$v.maxTeamsLimit.required"
+              >Limit of teams is required</span
+            >
+          </div>
+          <br />
+          <input
+            :disabled="signUpLoading"
+            type="submit"
+            class="btn btn-primary"
+            value="Зарегистрировать организацию"
+          /><br />
+        </form>
+        <button class="btn btn-secondary" @click="isAddOrganization = false">
+          <i18n path="cancel"
+            ><span place="title">{{ $t("cancel") }}</span></i18n
+          >
+        </button>
+      </div>
+    </popup>
+    <minialert v-if="isShowAlertAdd"
+      ><p slot="title">Вы успешно добавили организацию</p></minialert
+    >
   </div>
 </template>
 
 <script>
 import popup from "@/components/account/Popup.vue";
-import { ORGS_QUERY, ONE_ORG_QUERY } from "@/graphql/queries";
+import minialert from "@/components/account/MiniAlert.vue";
+import {
+  ORGS_QUERY,
+  ONE_ORG_QUERY,
+  CREATE_ORGANIZATION,
+} from "@/graphql/queries";
+import { required } from "vuelidate/lib/validators";
 export default {
   name: "UserInOrganization",
-  components: { popup },
+  components: { popup, minialert },
   data() {
     return {
       findString: "",
@@ -123,6 +211,13 @@ export default {
       nameOfOrganization: "",
       tabFirst: true,
       isShowModalEdit: false,
+      isShowAlertAdd: false,
+      isAddOrganization: false,
+      name: "",
+      ownerId: 1,
+      organizationTypeId: 1,
+      maxTeamsLimit: 1,
+      signUpLoading: false,
     };
   },
   apollo: {
@@ -138,6 +233,21 @@ export default {
       },
     },
   },
+  validations: {
+    name: {
+      required,
+      alpha: (val) => /^[а-яёa-zA-Z ]*$/i.test(val),
+    },
+    ownerId: {
+      required,
+    },
+    organizationTypeId: {
+      required,
+    },
+    maxTeamsLimit: {
+      required,
+    },
+  },
   methods: {
     showModalEdit(organization) {
       (this.nameOfOrganization = organization.name),
@@ -146,6 +256,37 @@ export default {
         (el) => el.id === organization.id
       );
       this.oneOrganization = Object.assign(this.oneOrganization, organization);
+    },
+    submit() {
+      if (this.$v.$invalid) {
+        this.$v.$touch();
+      } else {
+        console.log(this.ownerId);
+        this.signUpLoading = true;
+        this.$apollo
+          .mutate({
+            mutation: CREATE_ORGANIZATION,
+            variables: {
+              name: this.name,
+              ownerId: this.ownerId,
+              organizationTypeId: this.organizationTypeId,
+              maxTeamsLimit: this.maxTeamsLimit,
+            },
+          })
+          .then((resp) => {
+            this.signUpLoading = false;
+            this.isAddOrganization = false;
+            console.log(resp);
+          })
+          .catch((error) => {
+            this.signUpLoading = false;
+            console.error(error);
+          });
+        this.isShowAlertAdd = true;
+        setTimeout(() => {
+          this.isShowAlertAdd = false;
+        }, 3000);
+      }
     },
   },
   computed: {
