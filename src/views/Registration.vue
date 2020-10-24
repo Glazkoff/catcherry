@@ -73,10 +73,7 @@ import {
   // TODO: email,
   minLength,
 } from "vuelidate/lib/validators";
-import {
-  SIGN_UP,
-  // CREATE_USER_QUERY,
-} from "@/graphql/queries.js";
+import { SIGN_UP } from "@/graphql/queries.js";
 
 export default {
   // TODO: добавить защиту роутов
