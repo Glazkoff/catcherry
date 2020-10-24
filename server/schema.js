@@ -5,11 +5,13 @@ type Error {
   errorStatus: Int!
   message: String!
 }
+
 type jwt {
   error: Error
   refreshToken: String
   accessToken: String
 }
+
 type User {
   id: ID!
   name: String
@@ -57,8 +59,9 @@ type Mutation {
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
-  signUp(name: String!, login: String!, password: String!): jwt
-  logIn(login: String!, password: String!): jwt
+
+  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
+  logIn(login: String!, password: String!, fingerprint:String!): jwt
   updateAccessToken: jwt!
 }
 `;

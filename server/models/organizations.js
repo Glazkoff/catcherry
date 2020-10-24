@@ -8,10 +8,12 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      // FIXME: раскомментирование вызывает ошибку при удалении из Users
       // Organizations.belongsTo(models.Users, {
       //   foreignKey: "ownerId",
       //   as: "user",
       // });
+      // FIXME: раскомментирование вызывает ошибку
       // Organizations.belongsTo(models.OrganizationsTypes, {
       //   foreignKey: "organizationTypeId",
       //   as: "organizationType",
