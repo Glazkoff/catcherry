@@ -14,11 +14,14 @@ import Registration from "@/views/Registration.vue";
 
 Vue.use(VueRouter);
 
+import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
+
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
+    beforeEnter: ifAuthenticated,
   },
   {
     path: "/admin",
@@ -58,11 +61,13 @@ const routes = [
     path: "/auth",
     name: "Authentication",
     component: Authentication,
+    beforeEnter: ifNotAuthenticated,
   },
   {
     path: "/registration",
     name: "Registration",
     component: Registration,
+    beforeEnter: ifNotAuthenticated,
   },
   // {
   //   path: "/about",
