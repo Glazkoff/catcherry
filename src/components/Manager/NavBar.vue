@@ -1,14 +1,14 @@
 <template>
 <nav>
-    <p>
-        <router-link to="/manager/team_members">Участники</router-link>
-    </p>
-    <p>
-        <router-link to="">Заявки на вхождение</router-link>
-    </p>
-    <p>
-        <router-link to="/manager/team_edit">Редактирование</router-link>
-    </p>
+  <p>
+    <router-link to="/manager/team_members">Участники</router-link>
+  </p>
+  <p>
+    <router-link to="/manager/requests">Заявки на вхождение</router-link>
+  </p>
+  <p>
+    <router-link to="/manager/team_edit">Редактирование</router-link>
+  </p>
 </nav>
 </template>
 
@@ -20,14 +20,14 @@ export default {
 
 <style lang="scss" scoped>
 nav {
-    margin: 1rem;
-    margin-right: 5rem;
+  margin: 1rem;
+  margin-right: 5rem;
 }
 
 nav p {
-    background-color: wheat;
-    margin: 0;
-    border: 1px solid rgb(247, 77, 77);
-    padding: 1rem;
+  background-color: wheat;
+  margin: 0;
+  border: 1px solid rgb(247, 77, 77);
+  padding: 1rem;
 }
 </style>
