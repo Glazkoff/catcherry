@@ -58,7 +58,7 @@ type Query {
   notification(id: ID!): Notification
 
   usersInTeams:[UserInTeam]!
-  userInTeam(id: ID!):UserInTeam
+
 
   requests:[UserInTeam]
 }

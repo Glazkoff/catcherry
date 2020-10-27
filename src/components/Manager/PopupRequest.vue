@@ -15,17 +15,15 @@
         <div class="modal-body">
           <slot name="body">
             <img src="" alt="photo">
-            <p>{{request.name}}</p>
-            <p>{{request.name}}</p>
-            <p>{{request.name}}</p>
-            <p>Пол: {{request.name}}</p>
-            <p>Дата рождения: {{request.name}}</p>
+            <p>{{request.user.name}}</p>
+            <p>Пол: </p>
+            <p>Дата рождения: </p>
           </slot>
         </div>
 
         <div class="modal-footer">
           <slot name="footer">
-            <button type="submit" class="modal-avtive-button">Принять</button>
+            <button type="submit" class="modal-avtive-button" @click="$emit('act')">Принять</button>
             <button type="submit" class="modal-default-button" @click="$emit('close')">Назад</button>
           </slot>
         </div>

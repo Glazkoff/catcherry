@@ -87,3 +87,24 @@ export const DELETE_IN_TEAMS_QUERY = gql`
     deleteUserInTeam(id: $id)
   }
 `;
+
+export const REQUESTS_QUERY = gql`
+  query {
+    requests {
+      id,
+      userId, 
+      teamId,
+      status,
+      roleId,
+      user {
+        id,
+        name
+      }
+    }
+  }
+`;
+export const ACCEPT_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    acceptRequst(id: $id)
+  }
+`;

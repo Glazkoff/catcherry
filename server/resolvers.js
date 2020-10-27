@@ -42,12 +42,8 @@ module.exports = {
 
     usersInTeams: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
+        where: { status: "Принят" },
         order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
-      }),
-    userInTeam: (parent, args, { db }, info) =>
-      db.UsersInTeams.findOne({
-        where: { id: args.id },
         include: [{ model: db.Users, as: "user" }]
       }),
     requests: (parent, args, { db }, info) =>
@@ -225,7 +221,7 @@ module.exports = {
         }
       }),
     /*
-      [Ниже] Мутации работы с заявквами на вхождение в команду     
+      [Ниже] Мутации работы с заявками на вхождение в команду     
     */
   acceptRequst:(parent, { id }, { db }, info) =>
       db.UsersInTeams.update(

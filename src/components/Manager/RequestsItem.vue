@@ -1,13 +1,10 @@
 <template>
 <div class="user">
   <img src="" alt="photo">
-  <div>
-    <p>{{request.name}}</p>
-    <p>{{request.name}}</p>
-    <p>{{request.name}}</p>
-  </div>
+  <p>{{request.user.name}}</p>
+  <p>{{request.status}}</p>
   <button type="submit" @click="showModal = true">Подробнее</button>
-  <PopupRequest v-if="showModal" @close="showModal = false" :request="request" />
+  <PopupRequest v-if="showModal" @close="showModal = false" :request="request" @act="$emit('accept', request.id)" />
 </div>
 </template>
 
