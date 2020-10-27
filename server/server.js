@@ -38,7 +38,7 @@ const db = require("./models/index");
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  context: { db },
+  context: { db }
 });
 
 // Инициализация express-приложения
@@ -60,7 +60,7 @@ app.use(
   bodyParser.json(),
   graphqlExpress((req, res) => ({
     schema,
-    context: { req, res, db },
+    context: { req, res, db }
   }))
 );
 
@@ -75,7 +75,7 @@ app.use(history());
 app.use(express.static(path.join(__dirname, "../dist")));
 
 // Работа со статическими файлами
-// app.use("/public", express.static(path.join(__dirname, "/public")));
+app.use("/public", express.static(path.join(__dirname, "/public")));
 
 // TODO: добавить заполнение фейковыми данными
 
