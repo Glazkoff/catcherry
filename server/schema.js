@@ -59,6 +59,8 @@ type Query {
 
   usersInTeams:[UserInTeam]!
   userInTeam(id: ID!):UserInTeam
+
+  requests:[UserInTeam]
 }
 
 type Mutation {
@@ -72,6 +74,8 @@ type Mutation {
 
   createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
   deleteUserInTeam(id: ID!): Int!
+
+  acceptRequst(id: ID!): [Int]!
 
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt
