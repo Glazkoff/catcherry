@@ -1,3 +1,4 @@
+"use strict";
 /** Список команд для реализации:
  * cd ./server
  * sequelize init
@@ -11,6 +12,7 @@
  * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
  */
 require("dotenv").config({ path: "../.env" });
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
@@ -20,6 +22,8 @@ const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
+const history = require("connect-history-api-fallback");
+const compression = require("compression");
 
 /**
  * Пример для создания точки Graphql
@@ -45,6 +49,18 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
+// Поддержка режима HTML5 History для SPA
+app.use(history());
+
+// Работа со статическими файлами
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// Работа со статическими файлами
+app.use("/public", express.static(path.join(__dirname, "/public")));
+
+// Использование сжатия gzip
+app.use(compression());
+
 // Настройка парсинга Cookie
 app.use(cookieParser());
 
@@ -63,12 +79,6 @@ app.use(
 
 // GraphiQL, визуальный редактор для запросов
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
-
-// Работа со статическими файлами
-app.use(express.static("./public"));
-
-// Корневой путь API
-app.get("/", (req, res) => res.send("Серверная часть проекта ФИШКА"));
 
 // TODO: добавить заполнение фейковыми данными
 
@@ -90,11 +100,13 @@ db.sequelize
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
       );
+      console.log(
+        chalk.green(`Клиентская часть запущена на`),
+        chalk.cyan(`http://localhost:${PORT}/`)
+      );
+      console.log(
+        chalk.blueBright(`Статические файлы доступны на`),
+        chalk.cyan(`http://localhost:${PORT}/public/...`)
+      );
     });
   });
-
-/* TODO: рекомендую использовать следующие библиотеки
-  (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)
-  - const expressJwt = require("express-jwt");
-  - const bcrypt = require("bcrypt")
-*/
