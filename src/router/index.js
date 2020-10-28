@@ -9,9 +9,9 @@ import Registration from "@/views/Registration.vue";
 import AdminPanel from "@/views/AdminPanel.vue";
 import Dashboard from "@/components/admin/Dashboard.vue";
 import Users from "@/components/admin/Users.vue";
+import User from "@/components/account/User.vue";
 import Organization from "@/components/admin/Organization.vue";
 
-import User from "@/components/account/User.vue";
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
@@ -23,7 +23,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Home
   },
   // FIXME: [Фёдор]
   /*
@@ -46,19 +46,19 @@ const routes = [
       {
         path: "",
         name: "Account",
-        component: Account,
+        component: Account
       },
       {
         path: "user_org",
         name: "UserInOrganization",
-        component: UserInOrganization,
+        component: UserInOrganization
       },
       {
         path: "list_req",
         name: "ListReguest",
-        component: ListRequest,
-      },
-    ],
+        component: ListRequest
+      }
+    ]
   },
   {
     path: "/admin",
@@ -67,38 +67,38 @@ const routes = [
     children: [
       {
         path: "",
-        component: Dashboard,
+        component: Dashboard
       },
       {
         path: "users",
-        component: Users,
+        component: Users
       },
       {
         path: "organization",
-        component: Organization,
-      },
-    ],
+        component: Organization
+      }
+    ]
   },
   {
     path: "/list_req",
     name: "ListReguest",
-    component: ListRequest,
+    component: ListRequest
   },
   {
     path: "/auth",
     name: "Authentication",
-    component: Authentication,
+    component: Authentication
   },
   {
     path: "/registration",
     name: "Registration",
-    component: Registration,
+    component: Registration
   },
   {
     path: "/notification",
     name: "ListOfNotifications",
-    component: ListOfNotifications,
-  },
+    component: ListOfNotifications
+  }
   // {
   //   path: "/about",
   //   name: "About",
@@ -113,7 +113,7 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 export default router;
