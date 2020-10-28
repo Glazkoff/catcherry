@@ -1,3 +1,4 @@
+"use strict";
 /** Список команд для реализации:
  * cd ./server
  * sequelize init
@@ -10,15 +11,19 @@
  * https://markomatic.me/blog/node-express-sequelize-pg-graphql/
  * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
  */
-
+require("dotenv").config({ path: "../.env" });
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
+const bcrypt = require("bcrypt");
 const chalk = require("chalk");
-
+const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
+const history = require("connect-history-api-fallback");
+const compression = require("compression");
 
 /**
  * Пример для создания точки Graphql
@@ -44,6 +49,21 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
+// Поддержка режима HTML5 History для SPA
+app.use(history());
+
+// Работа со статическими файлами
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// Работа со статическими файлами
+app.use("/public", express.static(path.join(__dirname, "/public")));
+
+// Использование сжатия gzip
+app.use(compression());
+
+// Настройка парсинга Cookie
+app.use(cookieParser());
+
 // Настройка CORS политики для разработки
 app.use(cors());
 
@@ -51,25 +71,42 @@ app.use(cors());
 app.use(
   "/graphql",
   bodyParser.json(),
-  graphqlExpress({ schema, context: { db } })
+  graphqlExpress((req, res) => ({
+    schema,
+    context: { req, res, db },
+  }))
 );
 
 // GraphiQL, визуальный редактор для запросов
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 
-// Работа со статическими файлами
-app.use(express.static("./public"));
-
-// Корневой путь API
-app.get("/", (req, res) => res.send("Серверная часть проекта ФИШКА"));
-
 // TODO: добавить заполнение фейковыми данными
 
-db.sequelize.sync().then(async () => {
-  app.listen(PORT, () => {
-    console.log(
-      chalk.yellow(`Сервер (Graphiql) запущен на`),
-      chalk.cyan(`http://localhost:${PORT}/graphiql`)
-    );
+db.sequelize
+  // .sync({ alter: true })
+  .sync()
+  .then(async () => {
+    app.listen(PORT, () => {
+      // db.Users.destroy({ where: {} });
+      // const salt = bcrypt.genSaltSync(10);
+      // for (let index = 0; index < 10; index++) {
+      //   db.Users.create({
+      //     name: faker.name.findName(),
+      //     login: faker.random.word(),
+      //     password: bcrypt.hashSync("nikita", salt),
+      //   });
+      // }
+      console.log(
+        chalk.yellow(`Сервер (Graphiql) запущен на`),
+        chalk.cyan(`http://localhost:${PORT}/graphiql`)
+      );
+      console.log(
+        chalk.green(`Клиентская часть запущена на`),
+        chalk.cyan(`http://localhost:${PORT}/`)
+      );
+      console.log(
+        chalk.blueBright(`Статические файлы доступны на`),
+        chalk.cyan(`http://localhost:${PORT}/public/...`)
+      );
+    });
   });
-});

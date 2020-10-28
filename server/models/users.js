@@ -8,10 +8,13 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "ownerId",
         as: "organizations",
       });
-      Users.hasMany(models.Notifications, {
-        foreignKey: "authorId",
-        as: "notificationUser",
-      });
+      // FIXME: При запросе на добавление оповещения возникает ошибка 
+      //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
+
+      // Users.hasMany(models.Notifications, {
+      //   foreignKey: "authorId",
+      //   as: "notificationUser",
+      // });
       Users.hasMany(models.ReadNotification, {
         foreignKey: "userId",
         as: "readNotificationUser",
@@ -61,6 +64,8 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: true,
       },
       password: {
+        // TODO: вспомнить, почему binary
+        // type: DataTypes.STRING.BINARY,
         type: DataTypes.STRING,
         allowNull: true,
       },
