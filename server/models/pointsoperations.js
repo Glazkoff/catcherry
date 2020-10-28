@@ -8,27 +8,30 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      PointsOperations.belongsTo(models.Points);
+      PointsOperations.belongsTo(models.Points, {
+        foreignKey: "accountId",
+        // as: "points"
+      });
     }
   }
   PointsOperations.init(
     {
       accountId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       delta: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       operationType: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "PointsOperations",
+      modelName: "PointsOperations"
     }
   );
   return PointsOperations;
