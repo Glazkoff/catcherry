@@ -24,6 +24,8 @@ const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
 const history = require("connect-history-api-fallback");
 const compression = require("compression");
+const helmet = require("helmet");
+
 
 /**
  * Пример для создания точки Graphql
@@ -66,6 +68,9 @@ app.use(cookieParser());
 
 // Настройка CORS политики для разработки
 app.use(cors());
+
+// Безопасность заголовков
+app.use(helmet());
 
 // Точка входа GraphQL
 app.use(
