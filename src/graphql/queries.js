@@ -34,20 +34,24 @@ export const LOG_IN = gql`
   }
 `;
 
+export const UPDATE_TOKENS = gql`
+  mutation($fingerprint: String!) {
+    updateTokens(fingerprint: $fingerprint) {
+      accessToken
+      error {
+        errorStatus
+        message
+      }
+    }
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {
     createUser(name: $name) {
       id
-      surname
       name
-      patricity
-      birthday
-      gender
-      login
-      password
-      updatedAt
-      createdAt
     }
   }
 `;
@@ -56,7 +60,6 @@ export const ONE_USER_QUERY = gql`
   query($id: ID!) {
     user(id: $id) {
       id
-      surname
       name
       patricity
       gender
@@ -70,7 +73,6 @@ export const USERS_QUERY = gql`
   query {
     users {
       id
-      surname
       name
       surname
       patricity

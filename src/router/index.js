@@ -27,11 +27,14 @@ import FeedOfPosts from "@/components/FeedOfPosts.vue";
 
 Vue.use(VueRouter);
 
+import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
+
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    beforeEnter: ifAuthenticated
   },
   // FIXME: [Фёдор]
   /*
@@ -85,7 +88,8 @@ const routes = [
         path: "organization",
         component: Organization
       }
-    ]
+    ],
+    beforeEnter: ifAuthenticated
   },
   {
     path: "/account",
@@ -105,7 +109,8 @@ const routes = [
   {
     path: "/auth",
     name: "Authentication",
-    component: Authentication
+    component: Authentication,
+    beforeEnter: ifNotAuthenticated
   },
   {
     path: "/registration",

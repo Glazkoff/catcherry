@@ -1,6 +1,4 @@
 module.exports = `
-scalar Date
-
 type Error {
   errorStatus: Int!
   message: String!
@@ -111,7 +109,12 @@ type Query {
   getPointsUser(userId: Int!): PointsUser
   getOperationPointsUser(userId: Int!): [PointOperations]
 }
+
 type Mutation {
+  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
+  logIn(login: String!, password: String!, fingerprint:String!): jwt
+  updateAccessToken(fingerprint:String!): jwt!
+
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
@@ -127,14 +130,10 @@ type Mutation {
   createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
   deleteUserInTeam(id: ID!): Int!
 
-  acceptRequst(id: ID!): [Int]!
+  acceptRequest(id: ID!): [Int]!
   createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
   deletePointOperation(id: ID!): Int!
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
-
-  signUp(name: String!, login: String!, password: String!): jwt
-  logIn(login: String!, password: String!): jwt
-  updateAccessToken: jwt!
 }
 `;
 

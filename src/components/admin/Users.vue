@@ -8,7 +8,7 @@
         {{ fullName }}
       </h3>
       <div slot="body" v-if="isShowModalEdit">
-        <form @submit.prevent="saveUserOnPopup()">
+        <form @submit.prevent="editUser()">
           <label for="surname">Фамилия</label>
           <input
             name="surname"
@@ -31,6 +31,12 @@
             placeholder="Имя"
             required
           />
+          <div v-if="$v.user.name.$error" class="error">
+            <span v-if="!$v.user.name.required">Данное поле обязательно</span>
+            <span v-else-if="!$v.user.name.alpha"
+              >Поле должно содержать только буквы</span
+            >
+          </div>
           <label for="patricity">Отчество (при наличии)</label>
           <input
             name="patricity"
@@ -43,6 +49,9 @@
             <option>Мужской</option>
             <option>Женский</option>
           </select>
+          <div v-if="$v.user.gender.$error" class="error">
+            <span v-if="!$v.user.gender.required">Данное поле обязательно</span>
+          </div>
           <label for="login">Логин</label>
           <input
             name="login"
@@ -50,11 +59,14 @@
             placeholder="Логин"
             required
           />
+          <div v-if="$v.user.login.$error" class="error">
+            <span v-if="!$v.user.login.required">Данное поле обязательно</span>
+          </div>
           <div class="btn-group">
             <button
               class="modal-default-button"
               :disabled="$v.user.$invalid"
-              @click="saveUserOnPopup()"
+              @click="editUser()"
             >
               <i18n path="save"
                 ><span>{{ $t("save") }}</span></i18n
@@ -279,8 +291,7 @@ export default {
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
       this.isShowModalEdit = true;
     },
-    saveUserOnPopup() {
-      console.log(this.user);
+    editUser() {
       this.isShowModalEdit = false;
       this.$apollo
         .mutate({

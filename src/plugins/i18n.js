@@ -10,7 +10,7 @@ export const i18n = new VueI18n({
     en: {
       welcomeMsg: "Hello, PolyWeb!",
       startMsg: "The start of the {title} project",
-      projectTitle: "FISHKA",
+      projectTitle: "CATCHERRY",
       editUser: "Edit user",
       listUser: "A list of users",
       listOrganization: "A list of organization",
@@ -34,7 +34,7 @@ export const i18n = new VueI18n({
     ru: {
       welcomeMsg: "Привет, Поливеб!",
       startMsg: "Старт проекта {title}",
-      projectTitle: "ФИШКА",
+      projectTitle: "Кэтчерри",
       editUser: "Редактировать пользователя",
       listUser: "Список пользователей",
       profileUser: "Профиль",

@@ -26,10 +26,6 @@ const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
 
-/**
- * Пример для создания точки Graphql
- */
-
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 
@@ -50,15 +46,6 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
-// Поддержка режима HTML5 History для SPA
-app.use(history());
-
-// Работа со статическими файлами
-app.use(express.static(path.join(__dirname, "../dist")));
-
-// Работа со статическими файлами
-app.use("/public", express.static(path.join(__dirname, "/public")));
-
 // Использование сжатия gzip
 app.use(compression());
 
@@ -69,7 +56,8 @@ app.use(cookieParser());
 app.use(cors());
 
 // Безопасность заголовков
-app.use(helmet());
+// FIXME: не работает путь /graphiql при использовании
+// app.use(helmet());
 
 // Точка входа GraphQL
 app.use(
@@ -84,26 +72,30 @@ app.use(
 // GraphiQL, визуальный редактор для запросов
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 
+// Поддержка режима HTML5 History для SPA
+// Все указанные выше запросы обрабатываются без history
+app.use(history());
+
+// Работа со статическими файлами
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// Работа со статическими файлами
+app.use("/public", express.static(path.join(__dirname, "/public")));
+
 // TODO: добавить заполнение фейковыми данными
 
 db.sequelize
-  // .sync({ force: true })
   // .sync({ alter: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
-
-      // for (let index = 0; index < 20; index++) {
+      // for (let index = 0; index < 10; index++) {
       //   db.Users.create({
-      //     surname: faker.name.lastName(),
-      //     name: faker.name.firstName(),
-      //     patricity: faker.name.firstName(),
+      //     name: faker.name.findName(),
       //     login: faker.random.word(),
       //     password: bcrypt.hashSync("nikita", salt),
-      //     gender: 'Мужской',
-      //     birthday: faker.date.past()
       //   });
       // }
       console.log(

@@ -3,6 +3,9 @@
     <form @submit.prevent="logIn">
       <h1>Вход</h1>
       <p>* - обязательное поле</p>
+      <div v-if="loginPasswordError" class="error">
+        <span>Ошибка ввода логина или пароля!</span>
+      </div>
       <label>Логин *</label><br />
       <input
         :disabled="authLoading"
@@ -10,6 +13,7 @@
         v-model.trim="$v.login.$model"
         placeholder="Введите логин"
         class="formControl"
+        @input="hideErrors()"
       />
       <div v-if="$v.login.$error" class="error">
         <span v-if="!$v.login.required">Login is required</span>
@@ -22,6 +26,7 @@
         v-model.trim="$v.password.$model"
         placeholder="Введите пароль"
         class="formControl"
+        @input="hideErrors()"
       />
       <div v-if="$v.password.$error" class="error">
         <span v-if="!$v.password.required">Password is required</span>
@@ -40,21 +45,26 @@
       </p>
     </form>
     <h1>{{ authLoading }}</h1>
+    <hr />
+    <TestGraphql></TestGraphql>
   </div>
 </template>
 
 <script>
+import TestGraphql from "@/components/TestGraphql.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import { LOG_IN } from "@/graphql/queries.js";
 export default {
   // TODO: добавить защиту роутов
   name: "Authentication",
+  components: { TestGraphql },
   data() {
     return {
       login: "",
       password: "",
       authLoading: false,
-      fingerprint: ""
+      fingerprint: "",
+      loginPasswordError: false
     };
   },
   async created() {
@@ -73,9 +83,13 @@ export default {
     }
   },
   methods: {
+    hideErrors() {
+      this.loginPasswordError = false;
+    },
     async logIn() {
       if (this.$v.$invalid) {
         this.$v.$touch();
+        this.hideErrors();
       } else {
         this.authLoading = true;
         let userData = {
@@ -92,16 +106,22 @@ export default {
             }
           })
           .then(resp => {
+            console.log("AUTH", resp);
             this.authLoading = false;
             if (resp.data.logIn && !resp.data.logIn.error) {
-              this.$store.commit(
-                "SET_ACCESS_TOKEN",
-                resp.data.logIn.accessToken
-              );
-              this.$router.push("/");
+              if (resp.data.logIn.accessToken !== null) {
+                this.$store.commit(
+                  "SET_ACCESS_TOKEN",
+                  resp.data.logIn.accessToken
+                );
+                this.$router.push("/");
+              } else {
+                this.loginPasswordError = true;
+              }
             } else {
               // TODO: добавить обработку ошибок
-              console.error("ERROR");
+              this.loginPasswordError = true;
+              // console.error("ERROR");
             }
           })
           .catch(error => {

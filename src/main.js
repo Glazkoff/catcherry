@@ -23,7 +23,7 @@ Vue.config.productionTip = process.env.NODE_ENV === "development";
 // Заголовки с получением токена из localstorage
 const getHeaders = () => {
   const headers = {};
-  const token = window.localStorage.getItem("apollo-token");
+  const token = store.accessToken || "";
   if (token) {
     headers.authorization = `Bearer ${token}`;
   }
