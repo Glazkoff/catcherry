@@ -1,4 +1,6 @@
 module.exports = `
+scalar Date
+
 type Error {
   errorStatus: Int!
   message: String!
@@ -19,8 +21,13 @@ type User {
   birthday: String
   login: String
   password: String
-  createdAt: String!
-  updatedAt: String!
+  createdAt: String
+  updatedAt: String
+  surname: String
+  patricity: String
+  birthday: String
+  gender: String
+  deletedAt: String
 }
 
 type Organization {
@@ -108,12 +115,10 @@ type Query {
   getPointsUser(userId: Int!): PointsUser
   getOperationPointsUser(userId: Int!): [PointOperations]
 }
-
 type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(name: String!, surname: String, patricity: String, gender: String, birthday: String, login: String, id: ID!): [Int]!
-
+  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!

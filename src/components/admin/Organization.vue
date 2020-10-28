@@ -1,10 +1,32 @@
 <template>
   <div class="main">
-    <popup @answer="closePopup" v-if="isShowModalEdit">
-      <h3 slot="header">
-        Редактирование организации "{{ nameOfOrganization }}"
+    <popup v-if="isShowFullInformation">
+      <h3 v-if="!isShowModalDelete && !isShowModalEdit" slot="header">
+        Организация "{{ oneOrganization.name }}"
       </h3>
-      <div slot="body">
+      <h3 v-if="isShowModalDelete" slot="header">
+        Вы действительно хотите удалить организацию "{{
+          oneOrganization.name
+        }}"?
+      </h3>
+      <h3 v-if="isShowModalEdit" slot="header">
+        Редактировать организацию "{{ oneOrganization.name }}"?
+      </h3>
+      <div slot="body" v-if="!isShowModalDelete && !isShowModalEdit">
+        <p>{{ oneOrganization.organizationType }}</p>
+        <p>{{ oneOrganization.maxTeamsLimit }}</p>
+        <p>{{ oneOrganization.createAt }}</p>
+        <div class="btn-group">
+          <button @click="showModalEdit()">Редактировать</button>
+          <button @click="showModalDelete()">Удалить</button>
+          <button @click="cancelFullInformation()">
+            <i18n path="cancel"
+              ><span place="title">{{ $t("cancel") }}</span></i18n
+            >
+          </button>
+        </div>
+      </div>
+      <div slot="body" v-if="isShowModalEdit">
         <form>
           <label for="name">Название</label>
           <input
@@ -13,37 +35,25 @@
             placeholder="Название"
             required
           />
+          <div class="btn-group" v-if="!isShowModalDelete && !isShowModalEdit">
+            <button @click="showModalEdit()">Редактировать</button>
+            <button @click="showModalDelete()">Удалить</button>
+            <button @click="cancelFullInformation()">
+              <i18n path="cancel"
+                ><span place="title">{{ $t("cancel") }}</span></i18n
+              >
+            </button>
+          </div>
         </form>
+        <div class="btn-group" v-if="isShowModalDelete">
+          <button @click="deleteOrganization()">Удалить</button>
+          <button @click="cancelModalDelete()">Отменить</button>
+        </div>
+        <div class="btn-group" v-if="isShowModalEdit">
+          <button @click="editOrganization()">Сохранить</button>
+          <button @click="cancelModalEdit()">Отменить</button>
+        </div>
       </div>
-      <button
-        slot="action"
-        class="modal-default-button"
-        @click="
-          closePopup({
-            ans: true,
-            action: 'edit',
-            organization: oneOrganization,
-          })
-        "
-      >
-        Сохранить
-      </button>
-    </popup>
-    <popup
-      @answer="closePopup"
-      :organization="organizations[index]"
-      v-if="isShowModalDelete"
-    >
-      <h3 slot="header">
-        Вы действительно хотите удалить организацию "{{ nameOfOrganization }}"?
-      </h3>
-      <button
-        slot="action"
-        class="modal-default-button"
-        @click="closePopup({ ans: true, action: 'delete' })"
-      >
-        Удалить
-      </button>
     </popup>
     <h2>Список организаций</h2>
     <h6 v-if="organizations.length == 0">
@@ -60,12 +70,11 @@
         v-for="organization in filterOrganization"
         :key="organization.id"
       >
-        <p>{{ organization.id }}.</p>
-        <p>{{ organization.name }}</p>
-        <p>{{ organization.ownerId }}</p>
-        <p>{{ organization.organizationType }}</p>
-        <button @click="showModalEdit(organization)">Редактировать</button>
-        <button @click="showModalDelete(organization)">Удалить</button>
+        <div>
+          <p>{{ organization.name }}</p>
+          <p>№ {{ organization.id }}</p>
+        </div>
+        <a @click="showFullInformation(organization)">Подробнее</a>
       </div>
     </div>
     <minialert v-if="isShowAlertEdit"
@@ -91,6 +100,7 @@ export default {
       isShowModalDelete: false,
       isShowAlertEdit: false,
       isShowAlertDelete: false,
+      isShowFullInformation: false,
       findString: "",
       organizations: [
         {
@@ -100,7 +110,7 @@ export default {
           organizationType: "Обычная",
           maxTeamsLimit: 10,
           createAt: new Date(),
-          updateAt: new Date(),
+          updateAt: new Date()
         },
         {
           id: 2,
@@ -109,56 +119,73 @@ export default {
           organizationType: "Обычная",
           maxTeamsLimit: 23,
           createAt: new Date(),
-          updateAt: new Date(),
-        },
-      ],
+          updateAt: new Date()
+        }
+      ]
     };
   },
   methods: {
-    showModalDelete(organization) {
-      (this.nameOfOrganization = organization.name),
-        (this.isShowModalDelete = true);
-      this.index = this.organizations.findIndex(
-        (el) => el.id === organization.id
-      );
-      this.oneOrganization = organization;
+    cancelFullInformation() {
+      this.isShowFullInformation = false;
     },
-    showModalEdit(organization) {
-      (this.nameOfOrganization = organization.name),
-        (this.isShowModalEdit = true);
-      this.index = this.organizations.findIndex(
-        (el) => el.id === organization.id
-      );
+    showFullInformation(organization) {
       this.oneOrganization = Object.assign(this.oneOrganization, organization);
+      this.isShowFullInformation = true;
     },
-    closePopup(ans) {
+    showModalDelete() {
+      this.isShowModalDelete = true;
+    },
+    cancelModalDelete() {
       this.isShowModalDelete = false;
-      this.isShowModalEdit = false;
-      if (ans.ans && ans.action == "delete") {
-        this.index = this.organizations.findIndex(
-          (el) => el.id === this.oneOrganization.id
-        );
-        this.organizations.splice(this.index, 1);
-        this.isShowAlertDelete = true;
-        setTimeout(() => {
-          this.isShowAlertDelete = false;
-        }, 3000);
-      } else if (ans.ans && ans.action === "edit") {
-        this.index = this.organizations.findIndex(
-          (el) => el.id === this.oneOrganization.id
-        );
-        this.organizations.splice(this.index, 1, ans.organization);
-        this.isShowAlertEdit = true;
-        setTimeout(() => {
-          this.isShowAlertEdit = false;
-        }, 3000);
-      }
     },
+    deleteOrganization() {
+      this.isShowFullInformation = false;
+      this.isShowModalDelete = false;
+      this.index = this.organizations.findIndex(
+        el => el.id === this.oneOrganization.id
+      );
+      this.organizations.splice(this.index, 1);
+      this.isShowAlertDelete = true;
+      setTimeout(() => {
+        this.isShowAlertDelete = false;
+      }, 3000);
+    },
+    showModalEdit() {
+      this.isShowModalEdit = true;
+    },
+    cancelModalEdit() {
+      this.isShowModalEdit = false;
+    },
+    editOrganization() {
+      this.isShowModalEdit = false;
+      this.index = this.organizations.findIndex(
+        el => el.id === this.oneOrganization.id
+      );
+      this.organizations.splice(this.index, 1, this.oneOrganization);
+      this.isShowAlertEdit = true;
+      setTimeout(() => {
+        this.isShowAlertEdit = false;
+      }, 3000);
+    }
+    // closePopup(ans) {
+    //   this.isShowModalDelete = false;
+    //   this.isShowModalEdit = false;
+    //   if (ans.ans && ans.action === "edit") {
+    //     this.index = this.organizations.findIndex(
+    //       el => el.id === this.oneOrganization.id
+    //     );
+    //     this.organizations.splice(this.index, 1, ans.organization);
+    //     this.isShowAlertEdit = true;
+    //     setTimeout(() => {
+    //       this.isShowAlertEdit = false;
+    //     }, 3000);
+    //   }
+    // }
   },
   computed: {
     filterOrganization() {
       if (this.findString !== "") {
-        return this.organizations.filter((el) => {
+        return this.organizations.filter(el => {
           return (
             el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
               -1 && el.name !== ""
@@ -167,19 +194,40 @@ export default {
       } else {
         return this.organizations;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
 <style lang="scss" scoped>
-button {
-  width: 100%;
-  margin: 0 5%;
-}
+// button {
+//   width: 100%;
+//   margin: 0 5%;
+// }
 .oneOrganization {
-  display: grid;
-  grid-template-columns: 5% 25% 20% 20% 15% 15%;
-  grid-template-rows: 1fr;
+  display: flex;
+  justify-content: space-between;
+  padding: 1%;
+  border: 1px solid black;
+  margin-bottom: 1%;
+  div {
+    width: 70%;
+    p {
+      margin: 0;
+      padding: 0;
+    }
+  }
+  a {
+    color: grey;
+    text-decoration: underline;
+  }
+  .btn-group {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    button {
+      width: 100%;
+    }
+  }
 }
 </style>

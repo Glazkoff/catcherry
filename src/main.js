@@ -9,8 +9,13 @@ import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { i18n } from "./plugins/i18n";
 import FlagIcon from "vue-flag-icon";
-import { directive as onClickaway } from "vue-clickaway"; 
+
+import { directive as onClickaway } from "vue-clickaway";
 Vue.directive("on-clickaway", onClickaway);
+
+import FingerprintJS from "@fingerprintjs/fingerprintjs";
+Vue.prototype.$fingerprint = FingerprintJS;
+
 Vue.use(Vuelidate);
 Vue.use(FlagIcon);
 Vue.config.productionTip = process.env.NODE_ENV === "development";
@@ -29,25 +34,25 @@ const getHeaders = () => {
 const link = new createHttpLink({
   uri: process.env.VUE_APP_GRAPHQL_URL,
   fetch,
-  headers: getHeaders(),
+  headers: getHeaders()
 });
 
 // Кэш Apollo (Graphql)
 const cache = new InMemoryCache({
-  addTypename: true,
+  addTypename: true
 });
 
 // Клиент Apollo
 const apolloClient = new ApolloClient({
   link,
-  cache,
+  cache
 });
 
 Vue.use(VueApollo);
 
 // Провайдер Apollo (Graphql)
 const apolloProvider = new VueApollo({
-  defaultClient: apolloClient,
+  defaultClient: apolloClient
 });
 
 new Vue({
@@ -55,5 +60,5 @@ new Vue({
   store,
   i18n,
   apolloProvider,
-  render: (h) => h(App),
+  render: h => h(App)
 }).$mount("#app");
