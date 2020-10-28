@@ -10,7 +10,7 @@
       <button v-on:click="onLike()">Лайк</button>
       <button v-on:click="onComment()">Коммент</button>
       <button v-on:click="onShare()">Репост</button>
-      <div class="postComments">
+      <!-- <div class="postComments">
         <div v-for="comment in comments" :key="comment.id">
           <p>{{ comment.author }}</p>
           <p>{{ comment.body }}</p>
@@ -23,14 +23,19 @@
           ></textarea>
           <input type="submit" value="Добавить" />
         </form>
-      </div>
+      </div> -->
+      <comments></comments>
     </div>
   </div>
 </template>
 
 <script>
+import Comments from "../components/Comments.vue";
 export default {
   name: "DetailedPost",
+  components: {
+        Comments
+    },
   computed: {
     id() {
       return this.$route.params.id
