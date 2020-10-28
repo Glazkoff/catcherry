@@ -1,43 +1,36 @@
 <template>
   <div class="container">
     <img src="../assets/placeholder.png" alt="placeholder" />
-    <h2>{{ this.headline }}</h2>
-    <p class="postDate">{{ this.date }}</p>
-    <p class="postBody">
-      {{ this.body }}
+    <router-link :to="{ name: 'Posts', params: { id: post.id},}">{{post.header}}</router-link>
+    <p>{{ post.date }}</p>
+    <p>
+      {{ post.body}}
     </p>
-    <span class="countLike">10</span>
-    <button v-on:click="onLike()">Лайк</button>
-    <span class="countComment">999</span>
-    <button v-on:click="onComment()">Коммент</button>
-    <span class="countRepost">9</span>
-    <button v-on:click="onRepost()">Репост</button>
+    <button v-on:click="onLike(post.id)">Лайк</button>
+    <button v-on:click="onComment(post.id)">Коммент</button>
+    <button v-on:click="onShare(post.id)">Репост</button>
   </div>
 </template>
 
 <script>
 export default {
   name: "OnePostList",
+  props: ["post"],
   data() {
     return {
-      errors: [],
-      headline: "Новая срочная новость из отдела техподдержки",
-      date: "29.09.2020 17:00",
-      body:
-        "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?"
-    };
+      };
   },
   methods: {
-    onLike() {
-      console.log("Нажата кнопка лайка");
+    onLike(id) {
+      this.$emit("like", {id: id});
     },
-    onComment() {
-      console.log("Нажата кнопка комментария");
+    onComment(id) {
+      this.$emit("comment", {id: id});
     },
-    onRepost() {
-      console.log("Нажата кнопка репоста");
-    }
-  }
+    onShare(id) {
+      this.$emit("share", {id: id});
+    },
+  },
 };
 </script>
 
@@ -52,7 +45,9 @@ export default {
   box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
     0px 20px 32px rgba(96, 97, 112, 0.24);
 }
+.header{
 
+}
 .container img {
   box-shadow: 0;
   margin-right: 5%;
