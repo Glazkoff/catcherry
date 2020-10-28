@@ -8,6 +8,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "ownerId",
         as: "organizations",
       });
+      // FIXME: При запросе на добавление оповещения возникает ошибка 
+      //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
+
       Users.hasMany(models.Notifications, {
         foreignKey: "authorId",
         as: "notificationUser",
@@ -67,6 +70,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
+      paranoid: true,
       modelName: "Users",
     }
   );

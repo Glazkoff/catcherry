@@ -12,11 +12,15 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "accountId",
         // as: "points"
       });
+      //TODO: Определить внешний ключ pointAccountId
+      //TODO: Сохранять предыдущее состояние счета
+
+      PointsOperations.belongsTo(models.Points);
     }
   }
   PointsOperations.init(
     {
-      accountId: {
+      pointAccountId: {
         type: DataTypes.INTEGER,
         allowNull: false
       },
@@ -24,10 +28,10 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      operationType: {
+      operationDescription: {
         type: DataTypes.STRING,
-        allowNull: false
-      }
+        allowNull: true,
+      },
     },
     {
       sequelize,

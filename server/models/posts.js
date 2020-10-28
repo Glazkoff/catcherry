@@ -30,11 +30,11 @@ module.exports = (sequelize, DataTypes) => {
       },
       organizationId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       forAllTeam: {
         type: DataTypes.BOOLEAN,
-        allowNull: false
+        allowNull: true
       }
     },
     {

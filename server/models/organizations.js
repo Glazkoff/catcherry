@@ -8,20 +8,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // FIXME: раскомментирование вызывает ошибку при удалении из Users
-      // Organizations.belongsTo(models.Users, {
-      //   foreignKey: "ownerId",
-      //   as: "user",
-      // });
-      // FIXME: раскомментирование вызывает ошибку
-      // Organizations.belongsTo(models.OrganizationsTypes, {
-      //   foreignKey: "organizationTypeId",
-      //   as: "organizationType",
-      // });
+      Organizations.belongsTo(models.Users, {
+        foreignKey: "ownerId",
+        as: "user"
+      });
+      Organizations.belongsTo(models.OrganizationsTypes, {
+        foreignKey: "organizationTypeId",
+        as: "organizationType"
+      });
       Organizations.hasMany(models.Teams, {
         onDelete: "cascade",
         foreignKey: "organizationId",
-        as: "teams",
+        as: "teams"
+      });
+      Organizations.hasMany(models.Posts, {
+        foreignKey: "organizationId",
+        as: "posts"
       });
     }
   }
@@ -29,24 +31,24 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       ownerId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       organizationTypeId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       maxTeamsLimit: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "Organizations",
+      modelName: "Organizations"
     }
   );
   return Organizations;
