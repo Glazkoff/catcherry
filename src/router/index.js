@@ -80,6 +80,11 @@ const routes = [
     ]
   },
   {
+    path: "/user_org",
+    name: "UserInOrganization",
+    component: UserInOrganization
+  },
+  {
     path: "/list_req",
     name: "ListReguest",
     component: ListRequest

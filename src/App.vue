@@ -7,7 +7,8 @@
     </div>
     <h1>{{ $t("welcomeMsg") }}</h1>
     <nav>
-      <router-link to="/user/136">Профиль</router-link>
+      <!-- FIXME: сделать id пользователя динамическим -->
+      <router-link to="/user/1">Профиль</router-link>
     </nav>
     <hr />
     <router-view></router-view>
@@ -21,8 +22,8 @@ export default {
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
-    },
-  },
+    }
+  }
 };
 </script>
 

@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="account-view">
     <h1>Список заявок на вступление в команду</h1>
     <div v-for="request in requests" :key="request.id">
       <div class="result_card">

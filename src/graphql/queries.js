@@ -1,5 +1,4 @@
 import gql from "graphql-tag";
-
 // (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 
 export const SIGN_UP = gql`
@@ -36,10 +35,15 @@ export const CREATE_USER_QUERY = gql`
 `;
 
 export const ONE_USER_QUERY = gql`
-  query {
-    user(id:156) {
+  query($id: ID!) {
+    user(id: $id) {
       id
       name
+      surname
+      patricity
+      gender
+      birthday
+      login
     }
   }
 `;
@@ -49,18 +53,122 @@ export const USERS_QUERY = gql`
     users {
       id
       name
+      surname
+      patricity
+      gender
+      birthday
+      login
     }
   }
 `;
 
 export const UPDATE_USER_QUERY = gql`
-  mutation($name: String!, $id: ID!) {
-    updateUser(name: $name, id: $id)
+  mutation(
+    $name: String!
+    $surname: String
+    $patricity: String
+    $gender: String
+    $birthday: String
+    $login: String
+    $id: ID!
+  ) {
+    updateUser(
+      name: $name
+      surname: $surname
+      patricity: $patricity
+      gender: $gender
+      birthday: $birthday
+      login: $login
+      id: $id
+    )
   }
 `;
 
 export const DELETE_USER_QUERY = gql`
   mutation($id: ID!) {
     deleteUser(id: $id)
+  }
+`;
+
+export const CREATE_ORGANIZATION = gql`
+  mutation(
+    $name: String!
+    $ownerId: Int
+    $organizationTypeId: Int
+    $maxTeamsLimit: Int
+  ) {
+    createOrganization(
+      name: $name
+      ownerId: $ownerId
+      organizationTypeId: $organizationTypeId
+      maxTeamsLimit: $maxTeamsLimit
+    ) {
+      id
+    }
+  }
+`;
+
+export const ORGS_QUERY = gql`
+  query {
+    organizations {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+    }
+  }
+`;
+export const ONE_ORG_QUERY = gql`
+  query($id: ID!) {
+    organization(id: $id) {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+    }
+  }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation(
+    $organizationId: Int
+    $name: String!
+    $description: String
+    $maxUsersLimit: Int
+  ) {
+    createTeam(
+      organizationId: $organizationId
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+    ) {
+      id
+    }
+  }
+`;
+
+export const TEAMS_QUERY = gql`
+  query {
+    teams {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
+export const TEAM_IN_ORG_QUERY = gql`
+  query($organizationId: Int) {
+    team(organizationId: $organizationId) {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
   }
 `;

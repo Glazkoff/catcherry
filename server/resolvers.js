@@ -35,6 +35,18 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
+    organizations: (parent, args, { db }, info) =>
+      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+    organization: (parent, args, { db }, info) => {
+      return db.Organizations.findOne({ where: { id: args.id } });
+    },
+    teams: (parent, args, { db }, info) =>
+      db.Teams.findAll({ order: [["id", "ASC"]] }),
+    team: (parent, args, { db }, info) => {
+      return db.Teams.findOne({
+        where: { organizationId: args.organizationId },
+      });
+    },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
@@ -125,10 +137,20 @@ module.exports = {
       db.Users.create({
         name: name,
       }),
-    updateUser: (parent, { name, id }, { db }, info) =>
+    updateUser: (
+      parent,
+      { name, surname, patricity, gender, birthday, login, id },
+      { db },
+      info
+    ) =>
       db.Users.update(
         {
           name: name,
+          surname: surname,
+          patricity: patricity,
+          gender: gender,
+          birthday: birthday,
+          login: login,
         },
         {
           where: {
@@ -153,6 +175,62 @@ module.exports = {
       // TODO: добавить резолвер login
       return "DO LOG IN";
     },
+    /*
+      [Ниже] Мутации работы с организациями (Organization)     
+    */
+    createOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit },
+      { db },
+      info
+    ) =>
+      db.Organizations.create({
+        name: name,
+        ownerId: ownerId,
+        organizationTypeId: organizationTypeId,
+        maxTeamsLimit: maxTeamsLimit,
+      }),
+    updateOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit, id },
+      { db },
+      info
+    ) =>
+      db.Organizations.update(
+        {
+          name: name,
+          ownerId: ownerId,
+          organizationTypeId: organizationTypeId,
+          maxTeamsLimit: maxTeamsLimit,
+        },
+        {
+          where: {
+            id: id,
+          },
+        }
+      ),
+    deleteOrganization: (parent, args, { db }, info) =>
+      db.Organizations.destroy({
+        where: {
+          id: args.id,
+        },
+      }),
+    /*
+      [Ниже] Мутации работы с организациями (Organization)     
+    */
+    createTeam: (
+      parent,
+      { organizationId, name, description, maxUsersLimit },
+      { db },
+      info
+    ) =>
+      db.Teams.create({
+        organizationId: organizationId,
+        name: name,
+        description: description,
+        maxUsersLimit: maxUsersLimit
+      }),
+    
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
