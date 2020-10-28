@@ -16,6 +16,9 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import ListOfNotifications from "@/components/ListOfNotifications.vue";
+import TeamMembers from "@/components/Manager/TeamMembers.vue";
+import EditTeam from "@/components/Manager/EditTeam.vue";
+import RequestsList from "@/components/Manager/RequestsList.vue";
 
 Vue.use(VueRouter);
 
@@ -103,6 +106,21 @@ const routes = [
     path: "/notification",
     name: "ListOfNotifications",
     component: ListOfNotifications
+  },
+  {
+    path: "/manager/team_members",
+    name: "TeamMembers",
+    component: TeamMembers
+  },
+  {
+    path: "/manager/team_edit",
+    name: "EditTeam",
+    component: EditTeam
+  },
+  {
+    path: "/manager/requests",
+    name: "RequestsList",
+    component: RequestsList
   }
   // {
   //   path: "/about",

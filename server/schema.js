@@ -43,14 +43,27 @@ type Team {
   updatedAt: String!
 }
 
+type UserInTeam {
+  id: ID!
+  userId: ID!
+  teamId: ID!
+  status: String!
+  roleId: ID!
+  user:User!
+  createdAt: String!
+  updatedAt: String!
+}
+
 input NotificationBody {
   header: String!
   text: String!
 }
+
 type BodyNotification {
   header: String!
   text: String!
 }
+
 type Notification {
   id: ID!
   body: BodyNotification!
@@ -75,6 +88,10 @@ type Query {
   
   notifications: [Notification]!
   notification(id: ID!): Notification
+
+  usersInTeams:[UserInTeam]!
+
+  requests:[UserInTeam]
 }
 
 type Mutation {
@@ -91,6 +108,10 @@ type Mutation {
   deleteOrganization(id: ID!): Int!
 
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
+  createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
+  deleteUserInTeam(id: ID!): Int!
+
+  acceptRequst(id: ID!): [Int]!
 
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt
