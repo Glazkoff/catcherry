@@ -15,6 +15,7 @@ import User from "@/components/account/User.vue";
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
+import ListOfNotifications from "@/components/ListOfNotifications.vue";
 
 Vue.use(VueRouter);
 
@@ -79,6 +80,11 @@ const routes = [
     ],
   },
   {
+    path: "/list_req",
+    name: "ListReguest",
+    component: ListRequest,
+  },
+  {
     path: "/auth",
     name: "Authentication",
     component: Authentication,
@@ -87,6 +93,11 @@ const routes = [
     path: "/registration",
     name: "Registration",
     component: Registration,
+  },
+  {
+    path: "/notification",
+    name: "ListOfNotifications",
+    component: ListOfNotifications,
   },
   // {
   //   path: "/about",
