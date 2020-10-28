@@ -25,10 +25,6 @@ const cors = require("cors");
 const history = require("connect-history-api-fallback");
 const compression = require("compression");
 
-/**
- * Пример для создания точки Graphql
- */
-
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 
@@ -42,14 +38,37 @@ const db = require("./models/index");
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  context: { db },
+  context: { db }
 });
 
 // Инициализация express-приложения
 const app = express();
 const PORT = 3000;
 
+// Настройка CORS политики для разработки
+app.use(cors());
+
+// Использование сжатия gzip
+// app.use(compression());
+
+// Настройка парсинга Cookie
+app.use(cookieParser());
+
+// Точка входа GraphQL
+app.use(
+  "/graphql",
+  bodyParser.json(),
+  graphqlExpress((req, res) => ({
+    schema,
+    context: { req, res, db }
+  }))
+);
+
+// GraphiQL, визуальный редактор для запросов
+app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
+
 // Поддержка режима HTML5 History для SPA
+// Все указанные выше запросы обрабатываются без history
 app.use(history());
 
 // Работа со статическими файлами
@@ -58,60 +77,32 @@ app.use(express.static(path.join(__dirname, "../dist")));
 // Работа со статическими файлами
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
-// Использование сжатия gzip
-app.use(compression());
-
-// Настройка парсинга Cookie
-app.use(cookieParser());
-
-// Настройка CORS политики для разработки
-app.use(cors());
-
-// Точка входа GraphQL
-app.use(
-  "/graphql",
-  bodyParser.json(),
-  graphqlExpress((req, res) => ({
-    schema,
-    context: { req, res, db },
-  }))
-);
-
-// GraphiQL, визуальный редактор для запросов
-app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
-
 // TODO: добавить заполнение фейковыми данными
 
 db.sequelize
-  // .sync({ force: true })
   // .sync({ alter: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
-
-      // for (let index = 0; index < 20; index++) {
+      // for (let index = 0; index < 10; index++) {
       //   db.Users.create({
-      //     surname: faker.name.lastName(),
-      //     name: faker.name.firstName(),
-      //     patricity: faker.name.firstName(),
+      //     name: faker.name.findName(),
       //     login: faker.random.word(),
       //     password: bcrypt.hashSync("nikita", salt),
-      //     gender: 'Мужской',
-      //     birthday: faker.date.past()
       //   });
       // }
       console.log(
-        chalk.yellow(`Сервер (Graphiql) запущен на`),
+        chalk.yellow('Сервер (Graphiql) запущен на'),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
       );
       console.log(
-        chalk.green(`Клиентская часть запущена на`),
+        chalk.green('Клиентская часть запущена на'),
         chalk.cyan(`http://localhost:${PORT}/`)
       );
       console.log(
-        chalk.blueBright(`Статические файлы доступны на`),
+        chalk.blueBright('Статические файлы доступны на'),
         chalk.cyan(`http://localhost:${PORT}/public/...`)
       );
     });

@@ -1,22 +1,6 @@
 require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
-// Соль для шифрования bcrypt
-const salt = bcrypt.genSaltSync(10);
-
-// Функция генерации токенов (принмает данные, которые мы заносим в токен )
-function generateTokens(user) {
-  // Генерируем рефреш-токен
-  let refreshToken = jwt.sign(
-    { userId: user.id },
-    process.env.REFRESH_TOKEN_SECRET,
-    {
-      expiresIn: 100 * 60 * 60 * 24 * 365,
-    }
-  );
-
-  // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
 const { v4 } = require("uuid");
 
 // Соль для шифрования bcrypt
@@ -29,53 +13,97 @@ function generateTokens(user) {
 
   // Генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 100 * 60 * 60 * 24,
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
   });
 
   // Возвращаем объект с двумя полями (refreshToken, accessToken)
   return {
     refreshToken,
-    accessToken,
+    accessToken
   };
 }
 
 async function addRefreshSession(db, userId, refreshToken, fingerprint) {
-  let sessionsCount = await db.RefreshSessions.count({
-    where: {
+  try {
+    // Задаём объект сессии
+    let USER_OBJECT = {
       userId,
-    },
-  });
-  if (sessionsCount > 5) {
-    await db.RefreshSessions.destroy({
+      refreshToken,
+      // ua,
+      fingerprint,
+      // ip: ip
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
+    };
+
+    // Находим предыдущую сессию на этом клиенте
+    let prevSession = await db.RefreshSessions.findOne({
       where: {
-        userId,
-      },
+        fingerprint
+      }
     });
+
+    // Если нет предыдущая сессия на этом клиенте, создаём новую для клиента
+    if (!prevSession) {
+      // Считаем количество клиентов (сессий) для пользователя
+      let sessionsCount = await db.RefreshSessions.count({
+        where: {
+          userId
+        }
+      });
+
+      // Если количество клиентов для пользователя больше 5, удаляем все сессии
+      if (sessionsCount > 5) {
+        await db.RefreshSessions.destroy({
+          where: {
+            userId
+          }
+        });
+      }
+
+      // Создаём новую сессию
+      let res = await db.RefreshSessions.create(USER_OBJECT);
+      return res;
+    }
+    // Если есть предыдущие сессии, удаляем и создаём ещё раз
+    else {
+      await db.RefreshSessions.destroy({
+        where: {
+          userId,
+          fingerprint
+        }
+      });
+      let sessionsUpdate = await db.RefreshSessions.create(USER_OBJECT);
+      return sessionsUpdate;
+    }
+  } catch (error) {
+    // Возвращаем ошибку в случае возникновения
+    return error;
   }
-  let res = await db.RefreshSessions.create({
-    userId,
-    refreshToken,
-    // ua,
-    fingerprint,
-    // ip: ip
-    expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
-  });
-  return res;
 }
 
 module.exports = {
   Query: {
     users: (parent, args, { db }, info) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
+      teams: (parent, args, { db }, info) =>
+      db.Teams.findAll({ order: [["id", "ASC"]] }),
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
-    deletedUsers: (parent, args, { db }, info) => 
-      db.Users.findAll({ order: [["id", "ASC"]], paranoid: false }),
+    organizations: (parent, args, { db }, info) => 
+      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+    organization: async (parent, args, { db }, info) => {
+      let a = await db.Organizations.findOne({ 
+        where: { id: args.id }, 
+        include: [{ model: db.OrganizationsTypes, as: "organizationType" }, { model: db.Users, as: "owner" }, { model: db.Teams, as: "teams" }] 
+      });
+      console.log("AAA", JSON.stringify(a));
+      return a;
+    },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
-      db.Notifications.findOne({ where: { id: args.id } }),
+      db.Notifications.findOne({ where: { id: args.id } })
   },
   Mutation: {
     /*
@@ -90,11 +118,10 @@ module.exports = {
       let hashPassword = bcrypt.hashSync(password, salt);
 
       // Добавляем данные в БД
-
       let user = await db.Users.create({
         login,
         name,
-        password: hashPassword,
+        password: hashPassword
       });
 
       // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -111,7 +138,7 @@ module.exports = {
       // Записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365,
+        maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
       });
       return tokens;
     },
@@ -121,19 +148,24 @@ module.exports = {
       { res, db },
       info
     ) => {
+      console.log(login, password, fingerprint);
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login,
-        },
+          login
+        }
       });
       // Проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
-        return null;
+        return {
+          errror: {
+            errorStatus: 401,
+            message: "Incorrect login or password!"
+          }
+        };
       } else if (bcrypt.compareSync(password, user.password)) {
         // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
         let tokens = generateTokens(user.dataValues);
-
         // Добавляем сессию в БД
         await addRefreshSession(
           db,
@@ -141,45 +173,72 @@ module.exports = {
           tokens.refreshToken,
           fingerprint
         );
-
         // Записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 365,
+          maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
         });
-
         // Отправить в ответ оба токен
         return tokens;
       } else {
-        return null;
+        return {
+          errror: {
+            errorStatus: 401,
+            message: "Incorrect login or password!"
+          }
+        };
       }
     },
-    updateAccessToken: async (parent, {}, { req, res, db }, info) => {
-      let refreshToken = req.cookies.refreshToken;
-      if (
-        !refreshToken ||
-        !jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
-      ) {
+    updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
+      // Читаем refresh токен
+      // let refreshToken = req.cookies.refreshToken;
+      // TODO: заменить
+      let refreshToken = "be332aae-d88f-4e40-96d6-16120c2caf13";
+
+      // Если токен в cookie пустой
+      if (!refreshToken) {
         return {
           error: {
             errorStatus: 401,
-            message: "Refresh token is absent",
-          },
+            message: "Refresh token is absent!"
+          }
         };
       } else {
-        let userId = jwt.decode(refreshToken).userId;
-        let user = await db.Users.findOne({ where: { id: userId } });
-        let accessToken = jwt.sign(
-          user.dataValues,
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: 100 * 60 * 60 * 24,
+        // Ищем запись в таблице сессий
+        let refreshSession = await db.RefreshSessions.findOne({
+          where: {
+            fingerprint,
+            refreshToken
           }
-        );
-        return {
-          // TODO: выпустить токен
-          accessToken,
-        };
+        });
+
+        // Если запись в таблице сессий не найдена
+        if (!refreshSession) {
+          return {
+            error: {
+              errorStatus: 401,
+              message: "Refresh token is absent!"
+            }
+          };
+        } else {
+          // Находим пользователя
+          let user = await db.Users.findOne({
+            where: { id: refreshSession.userId }
+          });
+
+          // Генерируем новые токены для пользователя
+          let tokens = generateTokens(user.dataValues);
+
+          // Записать в Cookie HttpOnly рефреш-токен
+          res.cookie("refreshToken", tokens.refreshToken, {
+            httpOnly: true,
+            maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
+          });
+
+          return {
+            accessToken: tokens.accessToken
+          };
+        }
       }
     },
     /*
@@ -187,40 +246,47 @@ module.exports = {
     */
     createUser: (parent, { name }, { db }, info) =>
       db.Users.create({
-        name: name,
+        name: name
       }),
-    updateUser: (parent, { surname, name, patricity, gender, login, id}, { db }, info) =>
+    updateUser: (parent, { surname, name, patricity, gender, login, id }, { db }, info) =>
       db.Users.update(
         {
-          surname: surname,
           name: name,
+          surname: surname,
           patricity: patricity,
           gender: gender,
-          login: login,
+          login: login
         },
         {
           where: {
-            id: id,
-          },
+            id
+          }
         }
       ),
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
+          id: args.id
+        }
+      }),
+
+      deleteOrganization: (parent, args, { db }, info) =>
+      db.Organizations.destroy({
+        where: {
           id: args.id,
         },
       }),
-    /*
-      [Ниже] Мутации регистрации и авторизации
-    */
-    signUp: async (parent, args, { db }, info) => {
-      // TODO: добавить резолвер signup
-      return "DO SIGN UP";
-    },
-    logIn: async (parent, args, { db }, info) => {
-      // TODO: добавить резолвер login
-      return "DO LOG IN";
-    },
+      updateOrganization: (parent, { name, id }, { db }, info) =>
+      db.Organizations.update(
+        {
+          name: name
+        },
+        {
+          where: {
+            id
+          }
+        }
+      ),
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
@@ -228,7 +294,7 @@ module.exports = {
       db.Notifications.create({
         body: body,
         authorId: authorId,
-        teamId: teamId,
+        teamId: teamId
       }),
     updateNotification: (
       parent,
@@ -242,19 +308,19 @@ module.exports = {
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam,
+          forAllTeam: forAllTeam
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
         where: {
-          id: args.id,
-        },
-      }),
-  },
+          id: args.id
+        }
+      })
+  }
 };

@@ -104,3 +104,49 @@ export const DELETE_USER_QUERY = gql`
     deleteUser(id: $id)
   }
 `;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ ORGANIZATIONS
+export const ORGS_QUERY = gql`
+  query {
+    organizations {
+      id
+      name
+    }
+  }
+`;
+export const ONE_ORG_QUERY = gql`
+  query($id: ID!) {
+    organization(id: $id) {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+      organizationType {
+        name
+      }
+      owner {
+        surname
+        name
+        patricity
+      }
+      teams {
+        name
+        description
+        maxUsersLimit
+      }
+    }
+  }
+`;
+
+export const DELETE_ORG_QUERY = gql`
+  mutation($id: ID!) {
+    deleteOrganization(id: $id)
+  }
+`;
+
+export const UPDATE_ORG_QUERY = gql`
+  mutation($id: ID!, $name: String) {
+    updateOrganization(id: $id, name: $name)
+  }
+`;

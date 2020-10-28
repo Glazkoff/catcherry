@@ -1,21 +1,46 @@
 <template>
   <div class="main">
     <popup v-if="isShowFullInformation">
+      <h3 slot="header" v-if="$apollo.loading">
+        Загрузка...
+      </h3>
+      <h3 slot="body" v-if="$apollo.loading"></h3>
       <h3 v-if="!isShowModalDelete && !isShowModalEdit" slot="header">
-        Организация "{{ oneOrganization.name }}"
+        Организация "{{ organization.name }}"
       </h3>
       <h3 v-if="isShowModalDelete" slot="header">
-        Вы действительно хотите удалить организацию "{{
-          oneOrganization.name
-        }}"?
+        Вы действительно хотите удалить организацию "{{ organization.name }}"?
       </h3>
       <h3 v-if="isShowModalEdit" slot="header">
-        Редактировать организацию "{{ oneOrganization.name }}"?
+        Редактировать организацию "{{ nameOfOrganization }}"?
       </h3>
       <div slot="body" v-if="!isShowModalDelete && !isShowModalEdit">
-        <p>{{ oneOrganization.organizationType }}</p>
-        <p>{{ oneOrganization.maxTeamsLimit }}</p>
-        <p>{{ oneOrganization.createAt }}</p>
+        <p>Тип организации: {{ organization.organizationType.name }}</p>
+        <p>
+          Максимальное количество команд в организации:
+          {{ organization.maxTeamsLimit }} команд
+        </p>
+        <p>Дата создания организации: {{ organization.createdAt }}</p>
+        <p>
+          Владелец организации:
+          {{ organization.owner.surname }} {{ organization.owner.name }}
+          {{ organization.owner.patricity }}
+        </p>
+        <div class="teams-list">
+          <p v-if="organization.teams.length === 0">
+            Команд у данной организации нет
+          </p>
+          <div v-if="organization.teams.length !== 0">
+            <p>Список команд в данной организации:</p>
+            <div v-for="team in organization.teams" :key="team.id">
+              <div>
+                <p>Название команды: {{ team.name }}</p>
+                <p>{{ team.description }}</p>
+                <p>Количество участников: {{ team.maxUsersLimit }}</p>
+              </div>
+            </div>
+          </div>
+        </div>
         <div class="btn-group">
           <button @click="showModalEdit()">Редактировать</button>
           <button @click="showModalDelete()">Удалить</button>
@@ -31,7 +56,7 @@
           <label for="name">Название</label>
           <input
             name="name"
-            v-model="oneOrganization.name"
+            v-model="organization.name"
             placeholder="Название"
             required
           />
@@ -45,36 +70,53 @@
             </button>
           </div>
         </form>
-        <div class="btn-group" v-if="isShowModalDelete">
-          <button @click="deleteOrganization()">Удалить</button>
-          <button @click="cancelModalDelete()">Отменить</button>
-        </div>
         <div class="btn-group" v-if="isShowModalEdit">
           <button @click="editOrganization()">Сохранить</button>
-          <button @click="cancelModalEdit()">Отменить</button>
+          <button @click="cancelModal()">Отменить</button>
         </div>
+      </div>
+      <div slot="body" v-if="isShowModalDelete" class="btn-group">
+        <button
+          @click="deleteOrganization()"
+          slot="action"
+          class="modal-default-button"
+        >
+          <i18n path="delete"
+            ><span place="title">{{ $t("delete") }}</span></i18n
+          >
+        </button>
+        <button @click="cancelModal()">
+          <i18n path="cancel"
+            ><span place="title">{{ $t("cancel") }}</span></i18n
+          >
+        </button>
       </div>
     </popup>
     <h2>Список организаций</h2>
-    <h6 v-if="organizations.length == 0">
-      К сожалению, пока пользователей нет
-    </h6>
-    <div v-if="organizations.length > 0">
-      <input
-        v-model="findString"
-        type="text"
-        placeholder="Поиск по организациям"
-      />
-      <div
-        class="oneOrganization"
-        v-for="organization in filterOrganization"
-        :key="organization.id"
-      >
-        <div>
-          <p>{{ organization.name }}</p>
-          <p>№ {{ organization.id }}</p>
+    <h3 v-if="$apollo.loading">
+      Загрузка...
+    </h3>
+    <div v-if="!$apollo.loading">
+      <h6 v-if="organizations.length == 0">
+        К сожалению, пока пользователей нет
+      </h6>
+      <div v-if="organizations.length > 0">
+        <input
+          v-model="findString"
+          type="text"
+          placeholder="Поиск по организациям"
+        />
+        <div
+          class="oneOrganization"
+          v-for="organization in filterOrganization"
+          :key="organization.id"
+        >
+          <div>
+            <p>{{ organization.name }}</p>
+            <p>№ {{ organization.id }}</p>
+          </div>
+          <a @click="showFullInformation(organization.id)">Подробнее</a>
         </div>
-        <a @click="showFullInformation(organization)">Подробнее</a>
       </div>
     </div>
     <minialert v-if="isShowAlertEdit"
@@ -83,18 +125,39 @@
     <minialert v-if="isShowAlertDelete"
       ><p slot="title">Вы успешно удалили организацию</p></minialert
     >
+    <minialert v-if="isError"
+      ><p slot="title">Произошла какая-то ошибка. Извините</p></minialert
+    >
   </div>
 </template>
 
 <script>
 import popup from "@/components/admin/Popup.vue";
 import minialert from "@/components/admin/MiniAlert.vue";
+import {
+  ORGS_QUERY,
+  ONE_ORG_QUERY,
+  DELETE_ORG_QUERY,
+  UPDATE_ORG_QUERY
+} from "@/graphql/queries";
 export default {
   components: { minialert, popup },
+  apollo: {
+    organizations: {
+      query: ORGS_QUERY
+    },
+    organization: {
+      query: ONE_ORG_QUERY,
+      variables() {
+        return {
+          id: this.organizationId
+        };
+      }
+    }
+  },
   data() {
     return {
       index: 0,
-      oneOrganization: {},
       nameOfOrganization: "",
       isShowModalEdit: false,
       isShowModalDelete: false,
@@ -102,85 +165,107 @@ export default {
       isShowAlertDelete: false,
       isShowFullInformation: false,
       findString: "",
-      organizations: [
-        {
-          id: 1,
-          name: "Малькина и Ко",
-          ownerId: 1,
-          organizationType: "Обычная",
-          maxTeamsLimit: 10,
-          createAt: new Date(),
-          updateAt: new Date()
-        },
-        {
-          id: 2,
-          name: "Поливеб",
-          ownerId: 2,
-          organizationType: "Обычная",
-          maxTeamsLimit: 23,
-          createAt: new Date(),
-          updateAt: new Date()
-        }
-      ]
+      organizationId: -1,
+      isError: false
     };
   },
   methods: {
     cancelFullInformation() {
       this.isShowFullInformation = false;
     },
-    showFullInformation(organization) {
-      this.oneOrganization = Object.assign(this.oneOrganization, organization);
+    showFullInformation(id) {
+      this.organizationId = id;
       this.isShowFullInformation = true;
     },
     showModalDelete() {
       this.isShowModalDelete = true;
+      console.log(this.organization);
     },
-    cancelModalDelete() {
+    cancelModal() {
+      this.isShowModalEdit = false;
       this.isShowModalDelete = false;
     },
     deleteOrganization() {
-      this.isShowFullInformation = false;
-      this.isShowModalDelete = false;
-      this.index = this.organizations.findIndex(
-        el => el.id === this.oneOrganization.id
-      );
-      this.organizations.splice(this.index, 1);
-      this.isShowAlertDelete = true;
-      setTimeout(() => {
-        this.isShowAlertDelete = false;
-      }, 3000);
+      this.$apollo
+        .mutate({
+          mutation: DELETE_ORG_QUERY,
+          variables: {
+            id: this.organization.id
+          },
+          update: cache => {
+            let data = cache.readQuery({ query: ORGS_QUERY });
+            let index = data.organizations.findIndex(
+              el => el.id == this.organization.id
+            );
+            data.organizations.splice(index, 1);
+            cache.writeQuery({ query: ORGS_QUERY, data });
+          }
+        })
+        .then(data => {
+          console.log(data);
+          this.isShowFullInformation = false;
+          this.isShowModalDelete = false;
+          this.isShowAlertDelete = true;
+          setTimeout(() => {
+            this.isShowAlertDelete = false;
+          }, 3000);
+        })
+        .catch(error => {
+          console.error(error);
+          this.isShowFullInformation = false;
+          this.isShowModalDelete = false;
+          this.isError = true;
+          setTimeout(() => {
+            this.isError = false;
+          }, 3000);
+        });
     },
     showModalEdit() {
       this.isShowModalEdit = true;
-    },
-    cancelModalEdit() {
-      this.isShowModalEdit = false;
+      this.nameOfOrganization = this.organization.name;
     },
     editOrganization() {
       this.isShowModalEdit = false;
-      this.index = this.organizations.findIndex(
-        el => el.id === this.oneOrganization.id
-      );
-      this.organizations.splice(this.index, 1, this.oneOrganization);
-      this.isShowAlertEdit = true;
-      setTimeout(() => {
-        this.isShowAlertEdit = false;
-      }, 3000);
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_ORG_QUERY,
+          variables: {
+            id: this.organization.id,
+            name: this.organization.name
+          },
+          update: (cache, { data: { updateOrganization } }) => {
+            let data = cache.readQuery({ query: ORGS_QUERY });
+            data.organizations.find(
+              el => el.id === this.organization.id
+            ).name = this.organization.name;
+            cache.writeQuery({ query: ORGS_QUERY, data });
+            console.log(updateOrganization);
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createUser: {
+              __typename: "Organization",
+              id: -1,
+              name: this.organization.name
+            }
+          }
+        })
+        .then(data => {
+          console.log(data);
+          this.isShowAlertEdit = true;
+          setTimeout(() => {
+            this.isShowAlertEdit = false;
+          }, 3000);
+        })
+        .catch(error => {
+          console.error(error);
+          this.isShowFullInformation = false;
+          this.isError = true;
+          setTimeout(() => {
+            this.isError = false;
+          }, 3000);
+        });
     }
-    // closePopup(ans) {
-    //   this.isShowModalDelete = false;
-    //   this.isShowModalEdit = false;
-    //   if (ans.ans && ans.action === "edit") {
-    //     this.index = this.organizations.findIndex(
-    //       el => el.id === this.oneOrganization.id
-    //     );
-    //     this.organizations.splice(this.index, 1, ans.organization);
-    //     this.isShowAlertEdit = true;
-    //     setTimeout(() => {
-    //       this.isShowAlertEdit = false;
-    //     }, 3000);
-    //   }
-    // }
   },
   computed: {
     filterOrganization() {

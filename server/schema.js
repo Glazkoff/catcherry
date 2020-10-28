@@ -25,6 +25,29 @@ type User {
   gender: String
   deletedAt: String
 }
+type Teams {
+  id: ID!
+  organizationId: ID,
+  name: String
+  description: String
+  maxUsersLimit: Int
+}
+type OrganizationType {
+  id: ID!
+  name: String
+}
+type Organization {
+  id: ID!
+  name: String!
+  organizationType: OrganizationType
+  ownerId: Int
+  owner: User
+  organizationTypeId: Int
+  maxTeamsLimit: Int
+  createdAt: String!
+  updatedAt: String!
+  teams: [Teams]
+}
 input NotificationBody {
   header: String!
   text: String!
@@ -48,6 +71,11 @@ type Query {
   users: [User!] 
   user(id: ID!): User
   deletedUsers: [User!]
+
+  teams: [Teams] 
+
+  organizations: [Organization!]
+  organization(id: ID!): Organization
   
   notifications: [Notification]!
   notification(id: ID!): Notification
@@ -56,13 +84,19 @@ type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
+
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
+  deleteOrganization(id: ID!): Int!
+  updateOrganization(id: ID!, name: String): [Int]!
+
+
+
   signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
   logIn(login: String!, password: String!, fingerprint:String!): jwt
-  updateAccessToken: jwt!
+  updateTokens(fingerprint:String!): jwt!
 }
 `;
 
