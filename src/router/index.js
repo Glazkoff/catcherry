@@ -25,10 +25,6 @@ import RequestsList from "@/components/Manager/RequestsList.vue";
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
 
-import Account from "@/components/Account.vue";
-import UserInOrganization from "@/components/UserInOrganization.vue";
-import ListRequest from "@/components/ListRequest.vue";
-
 Vue.use(VueRouter);
 
 const routes = [

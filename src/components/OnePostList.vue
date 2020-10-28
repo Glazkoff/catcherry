@@ -1,10 +1,12 @@
 <template>
   <div class="container">
     <img src="../assets/placeholder.png" alt="placeholder" />
-    <router-link :to="{ name: 'Posts', params: { id: post.id},}">{{post.header}}</router-link>
+    <router-link :to="{ name: 'Posts', params: { id: post.id } }">{{
+      post.header
+    }}</router-link>
     <p>{{ post.date }}</p>
     <p>
-      {{ post.body}}
+      {{ post.body }}
     </p>
     <button v-on:click="onLike(post.id)">Лайк</button>
     <button v-on:click="onComment(post.id)">Коммент</button>
@@ -17,20 +19,19 @@ export default {
   name: "OnePostList",
   props: ["post"],
   data() {
-    return {
-      };
+    return {};
   },
   methods: {
     onLike(id) {
-      this.$emit("like", {id: id});
+      this.$emit("like", { id: id });
     },
     onComment(id) {
-      this.$emit("comment", {id: id});
+      this.$emit("comment", { id: id });
     },
     onShare(id) {
-      this.$emit("share", {id: id});
-    },
-  },
+      this.$emit("share", { id: id });
+    }
+  }
 };
 </script>
 
@@ -43,8 +44,7 @@ export default {
   box-sizing: border-box;
   overflow: hidden;
 }
-.header{
-
+.header {
 }
 .container img {
   margin-right: 5%;

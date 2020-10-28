@@ -205,22 +205,22 @@ import {
   USERS_QUERY,
   DELETE_USER_QUERY,
   UPDATE_USER_QUERY,
-  ONE_USER_QUERY,
+  ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
   components: { minialert, popup },
   apollo: {
     users: {
-      query: USERS_QUERY,
+      query: USERS_QUERY
     },
     user: {
       query: ONE_USER_QUERY,
       variables() {
         return {
-          id: this.$route.params.id,
+          id: this.$route.params.id
         };
-      },
-    },
+      }
+    }
   },
   data() {
     return {
@@ -233,34 +233,34 @@ export default {
       isShowAlertEdit: false,
       isShowModalEdit: false,
       isShowModalDelete: false,
-      findString: "",
+      findString: ""
     };
   },
   validations: {
     user: {
       surname: {
         required,
-        alpha: (val) => /^[а-яёa-zA-Z ]*$/i.test(val),
+        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
       },
       name: {
         required,
-        alpha: (val) => /^[а-яёa-zA-Z ]*$/i.test(val),
+        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
       },
       patricity: {
         required,
-        alpha: (val) => /^[а-яёa-zA-Z ]*$/i.test(val),
+        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
       },
       gender: {
-        required,
+        required
       },
       login: {
-        required,
+        required
       },
       password: {
         required,
-        minLength: minLength(2),
-      },
-    },
+        minLength: minLength(2)
+      }
+    }
   },
   methods: {
     showFullInformation(id) {
@@ -283,19 +283,19 @@ export default {
         .mutate({
           mutation: DELETE_USER_QUERY,
           variables: {
-            id: this.user.id,
+            id: this.user.id
           },
-          update: (cache) => {
+          update: cache => {
             let data = cache.readQuery({ query: USERS_QUERY });
-            let index = data.users.findIndex((el) => el.id == this.user.id);
+            let index = data.users.findIndex(el => el.id == this.user.id);
             data.users.splice(index, 1);
             cache.writeQuery({ query: USERS_QUERY, data });
-          },
+          }
         })
-        .then((data) => {
+        .then(data => {
           console.log(data);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(error);
         });
       this.isShowFullInformation = false;
@@ -321,24 +321,22 @@ export default {
             name: this.user.name,
             patricity: this.user.patricity,
             gender: this.user.gender,
-            login: this.user.login,
+            login: this.user.login
           },
           update: (cache, { data: { updateUser } }) => {
             let data = cache.readQuery({ query: USERS_QUERY });
             data.users.find(
-              (el) => el.id === this.user.id
+              el => el.id === this.user.id
             ).surname = this.user.surname;
+            data.users.find(el => el.id === this.user.id).name = this.user.name;
             data.users.find(
-              (el) => el.id === this.user.id
-            ).name = this.user.name;
-            data.users.find(
-              (el) => el.id === this.user.id
+              el => el.id === this.user.id
             ).patricity = this.user.patricity;
             data.users.find(
-              (el) => el.id === this.user.id
+              el => el.id === this.user.id
             ).gender = this.user.gender;
             data.users.find(
-              (el) => el.id === this.user.id
+              el => el.id === this.user.id
             ).login = this.user.login;
             cache.writeQuery({ query: USERS_QUERY, data });
             console.log(updateUser);
@@ -352,26 +350,26 @@ export default {
               name: this.user.name,
               patricity: this.user.patricity,
               gender: this.user.gender,
-              login: this.user.login,
-            },
-          },
+              login: this.user.login
+            }
+          }
         })
-        .then((data) => {
+        .then(data => {
           console.log(data);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(error);
         });
       this.isShowAlertEdit = true;
       setTimeout(() => {
         this.isShowAlertEdit = false;
       }, 3000);
-    },
+    }
   },
   computed: {
     filterUser() {
       if (this.findString !== "") {
-        return this.users.filter((el) => {
+        return this.users.filter(el => {
           if (el.surname === undefined || el.surname === null) {
             el.surname = " ";
           }
@@ -397,8 +395,8 @@ export default {
       } else {
         return this.users;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

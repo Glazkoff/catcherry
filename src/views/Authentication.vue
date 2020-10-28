@@ -54,7 +54,7 @@ export default {
       login: "",
       password: "",
       authLoading: false,
-      fingerprint: "",
+      fingerprint: ""
     };
   },
   async created() {
@@ -65,12 +65,12 @@ export default {
   },
   validations: {
     login: {
-      required,
+      required
     },
     password: {
       required,
-      minLength: minLength(6),
-    },
+      minLength: minLength(6)
+    }
   },
   methods: {
     async logIn() {
@@ -80,18 +80,18 @@ export default {
         this.authLoading = true;
         let userData = {
           login: this.$v.login.$model,
-          password: this.$v.password.$model,
-        }; 
+          password: this.$v.password.$model
+        };
         this.$apollo
           .mutate({
             mutation: LOG_IN,
             variables: {
               login: userData.login,
               password: userData.password,
-              fingerprint: this.fingerprint,
-            },
+              fingerprint: this.fingerprint
+            }
           })
-          .then((resp) => {
+          .then(resp => {
             this.authLoading = false;
             if (resp.data.logIn && !resp.data.logIn.error) {
               this.$store.commit(
@@ -104,13 +104,13 @@ export default {
               console.error("ERROR");
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.authLoading = false;
             console.error(error);
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

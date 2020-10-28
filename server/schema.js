@@ -23,10 +23,6 @@ type User {
   password: String
   createdAt: String
   updatedAt: String
-  surname: String
-  patricity: String
-  birthday: String
-  gender: String
   deletedAt: String
 }
 

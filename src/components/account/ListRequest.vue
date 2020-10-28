@@ -22,8 +22,8 @@ export default {
       requests: [
         { id: 1, organization: "FFFF", status: false },
         { id: 2, organization: "sss", status: null },
-        { id: 3, organization: "FFgggFF", status: true },
-      ],
+        { id: 3, organization: "FFgggFF", status: true }
+      ]
     };
   },
   methods: {
@@ -31,8 +31,8 @@ export default {
       if (status === false) return "Отклонено";
       if (status === true) return "Одобрено";
       if (status === null) return "На рассмотрении";
-    },
-  },
+    }
+  }
 };
 </script>
 
