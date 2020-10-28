@@ -1,9 +1,12 @@
 require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const chalk = require("chalk");
+const sequelize = require("sequelize");
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
+
+const Op = sequelize.Op;
 
 // TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
@@ -51,7 +54,6 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
-
     usersInTeams: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят" },
@@ -63,7 +65,24 @@ module.exports = {
         where: { status: "Не принят" },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
-      })
+      }),
+    getPointsUser: (parent, args, { db }, info) =>
+      db.Points.findOne({ where: { userId: args.userId } }),
+    //Функция поиска операций для конкретного пользователя
+    getOperationPointsUser: async (parent, args, { db }, info) => {
+      let points = await db.Points.findOne({
+        attributes: [],
+        include: [
+          {
+            model: db.PointsOperations,
+            as: "pointsOperations",
+            attributes: ["pointAccountId", "delta", "operationDescription"]
+          }
+        ],
+        where: { userId: args.userId }
+      });
+      return points.pointsOperations;
+    }
   },
   Mutation: {
     /*
@@ -178,17 +197,6 @@ module.exports = {
         }
       }),
     /*
-      [Ниже] Мутации регистрации и авторизации
-    */
-    signUp: async (parent, args, { db }, info) => {
-      // TODO: добавить резолвер signup
-      return "DO SIGN UP";
-    },
-    logIn: async (parent, args, { db }, info) => {
-      // TODO: добавить резолвер login
-      return "DO LOG IN";
-    },
-    /*
       [Ниже] Мутации работы с организациями (Organization)     
     */
     createOrganization: (
@@ -279,7 +287,6 @@ module.exports = {
           id: args.id
         }
       }),
-
     createUserInTeam: (
       parent,
       { userId, teamId, status, roleId },
@@ -312,5 +319,31 @@ module.exports = {
           }
         }
       )
-  }
+  },
+  /*
+      [Ниже] Мутации работы с баллами (PointsOperstion)     
+    */
+  createPointOperation: (parent, { pointAccountId, delta }, { db }, info) =>
+    db.PointsOperations.create({
+      pointAccountId: pointAccountId,
+      delta: delta
+    }),
+  updatePointOperation: (parent, { pointAccountId, delta, id }, { db }, info) =>
+    db.PointsOperations.update(
+      {
+        pointAccountId: pointAccountId,
+        delta: delta
+      },
+      {
+        where: {
+          id: id
+        }
+      }
+    ),
+  deletePointOperation: (parent, args, { db }, info) =>
+    db.PointsOperations.destroy({
+      where: {
+        id: args.id
+      }
+    })
 };

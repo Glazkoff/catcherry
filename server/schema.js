@@ -75,6 +75,19 @@ type Notification {
   createdAt: String!
   updatedAt: String!
 }
+type PointsUser{
+  id: ID!
+  userId: Int!
+  pointQuantity: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+type PointOperations{
+  id: ID!
+  pointAccountId: Int!
+  delta: Int!
+  operationDescription: String
+}
 
 type Query { 
   users: [User!] 
@@ -92,6 +105,8 @@ type Query {
   usersInTeams:[UserInTeam]!
 
   requests:[UserInTeam]
+  getPointsUser(userId: Int!): PointsUser
+  getOperationPointsUser(userId: Int!): [PointOperations]
 }
 
 type Mutation {
@@ -112,6 +127,9 @@ type Mutation {
   deleteUserInTeam(id: ID!): Int!
 
   acceptRequst(id: ID!): [Int]!
+  createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
+  deletePointOperation(id: ID!): Int!
+  updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
 
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt
