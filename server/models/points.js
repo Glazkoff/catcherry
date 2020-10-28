@@ -9,11 +9,13 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Points.hasMany(models.PointsOperations, {
-        foreignKey: "pointAccountId",
-        as: "pointsOperations",
+        foreignKey: "accountId",
+        as: "pointsOperation"
       });
-      // TODO: Исправить внешний ключ
-      Points.belongsTo(models.Users);
+      Points.belongsTo(models.Users, {
+        foreignKey: "userId",
+        as: "userPoints"
+      });
     }
   }
   Points.init(
@@ -29,7 +31,7 @@ module.exports = (sequelize, DataTypes) => {
     },
     {
       sequelize,
-      modelName: "Points",
+      modelName: "Points"
     }
   );
   return Points;
