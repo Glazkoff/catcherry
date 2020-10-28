@@ -107,7 +107,10 @@ async function addAllTables(destroyTable) {
     });
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
-      name: faker.name.findName(),
+      name: faker.name.firstName(),
+      surname: faker.name.lastName(),
+      patricity: faker.name.findName(),
+      gender: faker.name.gender(),
       login: faker.random.word(),
       password: bcrypt.hashSync("nikita", salt)
     });
