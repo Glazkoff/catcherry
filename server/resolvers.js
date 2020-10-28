@@ -1,9 +1,12 @@
 require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-
+const chalk = require("chalk");
+const sequelize = require("sequelize");
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
+
+const Op = sequelize.Op;
 
 // TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
@@ -12,19 +15,19 @@ function generateTokens(user) {
     { userId: user.id },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: 100 * 60 * 60 * 24 * 365,
+      expiresIn: 100 * 60 * 60 * 24 * 365
     }
   );
 
   // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 100 * 60 * 60 * 24,
+    expiresIn: 100 * 60 * 60 * 24
   });
 
   // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
   return {
     refreshToken,
-    accessToken,
+    accessToken
   };
 }
 
@@ -35,6 +38,51 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
+    organizations: (parent, args, { db }, info) =>
+      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+    organization: (parent, args, { db }, info) => {
+      return db.Organizations.findOne({ where: { id: args.id } });
+    },
+    teams: (parent, args, { db }, info) =>
+      db.Teams.findAll({ order: [["id", "ASC"]] }),
+    team: (parent, args, { db }, info) => {
+      return db.Teams.findOne({
+        where: { organizationId: args.organizationId }
+      });
+    },
+    notifications: (parent, args, { db }, info) =>
+      db.Notifications.findAll({ order: [["id", "ASC"]] }),
+    notification: (parent, args, { db }, info) =>
+      db.Notifications.findOne({ where: { id: args.id } }),
+    usersInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Принят" },
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "user" }]
+      }),
+    requests: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Не принят" },
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "user" }]
+      }),
+    getPointsUser: (parent, args, { db }, info) =>
+      db.Points.findOne({ where: { userId: args.userId } }),
+    //Функция поиска операций для конкретного пользователя
+    getOperationPointsUser: async (parent, args, { db }, info) => {
+      let points = await db.Points.findOne({
+        attributes: [],
+        include: [
+          {
+            model: db.PointsOperations,
+            as: "pointsOperations",
+            attributes: ["pointAccountId", "delta", "operationDescription"]
+          }
+        ],
+        where: { userId: args.userId }
+      });
+      return points.pointsOperations;
+    }
   },
   Mutation: {
     /*
@@ -47,7 +95,7 @@ module.exports = {
       let user = await db.Users.create({
         login,
         name,
-        password: hashPassword,
+        password: hashPassword
       });
 
       // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -56,7 +104,7 @@ module.exports = {
       // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365,
+        maxAge: 1000 * 60 * 60 * 24 * 365
       });
       return tokens;
     },
@@ -64,8 +112,8 @@ module.exports = {
       // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login,
-        },
+          login
+        }
       });
       // TODO: (DONE) проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
@@ -77,7 +125,7 @@ module.exports = {
         // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 365,
+          maxAge: 1000 * 60 * 60 * 24 * 365
         });
 
         // TODO: (DONE) отправить в ответ оба токен
@@ -95,8 +143,8 @@ module.exports = {
         return {
           error: {
             errorStatus: 401,
-            message: "Refresh token is absent",
-          },
+            message: "Refresh token is absent"
+          }
         };
       } else {
         let userId = jwt.decode(refreshToken).userId;
@@ -105,12 +153,12 @@ module.exports = {
           user.dataValues,
           process.env.ACCESS_TOKEN_SECRET,
           {
-            expiresIn: 100 * 60 * 60 * 24,
+            expiresIn: 100 * 60 * 60 * 24
           }
         );
         return {
           // TODO: выпустить токен
-          accessToken,
+          accessToken
         };
       }
     },
@@ -119,24 +167,183 @@ module.exports = {
     */
     createUser: (parent, { name }, { db }, info) =>
       db.Users.create({
-        name: name,
+        name: name
       }),
-    updateUser: (parent, { name, id }, { db }, info) =>
+    updateUser: (
+      parent,
+      { name, surname, patricity, gender, birthday, login, id },
+      { db },
+      info
+    ) =>
       db.Users.update(
         {
           name: name,
+          surname: surname,
+          patricity: patricity,
+          gender: gender,
+          birthday: birthday,
+          login: login
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
-          id: args.id,
-        },
+          id: args.id
+        }
       }),
+    /*
+      [Ниже] Мутации работы с организациями (Organization)     
+    */
+    createOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit },
+      { db },
+      info
+    ) =>
+      db.Organizations.create({
+        name: name,
+        ownerId: ownerId,
+        organizationTypeId: organizationTypeId,
+        maxTeamsLimit: maxTeamsLimit
+      }),
+    updateOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit, id },
+      { db },
+      info
+    ) =>
+      db.Organizations.update(
+        {
+          name: name,
+          ownerId: ownerId,
+          organizationTypeId: organizationTypeId,
+          maxTeamsLimit: maxTeamsLimit
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    deleteOrganization: (parent, args, { db }, info) =>
+      db.Organizations.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с организациями (Organization)     
+    */
+    createTeam: (
+      parent,
+      { organizationId, name, description, maxUsersLimit },
+      { db },
+      info
+    ) =>
+      db.Teams.create({
+        organizationId: organizationId,
+        name: name,
+        description: description,
+        maxUsersLimit: maxUsersLimit
+      }),
+
+    /*
+      [Ниже] Мутации работы с оповещениями (Notifications)     
+    */
+    createNotification: (parent, { body, authorId, teamId }, { db }, info) =>
+      db.Notifications.create({
+        body: body,
+        authorId: authorId,
+        teamId: teamId
+      }),
+    updateNotification: (
+      parent,
+      { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
+      { db },
+      info
+    ) =>
+      db.Notifications.update(
+        {
+          body: body,
+          teamId: teamId,
+          forAllUsers: forAllUsers,
+          forAllOrganization: forAllOrganization,
+          forAllTeam: forAllTeam
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    deleteNotification: (parent, args, { db }, info) =>
+      db.Notifications.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    createUserInTeam: (
+      parent,
+      { userId, teamId, status, roleId },
+      { db },
+      info
+    ) =>
+      db.UsersInTeams.create({
+        userId: userId,
+        teamId: teamId,
+        status: status,
+        roleId: roleId
+      }),
+    deleteUserInTeam: (parent, args, { db }, info) =>
+      db.UsersInTeams.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с заявками на вхождение в команду     
+    */
+    acceptRequst: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      )
   },
+  /*
+      [Ниже] Мутации работы с баллами (PointsOperstion)     
+    */
+  createPointOperation: (parent, { pointAccountId, delta }, { db }, info) =>
+    db.PointsOperations.create({
+      pointAccountId: pointAccountId,
+      delta: delta
+    }),
+  updatePointOperation: (parent, { pointAccountId, delta, id }, { db }, info) =>
+    db.PointsOperations.update(
+      {
+        pointAccountId: pointAccountId,
+        delta: delta
+      },
+      {
+        where: {
+          id: id
+        }
+      }
+    ),
+  deletePointOperation: (parent, args, { db }, info) =>
+    db.PointsOperations.destroy({
+      where: {
+        id: args.id
+      }
+    })
 };

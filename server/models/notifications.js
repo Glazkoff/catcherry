@@ -32,15 +32,15 @@ module.exports = (sequelize, DataTypes) => {
       },
       forAllUsers: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       forAllOrganization: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
       forAllTeam: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

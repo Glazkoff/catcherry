@@ -9,15 +9,20 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Points.hasMany(models.PointsOperations, {
-        foreignKey: "accountId",
-        as: "pointsOperation",
+        foreignKey: "pointAccountId",
+        as: "pointsOperations",
       });
+      // TODO: Исправить внешний ключ
       Points.belongsTo(models.Users);
     }
   }
   Points.init(
     {
       userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false,
+      },
+      pointQuantity: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },

@@ -1,22 +1,29 @@
 <template>
   <div id="app">
+    <div><top-bar></top-bar></div>
     <div class="locales">
       <a @click="setLocale('en')"><flag iso="us"></flag></a>
       <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
     </div>
     <h1>{{ $t("welcomeMsg") }}</h1>
+    <nav>
+      <!-- FIXME: сделать id пользователя динамическим -->
+      <router-link to="/user/1">Профиль</router-link>
+    </nav>
     <hr />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
+import TopBar from "@/components/TopBar.vue";
 export default {
+  components: { TopBar },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -50,23 +57,23 @@ p {
   padding: 0.375rem 0.75rem;
   line-height: 1.5;
   border-radius: 0.25rem;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out, border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
+  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out,
+    border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   cursor: pointer;
   font-size: 1rem;
 }
 
 .btn-primary {
-  background: #572F81;
+  background: #572f81;
   border: 1px solid #613490;
   color: white;
 }
 
 .btn-secondary {
   background: rgba(138, 110, 167, 0.2);
-  border: 1px solid #64507A;
+  border: 1px solid #64507a;
   color: #514163;
 }
-
 
 .btn-danger {
   background: #472669;
@@ -85,9 +92,10 @@ p {
   width: 100%;
 }
 
-.btn.disabled, .btn:disabled {
-  color: #E8D1FF;
-  background-color: #997ABA;
+.btn.disabled,
+.btn:disabled {
+  color: #e8d1ff;
+  background-color: #997aba;
   cursor: auto !important;
 }
 
@@ -95,7 +103,8 @@ p {
   filter: brightness(130%);
 }
 
-.btn.disabled:hover, .btn:disabled:hover {
+.btn.disabled:hover,
+.btn:disabled:hover {
   filter: brightness(100%);
 }
 
@@ -104,10 +113,10 @@ p {
   width: 100%;
   padding: 0.375rem 0.75rem;
   line-height: 1.5;
-  color: #572F81;
+  color: #572f81;
   background-color: #fff;
   background-clip: padding-box;
-  border: 1px solid #AA87CE;
+  border: 1px solid #aa87ce;
   border-radius: 0.25rem;
   transition: border-color 0.15s ease-in-out, box-shadow 0.15s ease-in-out;
   font-size: 1rem;
@@ -119,7 +128,7 @@ textarea.form-control {
 }
 
 .form-control::placeholder {
-  color: #997ABA;
+  color: #997aba;
 }
 
 .form-control:focus {
@@ -130,7 +139,7 @@ textarea.form-control {
 .form-text {
   display: block;
   margin-top: 0.25rem;
-  color: #AA87CE;
+  color: #aa87ce;
 }
 
 .form-text.small {
@@ -157,11 +166,11 @@ textarea.form-control {
 .form-check {
   position: relative;
   display: block;
-  color: #AA87CE;
+  color: #aa87ce;
 }
 
 input[type="checkbox"] {
-  border-color: #AA87CE;
+  border-color: #aa87ce;
 }
 
 .form-control-file {
@@ -183,7 +192,7 @@ input[type="checkbox"] {
   height: 60%;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   padding: 1%;
   box-sizing: border-box;
 }
@@ -229,7 +238,7 @@ input[type="checkbox"] {
   height: 25%;
   background: white;
   border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.5);
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.5);
   padding: 1%;
   box-sizing: border-box;
 }
@@ -288,6 +297,6 @@ input[type="checkbox"] {
 }
 
 .palitre {
-  color: #8547C5;
+  color: #8547c5;
 }
 </style>
