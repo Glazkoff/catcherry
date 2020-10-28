@@ -22,6 +22,9 @@ import TeamMembers from "@/components/Manager/TeamMembers.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
 import RequestsList from "@/components/Manager/RequestsList.vue";
 
+import DetailedPost from "@/components/DetailedPost.vue";
+import FeedOfPosts from "@/components/FeedOfPosts.vue";
+
 Vue.use(VueRouter);
 
 const routes = [
@@ -107,7 +110,7 @@ const routes = [
   {
     path: "/createpost",
     name: "CreatePost",
-    component: CreatePost,
+    component: CreatePost
   },
   {
     path: "/notification",
@@ -128,6 +131,16 @@ const routes = [
     path: "/manager/requests",
     name: "RequestsList",
     component: RequestsList
+  },
+  {
+    path: "/posts/:id",
+    name: "Posts",
+    component: DetailedPost
+  },
+  {
+    path: "/feed",
+    name: "FeedOfPosts",
+    component: FeedOfPosts
   }
   // {
   //   path: "/about",
