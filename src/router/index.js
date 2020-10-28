@@ -12,6 +12,8 @@ import Users from "@/components/admin/Users.vue";
 import User from "@/components/account/User.vue";
 import Organization from "@/components/admin/Organization.vue";
 
+import CreatePost from "@/components/CreatePost.vue";
+
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
@@ -101,6 +103,11 @@ const routes = [
     path: "/registration",
     name: "Registration",
     component: Registration
+  },
+  {
+    path: "/createpost",
+    name: "CreatePost",
+    component: CreatePost,
   },
   {
     path: "/notification",
