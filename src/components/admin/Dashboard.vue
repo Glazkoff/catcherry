@@ -1,11 +1,7 @@
 <template>
   <div>
     <h1>Добро пожаловать в Административную панель!</h1>
-    <h2>
-      <i18n path="systemStatistics"
-        ><span place="title">{{ $t("listUser") }}</span></i18n
-      >
-    </h2>
+    <h2>Статистика системы</h2>
     <MyChart></MyChart>
   </div>
 </template>

@@ -90,6 +90,7 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
+
     organizations: (parent, args, { db }, info) => 
       db.Organizations.findAll({ order: [["id", "ASC"]] }),
     organization: async (parent, args, { db }, info) => {
@@ -100,10 +101,31 @@ module.exports = {
       console.log("AAA", JSON.stringify(a));
       return a;
     },
+    teams: (parent, args, { db }, info) =>
+      db.Teams.findAll({ order: [["id", "ASC"]] }),
+    team: (parent, args, { db }, info) => {
+      return db.Teams.findOne({
+        where: { organizationId: args.organizationId }
+      });
+
+    },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
-      db.Notifications.findOne({ where: { id: args.id } })
+      db.Notifications.findOne({ where: { id: args.id } }),
+
+    usersInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Принят" },
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "user" }]
+      }),
+    requests: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Не принят" },
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "user" }]
+      })
   },
   Mutation: {
     /*
@@ -259,7 +281,7 @@ module.exports = {
         },
         {
           where: {
-            id
+            id: id
           }
         }
       ),
@@ -269,24 +291,62 @@ module.exports = {
           id: args.id
         }
       }),
-
-      deleteOrganization: (parent, args, { db }, info) =>
-      db.Organizations.destroy({
-        where: {
-          id: args.id,
-        },
+    /*
+      [Ниже] Мутации работы с организациями (Organization)     
+    */
+    createOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit },
+      { db },
+      info
+    ) =>
+      db.Organizations.create({
+        name: name,
+        ownerId: ownerId,
+        organizationTypeId: organizationTypeId,
+        maxTeamsLimit: maxTeamsLimit
       }),
-      updateOrganization: (parent, { name, id }, { db }, info) =>
+    updateOrganization: (
+      parent,
+      { name, ownerId, organizationTypeId, maxTeamsLimit, id },
+      { db },
+      info
+    ) =>
       db.Organizations.update(
         {
-          name: name
+          name: name,
+          ownerId: ownerId,
+          organizationTypeId: organizationTypeId,
+          maxTeamsLimit: maxTeamsLimit
         },
         {
           where: {
-            id
+            id: id
           }
         }
       ),
+    deleteOrganization: (parent, args, { db }, info) =>
+      db.Organizations.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с организациями (Organization)     
+    */
+    createTeam: (
+      parent,
+      { organizationId, name, description, maxUsersLimit },
+      { db },
+      info
+    ) =>
+      db.Teams.create({
+        organizationId: organizationId,
+        name: name,
+        description: description,
+        maxUsersLimit: maxUsersLimit
+      }),
+
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
@@ -321,6 +381,39 @@ module.exports = {
         where: {
           id: args.id
         }
-      })
+      }),
+
+    createUserInTeam: (
+      parent,
+      { userId, teamId, status, roleId },
+      { db },
+      info
+    ) =>
+      db.UsersInTeams.create({
+        userId: userId,
+        teamId: teamId,
+        status: status,
+        roleId: roleId
+      }),
+    deleteUserInTeam: (parent, args, { db }, info) =>
+      db.UsersInTeams.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с заявками на вхождение в команду     
+    */
+    acceptRequest: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      )
   }
 };

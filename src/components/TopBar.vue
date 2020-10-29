@@ -6,23 +6,39 @@
           <ul>
             <label for="gepleasurprised">
               <li class="icon right">
-                <a>☰</a>
+                <!-- <a v-on-clickaway="away">☰</a> -->
               </li>
             </label>
+
             <input
               type="checkbox"
               id="gepleasurprised"
               style="display: none;"
             />
             <li class="nav-logo">CATCHERRY</li>
-            <li><a href="#">Главная</a></li>
-            <li><a href="#">Личный кабинет</a></li>
-            <li><a href="#">Команда</a></li>
-            <li class="right"><button class="nav-exit">Выйти</button></li>
+            <li>
+              <router-link to="/user/156">{{ $t("accountMsg") }}</router-link>
+            </li>
+            <li>
+              <router-link to="/admin">admin</router-link>
+            </li>
+            <li>
+              <router-link to="/user/156/user_org">{{
+                $t("orgMsg")
+              }}</router-link>
+            </li>
+            <li>
+              <router-link to="/user/156/list_req">{{
+                $t("applicationMsg")
+              }}</router-link>
+            </li>
+            <li class="right">
+              <button class="nav-exit">{{ $t("endMsg") }}</button>
+            </li>
             <li class="right ">
               <a class="nav-name"
-                >Здравствуйте,<br />
-                Евлампий Крестовоздвиженский!</a
+                >{{ $t("hellouserMsg") }},<br />
+                {{ $t("nameuserMsg") }}!</a
               >
             </li>
           </ul>
@@ -33,8 +49,21 @@
 </template>
 
 <script>
+// import { directive as onClickaway } from "vue-clickaway";
+
 export default {
   name: "top-bar",
+  // directives: {
+  //   onClickaway: onClickaway
+  // },
+  methods: {
+    setLocale(locale) {
+      this.$i18n.locale = locale;
+    },
+    // away: function() {
+    //   console.log("clicked away");
+    // }
+  }
 };
 </script>
 

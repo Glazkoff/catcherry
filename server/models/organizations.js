@@ -21,7 +21,11 @@ module.exports = (sequelize, DataTypes) => {
       Organizations.hasMany(models.Teams, {
         onDelete: "cascade",
         foreignKey: "organizationId",
-        as: "teams",
+        as: "teams"
+      });
+      Organizations.hasMany(models.Posts, {
+        foreignKey: "organizationId",
+        as: "posts"
       });
     }
   }
@@ -29,24 +33,24 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       ownerId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       organizationTypeId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       maxTeamsLimit: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "Organizations",
+      modelName: "Organizations"
     }
   );
   return Organizations;

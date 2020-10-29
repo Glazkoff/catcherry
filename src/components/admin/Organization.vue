@@ -45,9 +45,7 @@
           <button @click="showModalEdit()">Редактировать</button>
           <button @click="showModalDelete()">Удалить</button>
           <button @click="cancelFullInformation()">
-            <i18n path="cancel"
-              ><span place="title">{{ $t("cancel") }}</span></i18n
-            >
+            Отменить
           </button>
         </div>
       </div>
@@ -60,15 +58,6 @@
             placeholder="Название"
             required
           />
-          <div class="btn-group" v-if="!isShowModalDelete && !isShowModalEdit">
-            <button @click="showModalEdit()">Редактировать</button>
-            <button @click="showModalDelete()">Удалить</button>
-            <button @click="cancelFullInformation()">
-              <i18n path="cancel"
-                ><span place="title">{{ $t("cancel") }}</span></i18n
-              >
-            </button>
-          </div>
         </form>
         <div class="btn-group" v-if="isShowModalEdit">
           <button @click="editOrganization()">Сохранить</button>
@@ -159,11 +148,11 @@ export default {
     return {
       index: 0,
       nameOfOrganization: "",
+      isShowFullInformation: false,
       isShowModalEdit: false,
       isShowModalDelete: false,
       isShowAlertEdit: false,
       isShowAlertDelete: false,
-      isShowFullInformation: false,
       findString: "",
       organizationId: -1,
       isError: false
@@ -179,7 +168,6 @@ export default {
     },
     showModalDelete() {
       this.isShowModalDelete = true;
-      console.log(this.organization);
     },
     cancelModal() {
       this.isShowModalEdit = false;
@@ -285,34 +273,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-// button {
-//   width: 100%;
-//   margin: 0 5%;
-// }
+button {
+  width: 100%;
+  margin: 0 5%;
+}
 .oneOrganization {
   display: flex;
+  border: 2px solid black;
   justify-content: space-between;
-  padding: 1%;
-  border: 1px solid black;
-  margin-bottom: 1%;
-  div {
-    width: 70%;
-    p {
-      margin: 0;
-      padding: 0;
-    }
-  }
-  a {
-    color: grey;
-    text-decoration: underline;
-  }
-  .btn-group {
-    display: flex;
-    justify-content: space-between;
-    width: 100%;
-    button {
-      width: 100%;
-    }
-  }
+}
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
 }
 </style>

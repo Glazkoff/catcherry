@@ -71,7 +71,7 @@
 import {
   required,
   // TODO: email,
-  minLength,
+  minLength
 } from "vuelidate/lib/validators";
 import { SIGN_UP } from "@/graphql/queries.js";
 
@@ -85,7 +85,7 @@ export default {
       login: "",
       password: "",
       signUpLoading: false,
-      fingerprint: "",
+      fingerprint: ""
     };
   },
   async created() {
@@ -97,21 +97,21 @@ export default {
   validations: {
     fullName: {
       required,
-      alpha: (val) => /^[а-яёa-zA-Z ]*$/i.test(val),
+      alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
     },
     // TODO: добавить обработку поля даты рождения
     // birthday: {
     //   required,
     // },
     login: {
-      required,
+      required
       // TODO: добавить обработку поля даты рождения
       // email,
     },
     password: {
       required,
-      minLength: minLength(6),
-    },
+      minLength: minLength(6)
+    }
   },
   methods: {
     submit() {
@@ -121,7 +121,7 @@ export default {
         let userData = {
           name: this.$v.fullName.$model,
           login: this.$v.login.$model,
-          password: this.$v.password.$model,
+          password: this.$v.password.$model
         };
         // TODO: Отправлять данные
         this.signUpLoading = true;
@@ -132,10 +132,10 @@ export default {
               name: userData.name,
               login: userData.login,
               password: userData.password,
-              fingerprint: this.fingerprint,
-            },
+              fingerprint: this.fingerprint
+            }
           })
-          .then((resp) => {
+          .then(resp => {
             this.signUpLoading = false;
             if (!resp.data.signUp.error) {
               this.$store.commit(
@@ -148,13 +148,13 @@ export default {
               console.error("ERROR");
             }
           })
-          .catch((error) => {
+          .catch(error => {
             this.signUpLoading = false;
             console.error(error);
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 <style>

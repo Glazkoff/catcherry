@@ -1,6 +1,4 @@
 module.exports = `
-scalar Date
-
 type Error {
   errorStatus: Int!
   message: String!
@@ -14,23 +12,16 @@ type jwt {
 
 type User {
   id: ID!
-  name: String
+  name: String!
+  surname: String
+  patricity: String
+  gender: String
+  birthday: String
   login: String
   password: String
   createdAt: String
   updatedAt: String
-  surname: String
-  patricity: String
-  birthday: String
-  gender: String
   deletedAt: String
-}
-type Teams {
-  id: ID!
-  organizationId: ID,
-  name: String
-  description: String
-  maxUsersLimit: Int
 }
 type OrganizationType {
   id: ID!
@@ -46,16 +37,40 @@ type Organization {
   maxTeamsLimit: Int
   createdAt: String!
   updatedAt: String!
-  teams: [Teams]
+  teams: [Team]
 }
+
+type Team {
+  id: ID!
+  organizationId: Int
+  name: String!
+  description: String
+  maxUsersLimit: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
+type UserInTeam {
+  id: ID!
+  userId: ID!
+  teamId: ID!
+  status: String!
+  roleId: ID!
+  user:User!
+  createdAt: String!
+  updatedAt: String!
+}
+
 input NotificationBody {
   header: String!
   text: String!
 }
+
 type BodyNotification {
   header: String!
   text: String!
 }
+
 type Notification {
   id: ID!
   body: BodyNotification!
@@ -67,20 +82,46 @@ type Notification {
   createdAt: String!
   updatedAt: String!
 }
+type PointsUser{
+  id: ID!
+  userId: Int!
+  pointQuantity: Int!
+  createdAt: String!
+  updatedAt: String!
+}
+type PointOperations{
+  id: ID!
+  pointAccountId: Int!
+  delta: Int!
+  operationDescription: String
+}
+
 type Query { 
   users: [User!] 
   user(id: ID!): User
   deletedUsers: [User!]
 
-  teams: [Teams] 
-
   organizations: [Organization!]
   organization(id: ID!): Organization
+
+  teams: [Team!]
+  team(organizationId: Int): Team
   
   notifications: [Notification]!
   notification(id: ID!): Notification
+
+  usersInTeams:[UserInTeam]!
+
+  requests:[UserInTeam]
+  getPointsUser(userId: Int!): PointsUser
+  getOperationPointsUser(userId: Int!): [PointOperations]
 }
+
 type Mutation {
+  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
+  logIn(login: String!, password: String!, fingerprint:String!): jwt
+  updateAccessToken(fingerprint:String!): jwt!
+
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
@@ -90,13 +131,19 @@ type Mutation {
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
   deleteOrganization(id: ID!): Int!
-  updateOrganization(id: ID!, name: String): [Int]!
 
-
-
-  signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
-  logIn(login: String!, password: String!, fingerprint:String!): jwt
   updateTokens(fingerprint:String!): jwt!
+  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
+  updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
+
+  createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
+  createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
+  deleteUserInTeam(id: ID!): Int!
+
+  acceptRequest(id: ID!): [Int]!
+  createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
+  deletePointOperation(id: ID!): Int!
+  updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
 }
 `;
 
