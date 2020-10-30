@@ -12,19 +12,19 @@ function generateTokens(user) {
     { userId: user.id },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: 100 * 60 * 60 * 24 * 365,
+      expiresIn: 100 * 60 * 60 * 24 * 365
     }
   );
 
   // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 100 * 60 * 60 * 24,
+    expiresIn: 100 * 60 * 60 * 24
   });
 
   // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
   return {
     refreshToken,
-    accessToken,
+    accessToken
   };
 }
 
@@ -44,13 +44,13 @@ module.exports = {
       db.Teams.findAll({ order: [["id", "ASC"]] }),
     team: (parent, args, { db }, info) => {
       return db.Teams.findOne({
-        where: { organizationId: args.organizationId },
+        where: { organizationId: args.organizationId }
       });
     },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
-      db.Notifications.findOne({ where: { id: args.id } }),
+      db.Notifications.findOne({ where: { id: args.id } })
   },
   Mutation: {
     /*
@@ -63,7 +63,7 @@ module.exports = {
       let user = await db.Users.create({
         login,
         name,
-        password: hashPassword,
+        password: hashPassword
       });
 
       // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -72,7 +72,7 @@ module.exports = {
       // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365,
+        maxAge: 1000 * 60 * 60 * 24 * 365
       });
       return tokens;
     },
@@ -80,8 +80,8 @@ module.exports = {
       // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login,
-        },
+          login
+        }
       });
       // TODO: (DONE) проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
@@ -93,7 +93,7 @@ module.exports = {
         // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 365,
+          maxAge: 1000 * 60 * 60 * 24 * 365
         });
 
         // TODO: (DONE) отправить в ответ оба токен
@@ -111,8 +111,8 @@ module.exports = {
         return {
           error: {
             errorStatus: 401,
-            message: "Refresh token is absent",
-          },
+            message: "Refresh token is absent"
+          }
         };
       } else {
         let userId = jwt.decode(refreshToken).userId;
@@ -121,12 +121,12 @@ module.exports = {
           user.dataValues,
           process.env.ACCESS_TOKEN_SECRET,
           {
-            expiresIn: 100 * 60 * 60 * 24,
+            expiresIn: 100 * 60 * 60 * 24
           }
         );
         return {
           // TODO: выпустить токен
-          accessToken,
+          accessToken
         };
       }
     },
@@ -135,7 +135,7 @@ module.exports = {
     */
     createUser: (parent, { name }, { db }, info) =>
       db.Users.create({
-        name: name,
+        name: name
       }),
     updateUser: (
       parent,
@@ -150,19 +150,19 @@ module.exports = {
           patricity: patricity,
           gender: gender,
           birthday: birthday,
-          login: login,
+          login: login
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
-          id: args.id,
-        },
+          id: args.id
+        }
       }),
     /*
       [Ниже] Мутации регистрации и авторизации
@@ -188,7 +188,7 @@ module.exports = {
         name: name,
         ownerId: ownerId,
         organizationTypeId: organizationTypeId,
-        maxTeamsLimit: maxTeamsLimit,
+        maxTeamsLimit: maxTeamsLimit
       }),
     updateOrganization: (
       parent,
@@ -201,19 +201,19 @@ module.exports = {
           name: name,
           ownerId: ownerId,
           organizationTypeId: organizationTypeId,
-          maxTeamsLimit: maxTeamsLimit,
+          maxTeamsLimit: maxTeamsLimit
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deleteOrganization: (parent, args, { db }, info) =>
       db.Organizations.destroy({
         where: {
-          id: args.id,
-        },
+          id: args.id
+        }
       }),
     /*
       [Ниже] Мутации работы с организациями (Organization)     
@@ -230,7 +230,7 @@ module.exports = {
         description: description,
         maxUsersLimit: maxUsersLimit
       }),
-    
+
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
@@ -238,7 +238,7 @@ module.exports = {
       db.Notifications.create({
         body: body,
         authorId: authorId,
-        teamId: teamId,
+        teamId: teamId
       }),
     updateNotification: (
       parent,
@@ -252,19 +252,19 @@ module.exports = {
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam,
+          forAllTeam: forAllTeam
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
         where: {
-          id: args.id,
-        },
-      }),
-  },
+          id: args.id
+        }
+      })
+  }
 };

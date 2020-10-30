@@ -14,13 +14,19 @@
         <h5>Поиск команды</h5>
         <input type="text" class="form-text" placeholder="Название команды" />
         <h3>Команды</h3>
-        <div class="oneTeam" v-for="team in teams" :key="team.id">
-          
-          <p> №{{ team.id }}</p><p>
-           <b>{{ team.name }}</b>
-          </p>
-          <span>{{team.description}}</span>
+        <div v-if="!team">
+          <h5>В организации пока нет ни одной команды</h5>
         </div>
+        <div class="oneTeam" v-else>
+          <p>№{{ team.id }}</p>
+          <p>
+            <b>{{ team.name }}</b>
+          </p>
+          <span>{{ team.description }}</span>
+          <button class="btn btn-link">Подать заявку</button>
+        </div>
+      </div>
+      <div slot="action">
         <button
           class="modal-default-button btn btn-secondary"
           @click="isShowModalEdit = false"
@@ -206,7 +212,7 @@ import {
   ONE_ORG_QUERY,
   CREATE_ORGANIZATION,
   TEAMS_QUERY,
-  TEAM_IN_ORG_QUERY,
+  TEAM_IN_ORG_QUERY
 } from "@/graphql/queries";
 import { required } from "vuelidate/lib/validators";
 export default {
@@ -227,56 +233,57 @@ export default {
       organizationId: 7,
       organizationTypeId: 1,
       maxTeamsLimit: 1,
-      signUpLoading: false,
+      signUpLoading: false
     };
   },
   apollo: {
     organizations: {
-      query: ORGS_QUERY,
+      query: ORGS_QUERY
     },
     organization: {
       query: ONE_ORG_QUERY,
       variables() {
         return {
-          id: this.$route.params.id,
+          id: this.$route.params.id
         };
-      },
+      }
     },
     teams: {
-      query: TEAMS_QUERY,
+      query: TEAMS_QUERY
     },
     team: {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: this.organizationId,
+          organizationId: this.organizationId
         };
-      },
-    },
+      }
+    }
   },
   validations: {
     name: {
       required,
-      alpha: (val) => /^[а-яёa-zA-Z ]*$/i.test(val),
+      alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
     },
     ownerId: {
-      required,
+      required
     },
     organizationTypeId: {
-      required,
+      required
     },
     maxTeamsLimit: {
-      required,
-    },
+      required
+    }
   },
   methods: {
     showModalEdit(organization) {
       (this.nameOfOrganization = organization.name),
         (this.isShowModalEdit = true);
       this.index = this.organizations.findIndex(
-        (el) => el.id === organization.id
+        el => el.id === organization.id
       );
       this.oneOrganization = Object.assign(this.oneOrganization, organization);
+      this.organizationId = parseInt(organization.id);
     },
     submit() {
       if (this.$v.$invalid) {
@@ -290,7 +297,7 @@ export default {
               name: this.name,
               ownerId: this.ownerId,
               organizationTypeId: this.organizationTypeId,
-              maxTeamsLimit: this.maxTeamsLimit,
+              maxTeamsLimit: this.maxTeamsLimit
             },
             update: (cache, { data: { createOrganization } }) => {
               let data = cache.readQuery({ query: ORGS_QUERY });
@@ -305,16 +312,16 @@ export default {
                 name: this.name,
                 ownerId: this.ownerId,
                 organizationTypeId: this.organizationTypeId,
-                maxTeamsLimit: this.maxTeamsLimit,
-              },
-            },
+                maxTeamsLimit: this.maxTeamsLimit
+              }
+            }
           })
-          .then((resp) => {
+          .then(resp => {
             this.signUpLoading = false;
             this.isAddOrganization = false;
             console.log(resp);
           })
-          .catch((error) => {
+          .catch(error => {
             this.signUpLoading = false;
             console.error(error);
           });
@@ -323,12 +330,12 @@ export default {
           this.isShowAlertAdd = false;
         }, 3000);
       }
-    },
+    }
   },
   computed: {
     filterOrganization() {
       if (this.findString !== "") {
-        return this.organizations.filter((el) => {
+        return this.organizations.filter(el => {
           return (
             el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
               -1 && el.name !== ""
@@ -347,8 +354,8 @@ export default {
         if (el.id.toLowerCase().indexOf(search) != -1) newArray.push(el);
       }
       return newArray;
-    },
-  },
+    }
+  }
 };
 </script>
 
@@ -371,7 +378,7 @@ body {
   text-align: left;
   background-color: #fff;
 }
-.oneTeam p{
+.oneTeam p {
   display: inline-block;
   margin-right: 10px;
 }
