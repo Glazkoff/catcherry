@@ -174,11 +174,11 @@ export const DELETE_ORG_QUERY = gql`
 `;
 
 export const UPDATE_ORG_QUERY = gql`
-  mutation($id: ID!, $name: String) {
-    updateOrganization(id: $id, name: $name)
+  mutation($name: String, $id: ID!) {
+    updateOrganization(name: $name, id: $id)
   }
-  `;
-  
+`;
+
 export const CREATE_TEAM = gql`
   mutation(
     $organizationId: Int

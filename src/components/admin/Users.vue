@@ -1,6 +1,7 @@
 <template>
   <div class="main">
     <popup v-if="isShowFullInformation">
+      <!-- Редактирование пользователя -->
       <h3 slot="header" v-if="isShowModalEdit">
         <i18n path="editUser"
           ><span place="title">{{ $t("editUser") }}</span></i18n
@@ -80,7 +81,7 @@
           </div>
         </form>
       </div>
-
+      <!-- Удаление пользователя -->
       <h3 slot="header" v-if="isShowModalDelete">
         <i18n path="deleteQuestion"
           ><span place="title">{{ $t("deleteQuestion") }}</span></i18n
@@ -103,13 +104,14 @@
           >
         </button>
       </div>
-
+      <!-- Заголовок загрузки информации про одного пользователя -->
       <h3
         slot="header"
         v-if="!isShowModalDelete && !isShowModalEdit && $apollo.loading"
       >
         Загрузка...
       </h3>
+      <!-- Подробная информация про одного пользователя -->
       <h3
         slot="header"
         v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"

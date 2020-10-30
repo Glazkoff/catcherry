@@ -1,27 +1,29 @@
 <template>
   <div class="main">
     <popup v-if="isShowFullInformation">
+      <!-- Заголовок загрузки информации про одного пользователя -->
       <h3 slot="header" v-if="$apollo.loading">
         Загрузка...
       </h3>
-      <h3 slot="body" v-if="$apollo.loading"></h3>
-      <h3 v-if="!isShowModalDelete && !isShowModalEdit" slot="header">
+
+      <!-- Информация про одного пользователя -->
+      <h3
+        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+        slot="header"
+      >
         Организация "{{ organization.name }}"
       </h3>
-      <h3 v-if="isShowModalDelete" slot="header">
-        Вы действительно хотите удалить организацию "{{ organization.name }}"?
-      </h3>
-      <h3 v-if="isShowModalEdit" slot="header">
-        Редактировать организацию "{{ nameOfOrganization }}"?
-      </h3>
-      <div slot="body" v-if="!isShowModalDelete && !isShowModalEdit">
+      <div
+        slot="body"
+        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+      >
         <p>Тип организации: {{ organization.organizationType.name }}</p>
         <p>
           Максимальное количество команд в организации:
           {{ organization.maxTeamsLimit }} команд
         </p>
         <p>Дата создания организации: {{ organization.createdAt }}</p>
-        <p>
+        <p v-if="organization.owner !== null">
           Владелец организации:
           {{ organization.owner.surname }} {{ organization.owner.name }}
           {{ organization.owner.patricity }}
@@ -49,21 +51,11 @@
           </button>
         </div>
       </div>
-      <div slot="body" v-if="isShowModalEdit">
-        <form>
-          <label for="name">Название</label>
-          <input
-            name="name"
-            v-model="organization.name"
-            placeholder="Название"
-            required
-          />
-        </form>
-        <div class="btn-group" v-if="isShowModalEdit">
-          <button @click="editOrganization()">Сохранить</button>
-          <button @click="cancelModal()">Отменить</button>
-        </div>
-      </div>
+
+      <!-- Удаление пользователя -->
+      <h3 v-if="isShowModalDelete" slot="header">
+        Вы действительно хотите удалить организацию "{{ organization.name }}"?
+      </h3>
       <div slot="body" v-if="isShowModalDelete" class="btn-group">
         <button
           @click="deleteOrganization()"
@@ -80,7 +72,27 @@
           >
         </button>
       </div>
+
+      <!-- Редактирование пользователя -->
+      <h3 v-if="isShowModalEdit" slot="header">
+        Редактировать организацию "{{ nameOfOrganization }}"?
+      </h3>
+      <div slot="body" v-if="isShowModalEdit">
+        <form @submit.prevent="editOrganization()">
+          <label for="name">Название</label>
+          <input
+            name="name"
+            v-model="organization.name"
+            placeholder="Название"
+          />
+          <div class="btn-group">
+            <button @click="editOrganization()">Сохранить</button>
+            <button @click="cancelModal()">Отменить</button>
+          </div>
+        </form>
+      </div>
     </popup>
+
     <h2>Список организаций</h2>
     <h3 v-if="$apollo.loading">
       Загрузка...
@@ -222,21 +234,22 @@ export default {
             name: this.organization.name
           },
           update: (cache, { data: { updateOrganization } }) => {
-            let data = cache.readQuery({ query: ORGS_QUERY });
-            data.organizations.find(
-              el => el.id === this.organization.id
-            ).name = this.organization.name;
-            cache.writeQuery({ query: ORGS_QUERY, data });
-            console.log(updateOrganization);
+           let data = cache.readQuery({ query: ORGS_QUERY });
+           console.log(data);
+           data.organizations.find(
+             el => el.id === this.organization.id
+           ).name = this.organization.name;
+           cache.writeQuery({ query: ORGS_QUERY, data });
+           console.log(updateOrganization);
           },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createUser: {
-              __typename: "Organization",
-              id: -1,
-              name: this.organization.name
-            }
-          }
+          // optimisticResponse: {
+          //   __typename: "Mutation",
+          //   createOrganization: {
+          //     __typename: "Organization",
+          //     id: -1,
+          //     name: this.organization.name
+          //   }
+          // }
         })
         .then(data => {
           console.log(data);

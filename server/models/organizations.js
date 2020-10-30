@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       // FIXME: раскомментирование вызывает ошибку при удалении из Users
       Organizations.belongsTo(models.Users, {
         foreignKey: "ownerId",
-        as: "owner",
+        as: "owner"
       });
       // FIXME: раскомментирование вызывает ошибку
       Organizations.belongsTo(models.OrganizationsTypes, {

@@ -85,21 +85,18 @@ module.exports = {
   Query: {
     users: (parent, args, { db }, info) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
-      teams: (parent, args, { db }, info) =>
-      db.Teams.findAll({ order: [["id", "ASC"]] }),
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
 
     organizations: (parent, args, { db }, info) => 
       db.Organizations.findAll({ order: [["id", "ASC"]] }),
-    organization: async (parent, args, { db }, info) => {
-      let a = await db.Organizations.findOne({ 
+
+    organization: (parent, args, { db }, info) => {
+      return db.Organizations.findOne({ 
         where: { id: args.id }, 
         include: [{ model: db.OrganizationsTypes, as: "organizationType" }, { model: db.Users, as: "owner" }, { model: db.Teams, as: "teams" }] 
       });
-      console.log("AAA", JSON.stringify(a));
-      return a;
     },
     teams: (parent, args, { db }, info) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
@@ -308,16 +305,13 @@ module.exports = {
       }),
     updateOrganization: (
       parent,
-      { name, ownerId, organizationTypeId, maxTeamsLimit, id },
+      { name, id },
       { db },
       info
     ) =>
       db.Organizations.update(
         {
           name: name,
-          ownerId: ownerId,
-          organizationTypeId: organizationTypeId,
-          maxTeamsLimit: maxTeamsLimit
         },
         {
           where: {

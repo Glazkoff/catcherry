@@ -133,8 +133,8 @@ type Mutation {
   deleteOrganization(id: ID!): Int!
 
   updateTokens(fingerprint:String!): jwt!
-  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
-  updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
+  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int, id: ID!): Organization!
+  updateOrganization(name: String!, id: ID!): [Int]!
 
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
   createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
