@@ -1,4 +1,12 @@
 module.exports = `
+directive @rateLimit(
+  max: Int,
+  window: String,
+  message: String,
+  identityArgs: [String],
+  arrayLengthField: String
+) on FIELD_DEFINITION
+
 type Error {
   errorStatus: Int!
   message: String!
@@ -91,23 +99,23 @@ type PointOperations{
 }
 
 type Query { 
-  users: [User!] 
-  user(id: ID!): User
+  users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  organizations: [Organization!]
-  organization(id: ID!): Organization
+  organizations: [Organization!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  organization(id: ID!): Organization @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  teams: [Team!]
-  team(organizationId: Int): Team
+  teams: [Team!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  team(organizationId: Int): Team @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
-  notifications: [Notification]!
-  notification(id: ID!): Notification
+  notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  usersInTeams:[UserInTeam]!
+  usersInTeams:[UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  requests:[UserInTeam]
-  getPointsUser(userId: Int!): PointsUser
-  getOperationPointsUser(userId: Int!): [PointOperations]
+  requests:[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getPointsUser(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(userId: Int!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 }
 
 type Mutation {
