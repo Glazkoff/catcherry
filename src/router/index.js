@@ -17,7 +17,7 @@ import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
-import RequestsList from "@/components/Manager/RequestsList.vue"
+import RequestsList from "@/components/Manager/RequestsList.vue";
 
 Vue.use(VueRouter);
 
@@ -25,7 +25,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Home
   },
   // FIXME: [Фёдор]
   /*
@@ -48,19 +48,19 @@ const routes = [
       {
         path: "",
         name: "Account",
-        component: Account,
+        component: Account
       },
       {
         path: "user_org",
         name: "UserInOrganization",
-        component: UserInOrganization,
+        component: UserInOrganization
       },
       {
         path: "list_req",
         name: "ListReguest",
-        component: ListRequest,
-      },
-    ],
+        component: ListRequest
+      }
+    ]
   },
   {
     path: "/admin",
@@ -69,44 +69,44 @@ const routes = [
     children: [
       {
         path: "",
-        component: Dashboard,
+        component: Dashboard
       },
       {
         path: "users",
-        component: Users,
+        component: Users
       },
       {
         path: "organization",
-        component: Organization,
-      },
-    ],
+        component: Organization
+      }
+    ]
   },
   {
     path: "/auth",
     name: "Authentication",
-    component: Authentication,
+    component: Authentication
   },
   {
     path: "/registration",
     name: "Registration",
-    component: Registration,
+    component: Registration
   },
-    {
+  {
     path: "/manager/team_members",
     name: "TeamMembers",
-    component: TeamMembers,
+    component: TeamMembers
   },
-        {
+  {
     path: "/manager/team_edit",
     name: "EditTeam",
-    component: EditTeam,
+    component: EditTeam
   },
-          {
+  {
     path: "/manager/requests",
     name: "RequestsList",
-    component: RequestsList,
-  },
-    
+    component: RequestsList
+  }
+
   // {
   //   path: "/about",
   //   name: "About",
@@ -121,7 +121,7 @@ const routes = [
 const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
-  routes,
+  routes
 });
 
 export default router;

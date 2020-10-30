@@ -223,10 +223,10 @@ module.exports = {
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
-  acceptRequst:(parent, { id }, { db }, info) =>
+    acceptRequst: (parent, { id }, { db }, info) =>
       db.UsersInTeams.update(
         {
-          status: "Принят",
+          status: "Принят"
         },
         {
           where: {
@@ -234,5 +234,17 @@ module.exports = {
           }
         }
       ),
+
+    revokeRequst: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Не принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      )
   }
 };

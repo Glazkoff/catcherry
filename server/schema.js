@@ -76,6 +76,7 @@ type Mutation {
   deleteUserInTeam(id: ID!): Int!
 
   acceptRequst(id: ID!): [Int]!
+  revokeRequst(id: ID!): [Int]!
 
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt

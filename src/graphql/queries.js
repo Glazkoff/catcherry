@@ -37,7 +37,7 @@ export const CREATE_USER_QUERY = gql`
 
 export const ONE_USER_QUERY = gql`
   query {
-    user(id:156) {
+    user(id: 156) {
       id
       name
     }
@@ -69,13 +69,13 @@ export const DELETE_USER_QUERY = gql`
 export const USERS_IN_TEAMS_QUERY = gql`
   query {
     usersInTeams {
-      id,
-      userId, 
-      teamId,
-      status,
-      roleId,
+      id
+      userId
+      teamId
+      status
+      roleId
       user {
-        id,
+        id
         name
       }
     }
@@ -91,13 +91,13 @@ export const DELETE_IN_TEAMS_QUERY = gql`
 export const REQUESTS_QUERY = gql`
   query {
     requests {
-      id,
-      userId, 
-      teamId,
-      status,
-      roleId,
+      id
+      userId
+      teamId
+      status
+      roleId
       user {
-        id,
+        id
         name
       }
     }
@@ -106,5 +106,11 @@ export const REQUESTS_QUERY = gql`
 export const ACCEPT_REQUEST_QUERY = gql`
   mutation($id: ID!) {
     acceptRequst(id: $id)
+  }
+`;
+
+export const REVOKE_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    revokeRequst(id: $id)
   }
 `;
