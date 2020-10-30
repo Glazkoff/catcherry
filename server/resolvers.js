@@ -47,6 +47,18 @@ module.exports = {
         where: { organizationId: args.organizationId }
       });
     },
+    usersInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Принят" },
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "user" }]
+      }),
+    oneUserInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { userId: args.userId},
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "user" }]
+      }),
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
@@ -216,7 +228,7 @@ module.exports = {
         }
       }),
     /*
-      [Ниже] Мутации работы с организациями (Organization)     
+      [Ниже] Мутации работы с командами (Teams)     
     */
     createTeam: (
       parent,
@@ -231,6 +243,27 @@ module.exports = {
         maxUsersLimit: maxUsersLimit
       }),
 
+    /*
+      [Ниже] Мутации работы с заявками в команду (UsersInTeams)     
+    */
+    createUserInTeam: (
+      parent,
+      { userId, teamId, status, roleId },
+      { db },
+      info
+    ) =>
+      db.UsersInTeams.create({
+        userId: userId,
+        teamId: teamId,
+        status: status,
+        roleId: roleId
+      }),
+    deleteUserInTeam: (parent, args, { db }, info) =>
+      db.UsersInTeams.destroy({
+        where: {
+          id: args.id
+        }
+      }),
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */

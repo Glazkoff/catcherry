@@ -90,6 +90,8 @@ export const DELETE_USER_QUERY = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ ORGANIZATIONS
+
 export const CREATE_ORGANIZATION = gql`
   mutation(
     $name: String!
@@ -131,6 +133,8 @@ export const ONE_ORG_QUERY = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TEAMS
+
 export const CREATE_TEAM = gql`
   mutation(
     $organizationId: Int
@@ -170,5 +174,44 @@ export const TEAM_IN_ORG_QUERY = gql`
       description
       maxUsersLimit
     }
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
+export const USERS_IN_TEAMS_QUERY = gql`
+  query {
+    usersInTeams {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const ONE_USER_IN_TEAMS_QUERY = gql`
+  query($userId: ID!) {
+    oneUserInTeams(userId: $userId) {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const DELETE_IN_TEAMS_QUERY = gql`
+  mutation($id: ID!) {
+    deleteUserInTeam(id: $id)
   }
 `;
