@@ -1,19 +1,14 @@
 <template>
   <div class="search_organization account-view">
-    <popup v-if="isShowModalEdit">
+    <popup v-if="isShowInfoModal">
       <h3 slot="header">Организация "{{ nameOfOrganization }}"</h3>
       <div slot="body">
         {{ oneOrganization.name }}
         <span
           >Вы можете вступить в организацию или сразу вступить в команду</span
         >
-        <h3>Участие в командах</h3>
-        <hr />
-        <h3>Заявки в команды</h3>
-        <hr />
-        <h5>Поиск команды</h5>
-        <input type="text" class="form-text" placeholder="Название команды" />
         <h3>Команды</h3>
+        <input type="text" class="form-text" placeholder="Поиск команды" />
         <div v-if="!team">
           <h5>В организации пока нет ни одной команды</h5>
         </div>
@@ -23,18 +18,24 @@
             <b>{{ team.name }}</b>
           </p>
           <span>{{ team.description }}</span>
-          <button class="btn btn-link">Подать заявку</button>
+          <button class="btn btn-link" @click="requestInTeam(team.id)">
+            Подать заявку
+          </button>
         </div>
       </div>
       <div slot="action">
         <button
           class="modal-default-button btn btn-secondary"
-          @click="isShowModalEdit = false"
+          @click="isShowInfoModal = false"
         >
           Закрыть
         </button>
       </div>
     </popup>
+    <minialert v-if="isShowAlertAddReq"
+      ><p slot="title">Заявка в команду успешно подана</p></minialert
+    >
+
     <h1>Поиск организации</h1>
     <div class="tabs">
       <input
@@ -89,10 +90,10 @@
           v-for="organization in filterOrganization"
           :key="organization.id"
         >
+          <h3>
+            {{ organization.name }}
+          </h3>
           <p>№{{ organization.id }}</p>
-          <p>
-            <b>{{ organization.name }}</b>
-          </p>
           <p>{{ organization.owner }}</p>
           <p>{{ organization.organizationType }}</p>
           <button @click="showModalEdit(organization)" class="btn-link">
@@ -212,9 +213,11 @@ import {
   ONE_ORG_QUERY,
   CREATE_ORGANIZATION,
   TEAMS_QUERY,
-  TEAM_IN_ORG_QUERY
+  TEAM_IN_ORG_QUERY,
+  CREATE_USER_IN_TEAM
 } from "@/graphql/queries";
 import { required } from "vuelidate/lib/validators";
+import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
   components: { popup, minialert },
@@ -225,8 +228,9 @@ export default {
       oneOrganization: {},
       nameOfOrganization: "",
       tabFirst: true,
-      isShowModalEdit: false,
+      isShowInfoModal: false,
       isShowAlertAdd: false,
+      isShowAlertAddReq: false,
       isAddOrganization: false,
       name: "",
       ownerId: 124,
@@ -278,7 +282,7 @@ export default {
   methods: {
     showModalEdit(organization) {
       (this.nameOfOrganization = organization.name),
-        (this.isShowModalEdit = true);
+        (this.isShowInfoModal = true);
       this.index = this.organizations.findIndex(
         el => el.id === organization.id
       );
@@ -330,6 +334,35 @@ export default {
           this.isShowAlertAdd = false;
         }, 3000);
       }
+    },
+    requestInTeam(teamId) {
+      this.$apollo.mutate({
+        mutation: CREATE_USER_IN_TEAM,
+        variables: {
+          userId: this.$route.params.id,
+          teamId: teamId,
+          status: "Не принят",
+          roleId: "20" //FIXME: определить начальную роль при подаче заявки
+        },
+        update: (cache, { data: { createUserInTeam } }) => {
+          let data = cache.readQuery({ query: ONE_USER_IN_TEAMS_QUERY });
+          data.usersInTeams.push(createUserInTeam);
+          cache.writeQuery({ query: ONE_USER_IN_TEAMS_QUERY, data });
+        }
+        // optimisticResponse: {
+        //   __typename: "Mutation",
+        //   createUser: {
+        //     __typename: "User",
+        //     id: -1,
+        //     name: username
+        //   }
+        // }
+      });
+      this.isShowInfoModal = false;
+      this.isShowAlertAddReq = true;
+      setTimeout(() => {
+        this.isShowAlertAddReq = false;
+      }, 3000);
     }
   },
   computed: {
@@ -381,6 +414,13 @@ body {
 .oneTeam p {
   display: inline-block;
   margin-right: 10px;
+}
+
+.oneOrganization {
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px #868686;
 }
 .tabs {
   font-size: 0;

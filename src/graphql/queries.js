@@ -210,6 +210,19 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
   }
 `;
 
+export const CREATE_USER_IN_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!, $status: String!, $roleId: ID!) {
+    createUserInTeam(
+      userId: $userId
+      teamId: $teamId
+      status: $status
+      roleId: $roleId
+    ) {
+      id
+    }
+  }
+`;
+
 export const DELETE_IN_TEAMS_QUERY = gql`
   mutation($id: ID!) {
     deleteUserInTeam(id: $id)

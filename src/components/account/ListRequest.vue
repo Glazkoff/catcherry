@@ -8,7 +8,7 @@
         <span>Владелец: Иванов И.И.</span><br />
         <span>Статус: {{request.status }}</span
         ><br />
-        <button class="btn" v-if="request.status === 'Отклонено'">Удалить</button>
+        <button class="btn" v-if="request.status === 'Не принят'">Отозвать</button>
       </div>
     </div>
   </div>
@@ -45,4 +45,10 @@ export default {
 };
 </script>
 
-<style></style>
+<style>
+.result_card {
+  padding: 20px;
+  margin: 10px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px #868686;
+}</style>
