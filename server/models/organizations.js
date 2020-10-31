@@ -9,15 +9,17 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       // FIXME: раскомментирование вызывает ошибку при удалении из Users
-      // Organizations.belongsTo(models.Users, {
-      //   foreignKey: "ownerId",
-      //   as: "user",
-      // });
+      Organizations.belongsTo(models.Users, {
+        foreignKey: "ownerId",
+        as: "owner",
+      });
       // FIXME: раскомментирование вызывает ошибку
-      // Organizations.belongsTo(models.OrganizationsTypes, {
-      //   foreignKey: "organizationTypeId",
-      //   as: "organizationType",
-      // });
+      Organizations.belongsTo(models.OrganizationsTypes, {
+        onDelete: "cascade",
+        foreignKey: "organizationTypeId",
+        as: "organizationType"
+      });
+      
       Organizations.hasMany(models.Teams, {
         foreignKey: "organizationId",
         as: "organization",

@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       Users.hasMany(models.Organizations, {
         onDelete: "cascade",
         foreignKey: "ownerId",
-        as: "organizations",
+        as: "owner",
       });
       // FIXME: При запросе на добавление оповещения возникает ошибка
       //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"

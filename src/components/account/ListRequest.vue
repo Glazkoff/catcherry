@@ -5,9 +5,8 @@
       <div class="result_card">
         <h4>Заявка на вступление в команду {{ request.team.name}}</h4>
         <span>Организация: {{request.team.organization.name}}</span><br />
-        <span>Номер: {{ request.id }}</span
+        <span>Номер заявки: {{ request.id }}</span
         ><br />
-        <span>Владелец: Иванов И.И.</span><br />
         <span>Статус: {{ request.status }}</span
         ><br />
         <button

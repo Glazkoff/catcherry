@@ -95,9 +95,9 @@
           <h3>
             {{ organization.name }}
           </h3>
-          <p>№{{ organization.id }}</p>
-          <p>{{ organization.owner }}</p>
-          <p>{{ organization.organizationType }}</p>
+          <p>Номер организации: {{ organization.id }}</p>
+          <p>Владелец: {{ organization.owner.name }}</p>
+          <p>{{ organization.organizationType.name }}</p>
           <button @click="showModalEdit(organization)" class="btn-link">
             Подробнее
           </button>
@@ -115,7 +115,7 @@
             <h4>Заявка на вступление в команду {{ item.name }}</h4>
             <span>Номер: {{ item.id }}</span
             ><br />
-            <span>Владелец: {{ item.owner }}</span
+            <span>Владелец: {{ item.owner.name }}</span
             ><br />
             <button class="btn-link" @click="showModalEdit(item)">
               Подробнее

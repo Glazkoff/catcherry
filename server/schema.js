@@ -29,8 +29,15 @@ type Organization {
   ownerId: Int
   organizationTypeId: Int
   maxTeamsLimit: Int
-  createdAt: String!
+  owner: User!
+  organizationType: OrganizationType!
+  createdAt: String! 
   updatedAt: String!
+}
+
+type OrganizationType {
+  id: ID!
+  name: String!
 }
 
 type Team {
@@ -43,6 +50,7 @@ type Team {
   createdAt: String!
   updatedAt: String!
 }
+
 type UserInTeam {
   id: ID!
   userId: ID!
@@ -81,6 +89,8 @@ type Query {
 
   organizations: [Organization!]
   organization(id: ID!): Organization
+
+  organizationTypes: [OrganizationType!]
 
   teams: [Team!]
   team(organizationId: Int): [Team!]
