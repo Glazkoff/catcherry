@@ -12,15 +12,17 @@
         <div v-if="!team">
           <h5>В организации пока нет ни одной команды</h5>
         </div>
-        <div class="oneTeam" v-else>
-          <p>№{{ team.id }}</p>
-          <p>
-            <b>{{ team.name }}</b>
-          </p>
-          <span>{{ team.description }}</span>
-          <button class="btn btn-link" @click="requestInTeam(team.id)">
-            Подать заявку
-          </button>
+        <div v-else>
+          <div class="oneTeam" v-for="teamUs in team" :key="teamUs.id">
+            <p>№{{ teamUs.id }}</p>
+            <p>
+              <b>{{ teamUs.name }}</b>
+            </p>
+            <span>{{ teamUs.description }}</span>
+            <button class="btn btn-link" @click="requestInTeam(teamUs.id)">
+              Подать заявку
+            </button>
+          </div>
         </div>
       </div>
       <div slot="action">
@@ -295,7 +297,7 @@ export default {
           mutation: CREATE_ORGANIZATION,
           variables: {
             name: this.name,
-            ownerId: this.ownerId,
+            ownerId: parseInt(this.ownerId),
             organizationTypeId: this.organizationTypeId,
             maxTeamsLimit: this.maxTeamsLimit
           },

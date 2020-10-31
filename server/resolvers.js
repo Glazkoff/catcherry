@@ -41,12 +41,14 @@ module.exports = {
       return db.Organizations.findOne({ where: { id: args.id } });
     },
     teams: (parent, args, { db }, info) =>
-      db.Teams.findAll({ order: [["id", "ASC"]] }),
-    team: (parent, args, { db }, info) => {
-      return db.Teams.findOne({
-        where: { organizationId: args.organizationId }
-      });
-    },
+      db.Teams.findAll({
+        order: [["id", "ASC"]]
+      }),
+    team: (parent, args, { db }, info) =>
+      db.Teams.findAll({
+        where: { organizationId: args.organizationId },
+        include: [{ model: db.Organizations, as: "organization" }]
+      }),
     usersInTeams: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят" },
@@ -55,9 +57,16 @@ module.exports = {
       }),
     oneUserInTeams: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
-        where: { userId: args.userId},
+        where: { userId: args.userId },
         order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
+        include: [
+          { model: db.Users, as: "user" },
+          {
+            model: db.Teams,
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
       }),
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),

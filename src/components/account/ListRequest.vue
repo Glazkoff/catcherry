@@ -3,7 +3,8 @@
     <h1>Список заявок на вступление в команду</h1>
     <div v-for="request in oneUserInTeams" :key="request.id">
       <div class="result_card">
-        <h4>Заявка на вступление в команду {{ request.teamId }}</h4>
+        <h4>Заявка на вступление в команду {{ request.team.name}}</h4>
+        <span>Организация: {{request.team.organization.name}}</span><br />
         <span>Номер: {{ request.id }}</span
         ><br />
         <span>Владелец: Иванов И.И.</span><br />

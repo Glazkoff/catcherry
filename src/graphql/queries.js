@@ -206,6 +206,14 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
         id
         name
       }
+      team {
+        id
+        name
+        organization {
+          id
+          name
+        }
+      }
     }
   }
 `;

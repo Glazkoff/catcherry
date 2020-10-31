@@ -8,6 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+      Teams.belongsTo(models.Organizations, {
+        foreignKey: "organizationId",
+        as: "organization"
+      });
       Teams.hasOne(models.TeamCustomization, {
         foreignKey: "teamId",
         as: "customization",

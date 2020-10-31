@@ -39,6 +39,7 @@ type Team {
   name: String!
   description: String
   maxUsersLimit: Int
+  organization: Organization
   createdAt: String!
   updatedAt: String!
 }
@@ -48,7 +49,8 @@ type UserInTeam {
   teamId: ID!
   status: String!
   roleId: ID!
-  user:User!
+  user: User!
+  team: Team!
   createdAt: String!
   updatedAt: String!
 }
@@ -81,7 +83,7 @@ type Query {
   organization(id: ID!): Organization
 
   teams: [Team!]
-  team(organizationId: Int): Team
+  team(organizationId: Int): [Team!]
 
   usersInTeams: [UserInTeam!]
   oneUserInTeams(userId: ID!): [UserInTeam!]
