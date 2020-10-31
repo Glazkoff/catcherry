@@ -290,50 +290,45 @@ export default {
       this.organizationId = parseInt(organization.id);
     },
     submit() {
-      if (this.$v.$invalid) {
-        this.$v.$touch();
-      } else {
-        this.signUpLoading = true;
-        this.$apollo
-          .mutate({
-            mutation: CREATE_ORGANIZATION,
-            variables: {
+      this.$apollo
+        .mutate({
+          mutation: CREATE_ORGANIZATION,
+          variables: {
+            name: this.name,
+            ownerId: this.ownerId,
+            organizationTypeId: this.organizationTypeId,
+            maxTeamsLimit: this.maxTeamsLimit
+          },
+          update: (cache, { data: { createOrganization } }) => {
+            let data = cache.readQuery({ query: ORGS_QUERY });
+            data.organizations.push(createOrganization);
+            cache.writeQuery({ query: ORGS_QUERY, data });
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createOrganization: {
+              __typename: "Organization",
+              id: -1,
               name: this.name,
               ownerId: this.ownerId,
               organizationTypeId: this.organizationTypeId,
               maxTeamsLimit: this.maxTeamsLimit
-            },
-            update: (cache, { data: { createOrganization } }) => {
-              let data = cache.readQuery({ query: ORGS_QUERY });
-              data.organizations.push(createOrganization);
-              cache.writeQuery({ query: ORGS_QUERY, data });
-            },
-            optimisticResponse: {
-              __typename: "Mutation",
-              createOrganization: {
-                __typename: "Organization",
-                id: -1,
-                name: this.name,
-                ownerId: this.ownerId,
-                organizationTypeId: this.organizationTypeId,
-                maxTeamsLimit: this.maxTeamsLimit
-              }
             }
-          })
-          .then(resp => {
-            this.signUpLoading = false;
-            this.isAddOrganization = false;
-            console.log(resp);
-          })
-          .catch(error => {
-            this.signUpLoading = false;
-            console.error(error);
-          });
-        this.isShowAlertAdd = true;
-        setTimeout(() => {
-          this.isShowAlertAdd = false;
-        }, 3000);
-      }
+          }
+        })
+        .then(resp => {
+          this.signUpLoading = false;
+          this.isAddOrganization = false;
+          console.log(resp);
+        })
+        .catch(error => {
+          this.signUpLoading = false;
+          console.error(error);
+        });
+      this.isShowAlertAdd = true;
+      setTimeout(() => {
+        this.isShowAlertAdd = false;
+      }, 3000);
     },
     requestInTeam(teamId) {
       this.$apollo.mutate({
@@ -345,18 +340,17 @@ export default {
           roleId: "20" //FIXME: определить начальную роль при подаче заявки
         },
         update: (cache, { data: { createUserInTeam } }) => {
-          let data = cache.readQuery({ query: ONE_USER_IN_TEAMS_QUERY });
-          data.usersInTeams.push(createUserInTeam);
-          cache.writeQuery({ query: ONE_USER_IN_TEAMS_QUERY, data });
+          let data = cache.readQuery({
+            query: ONE_USER_IN_TEAMS_QUERY,
+            variables: { userId: this.$route.params.id }
+          });
+          data.oneUserInTeams.push(createUserInTeam);
+          cache.writeQuery({
+            query: ONE_USER_IN_TEAMS_QUERY,
+            variables: { userId: this.$route.params.id },
+            data
+          });
         }
-        // optimisticResponse: {
-        //   __typename: "Mutation",
-        //   createUser: {
-        //     __typename: "User",
-        //     id: -1,
-        //     name: username
-        //   }
-        // }
       });
       this.isShowInfoModal = false;
       this.isShowAlertAddReq = true;
