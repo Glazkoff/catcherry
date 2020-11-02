@@ -41,14 +41,14 @@ import {
   CREATE_USER_QUERY,
   USERS_QUERY,
   UPDATE_USER_QUERY,
-  DELETE_USER_QUERY,
+  DELETE_USER_QUERY
 } from "../graphql/queries";
 export default {
   name: "TestGraphql",
   apollo: {
     users: {
-      query: USERS_QUERY,
-    },
+      query: USERS_QUERY
+    }
   },
   data() {
     return {
@@ -56,8 +56,8 @@ export default {
       editUser: {
         isEdit: false,
         name: "",
-        id: -1,
-      },
+        id: -1
+      }
     };
   },
   methods: {
@@ -68,12 +68,12 @@ export default {
           mutation: UPDATE_USER_QUERY,
           variables: {
             name: this.editUser.name,
-            id: this.editUser.id,
+            id: this.editUser.id
           },
           update: (cache, { data: { updateUser } }) => {
             let data = cache.readQuery({ query: USERS_QUERY });
             data.users.find(
-              (el) => el.id === this.editUser.id
+              el => el.id === this.editUser.id
             ).name = this.editUser.name;
             cache.writeQuery({ query: USERS_QUERY, data });
             console.log(updateUser);
@@ -83,19 +83,19 @@ export default {
             createUser: {
               __typename: "User",
               id: -1,
-              name: this.editUser.name,
-            },
-          },
+              name: this.editUser.name
+            }
+          }
         })
-        .then((data) => {
+        .then(data => {
           console.log(data);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(error);
         });
     },
     toEditUser(id) {
-      let editUser = this.users.find((el) => el.id === id);
+      let editUser = this.users.find(el => el.id === id);
       this.editUser.name = editUser.name;
       this.editUser.id = editUser.id;
       this.editUser.isEdit = true;
@@ -107,7 +107,7 @@ export default {
         .mutate({
           mutation: CREATE_USER_QUERY,
           variables: {
-            name: username,
+            name: username
           },
           update: (cache, { data: { createUser } }) => {
             let data = cache.readQuery({ query: USERS_QUERY });
@@ -119,14 +119,14 @@ export default {
             createUser: {
               __typename: "User",
               id: -1,
-              name: username,
-            },
-          },
+              name: username
+            }
+          }
         })
-        .then((data) => {
+        .then(data => {
           console.log(data);
         })
-        .catch((error) => {
+        .catch(error => {
           this.newUser = username;
           console.error(error);
         });
@@ -136,23 +136,23 @@ export default {
         .mutate({
           mutation: DELETE_USER_QUERY,
           variables: {
-            id,
+            id
           },
-          update: (cache) => {
+          update: cache => {
             let data = cache.readQuery({ query: USERS_QUERY });
-            let index = data.users.findIndex((el) => el.id == id);
+            let index = data.users.findIndex(el => el.id == id);
             data.users.splice(index, 1);
             cache.writeQuery({ query: USERS_QUERY, data });
-          },
+          }
         })
-        .then((data) => {
+        .then(data => {
           console.log(data);
         })
-        .catch((error) => {
+        .catch(error => {
           console.error(error);
         });
-    },
-  },
+    }
+  }
 };
 </script>
 
