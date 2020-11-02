@@ -76,13 +76,18 @@
           </div>
         </div>
       </div>
+      <comments></comments>
     </div>
   </div>
 </template>
 
 <script>
+import Comments from "../components/Comments.vue";
 export default {
   name: "DetailedPost",
+  components: {
+    Comments
+  },
   computed: {
     id() {
       return this.$route.params.id;
