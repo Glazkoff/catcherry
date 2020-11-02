@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Posts.belongsTo(models.Users);
-      Posts.belongsTo(models.Teams);
+      Posts.belongsTo(models.Organizations);
     }
   }
   Posts.init(
@@ -22,13 +22,13 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      teamId: {
+      organizationId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: true,
       },
-      forAllOrganization: {
+      forAllTeam: {
         type: DataTypes.BOOLEAN,
-        allowNull: false,
+        allowNull: true,
       },
     },
     {

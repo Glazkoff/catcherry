@@ -76,7 +76,7 @@ db.sequelize.sync({ alter: true }).then(async () => {
   app.listen(PORT, async () => {
     // false - если нужно просто добавить данные в таблицы;
     // true - если нужно удалить все данные и заново заполнить все таблицы;
-    // addAllTables(false);
+    addAllTables(false);
     console.log(
       chalk.yellow(`Сервер (Graphiql) запущен на`),
       chalk.cyan(`http://localhost:${PORT}/graphiql`)
