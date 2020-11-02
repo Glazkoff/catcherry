@@ -90,6 +90,27 @@ type PointOperations{
   operationDescription: String
 }
 
+
+input PostBody {
+  header: String!
+  text: String!
+}
+
+type BodyPost {
+  header: String!
+  text: String!
+}
+
+type Post {
+  id: ID!
+  body: BodyPost!
+  authorId: Int!
+  organizationId: Int!
+  forAllTeam: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Query { 
   users: [User!] 
   user(id: ID!): User
@@ -102,6 +123,9 @@ type Query {
   
   notifications: [Notification]!
   notification(id: ID!): Notification
+
+  posts: [Post]!
+  post(id: ID!): Post
 
   usersInTeams:[UserInTeam]!
 
