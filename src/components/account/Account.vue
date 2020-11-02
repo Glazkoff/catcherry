@@ -66,22 +66,22 @@
             placeholder="Пароль"
             required
           />
-          <div class="btn-group">
-            <button
-              class="modal-default-button btn btn-primary"
-              @click="saveUserOnPopup()"
-            >
-              <i18n path="save"
-                ><span>{{ $t("save") }}</span></i18n
-              >
-            </button>
-            <button class="btn btn-secondary" @click="cancelModal()">
-              <i18n path="cancel"
-                ><span place="title">{{ $t("cancel") }}</span></i18n
-              >
-            </button>
-          </div>
         </form>
+      </div>
+      <div slot="action" class="btn-group"  v-if="isShowModalEdit">
+        <button
+          class="modal-default-button btn btn-primary"
+          @click="saveUserOnPopup()"
+        >
+          <i18n path="save"
+            ><span>{{ $t("save") }}</span></i18n
+          >
+        </button>
+        <button class="btn btn-secondary" @click="cancelModal()">
+          <i18n path="cancel"
+            ><span place="title">{{ $t("cancel") }}</span></i18n
+          >
+        </button>
       </div>
 
       <h3 slot="header" v-if="isShowModalDelete">
@@ -139,19 +139,19 @@
         </p>
         <p>Логин: {{ user.login }}</p>
         <p>Пароль: {{ user.password }}</p>
-        <div class="btn-group">
-          <button class="btn btn-primary" @click="showModalEdit()">
-            Редактировать
-          </button>
-          <button class="btn btn-link" @click="showModalDelete()">
-            Удалить
-          </button>
-          <button class="btn btn-secondary" @click="cancelFullInformation()">
-            <i18n path="close"
-              ><span place="title">{{ $t("close") }}</span></i18n
-            >
-          </button>
-        </div>
+      </div>
+      <div slot="action" class="btn-group" v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading">
+        <button class="btn btn-primary" @click="showModalEdit()">
+          Редактировать
+        </button>
+        <button class="btn btn-link" @click="showModalDelete()">
+          Удалить
+        </button>
+        <button class="btn btn-secondary" @click="cancelFullInformation()">
+          <i18n path="close"
+            ><span place="title">{{ $t("close") }}</span></i18n
+          >
+        </button>
       </div>
     </popup>
 
