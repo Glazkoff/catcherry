@@ -2,11 +2,11 @@
   <div class="container">
     <div class="post">
       <div class="imageContainer">
-        <img src="../assets/placeholder.png" v-bind:alt="this.post.header" />
+        <img src="../assets/placeholder.png" v-bind:alt="post.header" />
       </div>
       <div class="infoContainer">
         <h1 class="heading">
-          {{ this.post.header }}
+          {{ post.header }}
         </h1>
         <p class="infoDate">{{ post.date }}</p>
         <p class="infoBody">
@@ -83,8 +83,14 @@
 
 <script>
 import Comments from "../components/Comments.vue";
+import { ONE_POST_QUERY } from "@/graphql/queries";
 export default {
   name: "DetailedPost",
+  apollo: {
+    post: {
+      query: ONE_POST_QUERY
+    }
+  },
   components: {
     Comments
   },

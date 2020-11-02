@@ -239,3 +239,31 @@ export const ACCEPT_REQUEST_QUERY = gql`
     acceptRequst(id: $id)
   }
 `;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
+
+export const ONE_POST_QUERY = gql`
+  query($id: ID!) {
+    post(id: $id) {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
+
+export const POSTS_QUERY = gql`
+  query {
+    posts {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
