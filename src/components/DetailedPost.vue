@@ -75,8 +75,8 @@
             </div>
           </div>
         </div>
+        <comments></comments>
       </div>
-      <comments></comments>
     </div>
   </div>
 </template>
