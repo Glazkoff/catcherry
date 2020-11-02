@@ -23,6 +23,7 @@ function generateTokens(user) {
   };
 }
 
+// ФУНКЦИЯ: создание записи о новой сессии
 async function addRefreshSession(db, userId, refreshToken, fingerprint) {
   try {
     // Задаём объект сессии
@@ -79,6 +80,29 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
     // Возвращаем ошибку в случае возникновения
     return error;
   }
+}
+
+// ФУНКЦИЯ: создание записи о новой сессии
+async function updateRefreshSession(
+  db,
+  userId,
+  oldRefreshToken,
+  newRefreshToken,
+  fingerprint
+) {
+  let result = await db.RefreshSessions.update(
+    {
+      refreshToken: newRefreshToken
+    },
+    {
+      where: {
+        refreshToken: oldRefreshToken,
+        fingerprint,
+        userId
+      }
+    }
+  );
+  return result;
 }
 
 module.exports = {
@@ -202,34 +226,75 @@ module.exports = {
         };
       }
     },
-    updateAccessToken: async (parent, {}, { req, res, db }, info) => {
+    updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
+      // Получаем refresh-токен из cookie
       let refreshToken = req.cookies.refreshToken;
-      if (
-        !refreshToken ||
-        !jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
-      ) {
+
+      // Если он пуст, отправляем ошибку
+      if (!refreshToken) {
         return {
           error: {
             errorStatus: 401,
             message: "Refresh token is absent"
           }
         };
-      } else {
-        let userId = jwt.decode(refreshToken).userId;
-        let user = await db.Users.findOne({ where: { id: userId } });
-        let accessToken = jwt.sign(
-          user.dataValues,
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: 100 * 60 * 60 * 24
+      }
+      // Если токен был получен
+      else {
+        // Ищем запись о сессии
+        let session = await db.RefreshSessions.findOne({
+          where: {
+            refreshToken,
+            fingerprint
           }
-        );
-        return {
-          // TODO: выпустить токен
-          accessToken
-        };
+        });
+
+        // Если сессия не была найдена, отправляем ошибку
+        if (!session) {
+          return {
+            error: {
+              errorStatus: 401,
+              message: "Session was not found!"
+            }
+          };
+        }
+        // Если сессия была найдена, обновляем токены
+        else {
+          session = session.dataValues;
+
+          // Находим пользователя по ID
+          // TODO: оптимизация запросов с помощью Include
+          let user = await db.Users.findOne({
+            where: {
+              id: session.userId
+            }
+          });
+
+          // Генерируем новые токены
+          let tokens = generateTokens(user.dataValues);
+
+          // Записать в Cookie HttpOnly рефреш-токен
+          res.cookie("refreshToken", tokens.refreshToken, {
+            httpOnly: true,
+            maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
+          });
+
+          // Обновляем записи в БД
+          updateRefreshSession(
+            db,
+            session.userId,
+            refreshToken,
+            tokens.refreshToken,
+            fingerprint
+          );
+
+          return {
+            accessToken: tokens.accessToken
+          };
+        }
       }
     },
+
     /*
       [Ниже] Мутации работы с пользователями (Users)     
     */

@@ -121,7 +121,7 @@ type Query {
 type Mutation {
   signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
   logIn(login: String!, password: String!, fingerprint:String!): jwt
-  updateAccessToken(fingerprint:String!): jwt!
+  updateTokens(fingerprint:String!): jwt!
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!

@@ -20,13 +20,17 @@ Vue.use(Vuelidate);
 Vue.use(FlagIcon);
 Vue.config.productionTip = process.env.NODE_ENV === "development";
 
+// TODO: разобраться с заголовками
+// https://blog.logrocket.com/handling-authentication-in-your-graphql-powered-vue-app/
+
 // Заголовки с получением токена из localstorage
 const getHeaders = () => {
   const headers = {};
-  const token = store.accessToken || "";
+  const token = store.state.accessToken || "";
   if (token) {
-    headers.authorization = `Bearer ${token}`;
+    headers["authorization"] = `Bearer ${token}`;
   }
+  console.log("!!!", headers, token);
   return headers;
 };
 
