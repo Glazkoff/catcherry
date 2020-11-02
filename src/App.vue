@@ -24,7 +24,11 @@ export default {
     setLocale(locale) {
       this.$i18n.locale = locale;
     }
+<<<<<<< HEAD
   },
+=======
+  }
+>>>>>>> dev
   // async beforeMount() {
   //   const fp = await this.$fingerprint.load();
   //   const result = await fp.get();

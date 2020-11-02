@@ -32,7 +32,7 @@ const getHeaders = () => {
 
 // Создание ссылки для Apollo
 const link = new createHttpLink({
-  uri: process.env.VUE_APP_GRAPHQL_URL,
+  uri: process.env.VUE_APP_GRAPHQL_URL || "http://localhost:3000",
   fetch,
   headers: getHeaders()
 });
