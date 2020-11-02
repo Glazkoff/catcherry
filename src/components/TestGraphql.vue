@@ -80,6 +80,7 @@ export default {
           },
           update: (cache, { data: { updateUser } }) => {
             let data = cache.readQuery({ query: USERS_QUERY });
+            console.log(data);
             data.users.find(
               el => el.id === this.editUser.id
             ).name = this.editUser.name;
