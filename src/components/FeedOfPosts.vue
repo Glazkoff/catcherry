@@ -1,22 +1,22 @@
 <template>
   <div class="flexbox">
-    <one-post-list
+    <non-detailed-post
       @like="onLike"
       @comment="onComment"
       @share="onShare"
       v-for="post in posts"
       :key="post.id"
       :post="post"
-    ></one-post-list>
+    ></non-detailed-post>
   </div>
 </template>
 
 <script>
-import OnePostList from "../components/OnePostList.vue";
+import NonDetailedPost from "../components/NonDetailedPost.vue";
 export default {
   name: "FeedOfPosts",
   components: {
-    OnePostList
+    NonDetailedPost
   },
   data() {
     return {
