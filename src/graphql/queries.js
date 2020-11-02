@@ -46,6 +46,95 @@ export const UPDATE_TOKENS = gql`
   }
 `;
 
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
+export const USERS_IN_TEAMS_QUERY = gql`
+  query {
+    usersInTeams {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation(
+    $organizationId: Int
+    $name: String!
+    $description: String
+    $maxUsersLimit: Int
+  ) {
+    createTeam(
+      organizationId: $organizationId
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+    ) {
+      id
+    }
+  }
+`;
+
+export const TEAMS_QUERY = gql`
+  query {
+    teams {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
+export const TEAM_IN_ORG_QUERY = gql`
+  query($organizationId: Int) {
+    team(organizationId: $organizationId) {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
+export const DELETE_IN_TEAMS_QUERY = gql`
+  mutation($id: ID!) {
+    deleteUserInTeam(id: $id)
+  }
+`;
+
+export const REQUESTS_QUERY = gql`
+  query {
+    requests {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const ACCEPT_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    acceptRequst(id: $id)
+  }
+`;
+
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {
@@ -176,75 +265,5 @@ export const DELETE_ORG_QUERY = gql`
 export const UPDATE_ORG_QUERY = gql`
   mutation($name: String, $id: ID!) {
     updateOrganization(name: $name, id: $id)
-  }
-`;
-
-export const CREATE_TEAM = gql`
-  mutation(
-    $organizationId: Int
-    $name: String!
-    $description: String
-    $maxUsersLimit: Int
-  ) {
-    createTeam(
-      organizationId: $organizationId
-      name: $name
-      description: $description
-      maxUsersLimit: $maxUsersLimit
-    ) {
-      id
-    }
-  }
-`;
-
-export const TEAMS_QUERY = gql`
-  query {
-    teams {
-      id
-      organizationId
-      name
-      description
-      maxUsersLimit
-    }
-  }
-`;
-
-export const TEAM_IN_ORG_QUERY = gql`
-  query($organizationId: Int) {
-    team(organizationId: $organizationId) {
-      id
-      organizationId
-      name
-      description
-      maxUsersLimit
-    }
-  }
-`;
-
-export const DELETE_IN_TEAMS_QUERY = gql`
-  mutation($id: ID!) {
-    deleteUserInTeam(id: $id)
-  }
-`;
-
-export const REQUESTS_QUERY = gql`
-  query {
-    requests {
-      id
-      userId
-      teamId
-      status
-      roleId
-      user {
-        id
-        name
-      }
-    }
-  }
-`;
-
-export const ACCEPT_REQUEST_QUERY = gql`
-  mutation($id: ID!) {
-    acceptRequst(id: $id)
   }
 `;

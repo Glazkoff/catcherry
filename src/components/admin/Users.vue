@@ -13,60 +13,70 @@
           <label for="surname">Фамилия</label>
           <input
             name="surname"
-            v-model.trim="$v.user.surname.$model"
-            @blur="$v.user.surname.$touch()"
+            v-model.trim="$v.oneUser.surname.$model"
+            @blur="$v.oneUser.surname.$touch()"
             placeholder="Фамилия"
           />
-          <div v-if="$v.user.surname.$error" class="error">
-            <span v-if="!$v.user.surname.required"
+          <div v-if="$v.oneUser.surname.$error" class="error">
+            <span v-if="!$v.oneUser.surname.required"
               >Данное поле обязательно</span
             >
-            <span v-else-if="!$v.user.surname.alpha"
+            <span v-else-if="!$v.oneUser.surname.alpha"
               >Поле должно содержать только буквы</span
             >
           </div>
           <label for="name">Имя</label>
           <input
             name="name"
-            v-model.trim="$v.user.name.$model"
+            v-model.trim="$v.oneUser.name.$model"
             placeholder="Имя"
             required
           />
-          <div v-if="$v.user.name.$error" class="error">
-            <span v-if="!$v.user.name.required">Данное поле обязательно</span>
-            <span v-else-if="!$v.user.name.alpha"
+          <div v-if="$v.oneUser.name.$error" class="error">
+            <span v-if="!$v.oneUser.name.required"
+              >Данное поле обязательно</span
+            >
+            <span v-else-if="!$v.oneUser.name.alpha"
               >Поле должно содержать только буквы</span
             >
           </div>
           <label for="patricity">Отчество (при наличии)</label>
           <input
             name="patricity"
-            v-model.trim="$v.user.patricity.$model"
+            v-model.trim="$v.oneUser.patricity.$model"
             placeholder="Отчество"
             required
           />
           <label for="gender">Пол</label>
-          <select name="gender" v-model.trim="$v.user.gender.$model" required>
+          <select
+            name="gender"
+            v-model.trim="$v.oneUser.gender.$model"
+            required
+          >
             <option>Мужской</option>
             <option>Женский</option>
           </select>
-          <div v-if="$v.user.gender.$error" class="error">
-            <span v-if="!$v.user.gender.required">Данное поле обязательно</span>
+          <div v-if="$v.oneUser.gender.$error" class="error">
+            <span v-if="!$v.oneUser.gender.required"
+              >Данное поле обязательно</span
+            >
           </div>
           <label for="login">Логин</label>
           <input
             name="login"
-            v-model.trim="$v.user.login.$model"
+            v-model.trim="$v.oneUser.login.$model"
             placeholder="Логин"
             required
           />
-          <div v-if="$v.user.login.$error" class="error">
-            <span v-if="!$v.user.login.required">Данное поле обязательно</span>
+          <div v-if="$v.oneUser.login.$error" class="error">
+            <span v-if="!$v.oneUser.login.required"
+              >Данное поле обязательно</span
+            >
           </div>
           <div class="btn-group">
             <button
               class="modal-default-button"
-              :disabled="$v.user.$invalid"
+              :disabled="$v.oneUser.$invalid"
               @click="editUser()"
             >
               <i18n path="save"
@@ -215,11 +225,19 @@ export default {
       isShowAlertEdit: false,
       isShowModalEdit: false,
       isShowModalDelete: false,
-      findString: ""
+      findString: "",
+      oneUser: {
+        id: -1,
+        surname: "",
+        name: "",
+        patricity: "",
+        gender: "",
+        login: ""
+      }
     };
   },
   validations: {
-    user: {
+    oneUser: {
       surname: {
         required,
         alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
@@ -229,7 +247,6 @@ export default {
         alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
       },
       patricity: {
-        required,
         alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
       },
       gender: {
@@ -290,8 +307,10 @@ export default {
         });
     },
     showModalEdit() {
+      this.oneUser = Object.assign({}, this.user);
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
       this.isShowModalEdit = true;
+      console.log(this.oneUser);
     },
     editUser() {
       this.isShowModalEdit = false;

@@ -85,7 +85,7 @@ const routes = [
         component: Users
       },
       {
-        path: "organization",
+        path: "organizations",
         component: Organization
       }
     ],

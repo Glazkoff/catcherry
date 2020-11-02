@@ -82,11 +82,38 @@
           <label for="name">Название</label>
           <input
             name="name"
-            v-model="organization.name"
             placeholder="Название"
+            v-model.trim="$v.oneOrganization.name.$model"
+            @blur="$v.oneOrganization.name.$touch()"
           />
+          <div v-if="$v.oneOrganization.name.$error" class="error">
+            <span v-if="!$v.oneOrganization.name.required"
+              >Данное поле обязательно</span
+            >
+          </div>
+          <label for="name">Максимальное количество участников</label>
+          <input
+            name="maxTeamsLimit"
+            placeholder="0"
+            type="number"
+            v-model.trim="$v.oneOrganization.maxTeamsLimit.$model"
+            @blur="$v.oneOrganization.maxTeamsLimit.$touch()"
+          />
+          <div v-if="$v.oneOrganization.maxTeamsLimit.$error" class="error">
+            <span v-if="!$v.oneOrganization.maxTeamsLimit.required"
+              >Данное поле обязательно</span
+            >
+            <span v-if="!$v.oneOrganization.maxTeamsLimit.numeric"
+              >Данное поле lолжно содержать только цифры</span
+            >
+          </div>
           <div class="btn-group">
-            <button @click="editOrganization()">Сохранить</button>
+            <button
+              @click="editOrganization()"
+              :disabled="$v.oneOrganization.$invalid"
+            >
+              Сохранить
+            </button>
             <button @click="cancelModal()">Отменить</button>
           </div>
         </form>
@@ -135,6 +162,7 @@
 <script>
 import popup from "@/components/admin/Popup.vue";
 import minialert from "@/components/admin/MiniAlert.vue";
+import { required, numeric } from "vuelidate/lib/validators";
 import {
   ORGS_QUERY,
   ONE_ORG_QUERY,
@@ -167,8 +195,24 @@ export default {
       isShowAlertDelete: false,
       findString: "",
       organizationId: -1,
-      isError: false
+      isError: false,
+      oneOrganization: {
+        id: -1,
+        name: "",
+        maxTeamsLimit: -1
+      }
     };
+  },
+  validations: {
+    oneOrganization: {
+      name: {
+        required
+      },
+      maxTeamsLimit: {
+        required,
+        numeric
+      }
+    }
   },
   methods: {
     cancelFullInformation() {
@@ -221,6 +265,7 @@ export default {
         });
     },
     showModalEdit() {
+      this.oneOrganization = Object.assign({}, this.organization);
       this.isShowModalEdit = true;
       this.nameOfOrganization = this.organization.name;
     },
@@ -234,22 +279,22 @@ export default {
             name: this.organization.name
           },
           update: (cache, { data: { updateOrganization } }) => {
-           let data = cache.readQuery({ query: ORGS_QUERY });
-           console.log(data);
-           data.organizations.find(
-             el => el.id === this.organization.id
-           ).name = this.organization.name;
-           cache.writeQuery({ query: ORGS_QUERY, data });
-           console.log(updateOrganization);
+            let data = cache.readQuery({ query: ORGS_QUERY });
+            console.log(data);
+            data.organizations.find(
+              el => el.id === this.organization.id
+            ).name = this.organization.name;
+            cache.writeQuery({ query: ORGS_QUERY, data });
+            console.log(updateOrganization);
           },
-          // optimisticResponse: {
-          //   __typename: "Mutation",
-          //   createOrganization: {
-          //     __typename: "Organization",
-          //     id: -1,
-          //     name: this.organization.name
-          //   }
-          // }
+          optimisticResponse: {
+            __typename: "Mutation",
+            createOrganization: {
+              __typename: "Organization",
+              id: -1,
+              name: this.organization.name
+            }
+          }
         })
         .then(data => {
           console.log(data);
