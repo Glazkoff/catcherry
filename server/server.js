@@ -154,6 +154,7 @@ async function addAllTables(destroyTable) {
       },
       status: faker.random.word()
     });
+
     let posts = await db.Posts.create({
       body: {
         header: faker.random.word(),

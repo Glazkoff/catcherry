@@ -43,6 +43,11 @@ module.exports = {
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
 
+    posts: (parent, args, { db }, info) =>
+      db.Posts.findAll({ order: [["id", "ASC"]] }),
+    post: (parent, args, { db }, info) =>
+      db.Posts.findOne({ where: { id: args.id } }),
+
     getPointsUser: (parent, args, { db }, info) =>
       db.Points.findOne({ where: { userId: args.userId } }),
 
@@ -210,6 +215,25 @@ module.exports = {
           id: args.id
         }
       }),
+
+    /*
+      [Ниже] Мутации работы с постами (Posts)     
+    */
+    createPost: (parent, { body, authorId, organizationId }, { db }, info) =>
+      db.Posts.create({
+        body: body,
+        authorId: authorId,
+        organizationId: organizationId
+      }),
+    deletePost: (parent, args, { db }, info) =>
+      db.Posts.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+
+    // ----- //
+
     /*
       [Ниже] Мутации работы с баллами (PointsOperstion)     
     */
