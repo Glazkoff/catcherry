@@ -1,19 +1,22 @@
 <template>
 <nav>
+  <h1>Команда "{{team.name}}"</h1>
   <p>
-    <router-link to="/manager/team_members">Участники</router-link>
+    <router-link to="team_members">Участники</router-link>
   </p>
   <p>
-    <router-link to="/manager/requests">Заявки на вхождение</router-link>
+    <router-link to="requests">Заявки на вхождение</router-link>
   </p>
   <p>
-    <router-link to="/manager/team_edit">Редактирование</router-link>
+    <router-link to="team_edit">Редактирование</router-link>
   </p>
+  <router-view />
 </nav>
 </template>
 
 <script>
 export default {
+  props: ['team']
 
 }
 </script>

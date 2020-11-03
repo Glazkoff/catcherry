@@ -35,6 +35,14 @@ module.exports = {
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },
+
+    teams: (parent, args, { db }, info) =>
+      db.Teams.findAll({ order: [["id", "ASC"]] }),
+    team: (parent, args, { db }, info) => {
+      return db.Teams.findOne({
+        where: { organizationId: args.organizationId }
+      });
+    },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
@@ -201,6 +209,8 @@ module.exports = {
           id: args.id
         }
       }),
+    
+
 
     createUserInTeam: (
       parent,

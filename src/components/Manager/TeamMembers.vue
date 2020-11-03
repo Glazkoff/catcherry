@@ -1,6 +1,5 @@
 <template>
 <div>
-  <h1>Команда "Название"</h1>
   <div class="every">
     <NavBar class="navig" />
     <div class="partic">

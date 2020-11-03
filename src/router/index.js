@@ -18,6 +18,8 @@ import ListRequest from "@/components/account/ListRequest.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
 import RequestsList from "@/components/Manager/RequestsList.vue";
+import TeamList from "@/components/Manager/TeamList.vue";
+import NavBar from "@/components/Manager/NavBar.vue";
 
 Vue.use(VueRouter);
 
@@ -91,21 +93,60 @@ const routes = [
     name: "Registration",
     component: Registration
   },
+  // {
+  //   path: "/manager/team_members",
+  //   name: "TeamMembers",
+  //   component: TeamMembers
+  // },
+  // {
+  //   path: "/manager/team_edit",
+  //   name: "EditTeam",
+  //   component: EditTeam
+  // },
+  // {
+  //   path: "/manager/requests",
+  //   name: "RequestsList",
+  //   component: RequestsList
+  // },
+  // {
+  //   path: "/manager/teams",
+  //   name: "TeamList",
+  //   component: TeamList
+  // },
+  // {
+  //   path: "/manager/teams/:id",
+  //   name: "NavBar",
+  //   component: NavBar,
+  //   props:true
+  // },
   {
-    path: "/manager/team_members",
-    name: "TeamMembers",
-    component: TeamMembers
+    path: "/manager/teams",
+    name: "TeamList",
+    component: TeamList,
   },
-  {
-    path: "/manager/team_edit",
-    name: "EditTeam",
-    component: EditTeam
-  },
-  {
-    path: "/manager/requests",
-    name: "RequestsList",
-    component: RequestsList
-  }
+      {
+        path: "/manager/teams/:id",
+        name: "NavBar",
+        component: NavBar,
+        props: true,
+        children: [
+          {
+            path: "team_members",
+            name: "TeamMembers",
+            component: TeamMembers
+          },
+          {
+            path: "team_edit",
+            name: "EditTeam",
+            component: EditTeam
+          },
+          {
+            path: "requests",
+            name: "RequestsList",
+            component: RequestsList
+          }
+        ]
+      }
 
   // {
   //   path: "/about",
