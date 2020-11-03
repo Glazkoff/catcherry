@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       PointsOperations.belongsTo(models.Points, {
-        foreignKey: "accountId",
+        foreignKey: "pointAccountId"
         // as: "points"
       });
       //TODO: Определить внешний ключ pointAccountId

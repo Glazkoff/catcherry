@@ -107,7 +107,7 @@ type Query {
 
   requests:[UserInTeam]
   getPointsUser(userId: Int!): PointsUser
-  getOperationPointsUser(userId: Int!): [PointOperations]
+  getOperationPointsUser(pointAccountId: Int!): [PointOperations]
 }
 
 type Mutation {
@@ -131,6 +131,8 @@ type Mutation {
   deleteUserInTeam(id: ID!): Int!
 
   acceptRequest(id: ID!): [Int]!
+
+  updatePointsUser(id:ID!, pointQuantity: Int!): [Int]!
   createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
   deletePointOperation(id: ID!): Int!
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
