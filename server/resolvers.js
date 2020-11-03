@@ -361,6 +361,23 @@ module.exports = {
         }
       }),
 
+    /*
+      [Ниже] Мутации работы с постами (Posts)     
+    */
+    createPost: (parent, { body, authorId, organizationId }, { db }, info) =>
+      db.Posts.create({
+        body: body,
+        authorId: authorId,
+        organizationId: organizationId
+      }),
+    deletePost: (parent, args, { db }, info) =>
+      db.Posts.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+
+    // ----- //
     createUserInTeam: (
       parent,
       { userId, teamId, status, roleId },

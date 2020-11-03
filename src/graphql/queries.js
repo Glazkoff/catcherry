@@ -267,3 +267,22 @@ export const POSTS_QUERY = gql`
     }
   }
 `;
+
+export const CREATE_POST = gql`
+  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
+    createPost(
+      body: $body
+      authorId: $authorId
+      organizationId: $organizationId
+    ) {
+      id
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation($id: ID!) {
+    deletePost(id: $id)
+  }
+`;

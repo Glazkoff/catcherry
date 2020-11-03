@@ -1,18 +1,18 @@
 <template>
   <div class="container">
     <div class="imageContainer">
-      <img src="../assets/placeholder.png" v-bind:alt="post.header" />
+      <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
     </div>
     <div class="infoContainer">
       <router-link
         tag="p"
         :to="{ name: 'Posts', params: { id: post.id } }"
         class="heading"
-        >{{ post.header }}</router-link
+        >{{ post.body.header }}</router-link
       >
-      <p class="infoDate">{{ post.date }}</p>
+      <p class="infoDate">{{ post.createdAt }}</p>
       <p class="infoBody">
-        {{ post.body }}
+        {{ post.body.text }}
       </p>
 
       <div class="iconContainer">

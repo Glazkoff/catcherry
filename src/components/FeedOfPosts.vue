@@ -30,6 +30,7 @@ export default {
   methods: {
     onLike(object) {
       console.log("Нажата кнопка лайка для поста с id " + object.id);
+      console.log(this.posts);
     },
     onComment(object) {
       console.log("Нажата кнопка комментария для поста с id " + object.id);

@@ -2,15 +2,15 @@
   <div class="container">
     <div class="post">
       <div class="imageContainer">
-        <img src="../assets/placeholder.png" v-bind:alt="post.header" />
+        <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
       </div>
       <div class="infoContainer">
         <h1 class="heading">
-          {{ post.header }}
+          {{ post.body.header }}
         </h1>
-        <p class="infoDate">{{ post.date }}</p>
+        <p class="infoDate">{{ post.createdAt }}</p>
         <p class="infoBody">
-          {{ post.body }}
+          {{ post.body.text }}
         </p>
         <div class="iconContainer">
           <div class="iconAndNumber">
@@ -102,12 +102,6 @@ export default {
   data() {
     return {
       message: null,
-      post: {
-        header: "Новая срочная новость из отдела техподдержки",
-        date: "29.09.2020 17:00",
-        body:
-          "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?"
-      },
       comments: [
         {
           id: 1,

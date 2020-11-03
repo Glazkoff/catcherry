@@ -146,6 +146,9 @@ type Mutation {
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
+  createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
+  deletePost(id: ID!): Int!
+  
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
