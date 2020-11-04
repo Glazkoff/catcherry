@@ -163,6 +163,11 @@ export const USERS_IN_TEAMS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
+        gender
+        birthday
+        login
       }
     }
   }
@@ -235,5 +240,13 @@ export const REQUESTS_QUERY = gql`
 export const ACCEPT_REQUEST_QUERY = gql`
   mutation($id: ID!) {
     acceptRequst(id: $id)
+  }
+`;
+
+export const GET_POINTS_QUERY = gql`
+  query($userId: Int!) {
+    getPointsUser(userId: $userId) {
+      pointQuantity
+    }
   }
 `;
