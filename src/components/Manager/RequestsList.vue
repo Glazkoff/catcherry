@@ -1,20 +1,14 @@
 <template>
 <div>
-  <div class="every">
-    <NavBar class="navig" />
-    <div class="partic">
-      <h3>Заявки на вхождение</h3>
-      <hr />
-      <div v-for="request in requests" :key="request.id" class="request">
-        <RequestsItem :request="request" @accept="toAccept" />
-      </div>
-    </div>
+  <h3>Заявки на вхождение</h3>
+  <hr />
+  <div v-for="request in requests" :key="request.id" class="request">
+    <RequestsItem :request="request" @accept="toAccept" />
   </div>
 </div>
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
 import RequestsItem from "@/components/Manager/RequestsItem";
 
 import {
@@ -34,7 +28,6 @@ export default {
   },
 
   components: {
-    NavBar,
     RequestsItem
   },
 
@@ -81,32 +74,19 @@ export default {
   margin: 1rem;
 }
 
-.every {
-  display: flex;
-  justify-content: baseline;
-}
-
-.navig {
-  width: 15%;
-}
-
-.partic {
-  width: 50%;
-}
-
-.partic form {
+form {
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
 }
 
-.partic form input,
+form input,
 textarea {
   padding: 0.5rem;
   margin-bottom: 1rem;
 }
 
-.partic form button {
+form button {
   padding: 0.5rem;
 }
 </style>

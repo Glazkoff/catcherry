@@ -1,62 +1,36 @@
 <template>
 <div>
-  <div class="every">
-    <NavBar class="navig" />
-    <div class="partic">
-      <h3>Редактирование</h3>
-      <hr>
-      <span>Последнее редактирование: </span>
-      <form action="">
-        <label for="name">Название</label>
-        <input type="text" placeholder="Название">
-        <label for="description">Описание</label>
-        <textarea name="description" id="" cols="10" rows="5" placeholder="Описание"></textarea>
-        <button type="submit">Сохранить</button>
-      </form>
-
-    </div>
-  </div>
-
+  <h3>Редактирование</h3>
+  <hr>
+  <span>Последнее редактирование: </span>
+  <form action="">
+    <label for="name">Название</label>
+    <input type="text" placeholder="Название">
+    <label for="description">Описание</label>
+    <textarea name="description" id="" cols="10" rows="5" placeholder="Описание"></textarea>
+    <button type="submit">Сохранить</button>
+  </form>
 </div>
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
-export default {
-  components: {
-    NavBar,
-  },
-
-}
+export default {}
 </script>
 
 <style lang="scss" scoped>
-.every {
-  display: flex;
-  justify-content: baseline;
-}
-
-.navig {
-  width: 15%;
-}
-
-.partic {
-  width: 50%;
-}
-
-.partic form {
+form {
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
 }
 
-.partic form input,
+form input,
 textarea {
   padding: 0.5rem;
   margin-bottom: 1rem;
 }
 
-.partic form button {
+form button {
   padding: 0.5rem;
 }
 </style>

@@ -19,7 +19,7 @@ import TeamMembers from "@/components/Manager/TeamMembers.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
 import RequestsList from "@/components/Manager/RequestsList.vue";
 import TeamList from "@/components/Manager/TeamList.vue";
-import NavBar from "@/components/Manager/NavBar.vue";
+import TeamSettings from "@/components/Manager/TeamSettings.vue";
 
 Vue.use(VueRouter);
 
@@ -126,12 +126,12 @@ const routes = [
   },
       {
         path: "/manager/teams/:id",
-        name: "NavBar",
-        component: NavBar,
+        name: "TeamSettings",
+        component: TeamSettings,
         props: true,
         children: [
           {
-            path: "team_members",
+            path: '',
             name: "TeamMembers",
             component: TeamMembers
           },

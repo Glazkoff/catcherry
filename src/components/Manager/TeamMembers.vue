@@ -1,14 +1,9 @@
 <template>
 <div>
-  <div class="every">
-    <NavBar class="navig" />
-    <div class="partic">
-      <h3>Участники</h3>
-      <hr />
-      <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
-        <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
-      </div>
-    </div>
+  <h3>Участники</h3>
+  <hr />
+  <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
+    <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
   </div>
   <Minialert v-if="isShowAlert">
     <p slot="title">{{message}}</p>
@@ -17,7 +12,6 @@
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
 import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
 import Minialert from "@/components/admin/MiniAlert.vue";
 
@@ -41,7 +35,6 @@ export default {
   },
   components: {
     TeamMemberItem,
-    NavBar,
     Minialert
   },
   methods: {
@@ -86,18 +79,5 @@ export default {
   border: 1px solid black;
   padding: 1rem;
   margin: 1rem;
-}
-
-.every {
-  display: flex;
-  justify-content: baseline;
-}
-
-.navig {
-  width: 15%;
-}
-
-.partic {
-  width: 50%;
 }
 </style>
