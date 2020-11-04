@@ -37,7 +37,7 @@ export const CREATE_USER_QUERY = gql`
 
 export const ONE_USER_QUERY = gql`
   query {
-    user(id:156) {
+    user(id: 156) {
       id
       name
     }
@@ -62,5 +62,52 @@ export const UPDATE_USER_QUERY = gql`
 export const DELETE_USER_QUERY = gql`
   mutation($id: ID!) {
     deleteUser(id: $id)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
+
+export const ONE_POST_QUERY = gql`
+  query($id: ID!) {
+    post(id: $id) {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
+
+export const POSTS_QUERY = gql`
+  query {
+    posts {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
+
+export const CREATE_POST = gql`
+  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
+    createPost(
+      body: $body
+      authorId: $authorId
+      organizationId: $organizationId
+    ) {
+      id
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation($id: ID!) {
+    deletePost(id: $id)
   }
 `;

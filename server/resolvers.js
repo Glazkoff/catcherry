@@ -15,19 +15,19 @@ function generateTokens(user) {
     { userId: user.id },
     process.env.REFRESH_TOKEN_SECRET,
     {
-      expiresIn: 100 * 60 * 60 * 24 * 365,
+      expiresIn: 100 * 60 * 60 * 24 * 365
     }
   );
 
   // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: 100 * 60 * 60 * 24,
+    expiresIn: 100 * 60 * 60 * 24
   });
 
   // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
   return {
     refreshToken,
-    accessToken,
+    accessToken
   };
 }
 
@@ -43,10 +43,14 @@ module.exports = {
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
 
+    posts: (parent, args, { db }, info) =>
+      db.Posts.findAll({ order: [["id", "ASC"]] }),
+    post: (parent, args, { db }, info) =>
+      db.Posts.findOne({ where: { id: args.id } }),
+
     getPointsUser: (parent, args, { db }, info) =>
       db.Points.findOne({ where: { userId: args.userId } }),
-    
-    
+
     //Функция поиска операций для конкретного пользователя
     getOperationPointsUser: async (parent, args, { db }, info) => {
       let points = await db.Points.findOne({
@@ -55,13 +59,13 @@ module.exports = {
           {
             model: db.PointsOperations,
             as: "pointsOperations",
-            attributes: ["pointAccountId", "delta", "operationDescription"],
-          },
+            attributes: ["pointAccountId", "delta", "operationDescription"]
+          }
         ],
-        where: { userId: args.userId },
+        where: { userId: args.userId }
       });
       return points.pointsOperations;
-    },
+    }
   },
   Mutation: {
     /*
@@ -74,7 +78,7 @@ module.exports = {
       let user = await db.Users.create({
         login,
         name,
-        password: hashPassword,
+        password: hashPassword
       });
 
       // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -83,7 +87,7 @@ module.exports = {
       // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        maxAge: 1000 * 60 * 60 * 24 * 365,
+        maxAge: 1000 * 60 * 60 * 24 * 365
       });
       return tokens;
     },
@@ -91,8 +95,8 @@ module.exports = {
       // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login,
-        },
+          login
+        }
       });
       // TODO: (DONE) проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
@@ -104,7 +108,7 @@ module.exports = {
         // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
-          maxAge: 1000 * 60 * 60 * 24 * 365,
+          maxAge: 1000 * 60 * 60 * 24 * 365
         });
 
         // TODO: (DONE) отправить в ответ оба токен
@@ -122,8 +126,8 @@ module.exports = {
         return {
           error: {
             errorStatus: 401,
-            message: "Refresh token is absent",
-          },
+            message: "Refresh token is absent"
+          }
         };
       } else {
         let userId = jwt.decode(refreshToken).userId;
@@ -132,12 +136,12 @@ module.exports = {
           user.dataValues,
           process.env.ACCESS_TOKEN_SECRET,
           {
-            expiresIn: 100 * 60 * 60 * 24,
+            expiresIn: 100 * 60 * 60 * 24
           }
         );
         return {
           // TODO: выпустить токен
-          accessToken,
+          accessToken
         };
       }
     },
@@ -146,24 +150,24 @@ module.exports = {
     */
     createUser: (parent, { name }, { db }, info) =>
       db.Users.create({
-        name: name,
+        name: name
       }),
     updateUser: (parent, { name, id }, { db }, info) =>
       db.Users.update(
         {
-          name: name,
+          name: name
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
-          id: args.id,
-        },
+          id: args.id
+        }
       }),
     /*
       [Ниже] Мутации регистрации и авторизации
@@ -183,7 +187,7 @@ module.exports = {
       db.Notifications.create({
         body: body,
         authorId: authorId,
-        teamId: teamId,
+        teamId: teamId
       }),
     updateNotification: (
       parent,
@@ -197,27 +201,46 @@ module.exports = {
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam,
+          forAllTeam: forAllTeam
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
         where: {
-          id: args.id,
-        },
+          id: args.id
+        }
       }),
+
+    /*
+      [Ниже] Мутации работы с постами (Posts)     
+    */
+    createPost: (parent, { body, authorId, organizationId }, { db }, info) =>
+      db.Posts.create({
+        body: body,
+        authorId: authorId,
+        organizationId: organizationId
+      }),
+    deletePost: (parent, args, { db }, info) =>
+      db.Posts.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+
+    // ----- //
+
     /*
       [Ниже] Мутации работы с баллами (PointsOperstion)     
     */
     createPointOperation: (parent, { pointAccountId, delta }, { db }, info) =>
       db.PointsOperations.create({
         pointAccountId: pointAccountId,
-        delta: delta,
+        delta: delta
       }),
     updatePointOperation: (
       parent,
@@ -228,19 +251,19 @@ module.exports = {
       db.PointsOperations.update(
         {
           pointAccountId: pointAccountId,
-          delta: delta,
+          delta: delta
         },
         {
           where: {
-            id: id,
-          },
+            id: id
+          }
         }
       ),
     deletePointOperation: (parent, args, { db }, info) =>
       db.PointsOperations.destroy({
         where: {
-          id: args.id,
-        },
-      }),
-  },
+          id: args.id
+        }
+      })
+  }
 };

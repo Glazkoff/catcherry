@@ -51,12 +51,33 @@ type PointOperations{
   operationDescription: String
 }
 
+input PostBody {
+  header: String!
+  text: String!
+}
+type BodyPost {
+  header: String!
+  text: String!
+}
+type Post {
+  id: ID!
+  body: BodyPost!
+  authorId: Int!
+  organizationId: Int!
+  forAllTeam: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Query { 
   users: [User!] 
   user(id: ID!): User
   
   notifications: [Notification]!
   notification(id: ID!): Notification
+
+  posts: [Post]!
+  post(id: ID!): Post
 
   getPointsUser(userId: Int!): PointsUser
   getOperationPointsUser(userId: Int!): [PointOperations]
@@ -70,6 +91,9 @@ type Mutation {
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
+
+  createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
+  deletePost(id: ID!): Int!
 
   createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
   deletePointOperation(id: ID!): Int!

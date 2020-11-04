@@ -154,11 +154,15 @@ async function addAllTables(destroyTable) {
       },
       status: faker.random.word()
     });
+
     let posts = await db.Posts.create({
-      body: faker.lorem.paragraph(),
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph()
+      },
       authorId: user.dataValues.id,
-      teamId: team.dataValues.id,
-      forAllOrganization: faker.random.boolean()
+      organizationId: organization.dataValues.id,
+      forAllTeam: faker.random.boolean()
     });
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
