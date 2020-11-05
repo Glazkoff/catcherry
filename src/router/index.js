@@ -98,7 +98,7 @@ const routes = [
   {
     path: "/manager/teams",
     name: "TeamList",
-    component: TeamList
+    component: TeamList,
   },
       {
         path: "/manager/teams/:id",

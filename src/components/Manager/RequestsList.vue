@@ -18,12 +18,19 @@ import {
 } from "@/graphql/queries";
 
 export default {
+
+  data() {
+    return {
+      teamId: this.$route.params.id
+    };
+  },
+
   apollo: {
     requests: {
       query: REQUESTS_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.teamId
         }
       }
     },
@@ -31,7 +38,7 @@ export default {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.teamId
         }
       }
     }
@@ -51,19 +58,21 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: REQUESTS_QUERY
+              query: REQUESTS_QUERY,
+              variables: {
+                teamId: this.teamId
+              },
             });
             let data_user = cache.readQuery({
-              query: USERS_IN_TEAMS_QUERY
+              query: USERS_IN_TEAMS_QUERY,
+              variables: {
+                teamId: this.teamId
+              },
             });
             data.requests.find(el => el.id === id).status = "Принят";
             let index = data.requests.findIndex(el => el.id == id);
             data_user.usersInTeams.push(data.requests.find(el => el.id === id));
             data.requests.splice(index, 1);
-            cache.writeQuery({
-              query: REQUESTS_QUERY,
-              data
-            });
           }
         })
         .then(data => {

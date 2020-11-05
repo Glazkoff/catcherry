@@ -26,6 +26,7 @@ export default {
     return {
       isShowAlert: false,
       message: "",
+      teamId: this.$route.params.id
     };
   },
 
@@ -34,7 +35,7 @@ export default {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.teamId
         }
       }
     },
@@ -54,7 +55,10 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: USERS_IN_TEAMS_QUERY
+              query: USERS_IN_TEAMS_QUERY,
+              variables: {
+                teamId: this.teamId
+              },
             });
             let index = data.usersInTeams.findIndex(el => el.id == id);
             data.usersInTeams.splice(index, 1);
@@ -62,10 +66,6 @@ export default {
             setTimeout(() => {
               this.isShowAlert = false;
             }, 3000);
-            cache.writeQuery({
-              query: USERS_IN_TEAMS_QUERY,
-              data
-            });
           }
         })
         .then(data => {

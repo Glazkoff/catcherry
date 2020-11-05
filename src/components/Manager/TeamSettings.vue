@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h1>Команда {{$route.params.name}}</h1>
+  <h1>Команда {{name}}</h1>
   <div class="every">
     <NavBar class="navig" />
     <router-view class="cont" />
@@ -13,6 +13,11 @@ import NavBar from "@/components/Manager/NavBar";
 export default {
   components: {
     NavBar
+  },
+  data() {
+    return {
+      name: this.$route.params.name
+    }
   }
 
 }
