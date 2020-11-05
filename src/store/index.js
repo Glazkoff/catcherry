@@ -6,22 +6,36 @@ Vue.use(Vuex);
 
 const store = new Vuex.Store({
   state: {
-    accessToken: ""
+    accessToken: "",
+    authLoading: false,
+    authError: null
   },
   getters: {
     isAuthenticated: state => {
       return !!((state.accessToken + "").length !== 0);
+    },
+    isAuthError: state => {
+      return state.authError !== null;
+    },
+    hasAccessToken: state => {
+      return state.accessToken !== null;
+    },
+    isAppLoading: state => {
+      return state.authLoading;
     }
   },
   mutations: {
     SET_ACCESS_TOKEN: (state, accessToken) => {
       state.accessToken = accessToken;
+    },
+    SET_AUTH_LOADING: (state, bool) => {
+      state.authLoading = !!bool;
     }
   },
   actions: {
     GET_TOKENS: async state => {
+      state.authLoading = true;
       const fingerprint = await getFingerprint();
-      console.log("!!: ", fingerprint);
       let promise = new Promise((resolve, reject) => {
         if (fingerprint) {
           store.$app.$apollo
@@ -38,27 +52,34 @@ const store = new Vuex.Store({
                 resp.data.updateTokens.accessToken === null ||
                 resp.data.updateTokens.error
               ) {
+                state.authError = resp.data.updateTokens.error;
                 if (store.$app.$route.path !== "/auth") {
                   store.$app.$router.push("/auth");
                 }
+                state.authLoading = false;
                 reject(resp.data.updateTokens.error);
               } else {
                 state.commit(
                   "SET_ACCESS_TOKEN",
                   resp.data.updateTokens.accessToken
                 );
-                if (store.$route.path !== "/") {
+                if (store.$app.$route.path !== "/") {
                   store.$app.$router.push("/");
                 }
+                state.authError = null;
+                state.authLoading = false;
                 resolve(resp.data.updateTokens.accessToken);
               }
             })
             .catch(error => {
-              console.error(error);
+              console.warn(error);
+              state.authError = error;
+              state.authLoading = false;
               reject(error);
             });
         } else {
-          console.log("!!!");
+          state.authError = true;
+          state.authLoading = false;
           reject();
         }
       });
@@ -70,16 +91,10 @@ const store = new Vuex.Store({
 
 async function getFingerprint() {
   try {
-    console.log("!!!!");
-    console.log(store);
-    if (store.$app !== undefined) {
-      const fp = await store.$app.$fingerprint.load();
-      const result = await fp.get();
-      const visitorId = result.visitorId;
-      return visitorId;
-    } else {
-      return null;
-    }
+    const fp = await store._vm.$fingerprint.load();
+    const result = await fp.get();
+    const visitorId = result.visitorId;
+    return visitorId;
   } catch (error) {
     console.log(error);
     return null;

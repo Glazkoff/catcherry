@@ -1,8 +1,8 @@
-import store from "../store/index";
+import store from "@/store/index";
 
 // Для перехода к компоненту
 export const ifNotAuthenticated = (to, from, next) => {
-  if (!store.getters.isAuthenticated) {
+  if (!store.getters.hasAccessToken) {
     next();
   } else {
     next("/");
@@ -11,7 +11,7 @@ export const ifNotAuthenticated = (to, from, next) => {
 
 // Для перехода в защищённые компоненты
 export const ifAuthenticated = (to, from, next) => {
-  if (!store.getters.isAuthenticated) {
+  if (!store.getters.hasAccessToken) {
     next("auth");
   } else {
     next();

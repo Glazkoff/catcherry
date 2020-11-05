@@ -38,9 +38,13 @@ Vue.config.productionTip = process.env.NODE_ENV === "development";
 // Добавление контекста заголовков (access токен)
 const authLink = setContext(async (_, { headers }) => {
   let token = store.state.accessToken;
-  // if (!token) {
-  //   token = await store.dispatch("GET_TOKENS");
-  // }
+  if (!store.getters.hasAccessToken && !store.getters.isAuthError) {
+    try {
+      token = await store.dispatch("GET_TOKENS");
+    } catch (error) {
+      store.state.authError = error;
+    }
+  }
   return {
     headers: {
       ...headers,

@@ -1,6 +1,7 @@
 <template>
   <div>
     <h4>Тестовый Graphql компонент</h4>
+    <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>
     <div v-if="editUser.isEdit">
       <label for="editUserName"
@@ -55,11 +56,15 @@ export default {
   name: "TestGraphql",
   apollo: {
     users: {
-      query: USERS_QUERY
+      query: USERS_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      }
     }
   },
   data() {
     return {
+      queryError: null,
       newUser: "",
       editUser: {
         isEdit: false,

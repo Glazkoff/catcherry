@@ -53,6 +53,7 @@ const routes = [
     path: "/user/:id",
     name: "User",
     component: User,
+    beforeEnter: ifAuthenticated,
     children: [
       {
         path: "",
@@ -75,6 +76,8 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: AdminPanel,
+    // TODO: добавить защиту для администратора
+    beforeEnter: ifAuthenticated,
     children: [
       {
         path: "",
@@ -88,22 +91,24 @@ const routes = [
         path: "organization",
         component: Organization
       }
-    ],
-    beforeEnter: ifAuthenticated
+    ]
   },
   {
     path: "/account",
     name: "Account",
+    beforeEnter: ifAuthenticated,
     component: Account
   },
   {
     path: "/user_org",
     name: "UserInOrganization",
+    beforeEnter: ifAuthenticated,
     component: UserInOrganization
   },
   {
     path: "/list_req",
     name: "ListReguest",
+    beforeEnter: ifAuthenticated,
     component: ListRequest
   },
   {
@@ -115,41 +120,49 @@ const routes = [
   {
     path: "/registration",
     name: "Registration",
-    component: Registration
+    component: Registration,
+    beforeEnter: ifNotAuthenticated
   },
   {
     path: "/createpost",
     name: "CreatePost",
+    beforeEnter: ifAuthenticated,
     component: CreatePost
   },
   {
     path: "/notification",
     name: "ListOfNotifications",
+    beforeEnter: ifAuthenticated,
     component: ListOfNotifications
   },
   {
     path: "/manager/team_members",
     name: "TeamMembers",
+    beforeEnter: ifAuthenticated,
     component: TeamMembers
   },
   {
     path: "/manager/team_edit",
     name: "EditTeam",
+    beforeEnter: ifAuthenticated,
     component: EditTeam
   },
   {
     path: "/manager/requests",
     name: "RequestsList",
+    beforeEnter: ifAuthenticated,
     component: RequestsList
   },
   {
     path: "/posts/:id",
     name: "Posts",
+    beforeEnter: ifAuthenticated,
     component: DetailedPost
   },
   {
     path: "/feed",
     name: "FeedOfPosts",
+    beforeEnter: ifAuthenticated,
     component: FeedOfPosts
   }
   // {
