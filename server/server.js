@@ -24,7 +24,7 @@ const { makeExecutableSchema } = require("graphql-tools");
 const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
-const { createRateLimitDirective } =  require('graphql-rate-limit')
+const { createRateLimitDirective } = require("graphql-rate-limit");
 
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
@@ -36,7 +36,9 @@ const resolvers = require("./resolvers");
 const db = require("./models/index");
 
 // Rate Limit
-const rateLimitDirective = createRateLimitDirective({ identifyContext: (ctx) => ctx.id });
+const rateLimitDirective = createRateLimitDirective({
+  identifyContext: ctx => ctx.id
+});
 
 // Соедняем всё в схему
 const schema = makeExecutableSchema({
@@ -57,7 +59,6 @@ app.use(compression());
 
 // Настройка парсинга Cookie
 app.use(cookieParser());
-
 
 // Безопасность заголовков
 // FIXME: не работает путь /graphiql при использовании

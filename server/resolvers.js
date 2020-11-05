@@ -107,8 +107,10 @@ async function updateRefreshSession(
 
 module.exports = {
   Query: {
-    users: (parent, args, { db }, info) =>
-      db.Users.findAll({ order: [["id", "ASC"]] }),
+    users: (parent, args, { req, db }, info) => {
+      console.log("HEADERS: ", req.headers);
+      return db.Users.findAll({ order: [["id", "ASC"]] });
+    },
     user: (parent, args, { db }, info) => {
       return db.Users.findOne({ where: { id: args.id } });
     },

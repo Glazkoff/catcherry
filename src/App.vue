@@ -17,7 +17,7 @@
 
 <script>
 import TopBar from "@/components/TopBar.vue";
-import { UPDATE_TOKENS } from "@/graphql/queries.js";
+
 export default {
   components: { TopBar },
   methods: {
@@ -26,40 +26,19 @@ export default {
     }
   },
   async mounted() {
-    const fp = await this.$fingerprint.load();
-    const result = await fp.get();
-    const visitorId = result.visitorId;
-    this.fingerprint = visitorId;
-    this.$apollo
-      .mutate({
-        mutation: UPDATE_TOKENS,
-        variables: {
-          fingerprint: this.fingerprint
-        }
-      })
-      .then(resp => {
-        // Если сервер не вернул токен
-        if (
-          !resp.data.updateTokens ||
-          resp.data.updateTokens.accessToken === null ||
-          resp.data.updateTokens.error
-        ) {
-          if (this.$route.path !== "/auth") {
-            this.$router.push("/auth");
-          }
-        } else {
-          this.$store.commit(
-            "SET_ACCESS_TOKEN",
-            resp.data.updateTokens.accessToken
-          );
-          if (this.$route.path !== "/") {
-            this.$router.push("/");
-          }
-        }
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    this.$store.dispatch("GET_TOKENS").then(
+      res => {
+        console.log(res);
+      },
+      err => {
+        console.error(err);
+      }
+    );
+    let token = this.$store.state.accessToken;
+    if (!token) {
+      console.log(token);
+      //   token = await store.dispatch("GET_TOKENS");
+    }
   }
 };
 </script>
