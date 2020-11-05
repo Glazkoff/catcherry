@@ -1,5 +1,5 @@
 <template>
-<div class="every">
+<div>
   <nav>
     <p>
       <router-link :to="{name:'TeamMembers'}">Участники</router-link>
@@ -11,7 +11,6 @@
       <router-link :to="{name:'EditTeam'}">Редактирование</router-link>
     </p>
   </nav>
-  <router-view class="cont" />
 </div>
 </template>
 
@@ -23,7 +22,6 @@ export default {}
 nav {
   margin: 1rem;
   margin-right: 5rem;
-  width: 15%;
 }
 
 nav p {
@@ -33,11 +31,7 @@ nav p {
   padding: 1rem;
 }
 
-.every {
-  display: flex;
-}
-
-.cont {
-  width: 50%;
+.router-link-exact-active {
+  font-weight: 700;
 }
 </style>

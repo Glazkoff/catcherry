@@ -6,7 +6,7 @@
     <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
   </div>
   <Minialert v-if="isShowAlert">
-    <p slot="title">{{message}}</p>
+    <p slot="title">{{ message }}</p>
   </Minialert>
 </div>
 </template>
@@ -21,18 +21,25 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  apollo: {
-    usersInTeams: {
-      query: USERS_IN_TEAMS_QUERY
-    }
-  },
 
   data() {
     return {
       isShowAlert: false,
-      message: ""
+      message: "",
     };
   },
+
+  apollo: {
+    usersInTeams: {
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.$route.params.id
+        }
+      }
+    },
+  },
+
   components: {
     TeamMemberItem,
     Minialert

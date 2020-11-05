@@ -70,10 +70,9 @@ type Query {
   teams: [Team!]
   team(organizationId: Int): Team
 
-  usersInTeams:[UserInTeam]!
+  usersInTeams (teamId:ID!):[UserInTeam]!
 
-
-  requests:[UserInTeam]
+  requests (teamId:ID!):[UserInTeam]
 }
 
 type Mutation {

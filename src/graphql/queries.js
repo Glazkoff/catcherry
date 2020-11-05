@@ -92,11 +92,10 @@ export const TEAM_IN_ORG_QUERY = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
-  query {
-    usersInTeams {
+  query ($teamId: ID!) {
+    usersInTeams (teamId: $teamId) {
       id
       userId
-      teamId
       status
       roleId
       user {
@@ -114,11 +113,10 @@ export const DELETE_IN_TEAMS_QUERY = gql`
 `;
 
 export const REQUESTS_QUERY = gql`
-  query {
-    requests {
+  query ($teamId: ID!) {
+    requests (teamId: $teamId) {
       id
       userId
-      teamId
       status
       roleId
       user {

@@ -20,10 +20,20 @@ import {
 export default {
   apollo: {
     requests: {
-      query: REQUESTS_QUERY
+      query: REQUESTS_QUERY,
+      variables() {
+        return {
+          teamId: this.$route.params.id
+        }
+      }
     },
     usersInTeams: {
-      query: USERS_IN_TEAMS_QUERY
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.$route.params.id
+        }
+      }
     }
   },
 
