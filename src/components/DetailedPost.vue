@@ -88,16 +88,16 @@ export default {
   name: "DetailedPost",
   apollo: {
     post: {
-      query: ONE_POST_QUERY
+      query: ONE_POST_QUERY,
+      variables() {
+        return {
+          id: this.$route.params.id
+        };
+      }
     }
   },
   components: {
     Comments
-  },
-  computed: {
-    id() {
-      return this.$route.params.id;
-    }
   },
   data() {
     return {
