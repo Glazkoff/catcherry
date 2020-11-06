@@ -13,6 +13,10 @@ type jwt {
 type User {
   id: ID!
   name: String
+  surname: String
+  patricity: String
+  gender: String
+  birthday: String
   login: String
   password: String
   createdAt: String!

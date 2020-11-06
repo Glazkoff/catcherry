@@ -92,8 +92,8 @@ export const TEAM_IN_ORG_QUERY = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
-  query ($teamId: ID!) {
-    usersInTeams (teamId: $teamId) {
+  query($teamId: ID!) {
+    usersInTeams(teamId: $teamId) {
       id
       userId
       status
@@ -101,6 +101,11 @@ export const USERS_IN_TEAMS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
+        gender
+        birthday
+        login
       }
     }
   }
@@ -113,8 +118,8 @@ export const DELETE_IN_TEAMS_QUERY = gql`
 `;
 
 export const REQUESTS_QUERY = gql`
-  query ($teamId: ID!) {
-    requests (teamId: $teamId) {
+  query($teamId: ID!) {
+    requests(teamId: $teamId) {
       id
       userId
       status
@@ -135,5 +140,13 @@ export const ACCEPT_REQUEST_QUERY = gql`
 export const REVOKE_REQUEST_QUERY = gql`
   mutation($id: ID!) {
     revokeRequst(id: $id)
+  }
+`;
+
+export const GET_POINTS_QUERY = gql`
+  query($userId: Int!) {
+    getPointsUser(userId: $userId) {
+      pointQuantity
+    }
   }
 `;

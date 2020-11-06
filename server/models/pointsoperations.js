@@ -9,25 +9,25 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       PointsOperations.belongsTo(models.Points, {
-          foreignKey: "pointAccountId"
+        foreignKey: "pointAccountId"
         // as: "points"	        // as: "points"
-      });	    
+      });
     }
   }
   PointsOperations.init(
     {
       pointAccountId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       delta: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       }
     },
     {
       sequelize,
-      modelName: "PointsOperations",
+      modelName: "PointsOperations"
     }
   );
   return PointsOperations;

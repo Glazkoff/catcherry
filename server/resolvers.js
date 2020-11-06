@@ -48,13 +48,13 @@ module.exports = {
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
 
-    usersInTeams: (parent, { teamId}, { db }, info) =>
+    usersInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
-        where: { status: "Принят", teamId: teamId},
+        where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
-    requests: (parent, { teamId}, { db }, info) =>
+    requests: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
         order: [["id", "ASC"]],
@@ -220,8 +220,6 @@ module.exports = {
           id: args.id
         }
       }),
-    
-
 
     createUserInTeam: (
       parent,
