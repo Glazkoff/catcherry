@@ -19,6 +19,16 @@ type User {
   updatedAt: String!
 }
 
+type Team {
+  id: ID!
+  organizationId: Int
+  name: String!
+  description: String
+  maxUsersLimit: Int
+  createdAt: String!
+  updatedAt: String!
+}
+
 type UserInTeam {
   id: ID!
   userId: ID!
@@ -71,12 +81,15 @@ type Query {
   notifications: [Notification]!
   notification(id: ID!): Notification
 
-  usersInTeams:[UserInTeam]!
-  requests:[UserInTeam]
-
   getPointsUser(userId: Int!): PointsUser
   getOperationPointsUser(pointAccountId: Int!): [PointOperations]
   
+  teams: [Team!]
+  team(organizationId: Int): Team
+
+  usersInTeams (teamId:ID!):[UserInTeam]!
+
+  requests (teamId:ID!):[UserInTeam]
 }
 
 type Mutation {

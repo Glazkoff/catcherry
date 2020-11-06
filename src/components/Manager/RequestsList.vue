@@ -1,21 +1,14 @@
 <template>
-  <div>
-    <h1>Команда "Название"</h1>
-    <div class="every">
-      <NavBar class="navig" />
-      <div class="partic">
-        <h3>Заявки на вхождение</h3>
-        <hr />
-        <div v-for="request in requests" :key="request.id" class="request">
-          <RequestsItem :request="request" @accept="toAccept" />
-        </div>
-      </div>
-    </div>
+<div>
+  <h3>Заявки на вхождение</h3>
+  <hr />
+  <div v-for="request in requests" :key="request.id" class="request">
+    <RequestsItem :request="request" @accept="toAccept" />
   </div>
+</div>
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
 import RequestsItem from "@/components/Manager/RequestsItem";
 
 import {
@@ -25,17 +18,33 @@ import {
 } from "@/graphql/queries";
 
 export default {
+
+  data() {
+    return {
+      teamId: this.$route.params.id
+    };
+  },
+
   apollo: {
     requests: {
-      query: REQUESTS_QUERY
+      query: REQUESTS_QUERY,
+      variables() {
+        return {
+          teamId: this.teamId
+        }
+      }
     },
     usersInTeams: {
-      query: USERS_IN_TEAMS_QUERY
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.teamId
+        }
+      }
     }
   },
 
   components: {
-    NavBar,
     RequestsItem
   },
 
@@ -49,19 +58,21 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: REQUESTS_QUERY
+              query: REQUESTS_QUERY,
+              variables: {
+                teamId: this.teamId
+              },
             });
             let data_user = cache.readQuery({
-              query: USERS_IN_TEAMS_QUERY
+              query: USERS_IN_TEAMS_QUERY,
+              variables: {
+                teamId: this.teamId
+              },
             });
             data.requests.find(el => el.id === id).status = "Принят";
             let index = data.requests.findIndex(el => el.id == id);
             data_user.usersInTeams.push(data.requests.find(el => el.id === id));
             data.requests.splice(index, 1);
-            cache.writeQuery({
-              query: REQUESTS_QUERY,
-              data
-            });
           }
         })
         .then(data => {
@@ -82,32 +93,19 @@ export default {
   margin: 1rem;
 }
 
-.every {
-  display: flex;
-  justify-content: baseline;
-}
-
-.navig {
-  width: 15%;
-}
-
-.partic {
-  width: 50%;
-}
-
-.partic form {
+form {
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
 }
 
-.partic form input,
+form input,
 textarea {
   padding: 0.5rem;
   margin-bottom: 1rem;
 }
 
-.partic form button {
+form button {
   padding: 0.5rem;
 }
 </style>

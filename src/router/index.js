@@ -18,6 +18,8 @@ import ListRequest from "@/components/account/ListRequest.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
 import RequestsList from "@/components/Manager/RequestsList.vue";
+import TeamList from "@/components/Manager/TeamList.vue";
+import TeamSettings from "@/components/Manager/TeamSettings.vue";
 
 Vue.use(VueRouter);
 
@@ -91,20 +93,34 @@ const routes = [
     name: "Registration",
     component: Registration
   },
+
   {
-    path: "/manager/team_members",
-    name: "TeamMembers",
-    component: TeamMembers
+    path: "/manager/teams",
+    name: "TeamList",
+    component: TeamList
   },
   {
-    path: "/manager/team_edit",
-    name: "EditTeam",
-    component: EditTeam
-  },
-  {
-    path: "/manager/requests",
-    name: "RequestsList",
-    component: RequestsList
+    path: "/manager/teams/:id",
+    name: "TeamSettings",
+    component: TeamSettings,
+    props: true,
+    children: [
+      {
+        path: "",
+        name: "TeamMembers",
+        component: TeamMembers
+      },
+      {
+        path: "team_edit",
+        name: "EditTeam",
+        component: EditTeam
+      },
+      {
+        path: "requests",
+        name: "RequestsList",
+        component: RequestsList
+      }
+    ]
   }
 
   // {

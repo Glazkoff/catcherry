@@ -65,13 +65,37 @@ export const DELETE_USER_QUERY = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TEAMS
+export const TEAMS_QUERY = gql`
+  query {
+    teams {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
+export const TEAM_IN_ORG_QUERY = gql`
+  query($organizationId: Int) {
+    team(organizationId: $organizationId) {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
-  query {
-    usersInTeams {
+  query ($teamId: ID!) {
+    usersInTeams (teamId: $teamId) {
       id
       userId
-      teamId
       status
       roleId
       user {
@@ -89,11 +113,10 @@ export const DELETE_IN_TEAMS_QUERY = gql`
 `;
 
 export const REQUESTS_QUERY = gql`
-  query {
-    requests {
+  query ($teamId: ID!) {
+    requests (teamId: $teamId) {
       id
       userId
-      teamId
       status
       roleId
       user {

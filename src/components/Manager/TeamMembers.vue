@@ -1,24 +1,17 @@
 <template>
 <div>
-  <h1>Команда "Название"</h1>
-  <div class="every">
-    <NavBar class="navig" />
-    <div class="partic">
-      <h3>Участники</h3>
-      <hr />
-      <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
-        <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
-      </div>
-    </div>
+  <h3>Участники</h3>
+  <hr />
+  <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
+    <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
   </div>
   <Minialert v-if="isShowAlert">
-    <p slot="title">{{message}}</p>
+    <p slot="title">{{ message }}</p>
   </Minialert>
 </div>
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
 import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
 import Minialert from "@/components/admin/MiniAlert.vue";
 
@@ -28,21 +21,28 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  apollo: {
-    usersInTeams: {
-      query: USERS_IN_TEAMS_QUERY
-    }
-  },
 
   data() {
     return {
       isShowAlert: false,
-      message: ""
+      message: "",
+      teamId: this.$route.params.id
     };
   },
+
+  apollo: {
+    usersInTeams: {
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.teamId
+        }
+      }
+    },
+  },
+
   components: {
     TeamMemberItem,
-    NavBar,
     Minialert
   },
   methods: {
@@ -55,7 +55,10 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: USERS_IN_TEAMS_QUERY
+              query: USERS_IN_TEAMS_QUERY,
+              variables: {
+                teamId: this.teamId
+              },
             });
             let index = data.usersInTeams.findIndex(el => el.id == id);
             data.usersInTeams.splice(index, 1);
@@ -63,10 +66,6 @@ export default {
             setTimeout(() => {
               this.isShowAlert = false;
             }, 3000);
-            cache.writeQuery({
-              query: USERS_IN_TEAMS_QUERY,
-              data
-            });
           }
         })
         .then(data => {
@@ -87,18 +86,5 @@ export default {
   border: 1px solid black;
   padding: 1rem;
   margin: 1rem;
-}
-
-.every {
-  display: flex;
-  justify-content: baseline;
-}
-
-.navig {
-  width: 15%;
-}
-
-.partic {
-  width: 50%;
 }
 </style>
