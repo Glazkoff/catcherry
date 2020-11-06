@@ -291,6 +291,27 @@ module.exports = {
         pointAccountId: pointAccountId,
         delta: delta
       });
-    }
+    },
+        /*
+      [Ниже] Мутации работы с командами     
+    */
+     updateTeam: (
+      parent,
+      { id, name, description, maxUsersLimit}, 
+      { db },
+      info
+    ) =>
+      db.Teams.update(
+        {
+          name: name,
+          description: description,
+          maxUsersLimit: maxUsersLimit
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ), 
   }
 };

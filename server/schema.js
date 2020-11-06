@@ -108,6 +108,8 @@ type Mutation {
   createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
   deleteUserInTeam(id: ID!): Int!
 
+  updateTeam(id:ID!, name: String, description:String, maxUsersLimit: Int):[Int]!
+
   acceptRequst(id: ID!): [Int]!
   revokeRequst(id: ID!): [Int]!
 

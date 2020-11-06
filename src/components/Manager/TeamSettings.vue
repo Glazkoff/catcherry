@@ -1,6 +1,6 @@
 <template>
 <div>
-  <h1>Команда {{name}}</h1>
+  <h1>Команда {{ name }}</h1>
   <div class="every">
     <NavBar class="navig" />
     <router-view class="cont" />
@@ -17,10 +17,9 @@ export default {
   data() {
     return {
       name: this.$route.params.name
-    }
+    };
   }
-
-}
+};
 </script>
 
 <style lang="scss" scoped>
