@@ -18,6 +18,7 @@ type User {
   gender: String
   birthday: String
   login: String
+  userPoints: PointsUser
   password: String
   createdAt: String!
   updatedAt: String!
@@ -92,7 +93,7 @@ type Query {
   team(organizationId: Int): Team
 
   usersInTeams (teamId:ID!):[UserInTeam]!
-
+  raitingInTeams (teamId:ID!): [UserInTeam]!
   requests (teamId:ID!):[UserInTeam]
 }
 

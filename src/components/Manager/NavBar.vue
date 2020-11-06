@@ -1,21 +1,31 @@
 <template>
-<div>
-  <nav>
-    <p>
-      <router-link :to="{name:'TeamMembers'}">Участники</router-link>
-    </p>
-    <p>
-      <router-link :to="{name:'RequestsList'}">Заявки на вхождение</router-link>
-    </p>
-    <p>
-      <router-link :to="{name:'EditTeam'}">Редактирование</router-link>
-    </p>
-  </nav>
-</div>
+  <div>
+    <nav>
+      <p>
+        <router-link :to="{ name: 'RaitingList' }"
+          >Рейтинг участников</router-link
+        >
+      </p>
+      <p>
+        <router-link :to="{ name: 'TeamMembers' }">Участники</router-link>
+      </p>
+      <p>
+        <router-link :to="{ name: 'RequestsList' }"
+          >Заявки на вхождение</router-link
+        >
+      </p>
+      <p>
+        <router-link :to="{ name: 'EditTeam' }">Редактирование</router-link>
+      </p>
+      <p>
+        <router-link :to="{ name: 'TasksTeam' }">Задания</router-link>
+      </p>
+    </nav>
+  </div>
 </template>
 
 <script>
-export default {}
+export default {};
 </script>
 
 <style lang="scss" scoped>

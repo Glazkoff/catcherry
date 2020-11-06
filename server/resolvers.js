@@ -54,6 +54,21 @@ module.exports = {
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
+    raitingInTeams: (parent, { teamId }, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Принят", teamId: teamId },
+        include: [
+          {
+            model: db.Users,
+            as: "user",
+            include: {
+              model: db.Points,
+              as: "userPoints",
+              order: [["pointQuantity", "ASC"]]
+            }
+          }
+        ]
+      }),
     requests: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
@@ -292,12 +307,12 @@ module.exports = {
         delta: delta
       });
     },
-        /*
+    /*
       [Ниже] Мутации работы с командами     
     */
-     updateTeam: (
+    updateTeam: (
       parent,
-      { id, name, description, maxUsersLimit}, 
+      { id, name, description, maxUsersLimit },
       { db },
       info
     ) =>
@@ -312,6 +327,6 @@ module.exports = {
             id: id
           }
         }
-      ), 
+      )
   }
 };

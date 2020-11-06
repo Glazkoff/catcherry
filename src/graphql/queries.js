@@ -146,7 +146,31 @@ export const REVOKE_REQUEST_QUERY = gql`
 export const GET_POINTS_QUERY = gql`
   query($userId: Int!) {
     getPointsUser(userId: $userId) {
+      id
+      userId
       pointQuantity
+    }
+  }
+`;
+
+export const CARGE_POINTS_QUERY = gql`
+  mutation($pointAccountId: Int!, $delta: Int!) {
+    createPointOperation(pointAccountId: $pointAccountId, delta: $delta) {
+      id
+    }
+  }
+`;
+
+export const RAITING_IN_TEAMS_QUERY = gql`
+  query($teamId: ID!) {
+    raitingInTeams(teamId: $teamId) {
+      id
+      user {
+        name
+        userPoints {
+          pointQuantity
+        }
+      }
     }
   }
 `;

@@ -23,9 +23,9 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         as: "tasksUser",
       });
-      Users.hasMany(models.Points, {
+      Users.hasOne(models.Points, {
         foreignKey: "userId",
-        as: "points",
+        as: "userPoints"
       });
       Users.hasMany(models.Posts, {
         foreignKey: "authorId",

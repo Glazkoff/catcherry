@@ -16,8 +16,10 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
+import RaitingList from "@/components/Manager/RaitingList.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
 import RequestsList from "@/components/Manager/RequestsList.vue";
+import TasksTeam from "@/components/Manager/TasksTeam.vue";
 import TeamList from "@/components/Manager/TeamList.vue";
 import TeamSettings from "@/components/Manager/TeamSettings.vue";
 
@@ -111,6 +113,11 @@ const routes = [
         component: TeamMembers
       },
       {
+        path: "raiting",
+        name: "RaitingList",
+        component: RaitingList
+      },
+      {
         path: "team_edit",
         name: "EditTeam",
         component: EditTeam
@@ -119,6 +126,11 @@ const routes = [
         path: "requests",
         name: "RequestsList",
         component: RequestsList
+      },
+      {
+        path: "tasks",
+        name: "TasksTeam",
+        component: TasksTeam
       }
     ]
   }

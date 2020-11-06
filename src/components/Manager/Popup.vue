@@ -14,6 +14,8 @@
 
           <div class="modal-body">
             <slot name="body">
+              <img src="" alt="photo" />
+              <p>Фамилия: {{ userInTeam.user.id }}</p>
               <p>Фамилия: {{ userInTeam.user.surname }}</p>
               <p>Имя: {{ userInTeam.user.name }}</p>
               <p>Отчетсво: {{ userInTeam.user.patricity }}</p>
@@ -34,7 +36,13 @@
                 <b v-if="!getPointsUser.pointQuantity">Загрузка...</b>
                 <b v-else>{{ getPointsUser.pointQuantity }}</b>
               </p>
-              <img src="" alt="photo" />
+              <button @click="editPoints = true" v-if="!editPoints">
+                Управление баллами
+              </button>
+              <form v-if="editPoints"  @submit.prevent="checkForm">
+                <input type="number" v-model="addPoints" />
+                <button @click="toAddPoints(getPointsUser.id)">Начислить</button>
+              </form>
             </slot>
           </div>
 
@@ -63,7 +71,7 @@
 </template>
 
 <script>
-import { GET_POINTS_QUERY } from "@/graphql/queries";
+import { GET_POINTS_QUERY, CARGE_POINTS_QUERY } from "@/graphql/queries";
 export default {
   props: ["userInTeam"],
   apollo: {
@@ -81,8 +89,41 @@ export default {
       userId: 1,
       getPointsUser: {
         pointQuantity: 0
-      }
+      },
+      editPoints: false,
+      addPoints: 10
     };
+  },
+  methods: {
+    toAddPoints(id) {
+      this.editPoints = false;
+      this.$apollo
+        .mutate({
+          mutation: CARGE_POINTS_QUERY,
+          variables: {
+            pointAccountId: parseInt(id),
+            delta: parseInt(this.addPoints)
+          },
+          // update: (cache, { data: { createPointOperation } }) => {
+          //   let data = cache.readQuery({
+          //     query: GET_POINTS_QUERY,
+          //     variables: {userId: parseInt(this.userInTeam.user.id)}
+          //   });
+          //   data.createPointOperation.push(createPointOperation);
+          //   cache.writeQuery({
+          //     query: GET_POINTS_QUERY,
+          //     data
+          //   });
+          // }
+        })
+        .then(data => {
+          this.getPointsUser.pointQuantity = +this.getPointsUser.pointQuantity + +this.addPoints
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   }
 };
 </script>
