@@ -1,3 +1,4 @@
+"use strict";
 /** Список команд для реализации:
  * cd ./server
  * sequelize init
@@ -11,6 +12,7 @@
  * https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize
  */
 require("dotenv").config({ path: "../.env" });
+const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
 const faker = require("faker/locale/en");
@@ -20,10 +22,9 @@ const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
-
-/**
- * Пример для создания точки Graphql
- */
+const history = require("connect-history-api-fallback");
+const compression = require("compression");
+const helmet = require("helmet");
 
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
@@ -45,11 +46,18 @@ const schema = makeExecutableSchema({
 const app = express();
 const PORT = 3000;
 
+// Использование сжатия gzip
+app.use(compression());
+
 // Настройка парсинга Cookie
 app.use(cookieParser());
 
 // Настройка CORS политики для разработки
 app.use(cors());
+
+// Безопасность заголовков
+// FIXME: не работает путь /graphiql при использовании
+// app.use(helmet());
 
 // Точка входа GraphQL
 app.use(
@@ -64,11 +72,15 @@ app.use(
 // GraphiQL, визуальный редактор для запросов
 app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
 
-// Работа со статическими файлами
-app.use(express.static("./public"));
+// Поддержка режима HTML5 History для SPA
+// Все указанные выше запросы обрабатываются без history
+app.use(history());
 
-// Корневой путь API
-app.get("/", (req, res) => res.send("Серверная часть проекта ФИШКА"));
+// Работа со статическими файлами
+app.use(express.static(path.join(__dirname, "../dist")));
+
+// Работа со статическими файлами
+app.use("/public", express.static(path.join(__dirname, "/public")));
 
 // TODO: добавить заполнение фейковыми данными
 
@@ -82,7 +94,6 @@ db.sequelize.sync({ alter: true }).then(async () => {
       chalk.cyan(`http://localhost:${PORT}/graphiql`)
     );
   });
-});
 let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
@@ -161,7 +172,7 @@ async function addAllTables(destroyTable) {
         text: faker.lorem.paragraph()
       },
       authorId: user.dataValues.id,
-      organizationId: organization.dataValues.id,
+      organizationId: team.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
     let teamcustomization = await db.TeamCustomization.create({

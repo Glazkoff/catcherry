@@ -1,10 +1,19 @@
 import gql from "graphql-tag";
-
 // (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 
 export const SIGN_UP = gql`
-  mutation($name: String!, $login: String!, $password: String!) {
-    signUp(name: $name, login: $login, password: $password) {
+  mutation(
+    $name: String!
+    $login: String!
+    $password: String!
+    $fingerprint: String!
+  ) {
+    signUp(
+      name: $name
+      login: $login
+      password: $password
+      fingerprint: $fingerprint
+    ) {
       accessToken
       error {
         errorStatus
@@ -14,8 +23,20 @@ export const SIGN_UP = gql`
 `;
 
 export const LOG_IN = gql`
-  mutation($login: String!, $password: String!) {
-    logIn(login: $login, password: $password) {
+  mutation($login: String!, $password: String!, $fingerprint: String!) {
+    logIn(login: $login, password: $password, fingerprint: $fingerprint) {
+      accessToken
+      error {
+        errorStatus
+        message
+      }
+    }
+  }
+`;
+
+export const UPDATE_TOKENS = gql`
+  mutation($fingerprint: String!) {
+    updateTokens(fingerprint: $fingerprint) {
       accessToken
       error {
         errorStatus
@@ -36,10 +57,14 @@ export const CREATE_USER_QUERY = gql`
 `;
 
 export const ONE_USER_QUERY = gql`
-  query {
-    user(id: 156) {
+  query($id: ID!) {
+    user(id: $id) {
       id
       name
+      patricity
+      gender
+      birthday
+      login
     }
   }
 `;
@@ -49,13 +74,34 @@ export const USERS_QUERY = gql`
     users {
       id
       name
+      surname
+      patricity
+      gender
+      birthday
+      login
     }
   }
 `;
 
 export const UPDATE_USER_QUERY = gql`
-  mutation($name: String!, $id: ID!) {
-    updateUser(name: $name, id: $id)
+  mutation(
+    $name: String!
+    $surname: String
+    $patricity: String
+    $gender: String
+    $birthday: String
+    $login: String
+    $id: ID!
+  ) {
+    updateUser(
+      name: $name
+      surname: $surname
+      patricity: $patricity
+      gender: $gender
+      birthday: $birthday
+      login: $login
+      id: $id
+    )
   }
 `;
 
@@ -65,49 +111,131 @@ export const DELETE_USER_QUERY = gql`
   }
 `;
 
-// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
-
-export const ONE_POST_QUERY = gql`
-  query($id: ID!) {
-    post(id: $id) {
-      id
-      body {
-        header
-        text
-      }
-      createdAt
-    }
-  }
-`;
-
-export const POSTS_QUERY = gql`
-  query {
-    posts {
-      id
-      body {
-        header
-        text
-      }
-      createdAt
-    }
-  }
-`;
-
-export const CREATE_POST = gql`
-  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
-    createPost(
-      body: $body
-      authorId: $authorId
-      organizationId: $organizationId
+export const CREATE_ORGANIZATION = gql`
+  mutation(
+    $name: String!
+    $ownerId: Int
+    $organizationTypeId: Int
+    $maxTeamsLimit: Int
+  ) {
+    createOrganization(
+      name: $name
+      ownerId: $ownerId
+      organizationTypeId: $organizationTypeId
+      maxTeamsLimit: $maxTeamsLimit
     ) {
       id
-      createdAt
     }
   }
 `;
 
-export const DELETE_POST = gql`
+export const ORGS_QUERY = gql`
+  query {
+    organizations {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+    }
+  }
+`;
+
+export const ONE_ORG_QUERY = gql`
+  query($id: ID!) {
+    organization(id: $id) {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+    }
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
+export const USERS_IN_TEAMS_QUERY = gql`
+  query {
+    usersInTeams {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const CREATE_TEAM = gql`
+  mutation(
+    $organizationId: Int
+    $name: String!
+    $description: String
+    $maxUsersLimit: Int
+  ) {
+    createTeam(
+      organizationId: $organizationId
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+    ) {
+      id
+    }
+  }
+`;
+
+export const TEAMS_QUERY = gql`
+  query {
+    teams {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
+export const TEAM_IN_ORG_QUERY = gql`
+  query($organizationId: Int) {
+    team(organizationId: $organizationId) {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+    }
+  }
+`;
+
+export const DELETE_IN_TEAMS_QUERY = gql`
   mutation($id: ID!) {
-    deletePost(id: $id)
+    deleteUserInTeam(id: $id)
+  }
+`;
+
+export const REQUESTS_QUERY = gql`
+  query {
+    requests {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const ACCEPT_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    acceptRequst(id: $id)
   }
 `;

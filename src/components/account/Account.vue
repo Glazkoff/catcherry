@@ -1,220 +1,293 @@
 <template>
-<div>
-  <i>AAA</i>
-<div v-if="editUser.isEdit">
-    <form @submit.prevent="checkForm">
-    <h1>Личный кабинет</h1>
-    <p>* - обязательное поле</p>
-    <p v-if="errors.length">
-      <b>Пожалуйста исправьте указанные ошибки:</b>
-      <ul>
-        <li v-for="(error, index) in errors" :key="index">{{ error }}</li>
-      </ul>
-    </p>
-    <label>Фамилия Имя Отчество</label><br />
-    <input
-      type="text"
-      v-model="editUser.name"
-      placeholder="Иванов Иван Иванович"
-      class="formControl"
-    /><br />
-    <label>Пол</label><br />
-    <input 
-      type="radio" 
-      name="gender"
-      v-model="gender" 
-      class="formControl" /><label>Мужской</label><br />
-      <input 
-      type="radio" 
-      name="gender"
-      v-model="gender" 
-      class="formControl" /><label>Женский</label><br />
-      <input 
-      type="radio" 
-      name="gender"
-      v-model="gender" 
-      class="formControl" /><label>Не указан</label><br />
-    <label>Дата рождения</label><br />
-    <input 
-      type="date" 
-      v-model="birthday" 
-      class="formControl" /><br />
-    <label>Логин</label><br />
-    <input
-      type="text"
-      v-model="login"
-      placeholder="login"
-      class="formControl"
-    /><br />
-     <button class="btn" @click="toSaveEditUser(user)">Сохранить</button>
-    <p>
-      <a href="#" @click="toDeleteUser(user)">Удалить аккаунт</a>
-    </p>
-  </form>
-     
-    </div>
+  <div class="main">
+    <popup v-if="isShowFullInformation">
+      <h3 slot="header" v-if="isShowModalEdit">
+        <i18n path="editUser"
+          ><span place="title">{{ $t("editUser") }}</span></i18n
+        >
+      </h3>
+      <div slot="body" v-if="isShowModalEdit">
+        <form @submit.prevent="saveUserOnPopup()">
+          <label for="surname">Фамилия</label>
+          <input
+            class="form-control form-text"
+            name="surname"
+            v-model.trim="$v.user.surname.$model"
+            @blur="$v.user.surname.$touch()"
+            placeholder="Фамилия"
+          />
+          <div v-if="$v.user.surname.$error" class="error">
+            <span v-if="!$v.user.surname.required"
+              >Данное поле обязательно</span
+            >
+            <span v-else-if="!$v.user.surname.alpha"
+              >Поле должно содержать только буквы</span
+            >
+          </div>
+          <label for="name">Имя</label>
+          <input
+            class="form-control form-text"
+            name="name"
+            v-model.trim="$v.user.name.$model"
+            placeholder="Имя"
+            required
+          />
+          <label for="patricity">Отчество (при наличии)</label>
+          <input
+            class="form-control form-text"
+            name="patricity"
+            v-model.trim="$v.user.patricity.$model"
+            placeholder="Отчество"
+            required
+          />
+          <label for="gender">Пол</label>
+          <select
+            class="form-control"
+            name="gender"
+            v-model.trim="$v.user.gender.$model"
+            required
+          >
+            <option>Мужской</option>
+            <option>Женский</option>
+          </select>
+          <label for="login">Логин</label>
+          <input
+            class="form-control form-text"
+            name="login"
+            v-model.trim="$v.user.login.$model"
+            placeholder="Логин"
+            required
+          />
+          <label for="password">Пароль</label>
+          <input
+            class="form-control form-text"
+            name="password"
+            v-model.trim="$v.user.password.$model"
+            placeholder="Пароль"
+            required
+          />
+          <div class="btn-group">
+            <button
+              class="modal-default-button btn btn-primary"
+              @click="saveUserOnPopup()"
+            >
+              <i18n path="save"
+                ><span>{{ $t("save") }}</span></i18n
+              >
+            </button>
+            <button class="btn btn-secondary" @click="cancelModal()">
+              <i18n path="cancel"
+                ><span place="title">{{ $t("cancel") }}</span></i18n
+              >
+            </button>
+          </div>
+        </form>
+      </div>
 
-<div v-if="!editUser.isEdit">
-      <ul>
-        <li>{{ user.id }}</li>
-        <li>{{ user.name }}</li>
-        <li>{{ user.__typename }}</li>
-        <li><button @click="toEditUser(user)">Редактировать</button></li>
-      </ul>
+      <h3 slot="header" v-if="isShowModalDelete">
+        <i18n path="deleteQuestion"
+          ><span place="title">{{ $t("deleteQuestion") }}</span></i18n
+        >
+        {{ fullName }}?
+      </h3>
+      <div slot="body" v-if="isShowModalDelete" class="btn-group">
+        <button
+          @click="deleteUser()"
+          slot="action"
+          class="modal-default-button"
+        >
+          <i18n path="delete"
+            ><span place="title">{{ $t("delete") }}</span></i18n
+          >
+        </button>
+        <button @click="cancelModal()">
+          <i18n path="cancel"
+            ><span place="title">{{ $t("cancel") }}</span></i18n
+          >
+        </button>
+      </div>
+
+      <h3
+        slot="header"
+        v-if="!isShowModalDelete && !isShowModalEdit && $apollo.loading"
+      >
+        Загрузка...
+      </h3>
+      <h3
+        slot="header"
+        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+      >
+        Каротчка пользователя
+      </h3>
+      <div
+        slot="body"
+        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+      >
+        <p>Фамилия: {{ user.surname }}</p>
+        <p>Имя: {{ user.name }}</p>
+        <p>Отчетсво: {{ user.patricity }}</p>
+        <p>Пол: {{ user.gender }}</p>
+        <p>Дата рождения: {{ new Date(user.birthday) }}</p>
+        <p>Логин: {{ user.login }}</p>
+        <p>Пароль: {{ user.password }}</p>
+        <div class="btn-group">
+          <button class="btn btn-primary" @click="showModalEdit()">
+            Редактировать
+          </button>
+          <button class="btn btn-link" @click="showModalDelete()">
+            Удалить
+          </button>
+          <button class="btn btn-secondary" @click="cancelFullInformation()">
+            <i18n path="close"
+              ><span place="title">{{ $t("close") }}</span></i18n
+            >
+          </button>
+        </div>
+      </div>
+    </popup>
+
+    <h2>
+      <i18n path="profileUser"
+        ><span place="title">{{ $t("profileUser") }}</span></i18n
+      >
+    </h2>
+    <h3 v-if="$apollo.loading">
+      Загрузка...
+    </h3>
+    <div v-if="!$apollo.loading">
+      <h6 v-if="users.length == 0">К сожалению, такого пользователя нет!</h6>
+      <div>
+        <div class="oneUser">
+          <p>
+            <i18n path="surname"
+              ><span place="title">{{ $t("surname") }}</span></i18n
+            >: {{ user.surname }}
+          </p>
+          <p>
+            <i18n path="name"
+              ><span place="title">{{ $t("name") }}</span></i18n
+            >: {{ user.name }}
+          </p>
+
+          <p>
+            <i18n path="patricity"
+              ><span place="title">{{ $t("patricity") }}</span></i18n
+            >: {{ user.patricity }}
+          </p>
+          <p>
+            <i18n path="login"
+              ><span place="title">{{ $t("login") }}</span></i18n
+            >: {{ user.login }}
+          </p>
+          <button
+            class="btn btn-secondary"
+            @click="showFullInformation(user.id)"
+          >
+            Подробнее
+          </button>
+        </div>
+      </div>
     </div>
-    
-</div>
+    <minialert v-if="isShowAlertEdit"
+      ><p slot="title">Вы успешно изменили пользователя</p></minialert
+    >
+    <minialert v-if="isShowAlertDelete"
+      ><p slot="title">Вы успешно удалили пользователя</p></minialert
+    >
+  </div>
 </template>
 
 <script>
+import popup from "@/components/account/Popup.vue";
+import minialert from "@/components/account/MiniAlert.vue";
+import { required, minLength } from "vuelidate/lib/validators";
 import {
-  ONE_USER_QUERY,
-  CREATE_USER_QUERY,
   USERS_QUERY,
+  DELETE_USER_QUERY,
   UPDATE_USER_QUERY,
-  DELETE_USER_QUERY
+  ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
-  name: "Account",
+  components: { minialert, popup },
   apollo: {
+    users: {
+      query: USERS_QUERY
+    },
     user: {
-      query: ONE_USER_QUERY
+      query: ONE_USER_QUERY,
+      variables() {
+        return {
+          id: this.$route.params.id
+        };
+      }
     }
   },
   data() {
     return {
-      errors: [],
-      fullName: null,
-      birthday: null,
-      login: null,
-      password: null,
-      newUser: "",
-      editUser: {
-        isEdit: false,
-        name: "",
-        id: -1
-      }
+      nameOfUser: "",
+      isShowFullInformation: false,
+      index: 0,
+      userId: -1,
+      fullName: "",
+      isShowAlertDelete: false,
+      isShowAlertEdit: false,
+      isShowModalEdit: false,
+      isShowModalDelete: false,
+      findString: ""
     };
   },
+  validations: {
+    user: {
+      surname: {
+        required,
+        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
+      },
+      name: {
+        required,
+        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
+      },
+      patricity: {
+        required,
+        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
+      },
+      gender: {
+        required
+      },
+      login: {
+        required
+      },
+      password: {
+        required,
+        minLength: minLength(2)
+      }
+    }
+  },
   methods: {
-
-    validFullName: function(str) {
-      var regularExpression = /^[A-zА-яЁё]+$/;
-      return regularExpression.test(str);
+    showFullInformation(id) {
+      this.userId = id;
+      this.isShowFullInformation = true;
     },
-
-    hasNotSpace: function(str) {
-      var regularExpression = /^\S*$/;
-      return regularExpression.test(str);
+    cancelFullInformation() {
+      this.isShowFullInformation = false;
     },
-
-    checkForm: function(e) {
-      this.errors = [];
-      // console.log('Login - ' + this.login);
-      // console.log('Password - ' + this.password);
-      // console.log(this.login.length);
-
-      if (!this.fullName) {
-        this.errors.push("Поле ФИО обязательно!");
-      }
-      // else if (!this.validFullName(this.fullName))  {
-      //   this.errors.push('Поле ФИО может содержать только латинские и кириллические символы!');
-      // }
-
-      if (!this.birthday) {
-        this.errors.push("Поле Дата рождения обязательно!");
-      }
-
-      if (!this.login) {
-        this.errors.push("Поле логин обязательно!");
-      } else if (!this.hasNotSpace(this.login)) {
-        this.errors.push("Поле логин не должно содержать пробелов!");
-      } else if (this.login.length < 6) {
-        this.errors.push("Поле логин должно содержать не менее 6 символов!");
-      }
-      e.preventDefault();
+    cancelModal() {
+      this.isShowModalEdit = false;
+      this.isShowModalDelete = false;
     },
-
-    toSaveEditUser() {
-      this.editUser.isEdit = false;
-      this.$apollo
-        .mutate({
-          mutation: UPDATE_USER_QUERY,
-          variables: {
-            name: this.editUser.name,
-            id: this.editUser.id
-          },
-          update: (cache, { data: { updateUser } }) => {
-            let data = cache.readQuery({ query: USERS_QUERY });
-            data.users.find(
-              el => el.id === this.editUser.id
-            ).name = this.editUser.name;
-            cache.writeQuery({ query: USERS_QUERY, data });
-            console.log(updateUser);
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createUser: {
-              __typename: "User",
-              id: -1,
-              name: this.editUser.name
-            }
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+    showModalDelete() {
+      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
+      this.isShowModalDelete = true;
     },
-    toEditUser(user) {
-      let editUser = user;
-      this.editUser.name = editUser.name;
-      this.editUser.id = editUser.id;
-      this.editUser.isEdit = true;
-    },
-    toAddUser() {
-      let username = this.newUser;
-      this.newUser = "";
-      this.$apollo
-        .mutate({
-          mutation: CREATE_USER_QUERY,
-          variables: {
-            name: username
-          },
-          update: (cache, { data: { createUser } }) => {
-            let data = cache.readQuery({ query: USERS_QUERY });
-            data.users.push(createUser);
-            cache.writeQuery({ query: USERS_QUERY, data });
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createUser: {
-              __typename: "User",
-              id: -1,
-              name: username
-            }
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          this.newUser = username;
-          console.error(error);
-        });
-    },
-    toDeleteUser(id) {
+    deleteUser() {
       this.$apollo
         .mutate({
           mutation: DELETE_USER_QUERY,
           variables: {
-            id
+            id: this.user.id
           },
           update: cache => {
             let data = cache.readQuery({ query: USERS_QUERY });
-            let index = data.users.findIndex(el => el.id == id);
+            let index = data.users.findIndex(el => el.id == this.user.id);
             data.users.splice(index, 1);
             cache.writeQuery({ query: USERS_QUERY, data });
           }
@@ -225,8 +298,121 @@ export default {
         .catch(error => {
           console.error(error);
         });
+      this.isShowFullInformation = false;
+      this.isShowModalDelete = false;
+      this.isShowAlertDelete = true;
+      setTimeout(() => {
+        this.isShowAlertDelete = false;
+      }, 3000);
+    },
+    showModalEdit() {
+      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
+      this.isShowModalEdit = true;
+    },
+    saveUserOnPopup() {
+      console.log(this.user);
+      this.isShowModalEdit = false;
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_USER_QUERY,
+          variables: {
+            id: this.user.id,
+            surname: this.user.surname,
+            name: this.user.name,
+            patricity: this.user.patricity,
+            gender: this.user.gender,
+            login: this.user.login
+          },
+          update: (cache, { data: { updateUser } }) => {
+            let data = cache.readQuery({ query: USERS_QUERY });
+            data.users.find(
+              el => el.id === this.user.id
+            ).surname = this.user.surname;
+            data.users.find(el => el.id === this.user.id).name = this.user.name;
+            data.users.find(
+              el => el.id === this.user.id
+            ).patricity = this.user.patricity;
+            data.users.find(
+              el => el.id === this.user.id
+            ).gender = this.user.gender;
+            data.users.find(
+              el => el.id === this.user.id
+            ).login = this.user.login;
+            cache.writeQuery({ query: USERS_QUERY, data });
+            console.log(updateUser);
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createUser: {
+              __typename: "User",
+              id: -1,
+              surname: this.user.surname,
+              name: this.user.name,
+              patricity: this.user.patricity,
+              gender: this.user.gender,
+              login: this.user.login
+            }
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+      this.isShowAlertEdit = true;
+      setTimeout(() => {
+        this.isShowAlertEdit = false;
+      }, 3000);
+    }
+  },
+  computed: {
+    filterUser() {
+      if (this.findString !== "") {
+        return this.users.filter(el => {
+          if (el.surname === undefined || el.surname === null) {
+            el.surname = " ";
+          }
+          if (el.name === undefined || el.name === null) {
+            el.name = " ";
+          }
+          if (el.patricity === undefined || el.patricity === null) {
+            el.patricity = " ";
+          }
+          return (
+            (el.surname.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+              -1 &&
+              el.surname !== "") ||
+            (el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+              -1 &&
+              el.name !== "") ||
+            (el.patricity
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.patricity !== "")
+          );
+        });
+      } else {
+        return this.users;
+      }
     }
   }
 };
 </script>
-<style></style>
+
+<style lang="scss" scoped>
+.main {
+  float: right;
+  width: 80%;
+}
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+input,
+select {
+  display: block;
+}
+</style>

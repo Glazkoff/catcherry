@@ -13,8 +13,8 @@ module.exports = (sequelize, DataTypes) => {
         as: "postUser"
       });
       Posts.belongsTo(models.Teams, {
-        foreignKey: "organizationId"
-        // as: "postOrganization"
+        foreignKey: "teamId"
+        // as: "postTeam"
       });
     }
   }
@@ -30,7 +30,7 @@ module.exports = (sequelize, DataTypes) => {
       },
       organizationId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: true
       },
       forAllTeam: {
         type: DataTypes.BOOLEAN,
