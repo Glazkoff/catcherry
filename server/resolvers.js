@@ -104,6 +104,10 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
+    comments: (parent, args, { db }, info) =>
+      db.Comments.findAll({ order: [["id", "ASC"]] }),
+    comment: (parent, args, { db }, info) =>
+      db.Comments.findOne({ where: { id: args.id } }),
 
     usersInTeams: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
@@ -351,6 +355,32 @@ module.exports = {
       ),
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с комментариями (Comments)     
+    */
+    createComment: (parent, { body, authorId, dateAdd }, { db }, info) =>
+      db.Comments.create({
+        body: body,
+        authorId: authorId,
+        dateAdd: dateAdd
+      }),
+    updateComment: (parent, { body, id }, { db }, info) =>
+      db.Comments.update(
+        {
+          body: body
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    deleteComment: (parent, args, { db }, info) =>
+      db.Comments.destroy({
         where: {
           id: args.id
         }
