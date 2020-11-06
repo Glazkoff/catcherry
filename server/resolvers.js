@@ -51,6 +51,17 @@ module.exports = {
         where: { status: "Не принят" },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
+      }),
+
+    getPointsUser: (parent, args, { db }, info) =>
+      db.Points.findOne({
+        where: { userId: args.userId },
+        order: [["id", "ASC"]]
+      }),
+    getOperationPointsUser: (parent, args, { db }, info) =>
+      db.PointsOperations.findAll({
+        where: { pointAccountId: args.pointAccountId },
+        order: [["id", "ASC"]]
       })
   },
   Mutation: {
@@ -245,6 +256,33 @@ module.exports = {
             id: id
           }
         }
-      )
+      ),
+    /*
+      [Ниже] Мутации работы с баллами     
+    */
+    createPointOperation: async (
+      parent,
+      { pointAccountId, delta },
+      { db },
+      info
+    ) => {
+      let total = await db.Points.findOne({
+        where: { id: pointAccountId }
+      });
+      db.Points.update(
+        {
+          pointQuantity: total.pointQuantity + delta
+        },
+        {
+          where: {
+            id: pointAccountId
+          }
+        }
+      );
+      return db.PointsOperations.create({
+        pointAccountId: pointAccountId,
+        delta: delta
+      });
+    }
   }
 };
