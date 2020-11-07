@@ -14,35 +14,53 @@
 
           <div class="modal-body">
             <slot name="body">
-              <img src="" alt="photo" />
-              <p>Фамилия: {{ userInTeam.user.id }}</p>
-              <p>Фамилия: {{ userInTeam.user.surname }}</p>
-              <p>Имя: {{ userInTeam.user.name }}</p>
-              <p>Отчетсво: {{ userInTeam.user.patricity }}</p>
-              <p>Пол: {{ userInTeam.user.gender }}</p>
-              <p>
-                Дата рождения:
-                {{
-                  new Date(userInTeam.user.birthday).toLocaleString("ru", {
-                    day: "numeric",
-                    month: "long",
-                    year: "numeric"
-                  })
-                }}
-              </p>
-              <p>Логин: {{ userInTeam.user.login }}</p>
-              <p>
-                Баллы:
-                <b v-if="!getPointsUser.pointQuantity">Загрузка...</b>
-                <b v-else>{{ getPointsUser.pointQuantity }}</b>
-              </p>
-              <button @click="editPoints = true" v-if="!editPoints">
-                Управление баллами
-              </button>
-              <form v-if="editPoints"  @submit.prevent="checkForm">
-                <input type="number" v-model="addPoints" />
-                <button @click="toAddPoints(getPointsUser.id)">Начислить</button>
-              </form>
+              <div>
+                <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
+              </div>
+              <div class="info">
+                <p>Фамилия: {{ userInTeam.user.surname }}</p>
+                <p>Имя: {{ userInTeam.user.name }}</p>
+                <p>Отчетсво: {{ userInTeam.user.patricity }}</p>
+                <p>Пол: {{ userInTeam.user.gender }}</p>
+                <p>
+                  Дата рождения:
+                  {{
+                    new Date(userInTeam.user.birthday).toLocaleString("ru", {
+                      day: "numeric",
+                      month: "long",
+                      year: "numeric"
+                    })
+                  }}
+                </p>
+                <p>Логин: {{ userInTeam.user.login }}</p>
+                <p>
+                  Баллы:
+                  <b v-if="!getPointsUser.pointQuantity">Загрузка...</b>
+                  <b v-else>{{ getPointsUser.pointQuantity }}</b>
+                </p>
+                <button @click="editPoints = true" v-if="!editPoints">
+                  Управление баллами
+                </button>
+                <form v-if="editPoints" @submit.prevent="checkForm">
+                  <input
+                    type="number"
+                    v-model="addPoints"
+                    class="form-control form-text"
+                  />
+                  <button
+                    @click="toAddPoints(getPointsUser.id)"
+                    class="btn btn-primary small"
+                  >
+                    Начислить
+                  </button>
+                  <button
+                    @click="editPoints = false"
+                    class="btn btn-secondary small"
+                  >
+                    Отмена
+                  </button>
+                </form>
+              </div>
             </slot>
           </div>
 
@@ -50,14 +68,14 @@
             <slot name="footer">
               <button
                 type="submit"
-                class="modal-avtive-button"
+                class="modal-avtive-button btn btn-link"
                 @click="$emit('del')"
               >
                 Удалить
               </button>
               <button
                 type="submit"
-                class="modal-default-button"
+                class="modal-default-button btn btn-secondary"
                 @click="$emit('close')"
               >
                 Отмена
@@ -103,7 +121,7 @@ export default {
           variables: {
             pointAccountId: parseInt(id),
             delta: parseInt(this.addPoints)
-          },
+          }
           // update: (cache, { data: { createPointOperation } }) => {
           //   let data = cache.readQuery({
           //     query: GET_POINTS_QUERY,
@@ -117,7 +135,8 @@ export default {
           // }
         })
         .then(data => {
-          this.getPointsUser.pointQuantity = +this.getPointsUser.pointQuantity + +this.addPoints
+          this.getPointsUser.pointQuantity =
+            +this.getPointsUser.pointQuantity + +this.addPoints;
           console.log(data);
         })
         .catch(error => {
@@ -159,6 +178,7 @@ export default {
 }
 .modal-body {
   margin: 20px 0;
+  display: flex;
 }
 .modal-footer {
   margin-bottom: 50px;
@@ -168,5 +188,16 @@ export default {
 }
 .modal-avtive-button {
   float: left;
+}
+
+form {
+  display: flex;
+}
+.info {
+  margin-left: 20px;
+}
+.bigAvatar {
+  height: 100px;
+  border-radius: 50px;
 }
 </style>

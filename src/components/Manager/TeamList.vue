@@ -1,19 +1,20 @@
 <template>
-<div>
-  <h1>Организация "Название"</h1>
-  <h3>Команды</h3>
-  <hr />
-  <div v-for="team in teams" :key="team.id" class="team">
-    <p>{{team.name}}</p>
-    <router-link :to="{name:'TeamSettings', params:{id: team.id, name:team.name}}">Перейти в управление</router-link>
+  <div>
+    <h1>Организация "Название"</h1>
+    <h3>Команды</h3>
+    <hr />
+    <div v-for="team in teams" :key="team.id" class="team">
+      <p>{{ team.name }}</p>
+      <router-link
+        :to="{ name: 'TeamSettings', params: { id: team.id, name: team.name } }"
+        >Перейти в управление</router-link
+      >
+    </div>
   </div>
-</div>
 </template>
 
 <script>
-import {
-  TEAMS_QUERY
-} from "@/graphql/queries";
+import { TEAMS_QUERY } from "@/graphql/queries";
 
 export default {
   apollo: {

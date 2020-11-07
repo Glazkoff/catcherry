@@ -1,11 +1,11 @@
 <template>
-<div>
-  <h3>Заявки на вхождение</h3>
-  <hr />
-  <div v-for="request in requests" :key="request.id" class="request">
-    <RequestsItem :request="request" @accept="toAccept" />
+  <div>
+    <h3>Заявки на вхождение</h3>
+    <hr />
+    <div v-for="request in requests" :key="request.id" class="request">
+      <RequestsItem :request="request" @accept="toAccept" />
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -18,7 +18,6 @@ import {
 } from "@/graphql/queries";
 
 export default {
-
   data() {
     return {
       teamId: this.$route.params.id
@@ -31,7 +30,7 @@ export default {
       variables() {
         return {
           teamId: this.teamId
-        }
+        };
       }
     },
     usersInTeams: {
@@ -39,7 +38,7 @@ export default {
       variables() {
         return {
           teamId: this.teamId
-        }
+        };
       }
     }
   },
@@ -61,13 +60,13 @@ export default {
               query: REQUESTS_QUERY,
               variables: {
                 teamId: this.teamId
-              },
+              }
             });
             let data_user = cache.readQuery({
               query: USERS_IN_TEAMS_QUERY,
               variables: {
                 teamId: this.teamId
-              },
+              }
             });
             data.requests.find(el => el.id === id).status = "Принят";
             let index = data.requests.findIndex(el => el.id == id);

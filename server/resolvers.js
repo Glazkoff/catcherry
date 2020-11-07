@@ -88,7 +88,7 @@ module.exports = {
       }),
     tasks: (parent, args, { db }, info) =>
       db.Tasks.findAll({
-        order: [["id", "ASC"]],
+        order: [["id", "DESC"]],
         include: [{ model: db.Users, as: "tasksUser" }]
       })
   },
@@ -332,6 +332,16 @@ module.exports = {
             id: id
           }
         }
-      )
+      ),
+
+    /*
+      [Ниже] Мутации работы с задачами     
+    */
+    createTask: (parent, { userId, header, text, status }, { db }, info) =>
+      db.Tasks.create({
+        userId: userId,
+        body: { header: header, text: text },
+        status: status
+      })
   }
 };

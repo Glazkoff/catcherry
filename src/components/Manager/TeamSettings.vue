@@ -1,11 +1,11 @@
 <template>
-<div>
-  <h1>Команда {{ name }}</h1>
-  <div class="every">
-    <NavBar class="navig" />
-    <router-view class="cont" />
+  <div>
+    <h1>Команда {{ name }}</h1>
+    <div class="every">
+      <NavBar class="navig" />
+      <router-view class="cont" />
+    </div>
   </div>
-</div>
 </template>
 
 <script>

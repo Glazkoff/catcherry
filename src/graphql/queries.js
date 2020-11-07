@@ -192,3 +192,16 @@ export const TASKS_QUERY = gql`
     }
   }
 `;
+export const ADD_TASK_QUERY = gql`
+  mutation($userId: ID, $header: String, $text: String, $status: String) {
+    createTask(userId: $userId, header: $header, text: $text, status: $status) {
+      id
+      userId
+      body {
+        header
+        text
+      }
+      status
+    }
+  }
+`;

@@ -135,6 +135,8 @@ type Mutation {
   deletePointOperation(id: ID!): Int!	
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
 
+  createTask(userId: ID, header: String, text: String, status: String): Task!
+
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt
   updateAccessToken: jwt!
