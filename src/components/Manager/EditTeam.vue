@@ -17,7 +17,7 @@
       ></textarea>
       <button type="submit" class="btn btn-primary">Сохранить</button>
     </form>
-  </div>
+  </div> 
 </template>
 
 <script>

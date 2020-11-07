@@ -91,6 +91,7 @@ type Task {
 type bodyTask {
   header: String
   text: String!
+  points: Int
 }
 
 type Query { 
@@ -131,11 +132,12 @@ type Mutation {
   revokeRequst(id: ID!): [Int]!
 
   updatePointsUser(id:ID!, pointQuantity: Int!): [Int]!
-  createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!	 
+  createPointOperation(pointAccountId: Int!, delta: Int!, operationDescription: String!): PointsUser!	 
   deletePointOperation(id: ID!): Int!	
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
 
-  createTask(userId: ID, header: String, text: String, status: String): Task!
+  createTask(userId: ID, header: String, text: String, points: Int, status: String): Task!
+  updateTask(id: ID!, status: String): Task!
 
   signUp(name: String!, login: String!, password: String!): jwt
   logIn(login: String!, password: String!): jwt

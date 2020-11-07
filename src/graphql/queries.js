@@ -154,8 +154,16 @@ export const GET_POINTS_QUERY = gql`
 `;
 
 export const CARGE_POINTS_QUERY = gql`
-  mutation($pointAccountId: Int!, $delta: Int!) {
-    createPointOperation(pointAccountId: $pointAccountId, delta: $delta) {
+  mutation(
+    $pointAccountId: Int!
+    $delta: Int!
+    $operationDescription: String!
+  ) {
+    createPointOperation(
+      pointAccountId: $pointAccountId
+      delta: $delta
+      operationDescription: $operationDescription
+    ) {
       id
     }
   }
@@ -183,9 +191,14 @@ export const TASKS_QUERY = gql`
       tasksUser {
         name
         surname
+        userPoints {
+          id
+        }
       }
       body {
+        header
         text
+        points
       }
       status
       createdAt
@@ -193,14 +206,33 @@ export const TASKS_QUERY = gql`
   }
 `;
 export const ADD_TASK_QUERY = gql`
-  mutation($userId: ID, $header: String, $text: String, $status: String) {
-    createTask(userId: $userId, header: $header, text: $text, status: $status) {
+  mutation(
+    $userId: ID
+    $header: String
+    $text: String
+    $points: Int
+    $status: String
+  ) {
+    createTask(
+      userId: $userId
+      header: $header
+      text: $text
+      points: $points
+      status: $status
+    ) {
       id
       userId
       body {
         header
         text
       }
+      status
+    }
+  }
+`;
+export const EDIT_TASK_QUERY = gql`
+  mutation($id: ID!, $status: String) {
+    updateTask(id: $id, status: $status) {
       status
     }
   }

@@ -18,9 +18,10 @@
                 <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
               </div>
               <div class="info">
-                <p>Фамилия: {{ userInTeam.user.surname }}</p>
-                <p>Имя: {{ userInTeam.user.name }}</p>
-                <p>Отчетсво: {{ userInTeam.user.patricity }}</p>
+                <p>
+                  ФИО: {{ userInTeam.user.surname }} {{ userInTeam.user.name }}
+                  {{ userInTeam.user.patricity }}
+                </p>
                 <p>Пол: {{ userInTeam.user.gender }}</p>
                 <p>
                   Дата рождения:
@@ -42,22 +43,23 @@
                   Управление баллами
                 </button>
                 <form v-if="editPoints" @submit.prevent="checkForm">
-                  <input
+                  <label>Количество баллов</label
+                  ><input
                     type="number"
                     v-model="addPoints"
                     class="form-control form-text"
                   />
+                  <label>Описание</label
+                  ><input
+                    type="text"
+                    v-model="operationDescription"
+                    class="form-control form-text"
+                  /><br />
                   <button
                     @click="toAddPoints(getPointsUser.id)"
                     class="btn btn-primary small"
                   >
                     Начислить
-                  </button>
-                  <button
-                    @click="editPoints = false"
-                    class="btn btn-secondary small"
-                  >
-                    Отмена
                   </button>
                 </form>
               </div>
@@ -109,7 +111,8 @@ export default {
         pointQuantity: 0
       },
       editPoints: false,
-      addPoints: 10
+      addPoints: 10,
+      operationDescription: ""
     };
   },
   methods: {
@@ -120,7 +123,8 @@ export default {
           mutation: CARGE_POINTS_QUERY,
           variables: {
             pointAccountId: parseInt(id),
-            delta: parseInt(this.addPoints)
+            delta: parseInt(this.addPoints),
+            operationDescription: this.operationDescription
           }
           // update: (cache, { data: { createPointOperation } }) => {
           //   let data = cache.readQuery({
@@ -191,7 +195,12 @@ export default {
 }
 
 form {
-  display: flex;
+}
+label {
+  margin-right: 10px;
+}
+input[type="number"] {
+  width: 80px;
 }
 .info {
   margin-left: 20px;

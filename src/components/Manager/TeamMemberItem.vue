@@ -1,8 +1,10 @@
 <template>
   <div class="user">
-    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar"/>
-    <div><p>{{ userInTeam.user.name }}</p>
-    <p>{{ userInTeam.status }}</p></div>
+    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
+    <div>
+      <p>{{ userInTeam.user.name }} {{ userInTeam.user.surname }}</p>
+      <p>{{ userInTeam.status }}</p>
+    </div>
     <button type="submit" class="btn btn-link" @click="showModal = true">
       Подробнее
     </button>
@@ -42,7 +44,7 @@ p {
   margin: 10px 20px;
 }
 .bigAvatar {
- height: 100px;
- border-radius: 50px;
+  height: 100px;
+  border-radius: 50px;
 }
 </style>

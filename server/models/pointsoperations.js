@@ -23,6 +23,10 @@ module.exports = (sequelize, DataTypes) => {
       delta: {
         type: DataTypes.INTEGER,
         allowNull: false
+      },
+      operationDescription: {
+        type: DataTypes.STRING,
+        allowNull: false
       }
     },
     {

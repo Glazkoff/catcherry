@@ -89,7 +89,11 @@ module.exports = {
     tasks: (parent, args, { db }, info) =>
       db.Tasks.findAll({
         order: [["id", "DESC"]],
-        include: [{ model: db.Users, as: "tasksUser" }]
+        include: [{ model: db.Users, as: "tasksUser",  include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          }]
       })
   },
   Mutation: {
@@ -290,7 +294,7 @@ module.exports = {
     */
     createPointOperation: async (
       parent,
-      { pointAccountId, delta },
+      { pointAccountId, delta, operationDescription },
       { db },
       info
     ) => {
@@ -309,7 +313,8 @@ module.exports = {
       );
       return db.PointsOperations.create({
         pointAccountId: pointAccountId,
-        delta: delta
+        delta: delta,
+        operationDescription: operationDescription
       });
     },
     /*
@@ -337,11 +342,27 @@ module.exports = {
     /*
       [Ниже] Мутации работы с задачами     
     */
-    createTask: (parent, { userId, header, text, status }, { db }, info) =>
+    createTask: (
+      parent,
+      { userId, header, text, points, status },
+      { db },
+      info
+    ) =>
       db.Tasks.create({
         userId: userId,
-        body: { header: header, text: text },
+        body: { header: header, text: text, points: points },
         status: status
-      })
+      }),
+    updateTask: (parent, { id, status }, { db }, info) =>
+      db.Tasks.update(
+        {
+          status: status
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      )
   }
 };
