@@ -82,9 +82,5 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.member {
-  border: 1px solid black;
-  padding: 1rem;
-  margin: 1rem;
-}
+
 </style>

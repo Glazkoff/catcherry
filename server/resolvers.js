@@ -85,6 +85,11 @@ module.exports = {
       db.PointsOperations.findAll({
         where: { pointAccountId: args.pointAccountId },
         order: [["id", "ASC"]]
+      }),
+    tasks: (parent, args, { db }, info) =>
+      db.Tasks.findAll({
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "tasksUser" }]
       })
   },
   Mutation: {

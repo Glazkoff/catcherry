@@ -174,3 +174,21 @@ export const RAITING_IN_TEAMS_QUERY = gql`
     }
   }
 `;
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TASKS
+export const TASKS_QUERY = gql`
+  query {
+    tasks {
+      id
+      userId
+      tasksUser {
+        name
+        surname
+      }
+      body {
+        text
+      }
+      status
+      createdAt
+    }
+  }
+`;

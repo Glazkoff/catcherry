@@ -79,6 +79,20 @@ type PointOperations{
   operationDescription: String
 }
 
+type Task {
+  id: ID!
+  userId: ID
+  body: bodyTask!
+  status: String
+  tasksUser: User!
+  createdAt: String
+}
+
+type bodyTask {
+  header: String
+  text: String!
+}
+
 type Query { 
   users: [User!] 
   user(id: ID!): User
@@ -95,6 +109,8 @@ type Query {
   usersInTeams (teamId:ID!):[UserInTeam]!
   raitingInTeams (teamId:ID!): [UserInTeam]!
   requests (teamId:ID!):[UserInTeam]
+
+  tasks: [Task!]
 }
 
 type Mutation {
