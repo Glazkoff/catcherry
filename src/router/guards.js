@@ -2,7 +2,7 @@ import store from "@/store/index";
 
 // Для перехода к компоненту
 export const ifNotAuthenticated = (to, from, next) => {
-  if (!store.getters.hasAccessToken) {
+  if (!store.getters.isAuthenticated) {
     next();
   } else {
     next("/");
@@ -11,7 +11,7 @@ export const ifNotAuthenticated = (to, from, next) => {
 
 // Для перехода в защищённые компоненты
 export const ifAuthenticated = (to, from, next) => {
-  if (!store.getters.hasAccessToken) {
+  if (!store.getters.isAuthenticated) {
     next("auth");
   } else {
     next();

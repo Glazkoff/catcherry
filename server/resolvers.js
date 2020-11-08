@@ -13,7 +13,8 @@ function generateTokens(user) {
 
   // Генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
+    // В секундах
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN / 1000
   });
 
   // Возвращаем объект с двумя полями (refreshToken, accessToken)
@@ -325,12 +326,15 @@ module.exports = {
           }
         }
       ),
-    deleteUser: (parent, args, { db }, info) =>
-      db.Users.destroy({
+    deleteUser: (parent, args, { req, db }, info) => {
+      console.log("HEADERS: ", req.headers);
+      return db.Users.destroy({
         where: {
           id: args.id
         }
-      }),
+      });
+    },
+
     /*
       [Ниже] Мутации работы с организациями (Organization)     
     */

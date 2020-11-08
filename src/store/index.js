@@ -1,6 +1,7 @@
 import Vue from "vue";
 import Vuex from "vuex";
 import { UPDATE_TOKENS } from "@/graphql/queries.js";
+import jwt from "jsonwebtoken";
 
 Vue.use(Vuex);
 
@@ -22,6 +23,10 @@ const store = new Vuex.Store({
     },
     isAppLoading: state => {
       return state.authLoading;
+    },
+    decodedToken: state => {
+      let decode = jwt.decode(state.accessToken);
+      return decode;
     }
   },
   mutations: {
@@ -29,7 +34,7 @@ const store = new Vuex.Store({
       state.accessToken = accessToken;
     },
     SET_AUTH_LOADING: (state, bool) => {
-      state.authLoading = !!bool;
+      state.authLoading = bool;
     }
   },
   actions: {
@@ -53,9 +58,9 @@ const store = new Vuex.Store({
                 resp.data.updateTokens.error
               ) {
                 state.authError = resp.data.updateTokens.error;
-                if (store.$app.$route.path !== "/auth") {
-                  store.$app.$router.push("/auth");
-                }
+                // if (store.$app.$route.path !== "/auth") {
+                //   store.$app.$router.push("/auth");
+                // }
                 state.authLoading = false;
                 reject(resp.data.updateTokens.error);
               } else {
@@ -63,9 +68,9 @@ const store = new Vuex.Store({
                   "SET_ACCESS_TOKEN",
                   resp.data.updateTokens.accessToken
                 );
-                if (store.$app.$route.path !== "/") {
-                  store.$app.$router.push("/");
-                }
+                // if (store.$app.$route.path !== "/") {
+                //   store.$app.$router.push("/");
+                // }
                 state.authError = null;
                 state.authLoading = false;
                 resolve(resp.data.updateTokens.accessToken);

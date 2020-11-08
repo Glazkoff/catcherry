@@ -53,11 +53,52 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
+// let refreshingPromise = null;
+
+const customFetch = async (uri, options) => {
+  // TODO: ВОССТАНОВИТЬ НИЖЕ
+  // if (!store.getters.hasAccessToken) {
+  //   if (!refreshingPromise) {
+  //     refreshingPromise = true;
+  //     store.dispatch("GET_TOKENS").then(
+  //       newAccessToken => {
+  //         options.headers.authorization = `Bearer ${newAccessToken}`;
+  //         refreshingPromise = null;
+  //         return fetch(uri, options);
+  //       },
+  //       err => {
+  //         console.log(err);
+  //         refreshingPromise = null;
+  //       }
+  //     );
+  //   }
+  // } else {
+  //   let decodedToken = store.getters.decodedToken;
+  //   if (decodedToken !== null) {
+  //     console.log(decodedToken);
+  //     console.log("IAT: ", decodedToken.iat);
+  //     console.log("EXP: ", decodedToken.exp);
+  //     console.log("DIFF: ", decodedToken.exp - decodedToken.iat);
+  //     console.log("---: ", Math.ceil(Date.now() / 1000) - decodedToken.exp);
+  //     console.log("NOW: ", Math.ceil(Date.now() / 1000));
+  //     if (Math.ceil(Date.now() / 1000) - decodedToken.exp >= -20) {
+  //       if (!refreshingPromise) {
+  //         console.log("НУЖЕН РЕФРЕШ!");
+  //         // TODO: refresh
+  //       }
+  //     }
+  //   }
+  //   return fetch(uri, options);
+  // }
+  // ..............................................................................
+  let initialRequest = fetch(uri, options);
+  return initialRequest;
+};
+
 // Создание ссылки для Apollo
 const link = new createHttpLink({
   uri: process.env.VUE_APP_GRAPHQL_URL,
-  fetch
-  // headers: getHeaders()
+  fetch: customFetch
 });
 
 // Кэш Apollo (Graphql)

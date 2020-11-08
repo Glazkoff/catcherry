@@ -15,6 +15,8 @@
 - [[ENG] How to authenticate using GraphQL Cookies and JWT](https://flaviocopes.com/graphql-auth-apollo-jwt-cookies/) - очень важная статья. Продемонстрирован принцип разделения REST API и GraphQL, а также работа с HttpOnly Cookies
 - [[ENG] Refresh token with JWT authentication in Node.js](https://solidgeargroup.com/en/refresh-token-with-jwt-authentication-node-js/)
 - [[ENG] Solution! GraphQL Server Not Setting JWT Cookie](https://dev.to/doylecodes/graphql-server-not-setting-jwt-cookie-1gme) - интересный вариант использования "ctx.response.cookie"
+- [[ENG] Refreshing Token Based Authentication With Apollo Client 2.0](https://medium.com/@lucasmcgartland/refreshing-token-based-authentication-with-apollo-client-2-0-7d45c20dc703)
+- [[ENG] Handling authentication in your GraphQL-powered Vue app](https://blog.logrocket.com/handling-authentication-in-your-graphql-powered-vue-app/)
 
 ## Статьи по теме "Работа с GraphQL и Apollo"
 
