@@ -29,8 +29,8 @@ export default {
   methods: {
     onCancel() {
       this.$emit("answer", { ans: false });
-    },
-  },
+    }
+  }
 };
 </script>
 

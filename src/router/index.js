@@ -9,12 +9,15 @@ import Registration from "@/views/Registration.vue";
 import AdminPanel from "@/views/AdminPanel.vue";
 import Dashboard from "@/components/admin/Dashboard.vue";
 import Users from "@/components/admin/Users.vue";
+import User from "@/components/account/User.vue";
 import Organization from "@/components/admin/Organization.vue";
 
-import User from "@/components/account/User.vue";
+import CreatePost from "@/components/CreatePost.vue";
+
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
+import ListOfNotifications from "@/components/ListOfNotifications.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
 import RaitingList from "@/components/Manager/RaitingList.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
@@ -23,13 +26,19 @@ import TasksTeam from "@/components/Manager/TasksTeam.vue";
 import TeamList from "@/components/Manager/TeamList.vue";
 import TeamSettings from "@/components/Manager/TeamSettings.vue";
 
+import DetailedPost from "@/components/DetailedPost.vue";
+import FeedOfPosts from "@/components/FeedOfPosts.vue";
+
 Vue.use(VueRouter);
+
+import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
 
 const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home
+    component: Home,
+    beforeEnter: ifAuthenticated
   },
   // FIXME: [Фёдор]
   /*
@@ -83,12 +92,29 @@ const routes = [
         path: "organization",
         component: Organization
       }
-    ]
+    ],
+    beforeEnter: ifAuthenticated
+  },
+  {
+    path: "/account",
+    name: "Account",
+    component: Account
+  },
+  {
+    path: "/user_org",
+    name: "UserInOrganization",
+    component: UserInOrganization
+  },
+  {
+    path: "/list_req",
+    name: "ListReguest",
+    component: ListRequest
   },
   {
     path: "/auth",
     name: "Authentication",
-    component: Authentication
+    component: Authentication,
+    beforeEnter: ifNotAuthenticated
   },
   {
     path: "/registration",
@@ -96,6 +122,16 @@ const routes = [
     component: Registration
   },
 
+  {
+    path: "/createpost",
+    name: "CreatePost",
+    component: CreatePost
+  },
+  {
+    path: "/notification",
+    name: "ListOfNotifications",
+    component: ListOfNotifications
+  },
   {
     path: "/manager/teams",
     name: "TeamList",
@@ -133,8 +169,17 @@ const routes = [
         component: TasksTeam
       }
     ]
+  },
+  {
+    path: "/posts/:id",
+    name: "Posts",
+    component: DetailedPost
+  },
+  {
+    path: "/feed",
+    name: "FeedOfPosts",
+    component: FeedOfPosts
   }
-
   // {
   //   path: "/about",
   //   name: "About",
