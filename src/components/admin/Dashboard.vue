@@ -10,7 +10,7 @@
 import MyChart from "@/components/admin/MyChart.vue";
 
 export default {
-  components: { MyChart },
+  components: { MyChart }
 };
 </script>
 

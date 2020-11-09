@@ -8,19 +8,22 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      TeamCustomization.belongsTo(models.Teams);
+      TeamCustomization.belongsTo(models.Teams, {
+        foreignKey: "teamId",
+        // as: "teamCustomization"
+      });
     }
   }
   TeamCustomization.init(
     {
       settings: {
         type: DataTypes.JSONB,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "TeamCustomization",
+      modelName: "TeamCustomization"
     }
   );
   return TeamCustomization;

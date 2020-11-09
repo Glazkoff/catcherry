@@ -22,7 +22,7 @@
           closePopup({
             ans: true,
             action: 'edit',
-            organization: oneOrganization,
+            organization: oneOrganization
           })
         "
       >
@@ -100,7 +100,7 @@ export default {
           organizationType: "Обычная",
           maxTeamsLimit: 10,
           createAt: new Date(),
-          updateAt: new Date(),
+          updateAt: new Date()
         },
         {
           id: 2,
@@ -109,9 +109,9 @@ export default {
           organizationType: "Обычная",
           maxTeamsLimit: 23,
           createAt: new Date(),
-          updateAt: new Date(),
-        },
-      ],
+          updateAt: new Date()
+        }
+      ]
     };
   },
   methods: {
@@ -119,7 +119,7 @@ export default {
       (this.nameOfOrganization = organization.name),
         (this.isShowModalDelete = true);
       this.index = this.organizations.findIndex(
-        (el) => el.id === organization.id
+        el => el.id === organization.id
       );
       this.oneOrganization = organization;
     },
@@ -127,7 +127,7 @@ export default {
       (this.nameOfOrganization = organization.name),
         (this.isShowModalEdit = true);
       this.index = this.organizations.findIndex(
-        (el) => el.id === organization.id
+        el => el.id === organization.id
       );
       this.oneOrganization = Object.assign(this.oneOrganization, organization);
     },
@@ -136,7 +136,7 @@ export default {
       this.isShowModalEdit = false;
       if (ans.ans && ans.action == "delete") {
         this.index = this.organizations.findIndex(
-          (el) => el.id === this.oneOrganization.id
+          el => el.id === this.oneOrganization.id
         );
         this.organizations.splice(this.index, 1);
         this.isShowAlertDelete = true;
@@ -145,7 +145,7 @@ export default {
         }, 3000);
       } else if (ans.ans && ans.action === "edit") {
         this.index = this.organizations.findIndex(
-          (el) => el.id === this.oneOrganization.id
+          el => el.id === this.oneOrganization.id
         );
         this.organizations.splice(this.index, 1, ans.organization);
         this.isShowAlertEdit = true;
@@ -153,12 +153,12 @@ export default {
           this.isShowAlertEdit = false;
         }, 3000);
       }
-    },
+    }
   },
   computed: {
     filterOrganization() {
       if (this.findString !== "") {
-        return this.organizations.filter((el) => {
+        return this.organizations.filter(el => {
           return (
             el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
               -1 && el.name !== ""
@@ -167,8 +167,8 @@ export default {
       } else {
         return this.organizations;
       }
-    },
-  },
+    }
+  }
 };
 </script>
 
