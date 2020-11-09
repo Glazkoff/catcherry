@@ -2,16 +2,18 @@
 <div>
   <h3>Редактирование</h3>
   <hr />
-  <span>Последнее редактирование: </span>
+  <span>Последнее редактирование: {{ updatedAt }} </span>
   <div>
-    <form action="">
+    <form action="" @submit.prevent="toSaveEditTeam">
       <label for="name">Название</label>
       <input type="text" name="name" class="form-control" placeholder="Название" v-model="name" />
       <label for="description">Описание</label>
       <textarea name="description" class="form-control" id="" cols="10" rows="5" placeholder="Описание" v-model="description"></textarea>
       <label for="maxUsersLimit">Число</label>
       <input type="number" name="maxUsersLimit" class="form-control" placeholder="Максимальное число участников" v-model="maxUsersLimit" />
-      <button type="submit" class="btn btn-primary" @click="toSaveEditTeam">Сохранить</button>
+      <button type="submit" class="btn btn-primary">
+        Сохранить
+      </button>
     </form>
   </div>
 </div>
@@ -31,10 +33,11 @@ export default {
   data() {
     return {
       id: this.$route.params.id,
-      name: "",
+      name: this.$route.params.name,
       description: this.$route.params.description,
-      maxUsersLimit: this.$route.params.maxUsersLimit
-    }
+      maxUsersLimit: this.$route.params.maxUsersLimit,
+      updatedAt: ""
+    };
   },
   methods: {
     toSaveEditTeam() {
@@ -49,14 +52,19 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: TEAMS_QUERY,
+              query: TEAMS_QUERY
             });
             data.teams.find(el => el.id === this.id).name = this.name;
-            data.teams.find(el => el.id === this.id).description = this.description;
-            data.teams.find(el => el.id === this.id).maxUsersLimit = this.maxUsersLimit;
+            data.teams.find(
+              el => el.id === this.id
+            ).description = this.description;
+            data.teams.find(
+              el => el.id === this.id
+            ).maxUsersLimit = this.maxUsersLimit;
           }
         })
         .then(data => {
+          this.updatedAt = new Date().toLocaleString();
           console.log(data);
         })
         .catch(error => {
@@ -64,7 +72,7 @@ export default {
         });
     }
   }
-}
+};
 </script>
 
 <style lang="scss" scoped>
