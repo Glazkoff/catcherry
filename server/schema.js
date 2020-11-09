@@ -45,23 +45,13 @@ type Team {
   updatedAt: String!
 }
 
-type Team {
-  id: ID!
-  organizationId: Int
-  name: String!
-  description: String
-  maxUsersLimit: Int
-  createdAt: String!
-  updatedAt: String!
-}
-
 type UserInTeam {
   id: ID!
   userId: ID!
   teamId: ID!
   status: String!
   roleId: ID!
-  user:User!
+  user: User!
   createdAt: String!
   updatedAt: String!
 }
@@ -86,19 +76,6 @@ type Notification {
   forAllTeam: Boolean
   createdAt: String!
   updatedAt: String!
-}
-type PointsUser{
-  id: ID!
-  userId: Int!
-  pointQuantity: Int!
-  createdAt: String!
-  updatedAt: String!
-}
-type PointOperations{
-  id: ID!
-  pointAccountId: Int!
-  delta: Int!
-  operationDescription: String
 }
 
 type PointsUser{
@@ -147,16 +124,11 @@ type Query {
   getPointsUser(userId: Int!): PointsUser
   getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
   
-  teams: [Team!]
-  team(organizationId: Int): Team
-
   usersInTeams (teamId:ID!):[UserInTeam]!
   raitingInTeams (teamId:ID!): [UserInTeam]!
   requests (teamId:ID!):[UserInTeam]
 
   tasks: [Task!]
-  getPointsUser(userId: Int!): PointsUser
-  getOperationPointsUser(userId: Int!): [PointOperations]
 }
 
 type Mutation {
@@ -191,10 +163,6 @@ type Mutation {
 
   createTask(userId: ID, header: String, text: String, points: Int, status: String): Task!
   updateTask(id: ID!, status: String): Task!
-
-  signUp(name: String!, login: String!, password: String!): jwt
-  logIn(login: String!, password: String!): jwt
-  updateAccessToken: jwt!
 }
 `;
 
