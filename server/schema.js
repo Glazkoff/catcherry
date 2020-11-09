@@ -69,6 +69,7 @@ type PointsUser{
   id: ID!
   userId: Int!
   pointQuantity: Int!
+  pointsOperation: [PointOperations]
   createdAt: String!
   updatedAt: String!
 }
@@ -102,7 +103,7 @@ type Query {
   notification(id: ID!): Notification
 
   getPointsUser(userId: Int!): PointsUser
-  getOperationPointsUser(pointAccountId: Int!): [PointOperations]
+  getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
   
   teams: [Team!]
   team(organizationId: Int): Team

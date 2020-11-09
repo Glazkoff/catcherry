@@ -64,7 +64,10 @@ module.exports = {
             include: {
               model: db.Points,
               as: "userPoints",
-              order: [["pointQuantity", "ASC"]]
+              include: {
+                model: db.PointsOperations,
+                as: "pointsOperation"
+              }
             }
           }
         ]
@@ -89,11 +92,16 @@ module.exports = {
     tasks: (parent, args, { db }, info) =>
       db.Tasks.findAll({
         order: [["id", "DESC"]],
-        include: [{ model: db.Users, as: "tasksUser",  include: {
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
               model: db.Points,
               as: "userPoints"
             }
-          }]
+          }
+        ]
       })
   },
   Mutation: {

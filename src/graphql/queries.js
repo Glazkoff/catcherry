@@ -177,6 +177,9 @@ export const RAITING_IN_TEAMS_QUERY = gql`
         name
         userPoints {
           pointQuantity
+          pointsOperation {
+            delta
+          }
         }
       }
     }
