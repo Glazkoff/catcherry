@@ -8,6 +8,7 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
+<<<<<<< HEAD
       // FIXME: раскомментирование вызывает ошибку при удалении из Users
       Organizations.belongsTo(models.Users, {
         foreignKey: "ownerId",
@@ -15,6 +16,17 @@ module.exports = (sequelize, DataTypes) => {
       });
       // FIXME: раскомментирование вызывает ошибку
       Organizations.belongsTo(models.OrganizationsTypes, {
+=======
+      Organizations.belongsTo(models.Users, {
+        foreignKey: "ownerId",
+        as: "user"
+      });
+      Organizations.belongsTo(models.OrganizationsTypes, {
+        foreignKey: "organizationTypeId",
+        as: "organizationType"
+      });
+      Organizations.hasMany(models.Teams, {
+>>>>>>> team-members-feature
         onDelete: "cascade",
         foreignKey: "organizationTypeId",
         as: "organizationType"
@@ -22,7 +34,15 @@ module.exports = (sequelize, DataTypes) => {
       
       Organizations.hasMany(models.Teams, {
         foreignKey: "organizationId",
+<<<<<<< HEAD
         as: "organization",
+=======
+        as: "teams"
+      });
+      Organizations.hasMany(models.Posts, {
+        foreignKey: "organizationId",
+        as: "posts"
+>>>>>>> team-members-feature
       });
     }
   }
@@ -30,24 +50,24 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       ownerId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       organizationTypeId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       maxTeamsLimit: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "Organizations",
+      modelName: "Organizations"
     }
   );
   return Organizations;
