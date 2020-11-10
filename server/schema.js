@@ -41,6 +41,7 @@ type Team {
   name: String!
   description: String
   maxUsersLimit: Int
+  team: [UserInTeam]
   createdAt: String!
   updatedAt: String!
 }
@@ -95,9 +96,11 @@ type PointOperations{
 
 type Task {
   id: ID!
+  teamId: ID!
   userId: ID
   body: bodyTask!
   status: String
+  tasksTeam: Team!
   tasksUser: User!
   createdAt: String
 }
@@ -128,7 +131,7 @@ type Query {
   raitingInTeams (teamId:ID!): [UserInTeam]!
   requests (teamId:ID!):[UserInTeam]
 
-  tasks: [Task!]
+  tasks (teamId:ID!): [Task]!
 }
 
 type Mutation {

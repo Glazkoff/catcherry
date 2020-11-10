@@ -146,8 +146,9 @@ module.exports = {
         where: { pointAccountId: args.pointAccountId },
         order: [["id", "ASC"]]
       }),
-    tasks: (parent, args, { db }, info) =>
+    tasks: (parent, { teamId }, { db }, info) =>
       db.Tasks.findAll({
+        where: { teamId: teamId },
         order: [["id", "DESC"]],
         include: [
           {
@@ -157,8 +158,19 @@ module.exports = {
               model: db.Points,
               as: "userPoints"
             }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
           }
         ]
+        // include: [
+        //
+        // ]
       })
   },
   Mutation: {

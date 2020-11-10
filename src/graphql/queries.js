@@ -250,10 +250,23 @@ export const RAITING_IN_TEAMS_QUERY = gql`
 `;
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TASKS
 export const TASKS_QUERY = gql`
-  query {
-    tasks {
+  query($teamId: ID!) {
+    tasks(teamId: $teamId) {
       id
       userId
+      teamId
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksTeam {
+        name
+        team {
+          roleId
+        }
+      }
       tasksUser {
         name
         surname
@@ -261,13 +274,6 @@ export const TASKS_QUERY = gql`
           id
         }
       }
-      body {
-        header
-        text
-        points
-      }
-      status
-      createdAt
     }
   }
 `;

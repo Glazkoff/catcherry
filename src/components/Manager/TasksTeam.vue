@@ -30,33 +30,35 @@
       </form>
       <hr />
     </div>
-    <div v-for="task in tasks" :key="task.id" class="oneUser">
-      <h4>{{ task.body.header }}</h4>
-      <p>{{ task.body.text }}</p>
-      <p>
-        Ответственный:
-        <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
-        {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
-      </p>
-      <p>
-        +{{ task.body.points }} баллов - Статус:
-        <select
-          class="form-control small"
-          v-model="task.status"
-          @change="
-            toEditTask(
-              task.id,
-              task.status,
-              task.tasksUser.userPoints.id,
-              task.body.points
-            )
-          "
-        >
-          <option>Запланировано</option>
-          <option>В работе</option>
-          <option>Готово</option></select
-        >
-      </p>
+    <div v-for="task in tasks" :key="task.id">
+      <div v-if="task.body.points > 0" class="oneUser">
+        <h4>{{ task.body.header }}</h4>
+        <p>{{ task.body.text }}</p>
+        <p>
+          Ответственный:
+          <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
+          {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
+        </p>
+        <p>
+          +{{ task.body.points }} баллов - Статус:
+          <select
+            class="form-control small"
+            v-model="task.status"
+            @change="
+              toEditTask(
+                task.id,
+                task.status,
+                task.tasksUser.userPoints.id,
+                task.body.points
+              )
+            "
+          >
+            <option>Запланировано</option>
+            <option>В работе</option>
+            <option>Готово</option></select
+          >
+        </p>
+      </div>
     </div>
   </div>
 </template>
@@ -72,7 +74,12 @@ import {
 export default {
   apollo: {
     tasks: {
-      query: TASKS_QUERY
+      query: TASKS_QUERY,
+      variables() {
+        return {
+          teamId: this.$route.params.id
+        };
+      }
     },
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
