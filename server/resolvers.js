@@ -1,14 +1,12 @@
 require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
-const { v4 } = require("uuid");
 
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
 
-// Функция генерации токенов (принмает данные, которые мы заносим в токен )
+// TODO: (DONE) Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
-<<<<<<< HEAD
   // TODO: (DONE) генерируем рефреш-токен
   let refreshToken = jwt.sign(
     { userId: user.id },
@@ -17,83 +15,17 @@ function generateTokens(user) {
       expiresIn: 100 * 60 * 60 * 24 * 365
     }
   );
-=======
-  // Генерируем рефреш-токен
-  let refreshToken = v4();
->>>>>>> team-members-feature
 
-  // Генерируем JWT токен (в токен заносим общедоступные данные)
+  // TODO: (DONE) генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-<<<<<<< HEAD
     expiresIn: 100 * 60 * 60 * 24
-=======
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
->>>>>>> team-members-feature
   });
 
-  // Возвращаем объект с двумя полями (refreshToken, accessToken)
+  // TODO: (DONE) возвращать объект с двумя полями (refreshToken, accessToken)
   return {
     refreshToken,
     accessToken
   };
-}
-
-async function addRefreshSession(db, userId, refreshToken, fingerprint) {
-  try {
-    // Задаём объект сессии
-    let USER_OBJECT = {
-      userId,
-      refreshToken,
-      // ua,
-      fingerprint,
-      // ip: ip
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
-    };
-
-    // Находим предыдущую сессию на этом клиенте
-    let prevSession = await db.RefreshSessions.findOne({
-      where: {
-        fingerprint
-      }
-    });
-
-    // Если нет предыдущая сессия на этом клиенте, создаём новую для клиента
-    if (!prevSession) {
-      // Считаем количество клиентов (сессий) для пользователя
-      let sessionsCount = await db.RefreshSessions.count({
-        where: {
-          userId
-        }
-      });
-
-      // Если количество клиентов для пользователя больше 5, удаляем все сессии
-      if (sessionsCount > 5) {
-        await db.RefreshSessions.destroy({
-          where: {
-            userId
-          }
-        });
-      }
-
-      // Создаём новую сессию
-      let res = await db.RefreshSessions.create(USER_OBJECT);
-      return res;
-    }
-    // Если есть предыдущие сессии, удаляем и создаём ещё раз
-    else {
-      await db.RefreshSessions.destroy({
-        where: {
-          userId,
-          fingerprint
-        }
-      });
-      let sessionsUpdate = await db.RefreshSessions.create(USER_OBJECT);
-      return sessionsUpdate;
-    }
-  } catch (error) {
-    // Возвращаем ошибку в случае возникновения
-    return error;
-  }
 }
 
 module.exports = {
@@ -122,7 +54,6 @@ module.exports = {
       }),
 
     teams: (parent, args, { db }, info) =>
-<<<<<<< HEAD
       db.Teams.findAll({
         order: [["id", "ASC"]]
       }),
@@ -156,177 +87,55 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } })
-=======
-      db.Teams.findAll({ order: [["id", "ASC"]] }),
-    team: (parent, args, { db }, info) => {
-      return db.Teams.findOne({
-        where: { organizationId: args.organizationId }
-      });
-    },
-    notifications: (parent, args, { db }, info) =>
-      db.Notifications.findAll({ order: [["id", "ASC"]] }),
-    notification: (parent, args, { db }, info) =>
-      db.Notifications.findOne({ where: { id: args.id } }),
-
-    usersInTeams: (parent, { teamId }, { db }, info) =>
-      db.UsersInTeams.findAll({
-        where: { status: "Принят", teamId: teamId },
-        order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
-      }),
-    raitingInTeams: (parent, { teamId }, { db }, info) =>
-      db.UsersInTeams.findAll({
-        where: { status: "Принят", teamId: teamId },
-        include: [
-          {
-            model: db.Users,
-            as: "user",
-            include: {
-              model: db.Points,
-              as: "userPoints",
-              include: {
-                model: db.PointsOperations,
-                as: "pointsOperation"
-              }
-            }
-          }
-        ]
-      }),
-    requests: (parent, { teamId }, { db }, info) =>
-      db.UsersInTeams.findAll({
-        where: { status: "Не принят", teamId: teamId },
-        order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
-      }),
-
-    getPointsUser: (parent, args, { db }, info) =>
-      db.Points.findOne({
-        where: { userId: args.userId },
-        order: [["id", "ASC"]]
-      }),
-    getOperationPointsUser: (parent, args, { db }, info) =>
-      db.PointsOperations.findAll({
-        where: { pointAccountId: args.pointAccountId },
-        order: [["id", "ASC"]]
-      }),
-    tasks: (parent, { teamId }, { db }, info) =>
-      db.Tasks.findAll({
-        where: { teamId: teamId },
-        order: [["id", "DESC"]],
-        include: [
-          {
-            model: db.Users,
-            as: "tasksUser",
-            include: {
-              model: db.Points,
-              as: "userPoints"
-            }
-          },
-          {
-            model: db.Teams,
-            as: "tasksTeam",
-            include: {
-              model: db.UsersInTeams,
-              as: "team"
-            }
-          }
-        ]
-        // include: [
-        //
-        // ]
-      })
->>>>>>> team-members-feature
   },
   Mutation: {
     /*
       [Ниже] Мутации регистрации и авторизации
     */
-    signUp: async (
-      parent,
-      { name, login, password, fingerprint },
-      { res, db },
-      info
-    ) => {
+    signUp: async (parent, { name, login, password }, { res, db }, info) => {
       let hashPassword = bcrypt.hashSync(password, salt);
 
-      // Добавляем данные в БД
+      // TODO: (DONE) добавляем данные в БД
       let user = await db.Users.create({
         login,
         name,
         password: hashPassword
       });
 
-      // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+      // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
       let tokens = generateTokens(user.dataValues);
 
-      // Добавляем сессию в БД
-      await addRefreshSession(
-        db,
-        user.dataValues.id,
-        tokens.refreshToken,
-        fingerprint
-      );
-
-      // Записать в Cookie HttpOnly рефреш-токен
+      // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-<<<<<<< HEAD
         maxAge: 1000 * 60 * 60 * 24 * 365
-=======
-        maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
->>>>>>> team-members-feature
       });
       return tokens;
     },
-    logIn: async (
-      parent,
-      { login, password, fingerprint },
-      { res, db },
-      info
-    ) => {
-      console.log(login, password, fingerprint);
-      // Сравниваем логин с БД, если нет - ошибка
+    logIn: async (parent, { login, password }, { res, db }, info) => {
+      // TODO: (DONE) сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
           login
         }
       });
-      // Проверяем через bcrypt пароль, не совпадает - ошибка
+      // TODO: (DONE) проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
-        return {
-          errror: {
-            errorStatus: 401,
-            message: "Incorrect login or password!"
-          }
-        };
+        return null;
       } else if (bcrypt.compareSync(password, user.password)) {
-        // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
+        // TODO: (DONE) Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
         let tokens = generateTokens(user.dataValues);
-        // Добавляем сессию в БД
-        await addRefreshSession(
-          db,
-          user.dataValues.id,
-          tokens.refreshToken,
-          fingerprint
-        );
-        // Записать в Cookie HttpOnly рефреш-токен
+
+        // TODO: (DONE) записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
-<<<<<<< HEAD
           maxAge: 1000 * 60 * 60 * 24 * 365
-=======
-          maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
->>>>>>> team-members-feature
         });
-        // Отправить в ответ оба токен
+
+        // TODO: (DONE) отправить в ответ оба токен
         return tokens;
       } else {
-        return {
-          errror: {
-            errorStatus: 401,
-            message: "Incorrect login or password!"
-          }
-        };
+        return null;
       }
     },
     updateAccessToken: async (parent, {}, { req, res, db }, info) => {
@@ -392,6 +201,17 @@ module.exports = {
         }
       }),
     /*
+      [Ниже] Мутации регистрации и авторизации
+    */
+    signUp: async (parent, args, { db }, info) => {
+      // TODO: добавить резолвер signup
+      return "DO SIGN UP";
+    },
+    logIn: async (parent, args, { db }, info) => {
+      // TODO: добавить резолвер login
+      return "DO LOG IN";
+    },
+    /*
       [Ниже] Мутации работы с организациями (Organization)     
     */
     createOrganization: (
@@ -447,7 +267,6 @@ module.exports = {
         maxUsersLimit: maxUsersLimit
       }),
 
-<<<<<<< HEAD
     /*
       [Ниже] Мутации работы с заявками в команду (UsersInTeams)     
     */
@@ -469,8 +288,6 @@ module.exports = {
           id: args.id
         }
       }),
-=======
->>>>>>> team-members-feature
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
@@ -505,130 +322,6 @@ module.exports = {
         where: {
           id: args.id
         }
-<<<<<<< HEAD
       })
-=======
-      }),
-
-    createUserInTeam: (
-      parent,
-      { userId, teamId, status, roleId },
-      { db },
-      info
-    ) =>
-      db.UsersInTeams.create({
-        userId: userId,
-        teamId: teamId,
-        status: status,
-        roleId: roleId
-      }),
-    deleteUserInTeam: (parent, args, { db }, info) =>
-      db.UsersInTeams.destroy({
-        where: {
-          id: args.id
-        }
-      }),
-    /*
-      [Ниже] Мутации работы с заявками на вхождение в команду     
-    */
-    acceptRequst: (parent, { id }, { db }, info) =>
-      db.UsersInTeams.update(
-        {
-          status: "Принят"
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-
-    revokeRequst: (parent, { id }, { db }, info) =>
-      db.UsersInTeams.update(
-        {
-          status: "Не принят"
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    /*
-      [Ниже] Мутации работы с баллами     
-    */
-    createPointOperation: async (
-      parent,
-      { pointAccountId, delta, operationDescription },
-      { db },
-      info
-    ) => {
-      let total = await db.Points.findOne({
-        where: { id: pointAccountId }
-      });
-      db.Points.update(
-        {
-          pointQuantity: total.pointQuantity + delta
-        },
-        {
-          where: {
-            id: pointAccountId
-          }
-        }
-      );
-      return db.PointsOperations.create({
-        pointAccountId: pointAccountId,
-        delta: delta,
-        operationDescription: operationDescription
-      });
-    },
-    /*
-      [Ниже] Мутации работы с командами     
-    */
-    updateTeam: (
-      parent,
-      { id, name, description, maxUsersLimit },
-      { db },
-      info
-    ) =>
-      db.Teams.update(
-        {
-          name: name,
-          description: description,
-          maxUsersLimit: maxUsersLimit
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-
-    /*
-      [Ниже] Мутации работы с задачами     
-    */
-    createTask: (
-      parent,
-      { userId, header, text, points, status },
-      { db },
-      info
-    ) =>
-      db.Tasks.create({
-        userId: userId,
-        body: { header: header, text: text, points: points },
-        status: status
-      }),
-    updateTask: (parent, { id, status }, { db }, info) =>
-      db.Tasks.update(
-        {
-          status: status
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      )
->>>>>>> team-members-feature
   }
 };

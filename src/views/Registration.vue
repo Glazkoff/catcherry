@@ -71,12 +71,14 @@
 import {
   required,
   // TODO: email,
-  minLength
+  minLength,
 } from "vuelidate/lib/validators";
-import { SIGN_UP } from "@/graphql/queries.js";
+import {
+  SIGN_UP,
+  // CREATE_USER_QUERY,
+} from "@/graphql/queries.js";
 
 export default {
-  // TODO: добавить защиту роутов
   name: "Registration",
   data() {
     return {
@@ -85,33 +87,26 @@ export default {
       login: "",
       password: "",
       signUpLoading: false,
-      fingerprint: ""
     };
-  },
-  async created() {
-    const fp = await this.$fingerprint.load();
-    const result = await fp.get();
-    const visitorId = result.visitorId;
-    this.fingerprint = visitorId;
   },
   validations: {
     fullName: {
       required,
-      alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
+      alpha: (val) => /^[а-яёa-zA-Z ]*$/i.test(val),
     },
     // TODO: добавить обработку поля даты рождения
     // birthday: {
     //   required,
     // },
     login: {
-      required
+      required,
       // TODO: добавить обработку поля даты рождения
       // email,
     },
     password: {
       required,
-      minLength: minLength(6)
-    }
+      minLength: minLength(6),
+    },
   },
   methods: {
     submit() {
@@ -121,8 +116,9 @@ export default {
         let userData = {
           name: this.$v.fullName.$model,
           login: this.$v.login.$model,
-          password: this.$v.password.$model
+          password: this.$v.password.$model,
         };
+        console.log(userData);
         // TODO: Отправлять данные
         this.signUpLoading = true;
         this.$apollo
@@ -132,10 +128,9 @@ export default {
               name: userData.name,
               login: userData.login,
               password: userData.password,
-              fingerprint: this.fingerprint
-            }
+            },
           })
-          .then(resp => {
+          .then((resp) => {
             this.signUpLoading = false;
             if (!resp.data.signUp.error) {
               this.$store.commit(
@@ -145,16 +140,16 @@ export default {
               this.$router.push("/");
             } else {
               // TODO: добавить обработку ошибок
-              console.error("ERROR");
+              console.log("ERROR");
             }
           })
-          .catch(error => {
+          .catch((error) => {
             this.signUpLoading = false;
             console.error(error);
           });
       }
-    }
-  }
+    },
+  },
 };
 </script>
 <style>

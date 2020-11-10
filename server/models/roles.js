@@ -11,7 +11,7 @@ module.exports = (sequelize, DataTypes) => {
       Roles.hasMany(models.UsersInTeams, {
         onDelete: "cascade",
         foreignKey: "roleId",
-        as: "role"
+        as: "users",
       });
     }
   }

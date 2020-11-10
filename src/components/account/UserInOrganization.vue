@@ -8,18 +8,9 @@
           >Вы можете вступить в организацию или сразу вступить в команду</span
         >
         <h3>Команды</h3>
-<<<<<<< HEAD
         <input type="text" class="form-text" placeholder="Поиск команды" />
         <div v-if="!team">
           <h5>В организации пока нет ни одной команды</h5>
-=======
-        <div class="oneTeam" v-for="team in teams" :key="team.id">
-          <p>№{{ team.id }}</p>
-          <p>
-            <b>{{ team.name }}</b>
-          </p>
-          <span>{{ team.description }}</span>
->>>>>>> team-members-feature
         </div>
         <div v-else>
           <div class="oneTeam" v-for="teamUs in team" :key="teamUs.id">
@@ -224,12 +215,8 @@ import {
   ONE_ORG_QUERY,
   CREATE_ORGANIZATION,
   TEAMS_QUERY,
-<<<<<<< HEAD
   TEAM_IN_ORG_QUERY,
   CREATE_USER_IN_TEAM
-=======
-  TEAM_IN_ORG_QUERY
->>>>>>> team-members-feature
 } from "@/graphql/queries";
 import { required } from "vuelidate/lib/validators";
 import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
@@ -328,7 +315,6 @@ export default {
               ownerId: this.ownerId,
               organizationTypeId: this.organizationTypeId,
               maxTeamsLimit: this.maxTeamsLimit
-<<<<<<< HEAD
             }
           }
         })
@@ -373,40 +359,6 @@ export default {
       setTimeout(() => {
         this.isShowAlertAddReq = false;
       }, 3000);
-=======
-            },
-            update: (cache, { data: { createOrganization } }) => {
-              let data = cache.readQuery({ query: ORGS_QUERY });
-              data.organizations.push(createOrganization);
-              cache.writeQuery({ query: ORGS_QUERY, data });
-            },
-            optimisticResponse: {
-              __typename: "Mutation",
-              createOrganization: {
-                __typename: "Organization",
-                id: -1,
-                name: this.name,
-                ownerId: this.ownerId,
-                organizationTypeId: this.organizationTypeId,
-                maxTeamsLimit: this.maxTeamsLimit
-              }
-            }
-          })
-          .then(resp => {
-            this.signUpLoading = false;
-            this.isAddOrganization = false;
-            console.log(resp);
-          })
-          .catch(error => {
-            this.signUpLoading = false;
-            console.error(error);
-          });
-        this.isShowAlertAdd = true;
-        setTimeout(() => {
-          this.isShowAlertAdd = false;
-        }, 3000);
-      }
->>>>>>> team-members-feature
     }
   },
   computed: {

@@ -14,7 +14,7 @@ import TestGraphql from "@/components/TestGraphql.vue";
 export default {
   name: "Home",
   components: {
-    TestGraphql
-  }
+    TestGraphql,
+  },
 };
 </script>

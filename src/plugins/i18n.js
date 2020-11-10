@@ -10,7 +10,7 @@ export const i18n = new VueI18n({
     en: {
       welcomeMsg: "Hello, PolyWeb!",
       startMsg: "The start of the {title} project",
-      projectTitle: "CATCHERRY",
+      projectTitle: "FISHKA",
       editUser: "Edit user",
       listUser: "A list of users",
       listOrganization: "A list of organization",
@@ -29,12 +29,12 @@ export const i18n = new VueI18n({
       edit: "Edit",
       delete: "Delete",
       deleteQuestion: "Are you sure you want to delete user",
-      placeholderSearchByUsers: "Search by users"
+      placeholderSearchByUsers: "Search by users",
     },
     ru: {
       welcomeMsg: "Привет, Поливеб!",
       startMsg: "Старт проекта {title}",
-      projectTitle: "Кэтчерри",
+      projectTitle: "ФИШКА",
       editUser: "Редактировать пользователя",
       listUser: "Список пользователей",
       profileUser: "Профиль",
@@ -53,7 +53,7 @@ export const i18n = new VueI18n({
       edit: "Редактировать",
       delete: "Удалить",
       deleteQuestion: "Вы действительно хотите удалить пользователя",
-      placeholderSearchByUsers: "Поиск по пользователям"
-    }
-  }
+      placeholderSearchByUsers: "Поиск по пользователям",
+    },
+  },
 });

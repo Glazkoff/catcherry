@@ -16,8 +16,9 @@
 
 <script>
 export default {
-  name: "User"
+  name: "User",
 };
+
 </script>
 
 <style lang="scss" scoped>

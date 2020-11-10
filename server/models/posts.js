@@ -8,38 +8,32 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Posts.belongsTo(models.Users, {
-        foreignKey: "authorId",
-        as: "postUser"
-      });
-      Posts.belongsTo(models.Teams, {
-        foreignKey: "teamId"
-        // as: "postTeam"
-      });
+      Posts.belongsTo(models.Users);
+      Posts.belongsTo(models.Teams);
     }
   }
   Posts.init(
     {
       body: {
         type: DataTypes.JSONB,
-        allowNull: false
+        allowNull: false,
       },
       authorId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
-      organizationId: {
+      teamId: {
         type: DataTypes.INTEGER,
-        allowNull: true
+        allowNull: false,
       },
-      forAllTeam: {
+      forAllOrganization: {
         type: DataTypes.BOOLEAN,
-        allowNull: true
-      }
+        allowNull: false,
+      },
     },
     {
       sequelize,
-      modelName: "Posts"
+      modelName: "Posts",
     }
   );
   return Posts;

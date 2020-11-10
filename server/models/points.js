@@ -9,29 +9,22 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Points.hasMany(models.PointsOperations, {
-        foreignKey: "pointAccountId",
-        as: "pointsOperation"
+        foreignKey: "accountId",
+        as: "pointsOperation",
       });
-      Points.belongsTo(models.Users, {
-        foreignKey: "userId",
-        as: "userPoints"
-      });
+      Points.belongsTo(models.Users);
     }
   }
   Points.init(
     {
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false
+        allowNull: false,
       },
-      pointQuantity: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-      }
     },
     {
       sequelize,
-      modelName: "Points"
+      modelName: "Points",
     }
   );
   return Points;

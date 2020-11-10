@@ -8,13 +8,13 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      pointAccountId: {
+      accountId: {
         type: Sequelize.INTEGER
       },
       delta: {
         type: Sequelize.INTEGER
       },
-      operationDescription: {
+      operationType: {
         type: Sequelize.STRING
       },
       createdAt: {

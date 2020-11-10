@@ -8,14 +8,8 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ReadNotification.belongsTo(models.Notifications, {
-        foreignKey: "notificationId",
-        as: "notification"
-      });
-      ReadNotification.belongsTo(models.Users, {
-        foreignKey: "userId",
-        as: "userNotification"
-      });
+      ReadNotification.belongsTo(models.Notifications);
+      ReadNotification.belongsTo(models.Users);
     }
   }
   ReadNotification.init(
@@ -31,11 +25,11 @@ module.exports = (sequelize, DataTypes) => {
       readOrNot: {
         type: DataTypes.BOOLEAN,
         allowNull: false
-      }
+      },
     },
     {
       sequelize,
-      modelName: "ReadNotification"
+      modelName: "ReadNotification",
     }
   );
   return ReadNotification;

@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Posts", {
+    await queryInterface.createTable('Posts', {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -14,10 +14,10 @@ module.exports = {
       authorId: {
         type: Sequelize.INTEGER
       },
-      organizationId: {
+      teamId: {
         type: Sequelize.INTEGER
       },
-      forAllTeam: {
+      forAllOrganization: {
         type: Sequelize.BOOLEAN
       },
       createdAt: {
