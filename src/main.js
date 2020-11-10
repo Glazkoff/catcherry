@@ -53,45 +53,42 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
-// let refreshingPromise = null;
+let refreshingPromise = null;
 
 const customFetch = async (uri, options) => {
-  // TODO: ВОССТАНОВИТЬ НИЖЕ
-  // if (!store.getters.hasAccessToken) {
-  //   if (!refreshingPromise) {
-  //     refreshingPromise = true;
-  //     store.dispatch("GET_TOKENS").then(
-  //       newAccessToken => {
-  //         options.headers.authorization = `Bearer ${newAccessToken}`;
-  //         refreshingPromise = null;
-  //         return fetch(uri, options);
-  //       },
-  //       err => {
-  //         console.log(err);
-  //         refreshingPromise = null;
-  //       }
-  //     );
-  //   }
-  // } else {
-  //   let decodedToken = store.getters.decodedToken;
-  //   if (decodedToken !== null) {
-  //     console.log(decodedToken);
-  //     console.log("IAT: ", decodedToken.iat);
-  //     console.log("EXP: ", decodedToken.exp);
-  //     console.log("DIFF: ", decodedToken.exp - decodedToken.iat);
-  //     console.log("---: ", Math.ceil(Date.now() / 1000) - decodedToken.exp);
-  //     console.log("NOW: ", Math.ceil(Date.now() / 1000));
-  //     if (Math.ceil(Date.now() / 1000) - decodedToken.exp >= -20) {
-  //       if (!refreshingPromise) {
-  //         console.log("НУЖЕН РЕФРЕШ!");
-  //         // TODO: refresh
-  //       }
-  //     }
-  //   }
-  //   return fetch(uri, options);
-  // }
   // ..............................................................................
   let initialRequest = fetch(uri, options);
+
+  if (!store.getters.hasAccessToken && !refreshingPromise) {
+    try {
+      refreshingPromise = true;
+      let newAccessToken = await store.dispatch("GET_TOKENS");
+      options.headers.authorization = `Bearer ${newAccessToken}`;
+      refreshingPromise = false;
+    } catch (error) {
+      refreshingPromise = false;
+      console.log(error);
+    }
+  } else {
+    let decodedToken = store.getters.decodedToken;
+    if (decodedToken !== null) {
+      if (
+        Math.ceil(Date.now() / 1000) - decodedToken.exp >= -20 &&
+        !refreshingPromise
+      ) {
+        try {
+          refreshingPromise = true;
+          let newAccessToken = await store.dispatch("GET_TOKENS");
+          options.headers.authorization = `Bearer ${newAccessToken}`;
+          refreshingPromise = false;
+        } catch (error) {
+          refreshingPromise = false;
+          console.log(error);
+        }
+      }
+    }
+  }
+
   return initialRequest;
 };
 

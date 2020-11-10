@@ -27,6 +27,9 @@ const store = new Vuex.Store({
     decodedToken: state => {
       let decode = jwt.decode(state.accessToken);
       return decode;
+    },
+    accessToken: state => {
+      return state.accessToken;
     }
   },
   mutations: {
