@@ -5,7 +5,7 @@
   <hr />
   <div v-for="team in teams" :key="team.id" class="team">
     <p>{{ team.name }}</p>
-    <router-link :to="{ name: 'TeamSettings', params: { id: team.id, name: team.name, description: team.description, maxUsersLimit: team.maxUsersLimit} }">Перейти в управление</router-link>
+    <router-link :to="{ name: 'TeamSettings', params: { id: team.id} }">Перейти в управление</router-link>
   </div>
 </div>
 </template>

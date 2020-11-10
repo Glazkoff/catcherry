@@ -138,7 +138,7 @@ const routes = [
     component: TeamList
   },
   {
-    path: "/manager/teams/:id/:name/:description/:maxUsersLimit",
+    path: "/manager/teams/:id",
     name: "TeamSettings",
     component: TeamSettings,
     props: true,
