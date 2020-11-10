@@ -1,11 +1,11 @@
 <template>
-  <div>
-    <h3>Заявки на вхождение</h3>
-    <hr />
-    <div v-for="request in requests" :key="request.id" class="request">
-      <RequestsItem :request="request" @accept="toAccept" />
-    </div>
+<div>
+  <h3>Заявки на вхождение</h3>
+  <hr />
+  <div v-for="request in requests" :key="request.id" class="request">
+    <RequestsItem :request="request" @accept="toAccept" />
   </div>
+</div>
 </template>
 
 <script>

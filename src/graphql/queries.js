@@ -134,6 +134,12 @@ export const TEAM_IN_ORG_QUERY = gql`
   }
 `;
 
+export const UPDATE_TEAMS_QUERY = gql`
+  mutation($name: String!, $description: String, $maxUsersLimit:Int, $id: ID!) {
+    updateTeam(name: $name, description:$description, maxUsersLimit:$maxUsersLimit,id: $id)
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {
