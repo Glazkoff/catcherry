@@ -25,16 +25,21 @@ import RequestsList from "@/components/Manager/RequestsList.vue";
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
 
+import store from "@/store/index";
+
 Vue.use(VueRouter);
 
-import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
+// import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
-    beforeEnter: ifAuthenticated
+    meta: {
+      requiresAuth: true
+    }
+    // beforeEnter: ifAuthenticated
   },
   // FIXME: [Фёдор]
   /*
@@ -53,7 +58,6 @@ const routes = [
     path: "/user/:id",
     name: "User",
     component: User,
-    beforeEnter: ifAuthenticated,
     children: [
       {
         path: "",
@@ -77,7 +81,6 @@ const routes = [
     name: "Admin",
     component: AdminPanel,
     // TODO: добавить защиту для администратора
-    beforeEnter: ifAuthenticated,
     children: [
       {
         path: "",
@@ -96,73 +99,69 @@ const routes = [
   {
     path: "/account",
     name: "Account",
-    beforeEnter: ifAuthenticated,
     component: Account
   },
   {
     path: "/user_org",
     name: "UserInOrganization",
-    beforeEnter: ifAuthenticated,
     component: UserInOrganization
   },
   {
     path: "/list_req",
     name: "ListReguest",
-    beforeEnter: ifAuthenticated,
     component: ListRequest
   },
   {
     path: "/auth",
     name: "Authentication",
     component: Authentication,
-    beforeEnter: ifNotAuthenticated
+    meta: {
+      guest: true
+    }
+    // beforeEnter: ifNotAuthenticated
   },
   {
     path: "/registration",
     name: "Registration",
     component: Registration,
-    beforeEnter: ifNotAuthenticated
+    meta: {
+      guest: true
+    }
+    // beforeEnter: ifNotAuthenticated
   },
   {
     path: "/createpost",
     name: "CreatePost",
-    beforeEnter: ifAuthenticated,
     component: CreatePost
   },
   {
     path: "/notification",
     name: "ListOfNotifications",
-    beforeEnter: ifAuthenticated,
     component: ListOfNotifications
   },
   {
     path: "/manager/team_members",
     name: "TeamMembers",
-    beforeEnter: ifAuthenticated,
     component: TeamMembers
   },
   {
     path: "/manager/team_edit",
     name: "EditTeam",
-    beforeEnter: ifAuthenticated,
     component: EditTeam
   },
   {
     path: "/manager/requests",
     name: "RequestsList",
-    beforeEnter: ifAuthenticated,
     component: RequestsList
   },
   {
     path: "/posts/:id",
     name: "Posts",
-    beforeEnter: ifAuthenticated,
     component: DetailedPost
   },
   {
     path: "/feed",
     name: "FeedOfPosts",
-    beforeEnter: ifAuthenticated,
     component: FeedOfPosts
   }
   // {
@@ -180,6 +179,40 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  // Если авторизация обязательна
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Если присутствует токен, пропускаем
+    if (store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    // Если отсутствует токен, редирект на страницу авторизации
+    else {
+      next("/auth");
+      return;
+    }
+  }
+  // Иначе если путь для гостя
+  else if (to.matched.some(record => record.meta.guest)) {
+    // Если нет токена, пропускаем
+    if (!store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    // Если есть токен, редирект на главную
+    else {
+      next("/");
+      return;
+    }
+  }
+  // Если авторизация НЕ обязательна, пропускаем
+  else {
+    next();
+    return;
+  }
 });
 
 export default router;

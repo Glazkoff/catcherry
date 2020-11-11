@@ -19,7 +19,7 @@ const store = new Vuex.Store({
       return state.authError !== null;
     },
     hasAccessToken: state => {
-      return state.accessToken !== null;
+      return state.accessToken != null;
     },
     isAppLoading: state => {
       return state.authLoading;
@@ -68,9 +68,9 @@ const store = new Vuex.Store({
                 resp.data.updateTokens.error
               ) {
                 state.authError = resp.data.updateTokens.error;
-                // if (store.$app.$route.path !== "/auth") {
-                //   store.$app.$router.push("/auth");
-                // }
+                if (store.$app.$route.path !== "/auth") {
+                  store.$app.$router.replace({ name: "Authentication" });
+                }
                 state.authLoading = false;
                 reject(resp.data.updateTokens.error);
               }
@@ -82,9 +82,9 @@ const store = new Vuex.Store({
                   resp.data.updateTokens.accessToken
                 );
 
-                // if (store.$app.$route.path !== "/") {
-                //   store.$app.$router.push("/");
-                // }
+                if (store.$app.$route.path !== "/") {
+                  store.$app.$router.replace({ name: "Home" });
+                }
 
                 // Никаких ошибок, загрузка завершена
                 state.authError = null;
