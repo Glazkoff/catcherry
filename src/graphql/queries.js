@@ -345,6 +345,7 @@ export const TASKS_QUERY = gql`
 `;
 export const ADD_TASK_QUERY = gql`
   mutation(
+    $teamId: ID
     $userId: ID
     $header: String
     $text: String
@@ -352,6 +353,7 @@ export const ADD_TASK_QUERY = gql`
     $status: String
   ) {
     createTask(
+      teamId: $teamId
       userId: $userId
       header: $header
       text: $text

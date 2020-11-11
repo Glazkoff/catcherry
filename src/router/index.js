@@ -17,6 +17,7 @@ import CreatePost from "@/components/CreatePost.vue";
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
+import Tasks from "@/components/account/Tasks.vue"; 
 import ListOfNotifications from "@/components/ListOfNotifications.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
 import RaitingList from "@/components/Manager/RaitingList.vue";
@@ -72,6 +73,11 @@ const routes = [
         path: "list_req",
         name: "ListReguest",
         component: ListRequest
+      },
+      {
+        path: "tasks",
+        name: "Tasks",
+        component: Tasks
       }
     ]
   },

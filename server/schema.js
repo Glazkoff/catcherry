@@ -101,7 +101,7 @@ type Task {
   body: bodyTask!
   status: String
   tasksTeam: Team!
-  tasksUser: User!
+  tasksUser: User
   createdAt: String
 }
 
@@ -164,7 +164,7 @@ type Mutation {
   deletePointOperation(id: ID!): Int!	
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
 
-  createTask(userId: ID, header: String, text: String, points: Int, status: String): Task!
+  createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
   updateTask(id: ID!, status: String): Task!
 }
 `;

@@ -510,11 +510,12 @@ module.exports = {
     */
     createTask: (
       parent,
-      { userId, header, text, points, status },
+      { teamId, userId, header, text, points, status },
       { db },
       info
     ) =>
       db.Tasks.create({
+        teamId: teamId,
         userId: userId,
         body: { header: header, text: text, points: points },
         status: status
