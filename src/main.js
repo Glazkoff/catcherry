@@ -21,20 +21,6 @@ Vue.use(Vuelidate);
 Vue.use(FlagIcon);
 Vue.config.productionTip = process.env.NODE_ENV === "development";
 
-// TODO: разобраться с заголовками
-// https://blog.logrocket.com/handling-authentication-in-your-graphql-powered-vue-app/
-
-// Заголовки с получением токена из localstorage
-// const getHeaders = () => {
-//   const headers = {};
-//   const token = store.state.accessToken || "";
-//   if (token) {
-//     headers["authorization"] = `Bearer ${token}`;
-//   }
-//   console.log("!!!", headers, token);
-//   return headers;
-// };
-
 // Добавление контекста заголовков (access токен)
 const authLink = setContext(async (_, { headers }) => {
   let token = store.state.accessToken;
@@ -53,13 +39,17 @@ const authLink = setContext(async (_, { headers }) => {
   };
 });
 
+// Существует ли в данный момент разрешающийся промис с рефрешем токенов
 let refreshingPromise = null;
 
+// Функция при каждом запросе Apollo
 const customFetch = async (uri, options) => {
-  // ..............................................................................
+  // Инициализируем запрос
   let initialRequest = fetch(uri, options);
 
+  // Если acess-токен не хранится в Vuex и не существует промис рефреша
   if (!store.getters.hasAccessToken && !refreshingPromise) {
+    // Запрашиваем новые токены и записываем acess-токен в заголовки
     try {
       refreshingPromise = true;
       let newAccessToken = await store.dispatch("GET_TOKENS");
@@ -69,13 +59,18 @@ const customFetch = async (uri, options) => {
       refreshingPromise = false;
       console.log(error);
     }
-  } else {
+  }
+  // Если acess-токен находится в Vuex и не существует промис рефреша
+  else if (!refreshingPromise) {
     let decodedToken = store.getters.decodedToken;
+    //  Если токен не равен null
     if (decodedToken !== null) {
+      // Если срок действия токена заканчивается меньше, чем через 30 секунд
       if (
-        Math.ceil(Date.now() / 1000) - decodedToken.exp >= -20 &&
+        Math.ceil(Date.now() / 1000) - decodedToken.exp >= -30 &&
         !refreshingPromise
       ) {
+        // Запрашиваем новые токены и записываем acess-токен в заголовки
         try {
           refreshingPromise = true;
           let newAccessToken = await store.dispatch("GET_TOKENS");

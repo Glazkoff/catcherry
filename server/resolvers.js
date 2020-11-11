@@ -109,7 +109,6 @@ async function updateRefreshSession(
 module.exports = {
   Query: {
     users: (parent, args, { req, db }, info) => {
-      console.log("HEADERS: ", req.headers);
       return db.Users.findAll({ order: [["id", "ASC"]] });
     },
     user: (parent, args, { db }, info) => {
@@ -188,7 +187,6 @@ module.exports = {
       { res, db },
       info
     ) => {
-      console.log(login, password, fingerprint);
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
@@ -327,7 +325,6 @@ module.exports = {
         }
       ),
     deleteUser: (parent, args, { req, db }, info) => {
-      console.log("HEADERS: ", req.headers);
       return db.Users.destroy({
         where: {
           id: args.id

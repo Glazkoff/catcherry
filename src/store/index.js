@@ -36,16 +36,23 @@ const store = new Vuex.Store({
     SET_ACCESS_TOKEN: (state, accessToken) => {
       state.accessToken = accessToken;
     },
-    SET_AUTH_LOADING: (state, bool) => {
-      state.authLoading = bool;
+    SET_AUTH_LOADING: (state, boolean) => {
+      state.authLoading = boolean;
     }
   },
   actions: {
     GET_TOKENS: async state => {
+      // Устанавливаю загрузку в приложении
       state.authLoading = true;
+
+      // Получаю отпечаток браузера
       const fingerprint = await getFingerprint();
+
+      // Собственный промис с запросом к серверу
       let promise = new Promise((resolve, reject) => {
+        // Если есть отпечаток (не пустой)
         if (fingerprint) {
+          // Делаю запрос к серверу за токенами
           store.$app.$apollo
             .mutate({
               mutation: UPDATE_TOKENS,
@@ -66,16 +73,24 @@ const store = new Vuex.Store({
                 // }
                 state.authLoading = false;
                 reject(resp.data.updateTokens.error);
-              } else {
+              }
+              // Если запрос произошёл удачно
+              else {
+                // Записываем в store новый access-токен
                 state.commit(
                   "SET_ACCESS_TOKEN",
                   resp.data.updateTokens.accessToken
                 );
+
                 // if (store.$app.$route.path !== "/") {
                 //   store.$app.$router.push("/");
                 // }
+
+                // Никаких ошибок, загрузка завершена
                 state.authError = null;
                 state.authLoading = false;
+
+                // Разрешаю промис
                 resolve(resp.data.updateTokens.accessToken);
               }
             })
@@ -85,7 +100,9 @@ const store = new Vuex.Store({
               state.authLoading = false;
               reject(error);
             });
-        } else {
+        }
+        // Если нет отпечатка браузера
+        else {
           state.authError = true;
           state.authLoading = false;
           reject();
