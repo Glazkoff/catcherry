@@ -18,6 +18,7 @@ type User {
   gender: String
   birthday: String
   login: String
+  userPoints: PointsUser
   password: String
   createdAt: String
   updatedAt: String
@@ -40,6 +41,7 @@ type Team {
   name: String!
   description: String
   maxUsersLimit: Int
+  team: [UserInTeam]
   createdAt: String!
   updatedAt: String!
 }
@@ -50,7 +52,7 @@ type UserInTeam {
   teamId: ID!
   status: String!
   roleId: ID!
-  user:User!
+  user: User!
   createdAt: String!
   updatedAt: String!
 }
@@ -76,10 +78,12 @@ type Notification {
   createdAt: String!
   updatedAt: String!
 }
+
 type PointsUser{
   id: ID!
   userId: Int!
   pointQuantity: Int!
+  pointsOperation: [PointOperations]
   createdAt: String!
   updatedAt: String!
 }
@@ -111,6 +115,23 @@ type Post {
   updatedAt: String!
 }
 
+type Task {
+  id: ID!
+  teamId: ID!
+  userId: ID
+  body: bodyTask!
+  status: String
+  tasksTeam: Team!
+  tasksUser: User!
+  createdAt: String
+}
+
+type bodyTask {
+  header: String
+  text: String!
+  points: Int
+}
+
 type Query { 
   users: [User!] 
   user(id: ID!): User
@@ -127,11 +148,14 @@ type Query {
   posts: [Post]!
   post(id: ID!): Post
 
-  usersInTeams:[UserInTeam]!
-
-  requests:[UserInTeam]
   getPointsUser(userId: Int!): PointsUser
-  getOperationPointsUser(userId: Int!): [PointOperations]
+  getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
+  
+  usersInTeams (teamId:ID!):[UserInTeam]!
+  raitingInTeams (teamId:ID!): [UserInTeam]!
+  requests (teamId:ID!):[UserInTeam]
+
+  tasks (teamId:ID!): [Task]!
 }
 
 type Mutation {
@@ -157,10 +181,18 @@ type Mutation {
   createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
   deleteUserInTeam(id: ID!): Int!
 
-  acceptRequest(id: ID!): [Int]!
-  createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
-  deletePointOperation(id: ID!): Int!
+  updateTeam(id:ID!, name: String, description:String, maxUsersLimit: Int):[Int]!
+
+  acceptRequst(id: ID!): [Int]!
+  revokeRequst(id: ID!): [Int]!
+
+  updatePointsUser(id:ID!, pointQuantity: Int!): [Int]!
+  createPointOperation(pointAccountId: Int!, delta: Int!, operationDescription: String!): PointsUser!	 
+  deletePointOperation(id: ID!): Int!	
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
+
+  createTask(userId: ID, header: String, text: String, points: Int, status: String): Task!
+  updateTask(id: ID!, status: String): Task!
 }
 `;
 

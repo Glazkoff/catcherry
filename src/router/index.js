@@ -19,8 +19,12 @@ import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import ListOfNotifications from "@/components/ListOfNotifications.vue";
 import TeamMembers from "@/components/Manager/TeamMembers.vue";
+import RaitingList from "@/components/Manager/RaitingList.vue";
 import EditTeam from "@/components/Manager/EditTeam.vue";
 import RequestsList from "@/components/Manager/RequestsList.vue";
+import TasksTeam from "@/components/Manager/TasksTeam.vue";
+import TeamList from "@/components/Manager/TeamList.vue";
+import TeamSettings from "@/components/Manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
@@ -117,6 +121,7 @@ const routes = [
     name: "Registration",
     component: Registration
   },
+
   {
     path: "/createpost",
     name: "CreatePost",
@@ -128,19 +133,42 @@ const routes = [
     component: ListOfNotifications
   },
   {
-    path: "/manager/team_members",
-    name: "TeamMembers",
-    component: TeamMembers
+    path: "/manager/teams",
+    name: "TeamList",
+    component: TeamList
   },
   {
-    path: "/manager/team_edit",
-    name: "EditTeam",
-    component: EditTeam
-  },
-  {
-    path: "/manager/requests",
-    name: "RequestsList",
-    component: RequestsList
+    path: "/manager/teams/:id",
+    name: "TeamSettings",
+    component: TeamSettings,
+    props: true,
+    children: [
+      {
+        path: "",
+        name: "TeamMembers",
+        component: TeamMembers
+      },
+      {
+        path: "raiting",
+        name: "RaitingList",
+        component: RaitingList
+      },
+      {
+        path: "team_edit",
+        name: "EditTeam",
+        component: EditTeam
+      },
+      {
+        path: "requests",
+        name: "RequestsList",
+        component: RequestsList
+      },
+      {
+        path: "tasks",
+        name: "TasksTeam",
+        component: TasksTeam
+      }
+    ]
   },
   {
     path: "/posts/:id",
