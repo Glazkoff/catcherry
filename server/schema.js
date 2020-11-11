@@ -119,7 +119,7 @@ type Query {
   organization(id: ID!): Organization
 
   teams: [Team!]
-  team(organizationId: Int): Team
+  team(organizationId: Int): [Team]
   
   notifications: [Notification]!
   notification(id: ID!): Notification

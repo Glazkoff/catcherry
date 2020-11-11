@@ -130,14 +130,15 @@ export const TEAM_IN_ORG_QUERY = gql`
       organizationId
       name
       description
-      maxUsersLimit
+      maxUsersLimit,
+      updatedAt
     }
   }
 `;
 
 export const UPDATE_TEAMS_QUERY = gql`
-  mutation($name: String!, $description: String, $maxUsersLimit:Int, $id: ID!) {
-    updateTeam(name: $name, description:$description, maxUsersLimit:$maxUsersLimit,id: $id)
+  mutation($name: String!, $description: String!, $maxUsersLimit:Int!, $id: ID!) {
+    updateTeam(name: $name, description:$description, maxUsersLimit:$maxUsersLimit, id: $id)
   }
 `;
 

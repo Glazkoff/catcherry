@@ -1,6 +1,6 @@
 <template>
 <div>
-  <span>Последнее редактирование: {{ team.updatedAt }} </span>
+  <span>Последнее редактирование: {{ t.updatedAt }} </span>
   <form action="" @submit="$emit('update', name, description, maxUsersLimit)">
     <label for="name">Название</label>
     <input type="text" name="name" class="form-control" placeholder="Название" v-model="name" />
@@ -17,13 +17,12 @@
 
 <script>
 export default {
-  props: ["team"],
+  props: ["t"],
   data() {
     return {
-      name: this.team.name,
-      description: this.team.description,
-      maxUsersLimit: this.team.maxUsersLimit,
-      // updatedAt: new Date(this.team.updatedAt)
+      name: this.t.name,
+      description: this.t.description,
+      maxUsersLimit: this.t.maxUsersLimit
     }
   }
 }
