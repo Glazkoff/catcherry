@@ -109,6 +109,55 @@ export const DELETE_USER_QUERY = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ ORGANIZATIONS
+
+export const CREATE_ORGANIZATION = gql`
+  mutation(
+    $name: String!
+    $ownerId: Int
+    $organizationTypeId: Int
+    $maxTeamsLimit: Int
+  ) {
+    createOrganization(
+      name: $name
+      ownerId: $ownerId
+      organizationTypeId: $organizationTypeId
+      maxTeamsLimit: $maxTeamsLimit
+    ) {
+      id
+    }
+  }
+`;
+
+export const ORGS_QUERY = gql`
+  query {
+    organizations {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+      owner {
+        name
+      }
+      organizationType {
+        name
+      }
+    }
+  }
+`;
+export const ONE_ORG_QUERY = gql`
+  query($id: ID!) {
+    organization(id: $id) {
+      id
+      name
+      ownerId
+      organizationTypeId
+      maxTeamsLimit
+    }
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TEAMS
 export const TEAMS_QUERY = gql`
   query {
@@ -117,7 +166,7 @@ export const TEAMS_QUERY = gql`
       organizationId
       name
       description
-      maxUsersLimit,
+      maxUsersLimit
       updatedAt
     }
   }
@@ -136,8 +185,18 @@ export const TEAM_IN_ORG_QUERY = gql`
 `;
 
 export const UPDATE_TEAMS_QUERY = gql`
-  mutation($name: String!, $description: String, $maxUsersLimit:Int, $id: ID!) {
-    updateTeam(name: $name, description:$description, maxUsersLimit:$maxUsersLimit,id: $id)
+  mutation(
+    $name: String!
+    $description: String
+    $maxUsersLimit: Int
+    $id: ID!
+  ) {
+    updateTeam(
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+      id: $id
+    )
   }
 `;
 
