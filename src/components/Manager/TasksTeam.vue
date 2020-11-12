@@ -1,6 +1,23 @@
 <template>
   <div>
-    <h3>Задания</h3>
+    <h3>Бэклог заданий</h3>
+    <hr />
+    <div v-for="taskNoneUser in backlog" :key="taskNoneUser.id">
+      <div v-if="!taskNoneUser.tasksUser" class="backlogTask">
+        <b>{{ taskNoneUser.body.header }}</b>
+        <span>{{ taskNoneUser.body.text }}</span>
+        <span>+{{ taskNoneUser.body.points }} баллов</span>
+        <select class="form-control" v-model="userId">
+          <option
+            v-for="users in usersInTeams"
+            :key="users.id"
+            :value="users.user.id"
+            >{{ users.user.name }} {{ users.user.surname }}</option
+          >
+        </select>
+      </div>
+    </div>
+    <h3>Распределенные задания</h3>
     <hr />
     <div v-if="!addTask">
       <button @click="addTask = true" class="btn btn-primary">
@@ -15,7 +32,7 @@
         ><input type="text" class="form-control" v-model="text" />
         <label>Ответственный</label
         ><select class="form-control" v-model="userId">
-          <option value="0">Назначается самостоятельно</option>
+          <option :value="null">Назначается самостоятельно</option>
           <option
             v-for="users in usersInTeams"
             :key="users.id"
@@ -35,13 +52,9 @@
         <h4>{{ task.body.header }}</h4>
         <p>{{ task.body.text }}</p>
         Ответственный:
-        <div v-if="task.taskUser">
           <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
           {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
-        </div>
-        <div v-else>Не назначен</div>
-        <p>
-          +{{ task.body.points }} баллов - Статус:
+          <label>Статус:</label>
           <select
             class="form-control small"
             v-model="task.status"
@@ -58,7 +71,7 @@
             <option>В работе</option>
             <option>Готово</option></select
           >
-        </p>
+        <p>+{{ task.body.points }} баллов</p>
       </div>
     </div>
   </div>
@@ -67,6 +80,7 @@
 <script>
 import {
   TASKS_QUERY,
+  BACKLOG_QUERY,
   USERS_IN_TEAMS_QUERY,
   ADD_TASK_QUERY,
   EDIT_TASK_QUERY,
@@ -76,6 +90,14 @@ export default {
   apollo: {
     tasks: {
       query: TASKS_QUERY,
+      variables() {
+        return {
+          teamId: this.$route.params.id
+        };
+      }
+    },
+    backlog: {
+      query: BACKLOG_QUERY,
       variables() {
         return {
           teamId: this.$route.params.id
@@ -112,19 +134,25 @@ export default {
             header: this.header,
             text: this.text,
             points: this.points,
-            status: "В работе"
-          }
+            status: "Запланировано"
+          },
           //FIXME: создать динамическое добавление нового задания в список
-          // update: (cache, { data: { createTask } }) => {
-          //   let data = cache.readQuery({
-          //     query: TASKS_QUERY
-          //   });
-          //   data.tasks.push(createTask);
-          //   cache.writeQuery({
-          //     query: TASKS_QUERY,
-          //     data
-          //   });
-          // }
+          update: (cache, { data: { createTask } }) => {
+            let data = cache.readQuery({
+              query: TASKS_QUERY,
+              variables: {
+                teamId: this.$route.params.id
+              }
+            });
+            data.tasks.unshift(createTask);
+            cache.writeQuery({
+              query: TASKS_QUERY,
+              variables: {
+                teamId: this.$route.params.id
+              },
+              data
+            });
+          }
         })
         .then(data => {
           this.addTask = false;

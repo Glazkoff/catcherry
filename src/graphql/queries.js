@@ -327,12 +327,6 @@ export const TASKS_QUERY = gql`
         points
       }
       status
-      tasksTeam {
-        name
-        team {
-          roleId
-        }
-      }
       tasksUser {
         name
         surname
@@ -362,11 +356,20 @@ export const ADD_TASK_QUERY = gql`
     ) {
       id
       userId
+      teamId
       body {
         header
         text
+        points
       }
       status
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
     }
   }
 `;
@@ -374,6 +377,37 @@ export const EDIT_TASK_QUERY = gql`
   mutation($id: ID!, $status: String) {
     updateTask(id: $id, status: $status) {
       status
+    }
+  }
+`;
+
+export const ADD_USER_TO_TASK_QUERY = gql`
+  mutation($id: ID!, $userId: ID) {
+    addUserToTask(id: $id, userId: $userId) {
+      userId
+    }
+  }
+`;
+
+export const BACKLOG_QUERY = gql`
+  query($teamId: ID!) {
+    backlog(teamId: $teamId) {
+      id
+      userId
+      teamId
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
     }
   }
 `;

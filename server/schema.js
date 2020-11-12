@@ -132,6 +132,7 @@ type Query {
   requests (teamId:ID!):[UserInTeam]
 
   tasks (teamId:ID!): [Task]!
+  backlog (teamId:ID!): [Task]!
 }
 
 type Mutation {
@@ -166,6 +167,8 @@ type Mutation {
 
   createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
   updateTask(id: ID!, status: String): Task!
+  addUserToTask(id: ID!, userId: ID): Task!
+  deleteTask(id: ID!): Int!
 }
 `;
 

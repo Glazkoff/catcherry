@@ -2,6 +2,8 @@ require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { v4 } = require("uuid");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
@@ -148,7 +150,7 @@ module.exports = {
       }),
     tasks: (parent, { teamId }, { db }, info) =>
       db.Tasks.findAll({
-        where: { teamId: teamId },
+        where: { teamId: teamId, userId: { [Op.ne]: null } },
         order: [["id", "DESC"]],
         include: [
           {
@@ -168,9 +170,29 @@ module.exports = {
             }
           }
         ]
-        // include: [
-        //
-        // ]
+      }),
+    backlog: (parent, { teamId }, { db }, info) =>
+      db.Tasks.findAll({
+        where: { teamId: teamId, userId: null },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
+          }
+        ]
       })
   },
   Mutation: {
@@ -530,6 +552,23 @@ module.exports = {
             id: id
           }
         }
-      )
+      ),
+    addUserToTask: (parent, { id, userId }, { db }, info) =>
+      db.Tasks.update(
+        {
+          userId: userId
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    deleteTask: (parent, args, { db }, info) =>
+      db.Tasks.destroy({
+        where: {
+          id: args.id
+        }
+      })
   }
 };
