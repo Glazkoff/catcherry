@@ -24,6 +24,7 @@
         <td>Имя</td>
         <td>Логин</td>
         <td>Тип</td>
+        <td>Дата регистрации</td>
         <td colspan="2">Действия</td>
       </tr>
       <tr v-for="user in users" :key="user.id">
@@ -34,6 +35,7 @@
         <td v-else>{{ user.name }}</td>
         <td>{{ user.login }}</td>
         <td>{{ user.__typename }}</td>
+        <td>{{ $d(user.createdAt, "short") }}</td>
         <td v-if="user.isEdit">
           <button @click="toSaveEditUser(user.id)">Сохранить</button>
         </td>

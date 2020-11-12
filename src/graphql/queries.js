@@ -79,6 +79,7 @@ export const USERS_QUERY = gql`
       gender
       birthday
       login
+      createdAt
     }
   }
 `;
