@@ -98,7 +98,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
-      //addAllTables();
+      // addAllTables();
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -206,7 +206,7 @@ async function addAllTables(destroyTable) {
     let pointsoperations = await db.PointsOperations.create({
       pointAccountId: pointsuser.dataValues.id,
       delta: faker.random.number(),
-      operationDescription: faker.lorem.paragraph()
+      operationDescription: faker.random.word()
     });
   }
 
