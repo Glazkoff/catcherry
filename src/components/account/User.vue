@@ -16,7 +16,7 @@
 
 <script>
 export default {
-  name: "User"
+  name: "User",
 };
 </script>
 
@@ -30,7 +30,6 @@ export default {
     display: block;
   }
 }
-
 .account-view {
   float: right;
   width: 80%;
