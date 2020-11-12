@@ -1,7 +1,7 @@
 <template>
   <div>
-    <h1>Добро пожаловать в Административную панель!</h1>
-    <h2>Статистика системы</h2>
+    <h1><i18n path="adminPanel">{{ $t("adminPanel") }}</i18n></h1>
+    <h2><i18n path="systemStatistics">{{ $t("systemStatistics") }}</i18n></h2>
     <MyChart></MyChart>
   </div>
 </template>

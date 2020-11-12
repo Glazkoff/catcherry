@@ -3,14 +3,14 @@
     <popup v-if="isShowFullInformation">
       <!-- Редактирование пользователя -->
       <h3 slot="header" v-if="isShowModalEdit">
-        <i18n path="editUser"
-          ><span place="title">{{ $t("editUser") }}</span></i18n
-        >
+        <i18n path="editUser">{{ $t("editUser") }}</i18n>
         {{ fullName }}
       </h3>
       <div slot="body" v-if="isShowModalEdit">
         <form @submit.prevent="editUser()">
-          <label for="surname">Фамилия</label>
+          <label for="surname"
+            ><i18n path="surname">{{ $t("surname") }}</i18n></label
+          >
           <input
             name="surname"
             v-model.trim="$v.oneUser.surname.$model"
@@ -19,13 +19,17 @@
           />
           <div v-if="$v.oneUser.surname.$error" class="error">
             <span v-if="!$v.oneUser.surname.required"
-              >Данное поле обязательно</span
+              ><i18n path="required">{{ $t("required") }}</i18n></span
             >
             <span v-else-if="!$v.oneUser.surname.alpha"
-              >Поле должно содержать только буквы</span
+              ><i18n path="requiredLetters">{{
+                $t("requiredLetters")
+              }}</i18n></span
             >
           </div>
-          <label for="name">Имя</label>
+          <label for="name"
+            ><i18n path="name">{{ $t("name") }}</i18n></label
+          >
           <input
             name="name"
             v-model.trim="$v.oneUser.name.$model"
@@ -34,34 +38,46 @@
           />
           <div v-if="$v.oneUser.name.$error" class="error">
             <span v-if="!$v.oneUser.name.required"
-              >Данное поле обязательно</span
+              ><i18n path="required">{{ $t("required") }}</i18n></span
             >
             <span v-else-if="!$v.oneUser.name.alpha"
-              >Поле должно содержать только буквы</span
+              ><i18n path="requiredLetters">{{
+                $t("requiredLetters")
+              }}</i18n></span
             >
           </div>
-          <label for="patricity">Отчество (при наличии)</label>
+          <label for="patricity"
+            ><i18n path="patricity">{{ $t("patricity") }}</i18n></label
+          >
           <input
             name="patricity"
             v-model.trim="$v.oneUser.patricity.$model"
             placeholder="Отчество"
             required
           />
-          <label for="gender">Пол</label>
+          <label for="gender"
+            ><i18n path="gender">{{ $t("gender") }}</i18n></label
+          >
           <select
             name="gender"
             v-model.trim="$v.oneUser.gender.$model"
             required
           >
-            <option>Мужской</option>
-            <option>Женский</option>
+            <option
+              ><i18n path="male">{{ $t("male") }}</i18n></option
+            >
+            <option
+              ><i18n path="female">{{ $t("female") }}</i18n></option
+            >
           </select>
           <div v-if="$v.oneUser.gender.$error" class="error">
             <span v-if="!$v.oneUser.gender.required"
-              >Данное поле обязательно</span
+              ><i18n path="required">{{ $t("required") }}</i18n></span
             >
           </div>
-          <label for="login">Логин</label>
+          <label for="login"
+            ><i18n path="login">{{ $t("login") }}</i18n></label
+          >
           <input
             name="login"
             v-model.trim="$v.oneUser.login.$model"
@@ -70,7 +86,7 @@
           />
           <div v-if="$v.oneUser.login.$error" class="error">
             <span v-if="!$v.oneUser.login.required"
-              >Данное поле обязательно</span
+              ><i18n path="required">{{ $t("required") }}</i18n></span
             >
           </div>
           <div class="btn-group">
@@ -79,18 +95,15 @@
               :disabled="$v.oneUser.$invalid"
               @click="editUser()"
             >
-              <i18n path="save"
-                ><span>{{ $t("save") }}</span></i18n
-              >
+              <i18n path="save">{{ $t("save") }}</i18n>
             </button>
             <button @click="cancelModal()">
-              <i18n path="cancel"
-                ><span place="title">{{ $t("cancel") }}</span></i18n
-              >
+              <i18n path="cancel">{{ $t("cancel") }}</i18n>
             </button>
           </div>
         </form>
       </div>
+
       <!-- Удаление пользователя -->
       <h3 slot="header" v-if="isShowModalDelete">
         <i18n path="deleteQuestion"
@@ -104,63 +117,127 @@
           slot="action"
           class="modal-default-button"
         >
-          <i18n path="delete"
-            ><span place="title">{{ $t("delete") }}</span></i18n
-          >
+          <i18n path="delete">{{ $t("delete") }}</i18n>
         </button>
         <button @click="cancelModal()">
-          <i18n path="cancel"
-            ><span place="title">{{ $t("cancel") }}</span></i18n
-          >
+          <i18n path="cancel">{{ $t("cancel") }}</i18n>
         </button>
       </div>
+
       <!-- Заголовок загрузки информации про одного пользователя -->
       <h3
         slot="header"
         v-if="!isShowModalDelete && !isShowModalEdit && $apollo.loading"
       >
-        Загрузка...
+        <i18n path="loading">{{ $t("loading") }}</i18n
+        >...
       </h3>
+
       <!-- Подробная информация про одного пользователя -->
       <h3
         slot="header"
         v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
       >
-        Пользователь {{ user.surname }} {{ user.name }} {{ user.patricity }}
+        <i18n path="user">{{ $t("user") }}</i18n> {{ user.surname }}
+        {{ user.name }} {{ user.patricity }}
       </h3>
       <div
         slot="body"
         v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
       >
-        <p>Фамилия: {{ user.surname }}</p>
-        <p>Имя: {{ user.name }}</p>
-        <p>Отчетсво: {{ user.patricity }}</p>
-        <p>Пол: {{ user.gender }}</p>
-        <p>Дата рождения: {{ new Date(user.birthday) }}</p>
-        <p>Логин: {{ user.login }}</p>
-        <p>Дата создания: {{ new Date(user.createdAt).toGMTString() }}</p>
-        <div class="btn-group">
-          <button @click="showModalEdit()">Редактировать</button>
-          <button @click="showModalDelete()">Удалить</button>
-          <button @click="cancelFullInformation()">
-            <i18n path="cancel"
-              ><span place="title">{{ $t("cancel") }}</span></i18n
+        <p>
+          <i18n path="surname">{{ $t("surname") }}</i18n
+          >: {{ user.surname }}
+        </p>
+        <p>
+          <i18n path="name">{{ $t("name") }}</i18n
+          >: {{ user.name }}
+        </p>
+        <p>
+          <i18n path="patricity">{{ $t("patriciry") }}</i18n
+          >: {{ user.patricity }}
+        </p>
+        <p>
+          <i18n path="gender">{{ $t("gender") }}</i18n
+          >: {{ user.gender }}
+        </p>
+        <p>
+          <i18n path="birthday">{{ $t("birthday") }}</i18n
+          >: {{ user.birthday }}
+        </p>
+        <p>
+          <i18n path="login">{{ $t("login") }}</i18n
+          >: {{ user.login }}
+        </p>
+        <p>
+          <i18n path="createdAt">{{ $t("createdAt") }}</i18n
+          >: {{ new Date(user.createdAt).toGMTString() }}
+        </p>
+        <p v-if="oneUserInTeams.length === 0">
+          <i18n path="noTeam">{{ $t("noTeam") }}</i18n>
+        </p>
+        <p v-if="oneUserInTeams.length !== 0">
+          <i18n path="userTeams">{{ $t("userTeams") }}</i18n
+          >:
+        </p>
+        <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
+          <p>
+            <i18n path="nameInanimate">{{ $t("nameInanimate") }}</i18n
+            >: {{ team.team.name }}
+          </p>
+          <p>
+            <i18n path="organization">{{ $t("organization") }}</i18n
+            >: {{ team.team.organization.name }}
+          </p>
+          <p>
+            <i18n path="status">{{ $t("status") }}</i18n
+            >: {{ team.status }}
+          </p>
+          <div class="btn-group">
+            <button
+              v-if="team.status === 'Принято'"
+              @click="changeStatusInTeam(team, 'Не принято')"
             >
+              <i18n path="deleteUserFromTeam">{{
+                $t("deleteUserFromTeam")
+              }}</i18n>
+            </button>
+            <button
+              v-if="team.status !== 'Принято'"
+              @click="changeStatusInTeam(team, 'Принято')"
+            >
+              <i18n path="addUserToTeam">{{ $t("addUserToTeam") }}</i18n>
+            </button>
+          </div>
+        </div>
+        <div class="btn-group">
+          <button @click="showModalEdit()">
+            <i18n path="edit">{{ $t("edit") }}</i18n>
+          </button>
+          <button @click="showModalDelete()">
+            <i18n path="delete">{{ $t("delete") }}</i18n>
+          </button>
+          <button @click="cancelFullInformation()">
+            <i18n path="cancel">{{ $t("cancel") }}</i18n>
           </button>
         </div>
       </div>
     </popup>
 
+    <!-- Вывод списка краткой информации пользователей -->
     <h2>
       <i18n path="listUser"
         ><span place="title">{{ $t("listUser") }}</span></i18n
       >
     </h2>
-    <h3 v-if="$apollo.loading">
-      Загрузка...
+    <h3 v-if="$apollo.queries.users.loading">
+      <i18n path="loading">{{ $t("loading") }}</i18n
+      >...
     </h3>
-    <div v-if="!$apollo.loading">
-      <h6 v-if="users.length == 0">К сожалению, пока пользователей нет</h6>
+    <div v-if="!$apollo.queries.users.loading">
+      <h6 v-if="users.length == 0">
+        <i18n path="noUser">{{ $t("noUser") }}</i18n>
+      </h6>
       <div>
         <input
           v-model.trim="findString"
@@ -171,18 +248,26 @@
           <p>{{ user.id }}.</p>
           <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
           <p>{{ user.login }}</p>
-          <button @click="showFullInformation(user.id)">Подробнее</button>
+          <button @click="showFullInformation(user.id)">
+            <i18n path="more">{{ $t("more") }}</i18n>
+          </button>
         </div>
       </div>
     </div>
     <minialert v-if="isShowAlertEdit"
-      ><p slot="title">Вы успешно изменили пользователя</p></minialert
+      ><p slot="title">
+        <i18n path="minialertEditUser">{{ $t("minialertEditUser") }}</i18n>
+      </p></minialert
     >
     <minialert v-if="isShowAlertDelete"
-      ><p slot="title">Вы успешно удалили пользователя</p></minialert
+      ><p slot="title">
+        <i18n path="minialertDeleteUser">{{ $t("minialertDeleteUser") }}</i18n>
+      </p></minialert
     >
     <minialert v-if="isError"
-      ><p slot="title">Произошла какая-то ошибка. Извините</p></minialert
+      ><p slot="title">
+        <i18n path="minialertError">{{ $t("minialertError") }}</i18n>
+      </p></minialert
     >
   </div>
 </template>
@@ -195,20 +280,33 @@ import {
   USERS_QUERY,
   DELETE_USER_QUERY,
   UPDATE_USER_QUERY,
-  ONE_USER_QUERY
+  ONE_USER_QUERY,
+  ONE_USER_IN_TEAMS_QUERY,
+  ADD_IN_TEAM_QUERY
 } from "@/graphql/queries";
 
 export default {
   components: { minialert, popup },
   apollo: {
+    // Получить список всех пользователей
     users: {
       query: USERS_QUERY
     },
+    // Получить всю информацию про одного пользователя
     user: {
       query: ONE_USER_QUERY,
       variables() {
         return {
           id: this.userId
+        };
+      }
+    },
+    // Получить список всех команд пользователя
+    oneUserInTeams: {
+      query: ONE_USER_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          userId: this.userId
         };
       }
     }
@@ -220,6 +318,7 @@ export default {
       isShowFullInformation: false,
       index: 0,
       userId: -1,
+      teamId: -1,
       fullName: "",
       isShowAlertDelete: false,
       isShowAlertEdit: false,
@@ -237,6 +336,7 @@ export default {
     };
   },
   validations: {
+    // Форма редактирования данных о пользователе
     oneUser: {
       surname: {
         required,
@@ -258,124 +358,185 @@ export default {
     }
   },
   methods: {
+    // Показать попап со всей информацией
     showFullInformation(id) {
       this.userId = id;
       this.isShowFullInformation = true;
     },
+    // Закрыть попап со всей информацией
     cancelFullInformation() {
       this.isShowFullInformation = false;
     },
+    // Закрыть попапы с редактированием или удалением
     cancelModal() {
       this.isShowModalEdit = false;
       this.isShowModalDelete = false;
     },
+    // Показать попап с удалением
     showModalDelete() {
-      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
+      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`; // Запись полного имени пользователя
       this.isShowModalDelete = true;
     },
+    // Удалить пользователя
     deleteUser() {
       this.$apollo
         .mutate({
-          mutation: DELETE_USER_QUERY,
+          mutation: DELETE_USER_QUERY, // Удаляем из БД
           variables: {
             id: this.user.id
           },
+          // Обновляем кеш
           update: cache => {
             let data = cache.readQuery({ query: USERS_QUERY });
-            let index = data.users.findIndex(el => el.id == this.user.id);
+            let index = data.users.findIndex(el => el.id == this.user.id); // Удаляем из списка одного пользователя
             data.users.splice(index, 1);
             cache.writeQuery({ query: USERS_QUERY, data });
           }
         })
+        // В случае успеха
         .then(data => {
           console.log(data);
-          this.isShowFullInformation = false;
+          this.isShowFullInformation = false; // закрываем попапы все
           this.isShowModalDelete = false;
-          this.isShowAlertDelete = true;
+          this.isShowAlertDelete = true; // Показать окно с информацией об успехе
           setTimeout(() => {
-            this.isShowAlertDelete = false;
+            this.isShowAlertDelete = false; // Закрыть окно с информацией об успехе
           }, 3000);
         })
+        // В случае ошибки
         .catch(error => {
           console.error(error);
-          this.isShowFullInformation = false;
+          this.isShowFullInformation = false; // Закрыть попап
           this.isShowModalDelete = false;
-          this.isError = true;
+          this.isError = true; // Показать окно с ошибкой
           setTimeout(() => {
-            this.isError = false;
+            this.isError = false; // Закрыть попап с ошибкой
           }, 3000);
         });
     },
+    // Показать попап с редактированием
     showModalEdit() {
-      this.oneUser = Object.assign({}, this.user);
-      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
+      this.oneUser = Object.assign({}, this.user); // Записываем данные о пользователе в другой объект, чтобы при редактировании данные в основном объекте не изменялись
+      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`; // Записываем полное имя
       this.isShowModalEdit = true;
-      console.log(this.oneUser);
     },
+    // Редактировать информацию про пользователя
     editUser() {
       this.isShowModalEdit = false;
       this.$apollo
         .mutate({
-          mutation: UPDATE_USER_QUERY,
+          mutation: UPDATE_USER_QUERY, // Изменяем в БД
           variables: {
-            id: this.user.id,
-            surname: this.user.surname,
-            name: this.user.name,
-            patricity: this.user.patricity,
-            gender: this.user.gender,
-            login: this.user.login
+            id: this.oneUser.id,
+            surname: this.oneUser.surname,
+            name: this.oneUser.name,
+            patricity: this.oneUser.patricity,
+            gender: this.oneUser.gender,
+            login: this.oneUser.login
           },
+          // Обновляем кеш
           update: (cache, { data: { updateUser } }) => {
             let data = cache.readQuery({ query: USERS_QUERY });
             data.users.find(
-              el => el.id === this.user.id
-            ).surname = this.user.surname;
-            data.users.find(el => el.id === this.user.id).name = this.user.name;
+              el => el.id === this.oneUser.id
+            ).surname = this.oneUser.surname; // Редактируем фамилию
             data.users.find(
-              el => el.id === this.user.id
-            ).patricity = this.user.patricity;
+              el => el.id === this.oneUser.id
+            ).name = this.oneUser.name; // Редактируем имя
             data.users.find(
-              el => el.id === this.user.id
-            ).gender = this.user.gender;
+              el => el.id === this.oneUser.id
+            ).patricity = this.oneUser.patricity;
             data.users.find(
-              el => el.id === this.user.id
-            ).login = this.user.login;
+              el => el.id === this.oneUser.id
+            ).gender = this.oneUser.gender;
+            data.users.find(
+              el => el.id === this.oneUser.id
+            ).login = this.oneUser.login;
             cache.writeQuery({ query: USERS_QUERY, data });
             console.log(updateUser);
           },
+          // Данные, пока идет запрос и ответ сервера
           optimisticResponse: {
             __typename: "Mutation",
             createUser: {
               __typename: "User",
               id: -1,
-              surname: this.user.surname,
-              name: this.user.name,
-              patricity: this.user.patricity,
-              gender: this.user.gender,
-              login: this.user.login
+              surname: this.oneUser.surname,
+              name: this.oneUser.name,
+              patricity: this.oneUser.patricity,
+              gender: this.oneUser.gender,
+              login: this.oneUser.login
             }
           }
         })
+        // В случае успеха
         .then(data => {
           console.log(data);
-          this.isShowAlertEdit = true;
+          this.isShowAlertEdit = true; // Показать окно с успехом
           setTimeout(() => {
-            this.isShowAlertEdit = false;
+            this.isShowAlertEdit = false; // Закрыть окно с успехом
           }, 3000);
         })
+        // В случае ошибки
         .catch(error => {
           console.error(error);
-          this.isShowFullInformation = false;
-          this.isError = true;
+          this.isShowFullInformation = false; // Закрыть все попапы
+          this.isError = true; // Показать окно в ошибкой
           setTimeout(() => {
-            this.isError = false;
+            this.isError = false; // Закрыть окно с ошибкой
+          }, 3000);
+        });
+    },
+    // Изменить статус пользователя в команде
+    changeStatusInTeam(team, newStatus) {
+      this.$apollo
+        .mutate({
+          mutation: ADD_IN_TEAM_QUERY, // Изменить в БД
+          variables: {
+            status: newStatus,
+            id: team.id
+          },
+          // Обновляем кеш
+          update: cache => {
+            let data = cache.readQuery({
+              query: ONE_USER_IN_TEAMS_QUERY,
+              variables: { userId: this.userId }
+            });
+            data.oneUserInTeams.find(
+              el => el.id === team.id
+            ).status = newStatus; // Меняем статус
+            cache.writeQuery({
+              query: ONE_USER_IN_TEAMS_QUERY,
+              variables: { userId: this.userId },
+              data
+            });
+          }
+        })
+        // В случае успеха
+        .then(data => {
+          console.log(data);
+          this.isShowAlertEdit = true; // Показываем окно с успехом
+          setTimeout(() => {
+            this.isShowAlertEdit = false; // Закрываем окно с успехом
+          }, 3000);
+        })
+        // В случае ошибки
+        .catch(error => {
+          console.error(error);
+          this.isShowFullInformation = false; // Закрыть все попапы
+          this.isShowModalDelete = false;
+          this.isError = true; // Показать окно с ошибкой
+          setTimeout(() => {
+            this.isError = false; // Закрыть окно с ошибкой
           }, 3000);
         });
     }
   },
   computed: {
+    // Фильтрация пользователей
     filterUser() {
       if (this.findString !== "") {
+        // Ищем по фамилии, имени и отчеству
         return this.users.filter(el => {
           if (el.surname === undefined || el.surname === null) {
             el.surname = " ";
@@ -421,6 +582,13 @@ button {
   display: grid;
   grid-template-columns: 5% 25% 10% 15% 15% 15% 15%;
   grid-template-rows: 1fr;
+}
+.oneTeam {
+  border: 1px solid black;
+  padding: 10px;
+  p {
+    display: block;
+  }
 }
 
 input,

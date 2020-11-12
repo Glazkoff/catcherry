@@ -1,4 +1,4 @@
-"use strict";
+"use strvct";
 /** Список команд для реализации:
  * cd ./server
  * sequelize init

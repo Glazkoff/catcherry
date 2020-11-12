@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Teams.belongsTo(models.Organizations, {
         foreignKey: "organizationId",
-        as: "teams",
+        as: "organization",
       });
     }
   }

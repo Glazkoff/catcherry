@@ -86,37 +86,62 @@ module.exports = {
     users: (parent, args, { db }, info) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
     user: (parent, args, { db }, info) => {
-      return db.Users.findOne({ where: { id: args.id } });
+      return db.Users.findOne({
+        where: { id: args.id }
+      });
     },
+    oneUserInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { userId: args.userId },
+        order: [["id", "ASC"]],
+        include: [
+          { model: db.Users, as: "user" },
+          {
+            model: db.Teams,
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
+      }),
 
-    organizations: (parent, args, { db }, info) => 
+    organizations: (parent, args, { db }, info) =>
       db.Organizations.findAll({ order: [["id", "ASC"]] }),
 
     organization: (parent, args, { db }, info) => {
-      return db.Organizations.findOne({ 
-        where: { id: args.id }, 
-        include: [{ model: db.OrganizationsTypes, as: "organizationType" }, { model: db.Users, as: "owner" }, { model: db.Teams, as: "teams" }] 
+      return db.Organizations.findOne({
+        where: { id: args.id },
+        include: [
+          { model: db.OrganizationsTypes, as: "organizationType" },
+          { model: db.Users, as: "owner" }
+        ]
       });
     },
+    teamsInOneOrganization: (parent, args, { db }, info) => {
+      return db.Teams.findAll({
+        order: [["id", "ASC"]],
+        where: { organizationId: args.organizationId }
+      });
+    },
+    organizationTypes: (parent, args, { db }, info) =>
+      db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
     teams: (parent, args, { db }, info) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
     team: (parent, args, { db }, info) => {
       return db.Teams.findOne({
         where: { organizationId: args.organizationId }
       });
-
     },
     notifications: (parent, args, { db }, info) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
 
-    usersInTeams: (parent, args, { db }, info) =>
-      db.UsersInTeams.findAll({
-        where: { status: "Принят" },
-        order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
-      }),
+    // usersInTeams: (parent, args, { db }, info) =>
+    //   db.UsersInTeams.findAll({
+    //     where: { status: "Принят" },
+    //     order: [["id", "ASC"]],
+    //     include: [{ model: db.Users, as: "user" }]
+    //   }),
     requests: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят" },
@@ -267,7 +292,12 @@ module.exports = {
       db.Users.create({
         name: name
       }),
-    updateUser: (parent, { surname, name, patricity, gender, login, id }, { db }, info) =>
+    updateUser: (
+      parent,
+      { surname, name, patricity, gender, login, id },
+      { db },
+      info
+    ) =>
       db.Users.update(
         {
           name: name,
@@ -282,12 +312,41 @@ module.exports = {
           }
         }
       ),
+    addUserInTeam: (parent, { status, id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: status
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
           id: args.id
         }
       }),
+    updateTeam: (
+      parent,
+      { name, description, maxUsersLimit, id },
+      { db },
+      info
+    ) =>
+      db.Teams.update(
+        {
+          name: name,
+          description: description,
+          maxUsersLimit: maxUsersLimit
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
     /*
       [Ниже] Мутации работы с организациями (Organization)     
     */
@@ -303,15 +362,11 @@ module.exports = {
         organizationTypeId: organizationTypeId,
         maxTeamsLimit: maxTeamsLimit
       }),
-    updateOrganization: (
-      parent,
-      { name, id },
-      { db },
-      info
-    ) =>
+    updateOrganization: (parent, { name, maxTeamsLimit, id }, { db }, info) =>
       db.Organizations.update(
         {
           name: name,
+          maxTeamsLimit: maxTeamsLimit
         },
         {
           where: {
@@ -321,6 +376,12 @@ module.exports = {
       ),
     deleteOrganization: (parent, args, { db }, info) =>
       db.Organizations.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    deleteTeam: (parent, args, { db }, info) =>
+      db.Teams.destroy({
         where: {
           id: args.id
         }

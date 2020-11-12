@@ -46,7 +46,6 @@ export const UPDATE_TOKENS = gql`
   }
 `;
 
-
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
   query {
@@ -134,7 +133,6 @@ export const ACCEPT_REQUEST_QUERY = gql`
   }
 `;
 
-
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {
@@ -155,6 +153,41 @@ export const ONE_USER_QUERY = gql`
       gender
       birthday
       login
+    }
+  }
+`;
+
+export const ONE_USER_IN_TEAMS_QUERY = gql`
+  query($userId: ID!) {
+    oneUserInTeams(userId: $userId) {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+      team {
+        id
+        name
+        organization {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const TEAMS_IN_ONE_ORG_QUERY = gql`
+  query($organizationId: ID!) {
+    teamsInOneOrganization(organizationId: $organizationId) {
+      id
+      name
+      description
+      maxUsersLimit
     }
   }
 `;
@@ -229,6 +262,15 @@ export const ORGS_QUERY = gql`
   }
 `;
 
+export const ORG_TYPES_QUERY = gql`
+  query {
+    organizationTypes {
+      id
+      name
+    }
+  }
+`;
+
 export const ONE_ORG_QUERY = gql`
   query($id: ID!) {
     organization(id: $id) {
@@ -245,11 +287,6 @@ export const ONE_ORG_QUERY = gql`
         name
         patricity
       }
-      teams {
-        name
-        description
-        maxUsersLimit
-      }
     }
   }
 `;
@@ -261,7 +298,30 @@ export const DELETE_ORG_QUERY = gql`
 `;
 
 export const UPDATE_ORG_QUERY = gql`
-  mutation($name: String, $id: ID!) {
-    updateOrganization(name: $name, id: $id)
+  mutation($name: String!, $maxTeamsLimit: Int, $id: ID!) {
+    updateOrganization(name: $name, maxTeamsLimit: $maxTeamsLimit, id: $id)
+  }
+`;
+
+export const DELETE_TEAM_QUERY = gql`
+  mutation($id: ID!) {
+    deleteTeam(id: $id)
+  }
+`;
+
+export const UPDATE_TEAM_QUERY = gql`
+  mutation($name: String, $description: String, $maxUsersLimit: Int, $id: ID!) {
+    updateTeam(
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+      id: $id
+    )
+  }
+`;
+
+export const ADD_IN_TEAM_QUERY = gql`
+  mutation($status: String!, $id: ID!) {
+    addUserInTeam(status: $status, id: $id)
   }
 `;

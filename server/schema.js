@@ -1,4 +1,5 @@
 module.exports = `
+
 type Error {
   errorStatus: Int!
   message: String!
@@ -22,7 +23,9 @@ type User {
   createdAt: String
   updatedAt: String
   deletedAt: String
+  userInTeam: UserInTeam
 }
+
 type OrganizationType {
   id: ID!
   name: String
@@ -46,17 +49,18 @@ type Team {
   name: String!
   description: String
   maxUsersLimit: Int
+  organization: Organization
   createdAt: String!
   updatedAt: String!
 }
-
 type UserInTeam {
   id: ID!
   userId: ID!
   teamId: ID!
   status: String!
   roleId: ID!
-  user:User!
+  user: User!
+  team: Team!
   createdAt: String!
   updatedAt: String!
 }
@@ -101,6 +105,8 @@ type Query {
   user(id: ID!): User
   deletedUsers: [User!]
 
+  organizationTypes: [OrganizationType!]
+
   organizations: [Organization!]
   organization(id: ID!): Organization
 
@@ -110,7 +116,8 @@ type Query {
   notifications: [Notification]!
   notification(id: ID!): Notification
 
-  usersInTeams:[UserInTeam]!
+  oneUserInTeams(userId: ID!): [UserInTeam!]
+  teamsInOneOrganization(organizationId: ID!): [Team]
 
   requests:[UserInTeam]
   getPointsUser(userId: Int!): PointsUser
@@ -125,19 +132,23 @@ type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
+  deleteUserFromTeam(id: ID!, ): [Int]!
 
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
   deleteOrganization(id: ID!): Int!
+  updateTeam(id: ID!, name: String, description: String, maxUsersLimit: Int): [Int]!
 
   updateTokens(fingerprint:String!): jwt!
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int, id: ID!): Organization!
-  updateOrganization(name: String!, id: ID!): [Int]!
+  updateOrganization(name: String!, maxTeamsLimit: Int, id: ID!): [Int]!
+  addUserInTeam(status: String!, id: ID!): [Int]!
 
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
   createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
+  deleteTeam(id: ID!): Int!
   deleteUserInTeam(id: ID!): Int!
 
   acceptRequest(id: ID!): [Int]!
