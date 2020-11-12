@@ -57,7 +57,7 @@ export default {
             });
             data.team.find(el => el.id === this.id).name = name;
             data.team.find(el => el.id === this.id).description = description;
-            data.team.find(el => el.id === this.id).maxUsersLimit = maxUsersLimit; // Не может получить найти maxUsersLimit по id
+            data.team.find(el => el.id === this.id).maxUsersLimit = maxUsersLimit;
           }
         })
         .then(data => {

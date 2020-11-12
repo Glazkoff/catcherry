@@ -1,7 +1,7 @@
 <template>
 <div>
   <span>Последнее редактирование: {{ t.updatedAt }} </span>
-  <form action="" @submit="$emit('update', name, description, maxUsersLimit)">
+  <form action="" @submit="$emit('update', name, description, parseInt(maxUsersLimit))">
     <label for="name">Название</label>
     <input type="text" name="name" class="form-control" placeholder="Название" v-model="name" />
     <label for="description">Описание</label>
