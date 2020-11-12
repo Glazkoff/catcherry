@@ -179,7 +179,8 @@ export const TEAM_IN_ORG_QUERY = gql`
       organizationId
       name
       description
-      maxUsersLimit
+      maxUsersLimit,
+      updatedAt
     }
   }
 `;

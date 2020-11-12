@@ -2,9 +2,9 @@
 <div>
   <h3>Редактирование</h3>
   <hr />
-  <div v-for="team in teams" :key="team.id">
-    <div v-if="team.id==id">
-      <EditForm :team="team" @update="toSaveEditTeam" />
+  <div v-for="t in team" :key="t.id">
+    <div v-if="t.id == id">
+      <EditForm :t="t" @update="toSaveEditTeam" />
     </div>
   </div>
 </div>
@@ -12,14 +12,19 @@
 
 <script>
 import {
-  TEAMS_QUERY,
+  TEAM_IN_ORG_QUERY,
   UPDATE_TEAMS_QUERY
 } from "@/graphql/queries";
-import EditForm from "@/components/Manager/EditForm"
+import EditForm from "@/components/Manager/EditForm";
 export default {
   apollo: {
-    teams: {
-      query: TEAMS_QUERY
+    team: {
+      query: TEAM_IN_ORG_QUERY,
+      variables() {
+        return {
+          organizationId: 1
+        };
+      }
     }
   },
   data() {
@@ -43,15 +48,16 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: TEAMS_QUERY
+              query: TEAM_IN_ORG_QUERY,
+              variables() {
+                return {
+                  organizationId: 1
+                };
+              }
             });
-            data.teams.find(el => el.id === this.id).name = name;
-            data.teams.find(
-              el => el.id === this.id
-            ).description = description;
-            data.teams.find(
-              el => el.id === this.id
-            ).maxUsersLimit = maxUsersLimit;
+            data.team.find(el => el.id === this.id).name = name;
+            data.team.find(el => el.id === this.id).description = description;
+            data.team.find(el => el.id === this.id).maxUsersLimit = maxUsersLimit;
           }
         })
         .then(data => {
@@ -65,5 +71,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>
