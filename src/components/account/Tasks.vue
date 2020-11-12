@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="account-view">
     <h3>Задания</h3>
     <hr />
     <div v-if="!addTask">
