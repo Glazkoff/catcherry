@@ -90,7 +90,7 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 // TODO: добавить заполнение фейковыми данными
 
 db.sequelize
-  // .sync({ alter: true })
+  //.sync({ force: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
@@ -103,6 +103,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
+      // addAllTables();
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -179,16 +180,22 @@ async function addAllTables(destroyTable) {
     });
 
     let tasks = await db.Tasks.create({
+      teamId: team.dataValues.id,
       userId: user.dataValues.id,
       body: {
-        text: faker.lorem.paragraph()
+        header: faker.random.word(),
+        text: faker.lorem.paragraph(),
+        points: faker.random.number()
       },
       status: faker.random.word()
     });
     let posts = await db.Posts.create({
-      body: faker.lorem.paragraph(),
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph()
+      },
       authorId: user.dataValues.id,
-      organizationId: team.dataValues.id,
+      organizationId: organization.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
     let teamcustomization = await db.TeamCustomization.create({
@@ -207,7 +214,7 @@ async function addAllTables(destroyTable) {
     let pointsoperations = await db.PointsOperations.create({
       pointAccountId: pointsuser.dataValues.id,
       delta: faker.random.number(),
-      operationDescription: faker.lorem.paragraph()
+      operationDescription: faker.random.word()
     });
   }
 

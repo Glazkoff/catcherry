@@ -130,18 +130,76 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
-
-    usersInTeams: (parent, args, { db }, info) =>
+    posts: (parent, args, { db }, info) =>
+      db.Posts.findAll({ order: [["id", "ASC"]] }),
+    post: (parent, args, { db }, info) =>
+      db.Posts.findOne({ where: { id: args.id } }),
+    usersInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
-        where: { status: "Принят" },
+        where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
-    requests: (parent, args, { db }, info) =>
+    raitingInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
-        where: { status: "Не принят" },
+        where: { status: "Принят", teamId: teamId },
+        include: [
+          {
+            model: db.Users,
+            as: "user",
+            include: {
+              model: db.Points,
+              as: "userPoints",
+              include: {
+                model: db.PointsOperations,
+                as: "pointsOperation"
+              }
+            }
+          }
+        ]
+      }),
+    requests: (parent, { teamId }, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Не принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
+      }),
+
+    getPointsUser: (parent, args, { db }, info) =>
+      db.Points.findOne({
+        where: { userId: args.userId },
+        order: [["id", "ASC"]]
+      }),
+    getOperationPointsUser: (parent, args, { db }, info) =>
+      db.PointsOperations.findAll({
+        where: { pointAccountId: args.pointAccountId },
+        order: [["id", "ASC"]]
+      }),
+    tasks: (parent, { teamId }, { db }, info) =>
+      db.Tasks.findAll({
+        where: { teamId: teamId },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
+          }
+        ]
+        // include: [
+        //
+        // ]
       })
   },
   Mutation: {
@@ -424,6 +482,23 @@ module.exports = {
         }
       }),
 
+    /*
+      [Ниже] Мутации работы с постами (Posts)     
+    */
+    createPost: (parent, { body, authorId, organizationId }, { db }, info) =>
+      db.Posts.create({
+        body: body,
+        authorId: authorId,
+        organizationId: organizationId
+      }),
+    deletePost: (parent, args, { db }, info) =>
+      db.Posts.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+
+    // ----- //
     createUserInTeam: (
       parent,
       { userId, teamId, status, roleId },
@@ -445,10 +520,97 @@ module.exports = {
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
-    acceptRequest: (parent, { id }, { db }, info) =>
+    acceptRequst: (parent, { id }, { db }, info) =>
       db.UsersInTeams.update(
         {
           status: "Принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+
+    revokeRequst: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Не принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    /*
+      [Ниже] Мутации работы с баллами     
+    */
+    createPointOperation: async (
+      parent,
+      { pointAccountId, delta, operationDescription },
+      { db },
+      info
+    ) => {
+      let total = await db.Points.findOne({
+        where: { id: pointAccountId }
+      });
+      db.Points.update(
+        {
+          pointQuantity: total.pointQuantity + delta
+        },
+        {
+          where: {
+            id: pointAccountId
+          }
+        }
+      );
+      return db.PointsOperations.create({
+        pointAccountId: pointAccountId,
+        delta: delta,
+        operationDescription: operationDescription
+      });
+    },
+    /*
+      [Ниже] Мутации работы с командами     
+    */
+    updateTeam: (
+      parent,
+      { id, name, description, maxUsersLimit },
+      { db },
+      info
+    ) =>
+      db.Teams.update(
+        {
+          name: name,
+          description: description,
+          maxUsersLimit: maxUsersLimit
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+
+    /*
+      [Ниже] Мутации работы с задачами     
+    */
+    createTask: (
+      parent,
+      { userId, header, text, points, status },
+      { db },
+      info
+    ) =>
+      db.Tasks.create({
+        userId: userId,
+        body: { header: header, text: text, points: points },
+        status: status
+      }),
+    updateTask: (parent, { id, status }, { db }, info) =>
+      db.Tasks.update(
+        {
+          status: status
         },
         {
           where: {
