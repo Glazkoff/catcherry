@@ -27,11 +27,12 @@ const dateTimeFormats = {
     },
     long: {
       year: "numeric",
-      month: "short",
+      month: "long",
       day: "numeric",
-      weekday: "short",
+      // weekday: "short",
       hour: "numeric",
-      minute: "numeric"
+      minute: "numeric",
+      second: "numeric"
     }
   }
 };
