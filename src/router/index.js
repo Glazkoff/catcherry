@@ -150,7 +150,7 @@ const routes = [
     props: true,
     children: [
       {
-        path: "",
+        path: "team_members",
         name: "TeamMembers",
         component: TeamMembers
       },

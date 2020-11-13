@@ -203,8 +203,8 @@ export const UPDATE_TEAMS_QUERY = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
-  query {
-    usersInTeams {
+  query ($teamId: ID!) {
+    usersInTeams (teamId: $teamId) {
       id
       userId
       teamId
