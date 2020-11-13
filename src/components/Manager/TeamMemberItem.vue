@@ -1,35 +1,50 @@
 <template>
-<div class="user">
-  <img src="" alt="photo">
-  <p>{{userInTeam.user.name}}</p>
-  <p>{{userInTeam.status}}</p>
-  <button type="submit" @click="showModal = true">Удалить участника</button>
-  <Popup v-if="showModal" @close="showModal = false" :userInTeam="userInTeam" @del="$emit('delete', userInTeam.id)" />
-
-</div>
+  <div class="user">
+    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
+    <div>
+      <p>{{ userInTeam.user.name }} {{ userInTeam.user.surname }}</p>
+      <p>{{ userInTeam.status }}</p>
+    </div>
+    <button type="submit" class="btn btn-link" @click="showModal = true">
+      Подробнее
+    </button>
+    <Popup
+      v-if="showModal"
+      @close="showModal = false"
+      :userInTeam="userInTeam"
+      @del="$emit('delete', userInTeam.id)"
+    />
+  </div>
 </template>
 
 <script>
 import Popup from "@/components/Manager/Popup.vue";
 export default {
-  props: ['userInTeam'],
+  props: ["userInTeam"],
   data() {
     return {
-      showModal: false,
-    }
-
+      showModal: false
+    };
   },
   components: {
-    Popup,
-  },
-
-}
+    Popup
+  }
+};
 </script>
 
 <style lang="scss" scoped>
 .user {
+  margin: 15px;
+  padding: 15px;
+  border-radius: 8px;
+  box-shadow: 0 2px 5px gray;
   display: flex;
-  align-items: baseline;
-  justify-content: space-evenly;
+}
+p {
+  margin: 10px 20px;
+}
+.bigAvatar {
+  height: 100px;
+  border-radius: 50px;
 }
 </style>

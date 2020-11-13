@@ -47,22 +47,6 @@ export const UPDATE_TOKENS = gql`
 `;
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
-export const USERS_IN_TEAMS_QUERY = gql`
-  query {
-    usersInTeams {
-      id
-      userId
-      teamId
-      status
-      roleId
-      user {
-        id
-        name
-      }
-    }
-  }
-`;
-
 export const CREATE_TEAM = gql`
   mutation(
     $organizationId: Int
@@ -77,18 +61,6 @@ export const CREATE_TEAM = gql`
       maxUsersLimit: $maxUsersLimit
     ) {
       id
-    }
-  }
-`;
-
-export const TEAMS_QUERY = gql`
-  query {
-    teams {
-      id
-      organizationId
-      name
-      description
-      maxUsersLimit
     }
   }
 `;
@@ -202,6 +174,7 @@ export const USERS_QUERY = gql`
       gender
       birthday
       login
+      createdAt
     }
   }
 `;
@@ -232,6 +205,8 @@ export const DELETE_USER_QUERY = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ ORGANIZATIONS
+
 export const CREATE_ORGANIZATION = gql`
   mutation(
     $name: String!
@@ -258,6 +233,12 @@ export const ORGS_QUERY = gql`
       ownerId
       organizationTypeId
       maxTeamsLimit
+      owner {
+        name
+      }
+      organizationType {
+        name
+      }
     }
   }
 `;
@@ -280,7 +261,56 @@ export const ONE_ORG_QUERY = gql`
       organizationTypeId
       maxTeamsLimit
       organizationType {
+    }
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TEAMS
+export const TEAMS_QUERY = gql`
+  query {
+    teams {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+      updatedAt
+    }
+  }
+`;
+
+export const UPDATE_TEAMS_QUERY = gql`
+  mutation(
+    $name: String!
+    $description: String
+    $maxUsersLimit: Int
+    $id: ID!
+  ) {
+    updateTeam(
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+      id: $id
+    )
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
+export const USERS_IN_TEAMS_QUERY = gql`
+  query($teamId: ID!) {
+    usersInTeams(teamId: $teamId) {
+      id
+      userId
+      status
+      roleId
+      user {
+        id
         name
+        surname
+        patricity
+        gender
+        birthday
+        login
       }
       owner {
         surname
@@ -323,5 +353,161 @@ export const UPDATE_TEAM_QUERY = gql`
 export const ADD_IN_TEAM_QUERY = gql`
   mutation($status: String!, $id: ID!) {
     addUserInTeam(status: $status, id: $id)
+    `;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
+
+export const ONE_POST_QUERY = gql`
+  query($id: ID!) {
+    post(id: $id) {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
+
+export const REVOKE_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    revokeRequst(id: $id)
+  }
+`;
+
+export const GET_POINTS_QUERY = gql`
+  query($userId: Int!) {
+    getPointsUser(userId: $userId) {
+      id
+      userId
+      pointQuantity
+    }
+  }
+`;
+
+export const POSTS_QUERY = gql`
+  query {
+    posts {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
+
+export const CREATE_POST = gql`
+  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
+    createPost(
+      body: $body
+      authorId: $authorId
+      organizationId: $organizationId
+    ) {
+      id
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation($id: ID!) {
+    deletePost(id: $id)
+  }
+`;
+
+export const CARGE_POINTS_QUERY = gql`
+  mutation(
+    $pointAccountId: Int!
+    $delta: Int!
+    $operationDescription: String!
+  ) {
+    createPointOperation(
+      pointAccountId: $pointAccountId
+      delta: $delta
+      operationDescription: $operationDescription
+    ) {
+      id
+    }
+  }
+`;
+
+export const RAITING_IN_TEAMS_QUERY = gql`
+  query($teamId: ID!) {
+    raitingInTeams(teamId: $teamId) {
+      id
+      user {
+        name
+        userPoints {
+          pointQuantity
+          pointsOperation {
+            delta
+          }
+        }
+      }
+    }
+  }
+`;
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TASKS
+export const TASKS_QUERY = gql`
+  query($teamId: ID!) {
+    tasks(teamId: $teamId) {
+      id
+      userId
+      teamId
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksTeam {
+        name
+        team {
+          roleId
+        }
+      }
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+export const ADD_TASK_QUERY = gql`
+  mutation(
+    $userId: ID
+    $header: String
+    $text: String
+    $points: Int
+    $status: String
+  ) {
+    createTask(
+      userId: $userId
+      header: $header
+      text: $text
+      points: $points
+      status: $status
+    ) {
+      id
+      userId
+      body {
+        header
+        text
+      }
+      status
+    }
+  }
+`;
+export const EDIT_TASK_QUERY = gql`
+  mutation($id: ID!, $status: String) {
+    updateTask(id: $id, status: $status) {
+      status
+    }
   }
 `;

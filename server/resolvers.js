@@ -83,14 +83,14 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
 
 module.exports = {
   Query: {
-    users: (parent, args, { db }, info) =>
+    users: (parent, args, { db }) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
-    user: (parent, args, { db }, info) => {
+    user: (parent, args, { db }) => {
       return db.Users.findOne({
         where: { id: args.id }
       });
     },
-    oneUserInTeams: (parent, args, { db }, info) =>
+    oneUserInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
         where: { userId: args.userId },
         order: [["id", "ASC"]],
@@ -104,10 +104,10 @@ module.exports = {
         ]
       }),
 
-    organizations: (parent, args, { db }, info) =>
+    organizations: (parent, args, { db }) =>
       db.Organizations.findAll({ order: [["id", "ASC"]] }),
 
-    organization: (parent, args, { db }, info) => {
+    organization: (parent, args, { db }) => {
       return db.Organizations.findOne({
         where: { id: args.id },
         include: [
@@ -116,37 +116,95 @@ module.exports = {
         ]
       });
     },
-    teamsInOneOrganization: (parent, args, { db }, info) => {
+    teamsInOneOrganization: (parent, args, { db }) => {
       return db.Teams.findAll({
         order: [["id", "ASC"]],
         where: { organizationId: args.organizationId }
       });
     },
-    organizationTypes: (parent, args, { db }, info) =>
+    organizationTypes: (parent, args, { db }) =>
       db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
-    teams: (parent, args, { db }, info) =>
+    teams: (parent, args, { db }) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
-    team: (parent, args, { db }, info) => {
+    team: (parent, args, { db }) => {
       return db.Teams.findOne({
         where: { organizationId: args.organizationId }
       });
     },
-    notifications: (parent, args, { db }, info) =>
+    notifications: (parent, args, { db }) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
-    notification: (parent, args, { db }, info) =>
+    notification: (parent, args, { db }) =>
       db.Notifications.findOne({ where: { id: args.id } }),
-
-    // usersInTeams: (parent, args, { db }, info) =>
-    //   db.UsersInTeams.findAll({
-    //     where: { status: "Принят" },
-    //     order: [["id", "ASC"]],
-    //     include: [{ model: db.Users, as: "user" }]
-    //   }),
-    requests: (parent, args, { db }, info) =>
+    posts: (parent, args, { db }) =>
+      db.Posts.findAll({ order: [["id", "ASC"]] }),
+    post: (parent, args, { db }) =>
+      db.Posts.findOne({ where: { id: args.id } }),
+    usersInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
-        where: { status: "Не принят" },
+        where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
+      }),
+    raitingInTeams: (parent, { teamId }, { db }) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Принят", teamId: teamId },
+        include: [
+          {
+            model: db.Users,
+            as: "user",
+            include: {
+              model: db.Points,
+              as: "userPoints",
+              include: {
+                model: db.PointsOperations,
+                as: "pointsOperation"
+              }
+            }
+          }
+        ]
+      }),
+    requests: (parent, { teamId }, { db }) =>
+      db.UsersInTeams.findAll({
+        where: { status: "Не принят", teamId: teamId },
+        order: [["id", "ASC"]],
+        include: [{ model: db.Users, as: "user" }]
+      }),
+
+    getPointsUser: (parent, args, { db }) =>
+      db.Points.findOne({
+        where: { userId: args.userId },
+        order: [["id", "ASC"]]
+      }),
+    getOperationPointsUser: (parent, args, { db }) =>
+      db.PointsOperations.findAll({
+        where: { pointAccountId: args.pointAccountId },
+        order: [["id", "ASC"]]
+      }),
+    tasks: (parent, { teamId }, { db }) =>
+      db.Tasks.findAll({
+        where: { teamId: teamId },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
+          }
+        ]
+        // include: [
+        //
+        // ]
       })
   },
   Mutation: {
@@ -156,8 +214,7 @@ module.exports = {
     signUp: async (
       parent,
       { name, login, password, fingerprint },
-      { res, db },
-      info
+      { res, db }
     ) => {
       let hashPassword = bcrypt.hashSync(password, salt);
 
@@ -186,12 +243,7 @@ module.exports = {
       });
       return tokens;
     },
-    logIn: async (
-      parent,
-      { login, password, fingerprint },
-      { res, db },
-      info
-    ) => {
+    logIn: async (parent, { login, password, fingerprint }, { res, db }) => {
       console.log(login, password, fingerprint);
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
@@ -233,7 +285,7 @@ module.exports = {
         };
       }
     },
-    updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
+    updateTokens: async (parent, { fingerprint }, { req, res, db }) => {
       // Читаем refresh токен
       // let refreshToken = req.cookies.refreshToken;
       // TODO: заменить
@@ -438,6 +490,23 @@ module.exports = {
         }
       }),
 
+    /*
+      [Ниже] Мутации работы с постами (Posts)     
+    */
+    createPost: (parent, { body, authorId, organizationId }, { db }, info) =>
+      db.Posts.create({
+        body: body,
+        authorId: authorId,
+        organizationId: organizationId
+      }),
+    deletePost: (parent, args, { db }, info) =>
+      db.Posts.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+
+    // ----- //
     createUserInTeam: (
       parent,
       { userId, teamId, status, roleId },
@@ -459,10 +528,79 @@ module.exports = {
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
-    acceptRequest: (parent, { id }, { db }, info) =>
+    acceptRequst: (parent, { id }, { db }, info) =>
       db.UsersInTeams.update(
         {
           status: "Принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+
+    revokeRequst: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Не принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    /*
+      [Ниже] Мутации работы с баллами     
+    */
+    createPointOperation: async (
+      parent,
+      { pointAccountId, delta, operationDescription },
+      { db },
+      info
+    ) => {
+      let total = await db.Points.findOne({
+        where: { id: pointAccountId }
+      });
+      db.Points.update(
+        {
+          pointQuantity: total.pointQuantity + delta
+        },
+        {
+          where: {
+            id: pointAccountId
+          }
+        }
+      );
+      return db.PointsOperations.create({
+        pointAccountId: pointAccountId,
+        delta: delta,
+        operationDescription: operationDescription
+      });
+    },
+    /*
+      [Ниже] Мутации работы с командами     
+    */
+
+    /*
+      [Ниже] Мутации работы с задачами     
+    */
+    createTask: (
+      parent,
+      { userId, header, text, points, status },
+      { db },
+      info
+    ) =>
+      db.Tasks.create({
+        userId: userId,
+        body: { header: header, text: text, points: points },
+        status: status
+      }),
+    updateTask: (parent, { id, status }, { db }, info) =>
+      db.Tasks.update(
+        {
+          status: status
         },
         {
           where: {

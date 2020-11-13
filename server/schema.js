@@ -19,6 +19,7 @@ type User {
   gender: String
   birthday: String
   login: String
+  userPoints: PointsUser
   password: String
   createdAt: String
   updatedAt: String
@@ -50,6 +51,7 @@ type Team {
   description: String
   maxUsersLimit: Int
   organization: Organization
+  team: [UserInTeam]
   createdAt: String!
   updatedAt: String!
 }
@@ -86,10 +88,12 @@ type Notification {
   createdAt: String!
   updatedAt: String!
 }
+
 type PointsUser{
   id: ID!
   userId: Int!
   pointQuantity: Int!
+  pointsOperation: [PointOperations]
   createdAt: String!
   updatedAt: String!
 }
@@ -98,6 +102,44 @@ type PointOperations{
   pointAccountId: Int!
   delta: Int!
   operationDescription: String
+}
+
+
+input PostBody {
+  header: String!
+  text: String!
+}
+
+type BodyPost {
+  header: String!
+  text: String!
+}
+
+type Post {
+  id: ID!
+  body: BodyPost!
+  authorId: Int!
+  organizationId: Int!
+  forAllTeam: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+
+type Task {
+  id: ID!
+  teamId: ID!
+  userId: ID
+  body: bodyTask!
+  status: String
+  tasksTeam: Team!
+  tasksUser: User!
+  createdAt: String
+}
+
+type bodyTask {
+  header: String
+  text: String!
+  points: Int
 }
 
 type Query { 
@@ -118,10 +160,17 @@ type Query {
 
   oneUserInTeams(userId: ID!): [UserInTeam!]
   teamsInOneOrganization(organizationId: ID!): [Team]
+  posts: [Post]!
+  post(id: ID!): Post
 
-  requests:[UserInTeam]
   getPointsUser(userId: Int!): PointsUser
-  getOperationPointsUser(userId: Int!): [PointOperations]
+  getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
+  
+  usersInTeams (teamId:ID!):[UserInTeam]!
+  raitingInTeams (teamId:ID!): [UserInTeam]!
+  requests (teamId:ID!):[UserInTeam]
+
+  tasks (teamId:ID!): [Task]!
 }
 
 type Mutation {
@@ -138,12 +187,15 @@ type Mutation {
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
+  createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
+  deletePost(id: ID!): Int!
+  
+  updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
   updateTeam(id: ID!, name: String, description: String, maxUsersLimit: Int): [Int]!
 
   updateTokens(fingerprint:String!): jwt!
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int, id: ID!): Organization!
-  updateOrganization(name: String!, maxTeamsLimit: Int, id: ID!): [Int]!
   addUserInTeam(status: String!, id: ID!): [Int]!
 
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
@@ -151,10 +203,16 @@ type Mutation {
   deleteTeam(id: ID!): Int!
   deleteUserInTeam(id: ID!): Int!
 
-  acceptRequest(id: ID!): [Int]!
-  createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
-  deletePointOperation(id: ID!): Int!
+  acceptRequst(id: ID!): [Int]!
+  revokeRequst(id: ID!): [Int]!
+
+  updatePointsUser(id:ID!, pointQuantity: Int!): [Int]!
+  createPointOperation(pointAccountId: Int!, delta: Int!, operationDescription: String!): PointsUser!	 
+  deletePointOperation(id: ID!): Int!	
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
+
+  createTask(userId: ID, header: String, text: String, points: Int, status: String): Task!
+  updateTask(id: ID!, status: String): Task!
 }
 `;
 

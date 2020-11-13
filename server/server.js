@@ -15,15 +15,15 @@ require("dotenv").config({ path: "../.env" });
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-const faker = require("faker/locale/en");
-const bcrypt = require("bcrypt");
+// const faker = require("faker/locale/en");
+// const bcrypt = require("bcrypt");
 const chalk = require("chalk");
 const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
 const cors = require("cors");
 const history = require("connect-history-api-fallback");
-const compression = require("compression");
+// const compression = require("compression");
 
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
@@ -80,7 +80,7 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 // TODO: добавить заполнение фейковыми данными
 
 db.sequelize
-  // .sync({ alter: true })
+  //.sync({ force: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
@@ -93,6 +93,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
+      // addAllTables();
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -107,3 +108,10 @@ db.sequelize
       );
     });
   });
+
+  // console.log(pointsuser);
+/* TODO: рекомендую использовать следующие библиотеки
+  (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)
+  - const expressJwt = require("express-jwt");
+  - const bcrypt = require("bcrypt")
+*/
