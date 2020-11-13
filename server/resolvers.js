@@ -362,12 +362,14 @@ module.exports = {
     /*
       [Ниже] Мутации работы с комментариями (Comments)     
     */
+    //Создать комментарий
     createComment: (parent, { body, authorId, dateAdd }, { db }, info) =>
       db.Comments.create({
         body: body,
         authorId: authorId,
         dateAdd: dateAdd
       }),
+    //Изменить комментарий
     updateComment: (parent, { body, id }, { db }, info) =>
       db.Comments.update(
         {
@@ -379,6 +381,7 @@ module.exports = {
           }
         }
       ),
+    //Удалить комментарий
     deleteComment: (parent, args, { db }, info) =>
       db.Comments.destroy({
         where: {
