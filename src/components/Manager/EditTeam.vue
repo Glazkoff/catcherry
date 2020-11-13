@@ -1,20 +1,17 @@
 <template>
-<div>
-  <h3>Редактирование</h3>
-  <hr />
-  <div v-for="t in team" :key="t.id">
-    <div v-if="t.id == id">
-      <EditForm :t="t" @update="toSaveEditTeam" />
+  <div>
+    <h3>Редактирование</h3>
+    <hr />
+    <div v-for="t in team" :key="t.id">
+      <div v-if="t.id == id">
+        <EditForm :t="t" @update="toSaveEditTeam" />
+      </div>
     </div>
   </div>
-</div>
 </template>
 
 <script>
-import {
-  TEAM_IN_ORG_QUERY,
-  UPDATE_TEAMS_QUERY
-} from "@/graphql/queries";
+import { TEAM_IN_ORG_QUERY, UPDATE_TEAMS_QUERY } from "@/graphql/queries";
 import EditForm from "@/components/Manager/EditForm";
 export default {
   apollo: {
@@ -61,7 +58,9 @@ export default {
             // Меняем поля определенной команды
             data.team.find(el => el.id === this.id).name = name;
             data.team.find(el => el.id === this.id).description = description;
-            data.team.find(el => el.id === this.id).maxUsersLimit = maxUsersLimit;
+            data.team.find(
+              el => el.id === this.id
+            ).maxUsersLimit = maxUsersLimit;
           }
         })
         .then(data => {

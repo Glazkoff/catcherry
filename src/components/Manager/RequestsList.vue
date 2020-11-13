@@ -1,11 +1,11 @@
 <template>
-<div>
-  <h3>Заявки на вхождение</h3>
-  <hr />
-  <div v-for="request in requests" :key="request.id" class="request">
-    <RequestsItem :request="request" @accept="toAccept" />
+  <div>
+    <h3>Заявки на вхождение</h3>
+    <hr />
+    <div v-for="request in requests" :key="request.id" class="request">
+      <RequestsItem :request="request" @accept="toAccept" />
+    </div>
   </div>
-</div>
 </template>
 
 <script>
@@ -94,11 +94,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.request {
-  border: 1px solid black;
-  padding: 1rem;
-  margin: 1rem;
-}
 
 form {
   display: flex;

@@ -96,7 +96,7 @@
             {{ organization.name }}
           </h3>
           <p>Номер организации: {{ organization.id }}</p>
-          <p>Владелец: {{ organization.owner.name }}</p>
+          <!-- <p>Владелец: {{ organization.owner.name }}</p> -->
           <p>{{ organization.organizationType.name }}</p>
           <button @click="showModalEdit(organization)" class="btn-link">
             Подробнее
@@ -339,7 +339,7 @@ export default {
           userId: this.$route.params.id,
           teamId: teamId,
           status: "Не принят",
-          roleId: "20" //FIXME: определить начальную роль при подаче заявки
+          roleId: "1" //FIXME: определить начальную роль при подаче заявки
         },
         update: (cache, { data: { createUserInTeam } }) => {
           let data = cache.readQuery({

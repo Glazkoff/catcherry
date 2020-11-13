@@ -179,7 +179,7 @@ export const TEAM_IN_ORG_QUERY = gql`
       organizationId
       name
       description
-      maxUsersLimit,
+      maxUsersLimit
       updatedAt
     }
   }
@@ -203,8 +203,8 @@ export const UPDATE_TEAMS_QUERY = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
-  query ($teamId: ID!) {
-    usersInTeams (teamId: $teamId) {
+  query($teamId: ID!) {
+    usersInTeams(teamId: $teamId) {
       id
       userId
       teamId
@@ -342,6 +342,7 @@ export const RAITING_IN_TEAMS_QUERY = gql`
           pointQuantity
           pointsOperation {
             delta
+            createdAt
           }
         }
       }

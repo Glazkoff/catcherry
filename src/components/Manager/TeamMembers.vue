@@ -1,27 +1,23 @@
 <template>
-<div>
-  <h3>Участники</h3>
-  <hr />
-  <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
-    <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+  <div>
+    <h3>Участники</h3>
+    <hr />
+    <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
+      <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+    </div>
+    <Minialert v-if="isShowAlert">
+      <p slot="title">{{ message }}</p>
+    </Minialert>
   </div>
-  <Minialert v-if="isShowAlert">
-    <p slot="title">{{ message }}</p>
-  </Minialert>
-</div>
 </template>
 
 <script>
 import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
 import Minialert from "@/components/admin/MiniAlert.vue";
 
-import {
-  USERS_IN_TEAMS_QUERY,
-  DELETE_IN_TEAMS_QUERY
-} from "@/graphql/queries";
+import { USERS_IN_TEAMS_QUERY, DELETE_IN_TEAMS_QUERY } from "@/graphql/queries";
 
 export default {
-
   data() {
     return {
       isShowAlert: false, // Для показа уведомления об удалении
@@ -37,9 +33,9 @@ export default {
       variables() {
         return {
           teamId: this.teamId
-        }
+        };
       }
-    },
+    }
   },
 
   components: {
@@ -61,7 +57,7 @@ export default {
               query: USERS_IN_TEAMS_QUERY,
               variables: {
                 teamId: this.teamId
-              },
+              }
             });
             // Зписываем в переменную участника команды по id
             let index = data.usersInTeams.findIndex(el => el.id == id);
@@ -90,6 +86,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-
-</style>
+<style lang="scss" scoped></style>

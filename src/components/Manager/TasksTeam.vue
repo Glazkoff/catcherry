@@ -52,25 +52,25 @@
         <h4>{{ task.body.header }}</h4>
         <p>{{ task.body.text }}</p>
         Ответственный:
-          <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
-          {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
-          <label>Статус:</label>
-          <select
-            class="form-control small"
-            v-model="task.status"
-            @change="
-              toEditTask(
-                task.id,
-                task.status,
-                task.tasksUser.userPoints.id,
-                task.body.points
-              )
-            "
-          >
-            <option>Запланировано</option>
-            <option>В работе</option>
-            <option>Готово</option></select
-          >
+        <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
+        {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
+        <label>Статус:</label>
+        <select
+          class="form-control small"
+          v-model="task.status"
+          @change="
+            toEditTask(
+              task.id,
+              task.status,
+              task.tasksUser.userPoints.id,
+              task.body.points
+            )
+          "
+        >
+          <option>Запланировано</option>
+          <option>В работе</option>
+          <option>Готово</option></select
+        >
         <p>+{{ task.body.points }} баллов</p>
       </div>
     </div>

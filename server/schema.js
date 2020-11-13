@@ -100,6 +100,7 @@ type PointOperations{
   pointAccountId: Int!
   delta: Int!
   operationDescription: String
+  createdAt: String
 }
 
 type Task {
