@@ -31,8 +31,14 @@ type Organization {
   ownerId: Int
   organizationTypeId: Int
   maxTeamsLimit: Int
-  createdAt: String!
+  owner: User
+  organizationType: OrganizationType!
+  createdAt: String! 
   updatedAt: String!
+}
+type OrganizationType {
+  id: ID!
+  name: String!
 }
 
 type Team {
@@ -42,6 +48,7 @@ type Team {
   description: String
   maxUsersLimit: Int
   team: [UserInTeam]
+  organization: Organization
   createdAt: String!
   updatedAt: String!
 }
@@ -53,6 +60,7 @@ type UserInTeam {
   status: String!
   roleId: ID!
   user: User!
+  team: Team!
   createdAt: String!
   updatedAt: String!
 }
@@ -117,6 +125,7 @@ type Query {
 
   organizations: [Organization!]
   organization(id: ID!): Organization
+  organizationTypes: [OrganizationType!]
 
   teams: [Team!]
   team(organizationId: Int): [Team]
@@ -128,6 +137,7 @@ type Query {
   getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
   
   usersInTeams (teamId:ID!):[UserInTeam]!
+  oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
   requests (teamId:ID!):[UserInTeam]
 

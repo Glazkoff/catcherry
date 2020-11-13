@@ -91,10 +91,20 @@ module.exports = {
       return db.Users.findOne({ where: { id: args.id } });
     },
     organizations: (parent, args, { db }, info) =>
-      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+      db.Organizations.findAll({
+        order: [["id", "ASC"]],
+        include: [
+          { model: db.Users, as: "owner" },
+          { model: db.OrganizationsTypes, as: "organizationType" }
+        ]
+      }),
     organization: (parent, args, { db }, info) => {
       return db.Organizations.findOne({ where: { id: args.id } });
     },
+    organizationTypes: (parent, args, { db }, info) =>
+      db.OrganizationsTypes.findAll({
+        order: [["id", "ASC"]]
+      }),
     teams: (parent, args, { db }, info) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
     team: (parent, args, { db }, info) => {
@@ -112,6 +122,19 @@ module.exports = {
         where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
+      }),
+    oneUserInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { userId: args.userId },
+        order: [["id", "ASC"]],
+        include: [
+          { model: db.Users, as: "user" },
+          {
+            model: db.Teams,
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
       }),
     raitingInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
@@ -569,6 +592,6 @@ module.exports = {
         where: {
           id: args.id
         }
-      })
+      }),
   }
 };

@@ -203,21 +203,54 @@ export const UPDATE_TEAMS_QUERY = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
-  query($teamId: ID!) {
-    usersInTeams(teamId: $teamId) {
+  query {
+    usersInTeams {
       id
       userId
+      teamId
       status
       roleId
       user {
         id
         name
-        surname
-        patricity
-        gender
-        birthday
-        login
       }
+    }
+  }
+`;
+
+export const ONE_USER_IN_TEAMS_QUERY = gql`
+  query($userId: ID!) {
+    oneUserInTeams(userId: $userId) {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+      team {
+        id
+        name
+        organization {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const CREATE_USER_IN_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!, $status: String!, $roleId: ID!) {
+    createUserInTeam(
+      userId: $userId
+      teamId: $teamId
+      status: $status
+      roleId: $roleId
+    ) {
+      id
     }
   }
 `;

@@ -24,7 +24,6 @@ export default {};
   right: 1%;
   transition: all 0.3s ease;
 }
-
 .alert-enter .alert,
 .alert-leave-active .alert {
   -webkit-transform: scale(1.1);
