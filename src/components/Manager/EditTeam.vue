@@ -18,6 +18,7 @@ import {
 import EditForm from "@/components/Manager/EditForm";
 export default {
   apollo: {
+    // Массив команд организации
     team: {
       query: TEAM_IN_ORG_QUERY,
       variables() {
@@ -29,13 +30,14 @@ export default {
   },
   data() {
     return {
-      id: this.$route.params.id
+      id: this.$route.params.id // id команды
     };
   },
   components: {
     EditForm
   },
   methods: {
+    // Метод для редактирования команды; сохраняет внесенные пользователем изменения
     toSaveEditTeam(name, description, maxUsersLimit) {
       this.$apollo
         .mutate({
@@ -47,6 +49,7 @@ export default {
             maxUsersLimit: maxUsersLimit
           },
           update: cache => {
+            // Записываем в переменную массив команд организации
             let data = cache.readQuery({
               query: TEAM_IN_ORG_QUERY,
               variables() {
@@ -55,6 +58,7 @@ export default {
                 };
               }
             });
+            // Меняем поля определенной команды
             data.team.find(el => el.id === this.id).name = name;
             data.team.find(el => el.id === this.id).description = description;
             data.team.find(el => el.id === this.id).maxUsersLimit = maxUsersLimit;

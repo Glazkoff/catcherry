@@ -17,7 +17,7 @@
 
 <script>
 export default {
-  props: ["t"],
+  props: ["t"], // Команда, которую хотим редактировать
   data() {
     return {
       name: this.t.name,

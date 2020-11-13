@@ -1,22 +1,17 @@
 <template>
-  <div class="user">
-    <img src="" alt="photo" />
-    <p>{{ request.user.name }}</p>
-    <p>{{ request.status }}</p>
-    <button type="submit" @click="showModal = true">Подробнее</button>
-    <PopupRequest
-      v-if="showModal"
-      @close="showModal = false"
-      :request="request"
-      @act="$emit('accept', request.id)"
-    />
-  </div>
+<div class="user">
+  <img src="" alt="photo" />
+  <p>{{ request.user.name }}</p>
+  <p>{{ request.status }}</p>
+  <button type="submit" @click="showModal = true">Подробнее</button>
+  <PopupRequest v-if="showModal" @close="showModal = false" :request="request" @act="$emit('accept', request.id)" />
+</div>
 </template>
 
 <script>
 import PopupRequest from "@/components/Manager/PopupRequest";
 export default {
-  props: ["request"],
+  props: ["request"], // переданная заявка
   data() {
     return {
       showModal: false

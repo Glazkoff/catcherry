@@ -17,6 +17,7 @@ import {
 
 export default {
   apollo: {
+    // Массив команд организации
     team: {
       query: TEAM_IN_ORG_QUERY,
       variables() {

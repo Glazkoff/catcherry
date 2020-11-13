@@ -19,6 +19,7 @@ import {
 } from "@/graphql/queries";
 export default {
   apollo: {
+    // Массив команд организации
     team: {
       query: TEAM_IN_ORG_QUERY,
       variables() {
@@ -33,7 +34,7 @@ export default {
   },
   data() {
     return {
-      id: this.$route.params.id
+      id: this.$route.params.id // id команды
     };
   }
 };
