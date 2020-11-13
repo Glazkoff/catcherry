@@ -84,15 +84,34 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 
 // TODO: добавить заполнение фейковыми данными
 
-db.sequelize.sync({ alter: true }).then(async () => {
-  app.listen(PORT, async () => {
-    // false - если нужно просто добавить данные в таблицы;
-    // true - если нужно удалить все данные и заново заполнить все таблицы;
-    //addAllTables(true);
-    console.log(
-      chalk.yellow(`Сервер (Graphiql) запущен на`),
-      chalk.cyan(`http://localhost:${PORT}/graphiql`)
-    );
+db.sequelize
+  .sync({ alter: true })
+  // .sync()
+  .then(async () => {
+    app.listen(PORT, () => {
+      // addAllTables(false);
+      // db.Users.destroy({ where: {} });
+      // const salt = bcrypt.genSaltSync(10);
+      // for (let index = 0; index < 10; index++) {
+      //   db.Users.create({
+      //     name: faker.name.findName(),
+      //     login: faker.random.word(),
+      //     password: bcrypt.hashSync("nikita", salt),
+      //   });
+      // }
+      console.log(
+        chalk.yellow(`Сервер (Graphiql) запущен на`),
+        chalk.cyan(`http://localhost:${PORT}/graphiql`)
+      );
+      console.log(
+        chalk.green(`Клиентская часть запущена на`),
+        chalk.cyan(`http://localhost:${PORT}/`)
+      );
+      console.log(
+        chalk.blueBright(`Статические файлы доступны на`),
+        chalk.cyan(`http://localhost:${PORT}/public/...`)
+      );
+    });
   });
 let destroyTable;
 async function addAllTables(destroyTable) {
@@ -118,10 +137,7 @@ async function addAllTables(destroyTable) {
     });
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
-      name: faker.name.firstName(),
-      surname: faker.name.lastName(),
-      patricity: faker.name.findName(),
-      gender: faker.name.gender(),
+      name: faker.name.findName(),
       login: faker.random.word(),
       password: bcrypt.hashSync("nikita", salt)
     });
@@ -165,12 +181,8 @@ async function addAllTables(destroyTable) {
       },
       status: faker.random.word()
     });
-
     let posts = await db.Posts.create({
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph()
-      },
+      body: faker.lorem.paragraph(),
       authorId: user.dataValues.id,
       organizationId: team.dataValues.id,
       forAllTeam: faker.random.boolean()
@@ -193,9 +205,10 @@ async function addAllTables(destroyTable) {
       delta: faker.random.number(),
       operationDescription: faker.lorem.paragraph()
     });
+  // console.log(organization);
+  //   console.log(team);
   }
-
-  // console.log(pointsuser);
+  
 }
 /* TODO: рекомендую использовать следующие библиотеки
   (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)

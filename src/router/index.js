@@ -24,7 +24,7 @@ import RequestsList from "@/components/Manager/RequestsList.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
-
+import PointsUser from "@/components/account/PointsUser.vue";
 Vue.use(VueRouter);
 
 import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
@@ -68,6 +68,11 @@ const routes = [
         path: "list_req",
         name: "ListReguest",
         component: ListRequest
+      },
+      {
+        path: "points",
+        name: "PointsUser",
+        component: PointsUser
       }
     ]
   },
@@ -151,6 +156,11 @@ const routes = [
     path: "/feed",
     name: "FeedOfPosts",
     component: FeedOfPosts
+  },
+  {
+    path: "/points",
+    name: "PointsUser",
+    component: PointsUser
   }
   // {
   //   path: "/about",

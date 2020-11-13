@@ -8,6 +8,9 @@
         <router-link tag="a" :to="'/user/' + $route.params.id + '/list_req'"
           >Заявки</router-link
         >
+        <router-link tag="a" :to="'/user/' + 1 + '/points'"
+          >Баллы</router-link
+        >
       </div>
       <router-view></router-view>
     </div>

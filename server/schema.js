@@ -76,6 +76,7 @@ type Notification {
   createdAt: String!
   updatedAt: String!
 }
+
 type PointsUser{
   id: ID!
   userId: Int!
@@ -150,6 +151,8 @@ type Mutation {
 
   acceptRequest(id: ID!): [Int]!
   createPointOperation(pointAccountId: Int!, delta: Int!): PointsUser!
+  deletePoints(id: ID!): Int!
+  updatePoints(id: ID!, pointQuantity: Int!): [Int]!
   deletePointOperation(id: ID!): Int!
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
 }
