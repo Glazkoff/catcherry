@@ -1,5 +1,6 @@
 <template>
   <div class="search_organization account-view">
+    <!-- попап для просмотра информации об организации -->
     <popup v-if="isShowInfoModal">
       <h3 slot="header">Организация "{{ nameOfOrganization }}"</h3>
       <div slot="body">
@@ -8,6 +9,7 @@
           >Вы можете вступить в организацию или сразу вступить в команду</span
         >
         <h3>Команды</h3>
+        <!-- список команд в организации -->
         <input type="text" class="form-text" placeholder="Поиск команды" />
         <div v-if="!team">
           <h5>В организации пока нет ни одной команды</h5>
@@ -37,7 +39,7 @@
     <minialert v-if="isShowAlertAddReq"
       ><p slot="title">Заявка в команду успешно подана</p></minialert
     >
-
+    <!-- свич-табы для поиска организации по названию или номеру  -->
     <h1>Поиск организации</h1>
     <div class="tabs">
       <input
@@ -83,6 +85,7 @@
         </form>
       </div>
     </div>
+    <!-- вывод массива всех организаций  -->
     <div class="result_organization">
       <h2>Список организаций</h2>
       <hr />
@@ -102,6 +105,7 @@
             Подробнее
           </button>
         </div>
+        <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
         <div v-if="filterOrganization == ''">
           <h4>Организации не найдены</h4>
           <button class="btn btn-primary" @click="isAddOrganization = true">
@@ -109,6 +113,7 @@
           </button>
         </div>
       </div>
+      <!-- вывод массива организаций, искомых по номеру  -->
       <div v-else style="color: gray;">
         <div v-for="(item, index) in searchOrgIndex" :key="index">
           <div class="result_card">
@@ -124,12 +129,13 @@
         </div>
       </div>
     </div>
-
+    <!-- попап для создания новой организации  -->
     <popup v-if="isAddOrganization">
       <h3 slot="header">
         Регистрация организации
       </h3>
       <div slot="body">
+        <!-- форма добавления новой организации  -->
         <form @submit.prevent="submit">
           <p>* - обязательное поле</p>
           <label>Название организации</label><br />
@@ -159,6 +165,7 @@
             <span v-if="!$v.ownerId.required">Owner is required</span>
           </div>
           <br />
+          <!-- тип орагизации должен выводиться из таблицы organizationTypes -->
           <label>Тип организации</label><br />
           <input
             type="number"
@@ -201,6 +208,7 @@
         </button>
       </div>
     </popup>
+    <!-- окошко информации о добавлении организации  -->
     <minialert v-if="isShowAlertAdd"
       ><p slot="title">Вы успешно добавили организацию</p></minialert
     >
@@ -243,9 +251,11 @@ export default {
     };
   },
   apollo: {
+    // массив всех организаций
     organizations: {
       query: ORGS_QUERY
     },
+    // массив информации об одной организации
     organization: {
       query: ONE_ORG_QUERY,
       variables() {
@@ -254,9 +264,11 @@ export default {
         };
       }
     },
+    // массив всех команд
     teams: {
       query: TEAMS_QUERY
     },
+    // массив команд, находящихся в организации
     team: {
       query: TEAM_IN_ORG_QUERY,
       variables() {
@@ -266,6 +278,7 @@ export default {
       }
     }
   },
+  // валидация формы
   validations: {
     name: {
       required,
@@ -282,6 +295,7 @@ export default {
     }
   },
   methods: {
+    // метод корректного отображения информации об организации в попапе
     showModalEdit(organization) {
       (this.nameOfOrganization = organization.name),
         (this.isShowInfoModal = true);
@@ -292,6 +306,7 @@ export default {
       this.organizationId = parseInt(organization.id);
     },
     submit() {
+      // создание новой организации
       this.$apollo
         .mutate({
           mutation: CREATE_ORGANIZATION,
@@ -327,11 +342,13 @@ export default {
           this.signUpLoading = false;
           console.error(error);
         });
+      // вывод инфомационного окошка о создании организации
       this.isShowAlertAdd = true;
       setTimeout(() => {
         this.isShowAlertAdd = false;
       }, 3000);
     },
+    // метод создания заявки в команду
     requestInTeam(teamId) {
       this.$apollo.mutate({
         mutation: CREATE_USER_IN_TEAM,
@@ -354,6 +371,7 @@ export default {
           });
         }
       });
+      // появление окошка информации о создании заявки
       this.isShowInfoModal = false;
       this.isShowAlertAddReq = true;
       setTimeout(() => {
@@ -362,6 +380,7 @@ export default {
     }
   },
   computed: {
+    // фильтрация организаций поиском по названию
     filterOrganization() {
       if (this.findString !== "") {
         return this.organizations.filter(el => {
@@ -374,6 +393,7 @@ export default {
         return this.organizations;
       }
     },
+    // поиск организации по ее номеру
     searchOrgIndex() {
       let obj = this.organizations;
       let newArray = [];

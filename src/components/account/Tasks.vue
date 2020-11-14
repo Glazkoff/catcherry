@@ -38,6 +38,11 @@
           <option>Готово</option></select
         >
         <p>+{{ task.body.points }} баллов</p>
+        <minialert v-if="isShowAlertPoints"
+          ><p slot="title">
+            Вам начислено {{ task.body.points }} баллов
+          </p></minialert
+        >
       </div>
     </div>
   </div>
@@ -52,7 +57,10 @@ import {
   EDIT_TASK_QUERY,
   CARGE_POINTS_QUERY
 } from "@/graphql/queries";
+import minialert from "@/components/account/MiniAlert.vue";
+
 export default {
+  components: { minialert },
   apollo: {
     tasks: {
       query: TASKS_QUERY,
@@ -86,7 +94,8 @@ export default {
       header: "",
       text: "",
       status: "",
-      points: 10
+      points: 10,
+      isShowAlertPoints: false
     };
   },
   methods: {
@@ -118,7 +127,7 @@ export default {
           console.error(error);
         });
     },
-
+    // метод смены статуса задачи
     toEditTask(id, status, pointAccountId, points) {
       this.$apollo
         .mutate({
@@ -134,6 +143,7 @@ export default {
         .catch(error => {
           console.error(error);
         });
+      // если статус задачи изменен на "Готово", то пользователю начисляются баллы за задачу
       if (status === "Готово") {
         this.$apollo
           .mutate({
@@ -150,6 +160,10 @@ export default {
           .catch(error => {
             console.error(error);
           });
+        this.isShowAlertPoints = true;
+        setTimeout(() => {
+          this.isShowAlertPoints = false;
+        }, 3000);
       }
     }
   }

@@ -2,6 +2,7 @@
   <div>
     <h3>Бэклог заданий</h3>
     <hr />
+    <!-- вывод массива задач без назначенных ответственных-->
     <div v-for="taskNoneUser in backlog" :key="taskNoneUser.id">
       <div v-if="!taskNoneUser.tasksUser" class="backlogTask">
         <b>{{ taskNoneUser.body.header }}</b>
@@ -25,13 +26,15 @@
       </button>
     </div>
     <div v-else>
+      <!-- форма добавления новой задачи  -->
       <form @submit.prevent="">
         <label>Заголовок</label
         ><input type="text" class="form-control" v-model="header" />
         <label>Описание задачи</label
         ><input type="text" class="form-control" v-model="text" />
-        <label>Ответственный</label
-        ><select class="form-control" v-model="userId">
+        <label>Ответственный</label>
+        <!-- селект для назначения ответственного из команды -->
+        <select class="form-control" v-model="userId">
           <option :value="null">Назначается самостоятельно</option>
           <option
             v-for="users in usersInTeams"
@@ -47,6 +50,7 @@
       </form>
       <hr />
     </div>
+    <!-- вывод массива задач с назначенными ответственными -->
     <div v-for="task in tasks" :key="task.id">
       <div v-if="task.body.points > 0" class="oneUser">
         <h4>{{ task.body.header }}</h4>
@@ -55,6 +59,7 @@
         <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
         {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
         <label>Статус:</label>
+        <!-- селект для смены статуса  -->
         <select
           class="form-control small"
           v-model="task.status"
@@ -72,6 +77,13 @@
           <option>Готово</option></select
         >
         <p>+{{ task.body.points }} баллов</p>
+        <!-- окошко о начислении баллов ответственному за задачу -->
+        <minialert v-if="isShowAlertPoints"
+          ><p slot="title">
+            Пользователю {{ task.tasksUser.name }}
+            {{ task.tasksUser.surname }} начислено {{ task.body.points }} баллов
+          </p></minialert
+        >
       </div>
     </div>
   </div>
@@ -86,8 +98,12 @@ import {
   EDIT_TASK_QUERY,
   CARGE_POINTS_QUERY
 } from "@/graphql/queries";
+import minialert from "@/components/account/MiniAlert.vue";
+
 export default {
+  components: { minialert },
   apollo: {
+    // массив задач с назначенными ответственными
     tasks: {
       query: TASKS_QUERY,
       variables() {
@@ -96,6 +112,7 @@ export default {
         };
       }
     },
+    // массив задач без ответственных
     backlog: {
       query: BACKLOG_QUERY,
       variables() {
@@ -104,6 +121,7 @@ export default {
         };
       }
     },
+    // массив участников команды для вывода в выпадающем списке
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
@@ -120,10 +138,12 @@ export default {
       header: "",
       text: "",
       status: "",
-      points: 10
+      points: 10,
+      isShowAlertPoints: false
     };
   },
   methods: {
+    // метод добавления нового задания в общий список
     toAddTask() {
       this.$apollo
         .mutate({
@@ -162,7 +182,7 @@ export default {
           console.error(error);
         });
     },
-
+    // изменение статуса заявки
     toEditTask(id, status, pointAccountId, points) {
       this.$apollo
         .mutate({
@@ -178,6 +198,7 @@ export default {
         .catch(error => {
           console.error(error);
         });
+      // если статус задачи изменен на "готово", ответстенному за задачу начисляются баллы
       if (status === "Готово") {
         this.$apollo
           .mutate({
@@ -194,6 +215,11 @@ export default {
           .catch(error => {
             console.error(error);
           });
+        // появляется окошко сообщения о начислении баллов
+        this.isShowAlertPoints = true;
+        setTimeout(() => {
+          this.isShowAlertPoints = false;
+        }, 3000);
       }
     }
   }

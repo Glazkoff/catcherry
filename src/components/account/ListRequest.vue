@@ -1,10 +1,12 @@
 <template>
   <div class="account-view">
     <h1>Список заявок на вступление в команду</h1>
+    <!-- вывод массива поданных заявок  -->
     <div v-for="request in oneUserInTeams" :key="request.id">
       <div class="result_card">
-        <h4>Заявка на вступление в команду {{ request.team.name}}</h4>
-        <span>Организация: {{request.team.organization.name}}</span><br />
+        <h4>Заявка на вступление в команду {{ request.team.name }}</h4>
+        <span>Организация: {{ request.team.organization.name }}</span
+        ><br />
         <span>Номер заявки: {{ request.id }}</span
         ><br />
         <span>Статус: {{ request.status }}</span
@@ -18,6 +20,7 @@
         </button>
       </div>
     </div>
+    <!-- всплывающее информационное окошко  -->
     <minialert v-if="isShowAlertDelete"
       ><p slot="title">Заявка в организацию отменена</p></minialert
     >
@@ -39,6 +42,7 @@ export default {
     };
   },
   apollo: {
+    // массив данных о пользователе в команде
     oneUserInTeams: {
       query: ONE_USER_IN_TEAMS_QUERY,
       variables() {
@@ -49,6 +53,7 @@ export default {
     }
   },
   methods: {
+    // метод отмены заявки, поданной в команду организации 
     deleteRequest(id) {
       this.$apollo
         .mutate({
