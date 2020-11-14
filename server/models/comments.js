@@ -14,11 +14,16 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "authorId",
         as: "author"
       });
+      Comments.belongsTo(models.Posts, {
+        foreignKey: "postId",
+        as: "post"
+      });
     }
   };
   Comments.init(
     {
       authorId: DataTypes.INTEGER,
+      postId: DataTypes.INTEGER,
       body: {
         type: DataTypes.JSONB,
         allowNull: false

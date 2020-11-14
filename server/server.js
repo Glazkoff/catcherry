@@ -115,18 +115,19 @@ db.sequelize
 let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
-    db.Administrators.destroy({ where: {} });
-    db.Notifications.destroy({ where: {} });
-    db.Organizations.destroy({ where: {} });
-    db.OrganizationsTypes.destroy({ where: {} });
-    db.Points.destroy({ where: {} });
-    db.PointsOperations.destroy({ where: {} });
-    db.Posts.destroy({ where: {} });
-    db.ReadNotification.destroy({ where: {} });
-    db.Roles.destroy({ where: {} });
-    db.Tasks.destroy({ where: {} });
-    db.TeamCustomization.destroy({ where: {} });
-    db.Teams.destroy({ where: {} });
+    db.Comments.destroy({ where: {} });
+    // db.Administrators.destroy({ where: {} });
+    // db.Notifications.destroy({ where: {} });
+    // db.Organizations.destroy({ where: {} });
+    // db.OrganizationsTypes.destroy({ where: {} });
+    // db.Points.destroy({ where: {} });
+    // db.PointsOperations.destroy({ where: {} });
+    // db.Posts.destroy({ where: {} });
+    // db.ReadNotification.destroy({ where: {} });
+    // db.Roles.destroy({ where: {} });
+    // db.Tasks.destroy({ where: {} });
+    // db.TeamCustomization.destroy({ where: {} });
+    // db.Teams.destroy({ where: {} });
   }
   //Можно менять количество заполнений в переменной quantity
   let quantity = 10;
@@ -204,6 +205,16 @@ async function addAllTables(destroyTable) {
       delta: faker.random.number(),
       operationDescription: faker.lorem.paragraph()
     });
+    let comments = await db.PointsOperations.create({
+      authorId: user.dataValues.id,
+      postId: posts.dataValues.id,
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph()
+      },
+      dateAdd: faker.random.number()
+    });
+    console.log(comments);
   }
 
   // console.log(pointsuser);

@@ -33,7 +33,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Users.hasMany(models.Comments, {
         foreignKey: "authorId",
-        as: "comments"
+        as: "author"
       });
       Users.hasOne(models.Administrators, {
         foreignKey: "userId",

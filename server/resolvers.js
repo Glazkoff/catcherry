@@ -105,7 +105,16 @@ module.exports = {
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
     comments: (parent, args, { db }, info) =>
-      db.Comments.findAll({ order: [["id", "ASC"]] }),
+      db.Comments.findAll({
+        order: [["id", "ASC"]]
+        // include: [
+        //   {
+        //     model: db.Users,
+        //     as: "author",
+        //     attributes: ["name"]
+        //   }
+        // ]
+      }),
     comment: (parent, args, { db }, info) =>
       db.Comments.findOne({ where: { id: args.id } }),
 
@@ -363,10 +372,16 @@ module.exports = {
       [Ниже] Мутации работы с комментариями (Comments)     
     */
     //Создать комментарий
-    createComment: (parent, { body, authorId, dateAdd }, { db }, info) =>
+    createComment: (
+      parent,
+      { body, authorId, postId, dateAdd },
+      { db },
+      info
+    ) =>
       db.Comments.create({
         body: body,
         authorId: authorId,
+        postId: postId,
         dateAdd: dateAdd
       }),
     //Изменить комментарий

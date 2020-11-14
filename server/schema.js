@@ -102,6 +102,7 @@ type Comment {
   id: ID!
   body: BodyComment!
   authorId: Int!
+  postId: Int!
   dateAdd: String!
   createdAt: String!
   updatedAt: String!
@@ -142,7 +143,7 @@ type Mutation {
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
-  createComment(body: CommentBody!, authorId: Int!, dateAdd: String!): Comment!
+  createComment(body: CommentBody!, authorId: Int!, postId: Int!, dateAdd: String!): Comment!
   deleteComment(id: ID!): Int!
   updateComment(body: CommentBody!, id: ID!): [Int]!
 
