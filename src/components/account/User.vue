@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <!-- боковое меню для пользователя без команды -->
       <div class="sidebar">
         <router-link tag="a" :to="'/user/' + $route.params.id + '/user_org'"
           >Организации</router-link

@@ -2,6 +2,7 @@
   <div>
     <h3>Рейтинг участников</h3>
     <hr />
+    <!-- инпуты для смены периода отображения рейтинга  -->
     В период с
     <input type="date" v-model="weekAgo" class="form-control mini-date" /> по
     <input type="date" v-model="today" class="form-control mini-date" />
@@ -10,10 +11,13 @@
     <a @click="weeklyList()" class="btn btn-link">По недельному результату</a>
     <div v-for="raiting in raitingInTeams" :key="raiting.id" class="oneUser">
       <img src="@/assets/avatar.jpg" alt="photo" class="mediumAvatar" />
-      <p>{{ raiting.user.name }}</p>
+      <p>
+        <b>{{ raiting.user.name }}</b> 
+      </p>
       <p>Заработанные баллы: {{ raiting.user.userPoints.pointQuantity }}</p>
       <div>
         За неделю заработано:
+        <!-- функция отображения баллов пользователя -->
         <div
           v-if="+summOperations(raiting.user.userPoints.pointsOperation) > 0"
           class="up"
@@ -44,6 +48,7 @@ export default {
     };
   },
   apollo: {
+    // массив пользователей команды с рейтиногм по баллам
     raitingInTeams: {
       query: RAITING_IN_TEAMS_QUERY,
       variables() {
@@ -54,6 +59,7 @@ export default {
     }
   },
   methods: {
+    // сортировка по общему количеству баллов
     sortList() {
       this.raitingInTeams.sort(
         (a, b) =>
@@ -61,6 +67,7 @@ export default {
           parseFloat(a.user.userPoints.pointQuantity)
       );
     },
+    // сортировка по недельному количеству заработанных баллов
     weeklyList() {
       this.raitingInTeams.sort(
         (a, b) =>
@@ -68,6 +75,7 @@ export default {
           parseFloat(this.summOperations(a.user.userPoints.pointsOperation))
       );
     },
+    // сумма баллов по заданному временному промежутку
     summOperations(pointsOperation) {
       let summ = 0;
       for (let i = 0; i < pointsOperation.length; i++) {
@@ -82,6 +90,7 @@ export default {
       }
       return summ;
     },
+    // отображение тайм-штампа в фотмате для input date
     stampToDate(stamp) {
       let a = new Date(stamp);
       let year = a.getFullYear();
@@ -92,8 +101,7 @@ export default {
       let time = year + "-" + month + "-" + date;
       return time;
     }
-  },
-  computed: {}
+  }
 };
 </script>
 
