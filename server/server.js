@@ -25,7 +25,6 @@ const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
 const { createRateLimitDirective } = require("graphql-rate-limit");
-
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 
@@ -87,8 +86,6 @@ app.use(express.static(path.join(__dirname, "../dist")));
 // Работа со статическими файлами
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
-// TODO: добавить заполнение фейковыми данными
-
 db.sequelize
   //.sync({ force: true })
   .sync()
@@ -118,6 +115,7 @@ db.sequelize
       );
     });
   });
+
 let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {

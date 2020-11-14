@@ -33,7 +33,10 @@ export default {
     }
   },
   async mounted() {
+    // Для глобального лоадера
     this.$store.commit("SET_AUTH_LOADING", true);
+
+    // Запрашиваем токены при запуске приложения
     this.$store.dispatch("GET_TOKENS").then(
       () => {
         this.$store.commit("SET_AUTH_LOADING", false);
@@ -44,40 +47,6 @@ export default {
       }
     );
   }
-  // async beforeMount() {
-  //   const fp = await this.$fingerprint.load();
-  //   const result = await fp.get();
-  //   const visitorId = result.visitorId;
-  //   this.fingerprint = visitorId;
-  //   this.$apollo
-  //     .mutate({
-  //       mutation: UPDATE_TOKENS,
-  //       variables: {
-  //         fingerprint: this.fingerprint
-  //       }
-  //     })
-  //     .then(resp => {
-  //       console.log("UPD", resp);
-  //       // Если сервер не вернул токен
-  //       if (
-  //         !resp.data.updateTokens ||
-  //         resp.data.updateTokens.accessToken === null ||
-  //         resp.data.updateTokens.error
-  //       ) {
-  //         if (this.$route.path !== "/auth") {
-  //           this.$router.push("/auth");
-  //         }
-  //       } else {
-  //         this.$store.commit(
-  //           "SET_ACCESS_TOKEN",
-  //           resp.data.updateTokens.accessToken
-  //         );
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // }
 };
 </script>
 
