@@ -1,15 +1,15 @@
 <template>
-  <div>
-    <h3>Заявки на вхождение</h3>
-    <hr />
-    <div v-for="request in requests" :key="request.id" class="request">
-      <RequestsItem :request="request" @accept="toAccept" />
-    </div>
+<div>
+  <h3>Заявки на вхождение</h3>
+  <hr />
+  <div v-for="request in requests" :key="request.id" class="request">
+    <RequestsItem :request="request" @accept="toAccept" />
   </div>
+</div>
 </template>
 
 <script>
-import RequestsItem from "@/components/Manager/RequestsItem";
+import RequestsItem from "@/components/manager/RequestsItem";
 
 import {
   REQUESTS_QUERY,
@@ -94,7 +94,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-
 form {
   display: flex;
   flex-direction: column;

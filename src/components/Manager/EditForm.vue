@@ -1,41 +1,18 @@
 <template>
-  <div>
-    <span>Последнее редактирование: {{ stampToDate(t.updatedAt) }} </span>
-    <form
-      action=""
-      @submit="$emit('update', name, description, parseInt(maxUsersLimit))"
-    >
-      <label for="name">Название</label>
-      <input
-        type="text"
-        name="name"
-        class="form-control"
-        placeholder="Название"
-        v-model="name"
-      />
-      <label for="description">Описание</label>
-      <textarea
-        name="description"
-        class="form-control"
-        id=""
-        cols="10"
-        rows="5"
-        placeholder="Описание"
-        v-model="description"
-      ></textarea>
-      <label for="maxUsersLimit">Максимальное число пользователей</label>
-      <input
-        type="number"
-        name="maxUsersLimit"
-        class="form-control"
-        placeholder="Максимальное число участников"
-        v-model="maxUsersLimit"
-      />
-      <button type="submit" class="btn btn-primary">
-        Сохранить
-      </button>
-    </form>
-  </div>
+<div>
+  <span>Последнее редактирование: {{ stampToDate(t.updatedAt) }} </span>
+  <form action="" @submit="$emit('update', name, description, parseInt(maxUsersLimit))">
+    <label for="name">Название</label>
+    <input type="text" name="name" class="form-control" placeholder="Название" v-model="name" />
+    <label for="description">Описание</label>
+    <textarea name="description" class="form-control" id="" cols="10" rows="5" placeholder="Описание" v-model="description"></textarea>
+    <label for="maxUsersLimit">Максимальное число пользователей</label>
+    <input type="number" name="maxUsersLimit" class="form-control" placeholder="Максимальное число участников" v-model="maxUsersLimit" />
+    <button type="submit" class="btn btn-primary">
+      Сохранить
+    </button>
+  </form>
+</div>
 </template>
 
 <script>
@@ -49,6 +26,7 @@ export default {
     };
   },
   methods: {
+    // Метод для корректного отображения даты последнего редактирования
     stampToDate(stamp) {
       let a = new Date(+stamp);
       var months = [

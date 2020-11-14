@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
+import NavBar from "@/components/manager/NavBar";
 import {
   TEAM_IN_ORG_QUERY
 } from "@/graphql/queries";
