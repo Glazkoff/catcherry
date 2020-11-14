@@ -53,7 +53,7 @@
           <div class = "cont">
             <!-- Fold this div and try deleting evrything inbetween -->
              <div class = "sec new">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg">
                 </div>
@@ -62,7 +62,7 @@
                </a>
             </div>
              <div class = "sec new">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "https://obamawhitehouse.archives.gov/sites/obamawhitehouse.archives.gov/files/styles/person_medium_photo/public/person-photo/amanda_lucidon22.jpg?itok=JFPi8OFJ">
                 </div>
@@ -71,7 +71,7 @@
                </a>
             </div>
              <div class = "sec">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3O45RK9qyCrZJivYsY6PmeVEJH07l7bkoolJmscBsNjzump27">
                 </div>
@@ -80,7 +80,7 @@
                </a>
             </div>
              <div class = "sec">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "https://c1.staticflickr.com/4/3725/10214643804_75c0b6eeab_b.jpg">
                 </div>
@@ -89,7 +89,7 @@
                </a>
             </div>
              <div class = "sec">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src="https://upload.wikimedia.org/wikipedia/commons/5/52/NG_headshot_white_shirt_square_Jan18.jpg">
                 </div>
@@ -98,7 +98,7 @@
                </a>
             </div>
              <div class = "sec">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "https://upload.wikimedia.org/wikipedia/commons/d/dd/Pat-headshot-square.jpg">
                 </div>
@@ -107,7 +107,7 @@
                </a>
             </div>
              <div class = "sec">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "https://c1.staticflickr.com/8/7407/13785133614_6254abb8c4.jpg">
                 </div>
@@ -116,7 +116,7 @@
                </a>
             </div>
              <div class = "sec">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "//c1.staticflickr.com/1/185/440890151_54c5b920b0_b.jpg">
                 </div>
@@ -125,7 +125,7 @@
                </a>
             </div>
              <div class = "sec">
-               <a href = "https://codepen.io/Golez/">
+               <a href = "#">
                <div class = "profCont">
                <img class = "profile" src = "//c2.staticflickr.com/4/3397/3585544855_28442029a5_z.jpg?zz=1">
                 </div>
@@ -454,10 +454,37 @@ header {
   #gepleasurprised:checked ~ li a.nav-name {
     display: none;
   }
+  .fas{
+    margin: 0px;
+  }
+  .number{
+  left: 20px;
+  }
+  .box{
+    left: 50px;
+  }
 }
 @media screen and (max-width: 350px) {
   .nav-logo {
     font-size: 24px;
   }
+}
+@media screen and (max-width: 660px) {
+   .box{
+  width: 200px;
+  height: 0px;
+  padding: 0px;
+  left: 50px;
+  margin-top: 5px;
+}
+.profCont{
+  display: none;
+}
+.txt{
+  color: black;
+  vertical-align: top;
+  font-size: 0.75rem;
+  padding: 5px 10px 0px 15px;
+}
 }
 </style>
