@@ -17,6 +17,7 @@ export const i18n = new VueI18n({
              applicationMsg: "Applications",
              hellouserMsg: "Hello",
              nameuserMsg: "Eulampios Krestovozdvizhensky",
+             pointsMsg: "points"
            },
            ru: {
              welcomeMsg: "Привет, Поливеб!",
@@ -28,6 +29,7 @@ export const i18n = new VueI18n({
              applicationMsg: "Заявки",
              hellouserMsg: "Здравствуйте",
              nameuserMsg: "Евлампий Крестовоздвиженский",
-           },
-         },
+             pointsMsg: "балла"
+           }
+         }
        });

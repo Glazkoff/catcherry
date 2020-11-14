@@ -17,15 +17,15 @@
             />
             <li class="nav-logo">CATCHERRY</li>
             <li>
-              <router-link to="/user/156">{{ $t("accountMsg") }}</router-link>
+              <router-link :to="'/user/' + $route.params.id">{{ $t("accountMsg") }}</router-link>
             </li>
             <li>
-              <router-link to="/user/156/user_org">{{
+              <router-link :to="'/user/' + $route.params.id + '/user_org'">{{
                 $t("orgMsg")
               }}</router-link>
             </li>
             <li>
-              <router-link to="/user/156/list_req">{{
+              <router-link :to="'/user/' + $route.params.id + '/list_req'">{{
                 $t("applicationMsg")
               }}</router-link>
             </li>
@@ -50,7 +50,8 @@
           <div class = "nothing"> 
             <div class = "cent">Looks Like your all caught up!</div>
           </div>
-          <div class = "cont"><!-- Fold this div and try deleting evrything inbetween -->
+          <div class = "cont">
+            <!-- Fold this div and try deleting evrything inbetween -->
              <div class = "sec new">
                <a href = "https://codepen.io/Golez/">
                <div class = "profCont">
@@ -141,7 +142,7 @@
             </li>
             <li class="right">
               <a class="nav-point"
-                >52 балла </a
+                >52 {{ $t("pointsMsg") }} </a
               >
             </li>
           </ul>
