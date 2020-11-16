@@ -3,6 +3,9 @@
     <form @submit.prevent="logIn">
       <h1>Вход</h1>
       <p>* - обязательное поле</p>
+      <div v-if="loginPasswordError" class="error">
+        <span>Ошибка ввода логина или пароля!</span>
+      </div>
       <label>Логин *</label><br />
       <input
         :disabled="authLoading"
@@ -10,6 +13,7 @@
         v-model.trim="$v.login.$model"
         placeholder="Введите логин"
         class="formControl"
+        @input="hideErrors()"
       />
       <div v-if="$v.login.$error" class="error">
         <span v-if="!$v.login.required">Login is required</span>
@@ -22,6 +26,7 @@
         v-model.trim="$v.password.$model"
         placeholder="Введите пароль"
         class="formControl"
+        @input="hideErrors()"
       />
       <div v-if="$v.password.$error" class="error">
         <span v-if="!$v.password.required">Password is required</span>
@@ -40,39 +45,56 @@
       </p>
     </form>
     <h1>{{ authLoading }}</h1>
+    <hr />
+    <TestGraphql></TestGraphql>
   </div>
 </template>
 
 <script>
+import TestGraphql from "@/components/TestGraphql.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import { LOG_IN } from "@/graphql/queries.js";
 export default {
+  // TODO: добавить защиту роутов
   name: "Authentication",
+  components: { TestGraphql },
   data() {
     return {
       login: "",
       password: "",
       authLoading: false,
+      fingerprint: "",
+      loginPasswordError: false
     };
+  },
+  async created() {
+    const fp = await this.$fingerprint.load();
+    const result = await fp.get();
+    const visitorId = result.visitorId;
+    this.fingerprint = visitorId;
   },
   validations: {
     login: {
-      required,
+      required
     },
     password: {
       required,
-      minLength: minLength(6),
-    },
+      minLength: minLength(6)
+    }
   },
   methods: {
-    logIn() {
+    hideErrors() {
+      this.loginPasswordError = false;
+    },
+    async logIn() {
       if (this.$v.$invalid) {
         this.$v.$touch();
+        this.hideErrors();
       } else {
         this.authLoading = true;
         let userData = {
           login: this.$v.login.$model,
-          password: this.$v.password.$model,
+          password: this.$v.password.$model
         };
         this.$apollo
           .mutate({
@@ -80,29 +102,35 @@ export default {
             variables: {
               login: userData.login,
               password: userData.password,
-            },
-          })
-          .then((resp) => {
-            console.log(resp);
-            this.authLoading = false;
-            if (resp.data.logIn && !resp.data.logIn.error) {
-              this.$store.commit(
-                "SET_ACCESS_TOKEN",
-                resp.data.logIn.accessToken
-              );
-              this.$router.push("/");
-            } else {
-              // TODO: добавить обработку ошибок
-              console.log("ERROR");
+              fingerprint: this.fingerprint
             }
           })
-          .catch((error) => {
+          .then(resp => {
+            console.log("AUTH", resp);
+            this.authLoading = false;
+            if (resp.data.logIn && !resp.data.logIn.error) {
+              if (resp.data.logIn.accessToken !== null) {
+                this.$store.commit(
+                  "SET_ACCESS_TOKEN",
+                  resp.data.logIn.accessToken
+                );
+                this.$router.push("/");
+              } else {
+                this.loginPasswordError = true;
+              }
+            } else {
+              // TODO: добавить обработку ошибок
+              this.loginPasswordError = true;
+              // console.error("ERROR");
+            }
+          })
+          .catch(error => {
             this.authLoading = false;
             console.error(error);
           });
       }
-    },
-  },
+    }
+  }
 };
 </script>
 

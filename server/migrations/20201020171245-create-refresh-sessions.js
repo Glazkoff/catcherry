@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Points", {
+    await queryInterface.createTable("RefreshSessions", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,8 +11,22 @@ module.exports = {
       userId: {
         type: Sequelize.INTEGER,
       },
-      pointQuantity: {
-        type: Sequelize.INTEGER,
+      refreshToken: {
+        type: Sequelize.UUID,
+      },
+      ua: {
+        type: Sequelize.STRING,
+      },
+      fingerprint: {
+        type: Sequelize.STRING,
+        allowNull: false,
+      },
+      ip: {
+        type: Sequelize.STRING,
+        allowNull: true,
+      },
+      expiresIn: {
+        type: Sequelize.BIGINT,
         allowNull: false,
       },
       createdAt: {
@@ -26,6 +40,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Points');
-  }
+    await queryInterface.dropTable("RefreshSessions");
+  },
 };

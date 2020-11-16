@@ -1,50 +1,48 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class UsersInTeams extends Model {
+  class RefreshSessions extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      // UsersInTeams.belongsTo(models.Users, {
-      //   foreignKey: "userId",
-      //   as: "user",
-      // });
-      UsersInTeams.belongsTo(models.Teams, {
-        foreignKey: "teamId",
-        as: "team",
-      });
-      UsersInTeams.belongsTo(models.Roles, {
-        foreignKey: "roleId",
-        as: "role",
-      });
+      // define association here
+      // TODO: добавить связь с таблицей Users
     }
   }
-  UsersInTeams.init(
+  RefreshSessions.init(
     {
       userId: {
         type: DataTypes.INTEGER,
         allowNull: false,
       },
-      teamId: {
-        type: DataTypes.INTEGER,
+      refreshToken: {
+        type: DataTypes.UUID,
         allowNull: false,
       },
-      status: {
+      ua: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      fingerprint: {
         type: DataTypes.STRING,
         allowNull: false,
       },
-      roleId: {
-        type: DataTypes.INTEGER,
+      ip: {
+        type: DataTypes.STRING,
+        allowNull: true,
+      },
+      expiresIn: {
+        type: DataTypes.BIGINT,
         allowNull: false,
       },
     },
     {
       sequelize,
-      modelName: "UsersInTeams",
+      modelName: "RefreshSessions",
     }
   );
-  return UsersInTeams;
+  return RefreshSessions;
 };
