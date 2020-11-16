@@ -89,6 +89,7 @@ db.sequelize
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
+      // addAllTables(false);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
@@ -214,9 +215,9 @@ async function addAllTables(destroyTable) {
       delta: faker.random.number(),
       operationDescription: faker.random.word()
     });
+    // console.log(organization);
+    //   console.log(team);
   }
-
-  // console.log(pointsuser);
 }
 /* TODO: рекомендую использовать следующие библиотеки
   (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)

@@ -120,6 +120,8 @@ module.exports = {
       db.Posts.findAll({ order: [["id", "ASC"]] }),
     post: (parent, args, { db }, info) =>
       db.Posts.findOne({ where: { id: args.id } }),
+    getPointsUser: (parent, args, { db }, info) =>
+      db.Points.findOne({ where: { userId: args.userId } }),
     usersInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
@@ -498,6 +500,53 @@ module.exports = {
         }
       }),
     /*
+      [Ниже] Мутации работы с баллами (PointsOperstion)     
+    */
+    //Изменить операцию с баллами (если ввели неправильное число баллов, его можно исправить)
+    updatePointOperation: (
+      parent,
+      { pointAccountId, delta, id },
+      { db },
+      info
+    ) =>
+      db.PointsOperations.update(
+        {
+          pointAccountId: pointAccountId,
+          delta: delta
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    //Напрямую изменить количество баллов у конкретного пользователя
+    updatePoints: (parent, { pointQuantity, id }, { db }, info) =>
+      db.PointsOperations.update(
+        {
+          pointQuantity: pointQuantity
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    //Удалить операцию с баллами
+    deletePointOperation: (parent, args, { db }, info) =>
+      db.PointsOperations.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    //Удалить счет пользователя
+    deletePoints: (parent, args, { db }, info) =>
+      db.Points.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
     acceptRequst: (parent, { id }, { db }, info) =>
@@ -615,6 +664,6 @@ module.exports = {
         where: {
           id: args.id
         }
-      }),
+      })
   }
 };
