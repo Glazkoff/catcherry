@@ -120,6 +120,21 @@ module.exports = {
       db.Posts.findAll({ order: [["id", "ASC"]] }),
     post: (parent, args, { db }, info) =>
       db.Posts.findOne({ where: { id: args.id } }),
+    getPointsUser: (parent, args, { db }, info) =>
+      db.Points.findOne({ where: { userId: args.userId } }),
+    comments: (parent, args, { db }, info) =>
+      db.Comments.findAll({
+        order: [["id", "ASC"]]
+        // include: [
+        //   {
+        //     model: db.Users,
+        //     as: "author",
+        //     attributes: ["name"]
+        //   }
+        // ]
+      }),
+    comment: (parent, args, { db }, info) =>
+      db.Comments.findOne({ where: { id: args.id } }),
     usersInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
@@ -426,12 +441,14 @@ module.exports = {
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
+    //Создать оповещение
     createNotification: (parent, { body, authorId, teamId }, { db }, info) =>
       db.Notifications.create({
         body: body,
         authorId: authorId,
         teamId: teamId
       }),
+    //Изменить оповещение
     updateNotification: (
       parent,
       { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
@@ -452,8 +469,44 @@ module.exports = {
           }
         }
       ),
+    //Удалить оповещение
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с комментариями (Comments)     
+    */
+    //Создать комментарий
+    createComment: (
+      parent,
+      { body, authorId, postId, dateAdd },
+      { db },
+      info
+    ) =>
+      db.Comments.create({
+        body: body,
+        authorId: authorId,
+        postId: postId,
+        dateAdd: dateAdd
+      }),
+    //Изменить комментарий
+    updateComment: (parent, { body, id }, { db }, info) =>
+      db.Comments.update(
+        {
+          body: body
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    //Удалить комментарий
+    deleteComment: (parent, args, { db }, info) =>
+      db.Comments.destroy({
         where: {
           id: args.id
         }
@@ -490,6 +543,53 @@ module.exports = {
       }),
     deleteUserInTeam: (parent, args, { db }, info) =>
       db.UsersInTeams.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с баллами (PointsOperstion)     
+    */
+    //Изменить операцию с баллами (если ввели неправильное число баллов, его можно исправить)
+    updatePointOperation: (
+      parent,
+      { pointAccountId, delta, id },
+      { db },
+      info
+    ) =>
+      db.PointsOperations.update(
+        {
+          pointAccountId: pointAccountId,
+          delta: delta
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    //Напрямую изменить количество баллов у конкретного пользователя
+    updatePoints: (parent, { pointQuantity, id }, { db }, info) =>
+      db.PointsOperations.update(
+        {
+          pointQuantity: pointQuantity
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    //Удалить операцию с баллами
+    deletePointOperation: (parent, args, { db }, info) =>
+      db.PointsOperations.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    //Удалить счет пользователя
+    deletePoints: (parent, args, { db }, info) =>
+      db.Points.destroy({
         where: {
           id: args.id
         }
@@ -612,6 +712,6 @@ module.exports = {
         where: {
           id: args.id
         }
-      }),
+      })
   }
 };

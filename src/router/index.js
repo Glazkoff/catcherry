@@ -17,7 +17,7 @@ import CreatePost from "@/components/CreatePost.vue";
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
-import Tasks from "@/components/account/Tasks.vue"; 
+import Tasks from "@/components/account/Tasks.vue";
 import ListOfNotifications from "@/components/ListOfNotifications.vue";
 import TeamMembers from "@/components/manager/TeamMembers.vue";
 import RaitingList from "@/components/manager/RaitingList.vue";
@@ -29,7 +29,7 @@ import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
-
+import PointsUser from "@/components/account/PointsUser.vue";
 Vue.use(VueRouter);
 
 import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
@@ -78,6 +78,11 @@ const routes = [
         path: "tasks",
         name: "Tasks",
         component: Tasks
+      },
+      {
+        path: "points",
+        name: "PointsUser",
+        component: PointsUser
       }
     ]
   },
@@ -185,6 +190,11 @@ const routes = [
     path: "/feed",
     name: "FeedOfPosts",
     component: FeedOfPosts
+  },
+  {
+    path: "/points",
+    name: "PointsUser",
+    component: PointsUser
   }
   // {
   //   path: "/about",
