@@ -3,9 +3,44 @@ import VueI18n from "vue-i18n";
 
 Vue.use(VueI18n);
 
+const dateTimeFormats = {
+  en: {
+    short: {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    },
+    long: {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      weekday: "short",
+      hour: "numeric",
+      minute: "numeric"
+    }
+  },
+  ru: {
+    short: {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    },
+    long: {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      // weekday: "short",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric"
+    }
+  }
+};
+
 export const i18n = new VueI18n({
   locale: "ru",
   fallbackLocale: "en",
+  dateTimeFormats,
   messages: {
     en: {
       welcomeMsg: "Hello, PolyWeb!",

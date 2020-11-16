@@ -79,6 +79,7 @@ export const USERS_QUERY = gql`
       gender
       birthday
       login
+      createdAt
     }
   }
 `;
@@ -300,6 +301,21 @@ export const ACCEPT_REQUEST_QUERY = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
+
+export const ONE_POST_QUERY = gql`
+  query($id: ID!) {
+    post(id: $id) {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
+
 export const REVOKE_REQUEST_QUERY = gql`
   mutation($id: ID!) {
     revokeRequst(id: $id)
@@ -313,6 +329,38 @@ export const GET_POINTS_QUERY = gql`
       userId
       pointQuantity
     }
+  }
+`;
+
+export const POSTS_QUERY = gql`
+  query {
+    posts {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+    }
+  }
+`;
+
+export const CREATE_POST = gql`
+  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
+    createPost(
+      body: $body
+      authorId: $authorId
+      organizationId: $organizationId
+    ) {
+      id
+      createdAt
+    }
+  }
+`;
+
+export const DELETE_POST = gql`
+  mutation($id: ID!) {
+    deletePost(id: $id)
   }
 `;
 

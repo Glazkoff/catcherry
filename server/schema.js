@@ -103,6 +103,27 @@ type PointOperations{
   createdAt: String
 }
 
+
+input PostBody {
+  header: String!
+  text: String!
+}
+
+type BodyPost {
+  header: String!
+  text: String!
+}
+
+type Post {
+  id: ID!
+  body: BodyPost!
+  authorId: Int!
+  organizationId: Int!
+  forAllTeam: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Task {
   id: ID!
   teamId: ID!
@@ -134,6 +155,9 @@ type Query {
   notifications: [Notification]!
   notification(id: ID!): Notification
 
+  posts: [Post]!
+  post(id: ID!): Post
+
   getPointsUser(userId: Int!): PointsUser
   getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
   
@@ -158,6 +182,9 @@ type Mutation {
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
+  createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
+  deletePost(id: ID!): Int!
+  
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
