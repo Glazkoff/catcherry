@@ -36,6 +36,7 @@ type Organization {
   createdAt: String! 
   updatedAt: String!
 }
+
 type OrganizationType {
   id: ID!
   name: String!
@@ -95,23 +96,13 @@ type PointsUser{
   createdAt: String!
   updatedAt: String!
 }
+
 type PointOperations{
   id: ID!
   pointAccountId: Int!
   delta: Int!
   operationDescription: String
   createdAt: String
-}
-
-
-input PostBody {
-  header: String!
-  text: String!
-}
-
-type BodyPost {
-  header: String!
-  text: String!
 }
 
 type Post {
@@ -145,18 +136,10 @@ input PostBody {
   header: String!
   text: String!
 }
+
 type BodyPost {
   header: String!
   text: String!
-}
-type Post {
-  id: ID!
-  body: BodyPost!
-  authorId: Int!
-  organizationId: Int!
-  forAllTeam: Boolean
-  createdAt: String!
-  updatedAt: String!
 }
 
 type Query { 
@@ -196,7 +179,7 @@ type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
-  
+
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
