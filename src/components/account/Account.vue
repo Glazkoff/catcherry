@@ -410,10 +410,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
-  float: right;
-  width: 80%;
-}
 .btn-group {
   display: flex;
   justify-content: space-between;

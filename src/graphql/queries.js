@@ -61,6 +61,7 @@ export const ONE_USER_QUERY = gql`
     user(id: $id) {
       id
       name
+      surname
       patricity
       gender
       birthday
