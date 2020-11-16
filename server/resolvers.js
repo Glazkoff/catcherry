@@ -620,6 +620,17 @@ module.exports = {
           }
         }
       ),
+      rejectRequst: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Отклонен"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
     /*
       [Ниже] Мутации работы с баллами     
     */
