@@ -301,6 +301,12 @@ export const ACCEPT_REQUEST_QUERY = gql`
   }
 `;
 
+export const REJECT_REQUEST = gql`
+  mutation($id: ID!) {
+    rejectRequst(id: $id)
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
 
 export const ONE_POST_QUERY = gql`

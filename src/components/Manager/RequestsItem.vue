@@ -4,7 +4,7 @@
   <p>{{ request.user.name }}</p>
   <p>{{ request.status }}</p>
   <button type="submit" @click="showModal = true" class="btn btn-secondary">Подробнее</button>
-  <PopupRequest v-if="showModal" @close="showModal = false" :request="request" @act="$emit('accept', request.id)" />
+  <PopupRequest v-if="showModal" @close="showModal = false" :request="request" @act="$emit('accept', request.id)" @rjc="$emit('reject', request.id)" />
 </div>
 </template>
 

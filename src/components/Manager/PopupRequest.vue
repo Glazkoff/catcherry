@@ -26,7 +26,7 @@
             <button type="submit" class="modal-avtive-button" @click="$emit('act')">
               Принять
             </button>
-            <button type="submit" class="modal-default-button">
+            <button type="submit" class="modal-default-button" @click="$emit('rjc')">
               Отклонить
             </button>
           </slot>

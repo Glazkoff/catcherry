@@ -199,6 +199,7 @@ type Mutation {
 
   acceptRequst(id: ID!): [Int]!
   revokeRequst(id: ID!): [Int]!
+  rejectRequst(id: ID!): [Int]!
 
   updatePointsUser(id:ID!, pointQuantity: Int!): [Int]!
   createPointOperation(pointAccountId: Int!, delta: Int!, operationDescription: String!): PointsUser!	 

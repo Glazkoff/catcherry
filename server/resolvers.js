@@ -495,7 +495,7 @@ module.exports = {
         }
       }),
     /*
-      [Ниже] Мутации работы с заявками на вхождение в команду     
+      [Ниже] Мутации работы с заявками    
     */
     acceptRequst: (parent, { id }, { db }, info) =>
       db.UsersInTeams.update(
@@ -513,6 +513,17 @@ module.exports = {
       db.UsersInTeams.update(
         {
           status: "Не принят"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+      rejectRequst: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Отклонен"
         },
         {
           where: {

@@ -3,23 +3,30 @@
   <h3>Заявки на вхождение</h3>
   <hr />
   <div v-for="request in requests" :key="request.id" class="request">
-    <RequestsItem :request="request" @accept="toAccept" />
+    <RequestsItem :request="request" @accept="toAccept" @reject="toReject" />
   </div>
+    <Minialert v-if="isShowAlert">
+    <p slot="title">{{ message }}</p>
+  </Minialert>
 </div>
 </template>
 
 <script>
 import RequestsItem from "@/components/manager/RequestsItem";
+import Minialert from "@/components/admin/MiniAlert.vue";
 
 import {
   REQUESTS_QUERY,
   ACCEPT_REQUEST_QUERY,
-  USERS_IN_TEAMS_QUERY
+  USERS_IN_TEAMS_QUERY,
+  REJECT_REQUEST
 } from "@/graphql/queries";
 
 export default {
   data() {
     return {
+      isShowAlert: false, // Для показа уведомления об удалении
+      message: "", // Для текста сообщения в уведомлении
       teamId: this.$route.params.id
     };
   },
@@ -46,7 +53,8 @@ export default {
   },
 
   components: {
-    RequestsItem
+    RequestsItem,
+    Minialert
   },
 
   methods: {
@@ -80,12 +88,62 @@ export default {
             data_user.usersInTeams.push(data.requests.find(el => el.id === id));
             // Удаляем заявку с измененным статусом из массива заявок
             data.requests.splice(index, 1);
+            // Меняем значение переменной для отображения уведомления
+            this.isShowAlert = true;
+            // Задаем время показа уведомления
+            setTimeout(() => {
+              this.isShowAlert = false;
+            }, 3000);
           }
         })
         .then(data => {
+          // Записываем в переменную текст уведомления
+          this.message = "Участник принят в команду";
           console.log(data);
         })
         .catch(error => {
+          // Записываем в переменную текст уведомления
+          this.message = "Ошибка " + error;
+          console.error(error);
+        });
+    },
+    // Метод для отклонения заявки
+    toReject(id){
+      this.$apollo
+        .mutate({
+          mutation: REJECT_REQUEST,
+          variables: {
+            id
+          },
+          update: cache => {
+            // Записываем массив заявок
+            let data = cache.readQuery({
+              query: REQUESTS_QUERY,
+              variables: {
+                teamId: this.teamId
+              }
+            });
+            // Меняем статус заявки
+            data.requests.find(el => el.id === id).status = "Отклонен";
+            let index = data.requests.findIndex(el => el.id == id);
+            // Удаляем заявку с измененным статусом из массива заявок
+            data.requests.splice(index, 1);
+            // Меняем значение переменной для отображения уведомления
+            this.isShowAlert = true;
+            // Задаем время показа уведомления
+            setTimeout(() => {
+              this.isShowAlert = false;
+            }, 3000);
+          }
+        })
+        .then(data => {
+          // Записываем в переменную текст уведомления
+          this.message = "Заявка отклонена";
+          console.log(data);
+        })
+        .catch(error => {
+          // Записываем в переменную текст уведомления
+          this.message = "Ошибка " + error;
           console.error(error);
         });
     }
