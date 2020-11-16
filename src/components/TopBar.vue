@@ -3,13 +3,8 @@
     <header>
       <div id="topbar">
         <nav class="navtopbar">
+          <a  class="icon right">☰</a>
           <ul>
-            <label for="gepleasurprised">
-              <li class="icon right">
-                <a v-on-clickaway="away">☰</a>
-              </li>
-            </label>
-
             <input
               type="checkbox"
               id="gepleasurprised"
@@ -160,13 +155,19 @@ export default {
   directives: {
     onClickaway: onClickaway,
   },
+  // data: {
+  //   open: false
+  // },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
     },
-    away: function() {
-      console.log("clicked away");
-    },
+    // openMenu: function() {
+    //   this.open = !this.open;
+    // },
+    // away: function() {
+    //   this.open = !this.open;
+    // },
   },
 };
 </script>
