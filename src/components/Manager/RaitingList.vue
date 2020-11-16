@@ -2,23 +2,37 @@
   <div>
     <h3>Рейтинг участников</h3>
     <hr />
+    <!-- инпуты для смены периода отображения рейтинга  -->
+    В период с
+    <input type="date" v-model="weekAgo" class="form-control mini-date" /> по
+    <input type="date" v-model="today" class="form-control mini-date" />
+    <hr />
     <a @click="sortList()" class="btn btn-link">По общему количеству</a>
     <a @click="weeklyList()" class="btn btn-link">По недельному результату</a>
     <div v-for="raiting in raitingInTeams" :key="raiting.id" class="oneUser">
       <img src="@/assets/avatar.jpg" alt="photo" class="mediumAvatar" />
-      <p>{{ raiting.user.name }}</p>
+      <p>
+        <b>{{ raiting.user.name }}</b> 
+      </p>
       <p>Заработанные баллы: {{ raiting.user.userPoints.pointQuantity }}</p>
       <div>
         За неделю заработано:
+        <!-- функция отображения баллов пользователя -->
         <div
           v-if="+summOperations(raiting.user.userPoints.pointsOperation) > 0"
           class="up"
         >
           ↑ +{{ summOperations(raiting.user.userPoints.pointsOperation) }}
         </div>
-        <div v-else class="down">
+        <div
+          v-else-if="
+            +summOperations(raiting.user.userPoints.pointsOperation) < 0
+          "
+          class="down"
+        >
           ↓ {{ summOperations(raiting.user.userPoints.pointsOperation) }}
         </div>
+        <div v-else>0</div>
       </div>
     </div>
   </div>
@@ -27,7 +41,14 @@
 <script>
 import { RAITING_IN_TEAMS_QUERY } from "@/graphql/queries";
 export default {
+  data() {
+    return {
+      today: this.stampToDate(new Date()),
+      weekAgo: this.stampToDate(new Date().setDate(new Date().getDate() - 7))
+    };
+  },
   apollo: {
+    // массив пользователей команды с рейтиногм по баллам
     raitingInTeams: {
       query: RAITING_IN_TEAMS_QUERY,
       variables() {
@@ -38,6 +59,7 @@ export default {
     }
   },
   methods: {
+    // сортировка по общему количеству баллов
     sortList() {
       this.raitingInTeams.sort(
         (a, b) =>
@@ -45,6 +67,7 @@ export default {
           parseFloat(a.user.userPoints.pointQuantity)
       );
     },
+    // сортировка по недельному количеству заработанных баллов
     weeklyList() {
       this.raitingInTeams.sort(
         (a, b) =>
@@ -52,12 +75,31 @@ export default {
           parseFloat(this.summOperations(a.user.userPoints.pointsOperation))
       );
     },
+    // сумма баллов по заданному временному промежутку
     summOperations(pointsOperation) {
       let summ = 0;
       for (let i = 0; i < pointsOperation.length; i++) {
-        summ += pointsOperation[i].delta;
+        if (
+          this.stampToDate(+pointsOperation[i].createdAt) <
+            this.stampToDate(this.today) &&
+          this.stampToDate(+pointsOperation[i].createdAt) >=
+            this.stampToDate(this.weekAgo)
+        ) {
+          summ += pointsOperation[i].delta;
+        }
       }
       return summ;
+    },
+    // отображение тайм-штампа в фотмате для input date
+    stampToDate(stamp) {
+      let a = new Date(stamp);
+      let year = a.getFullYear();
+      let month = a.getMonth() + 1;
+      if (month < 10) month = "0" + month;
+      let date = a.getDate();
+      if (date < 10) date = "0" + date;
+      let time = year + "-" + month + "-" + date;
+      return time;
     }
   }
 };
@@ -79,5 +121,14 @@ export default {
 }
 .down {
   color: rgb(244, 96, 94);
+}
+
+.mini-date {
+  width: 150px;
+  display: inline-block;
+}
+
+.btn-link {
+  display: inline-block;
 }
 </style>

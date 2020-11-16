@@ -17,14 +17,15 @@ import CreatePost from "@/components/CreatePost.vue";
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
+import Tasks from "@/components/account/Tasks.vue"; 
 import ListOfNotifications from "@/components/ListOfNotifications.vue";
-import TeamMembers from "@/components/Manager/TeamMembers.vue";
-import RaitingList from "@/components/Manager/RaitingList.vue";
-import EditTeam from "@/components/Manager/EditTeam.vue";
-import RequestsList from "@/components/Manager/RequestsList.vue";
-import TasksTeam from "@/components/Manager/TasksTeam.vue";
-import TeamList from "@/components/Manager/TeamList.vue";
-import TeamSettings from "@/components/Manager/TeamSettings.vue";
+import TeamMembers from "@/components/manager/TeamMembers.vue";
+import RaitingList from "@/components/manager/RaitingList.vue";
+import EditTeam from "@/components/manager/EditTeam.vue";
+import RequestsList from "@/components/manager/RequestsList.vue";
+import TasksTeam from "@/components/manager/TasksTeam.vue";
+import TeamList from "@/components/manager/TeamList.vue";
+import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
@@ -72,6 +73,11 @@ const routes = [
         path: "list_req",
         name: "ListReguest",
         component: ListRequest
+      },
+      {
+        path: "tasks",
+        name: "Tasks",
+        component: Tasks
       }
     ]
   },
@@ -144,7 +150,7 @@ const routes = [
     props: true,
     children: [
       {
-        path: "",
+        path: "team_members",
         name: "TeamMembers",
         component: TeamMembers
       },

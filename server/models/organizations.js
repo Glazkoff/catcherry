@@ -10,16 +10,15 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Organizations.belongsTo(models.Users, {
         foreignKey: "ownerId",
-        as: "user"
+        as: "owner"
       });
       Organizations.belongsTo(models.OrganizationsTypes, {
         foreignKey: "organizationTypeId",
         as: "organizationType"
       });
       Organizations.hasMany(models.Teams, {
-        onDelete: "cascade",
         foreignKey: "organizationId",
-        as: "teams"
+        as: "organization"
       });
       Organizations.hasMany(models.Posts, {
         foreignKey: "organizationId",

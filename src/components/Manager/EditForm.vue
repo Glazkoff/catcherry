@@ -1,32 +1,55 @@
 <template>
-<div>
-  <span>Последнее редактирование: {{ team.updatedAt }} </span>
-  <form action="" @submit="$emit('update', name, description, maxUsersLimit)">
-    <label for="name">Название</label>
-    <input type="text" name="name" class="form-control" placeholder="Название" v-model="name" />
-    <label for="description">Описание</label>
-    <textarea name="description" class="form-control" id="" cols="10" rows="5" placeholder="Описание" v-model="description"></textarea>
-    <label for="maxUsersLimit">Максимальное число пользователей</label>
-    <input type="number" name="maxUsersLimit" class="form-control" placeholder="Максимальное число участников" v-model="maxUsersLimit" />
-    <button type="submit" class="btn btn-primary">
-      Сохранить
-    </button>
-  </form>
-</div>
+  <div>
+    <span>Последнее редактирование: {{ $d(t.updatedAt, "long") }} </span>
+    <form
+      action=""
+      @submit="$emit('update', name, description, parseInt(maxUsersLimit))"
+    >
+      <label for="name">Название</label>
+      <input
+        type="text"
+        name="name"
+        class="form-control"
+        placeholder="Название"
+        v-model="name"
+      />
+      <label for="description">Описание</label>
+      <textarea
+        name="description"
+        class="form-control"
+        id=""
+        cols="10"
+        rows="5"
+        placeholder="Описание"
+        v-model="description"
+      ></textarea>
+      <label for="maxUsersLimit">Максимальное число пользователей</label>
+      <input
+        type="number"
+        name="maxUsersLimit"
+        class="form-control"
+        placeholder="Максимальное число участников"
+        v-model="maxUsersLimit"
+      />
+      <button type="submit" class="btn btn-primary">
+        Сохранить
+      </button>
+    </form>
+  </div>
 </template>
 
 <script>
 export default {
-  props: ["team"],
+  props: ["t"], // Команда, которую хотим редактировать
   data() {
     return {
-      name: this.team.name,
-      description: this.team.description,
-      maxUsersLimit: this.team.maxUsersLimit,
-      // updatedAt: new Date(this.team.updatedAt)
-    }
-  }
-}
+      name: this.t.name,
+      description: this.t.description,
+      maxUsersLimit: this.t.maxUsersLimit
+    };
+  },
+  methods: {}
+};
 </script>
 
 <style lang="scss" scoped>

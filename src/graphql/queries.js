@@ -181,6 +181,7 @@ export const TEAM_IN_ORG_QUERY = gql`
       name
       description
       maxUsersLimit
+      updatedAt
     }
   }
 `;
@@ -207,17 +208,50 @@ export const USERS_IN_TEAMS_QUERY = gql`
     usersInTeams(teamId: $teamId) {
       id
       userId
+      teamId
       status
       roleId
       user {
         id
         name
-        surname
-        patricity
-        gender
-        birthday
-        login
       }
+    }
+  }
+`;
+
+export const ONE_USER_IN_TEAMS_QUERY = gql`
+  query($userId: ID!) {
+    oneUserInTeams(userId: $userId) {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+      team {
+        id
+        name
+        organization {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const CREATE_USER_IN_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!, $status: String!, $roleId: ID!) {
+    createUserInTeam(
+      userId: $userId
+      teamId: $teamId
+      status: $status
+      roleId: $roleId
+    ) {
+      id
     }
   }
 `;
@@ -356,6 +390,7 @@ export const RAITING_IN_TEAMS_QUERY = gql`
           pointQuantity
           pointsOperation {
             delta
+            createdAt
           }
         }
       }
@@ -375,12 +410,6 @@ export const TASKS_QUERY = gql`
         points
       }
       status
-      tasksTeam {
-        name
-        team {
-          roleId
-        }
-      }
       tasksUser {
         name
         surname
@@ -393,6 +422,7 @@ export const TASKS_QUERY = gql`
 `;
 export const ADD_TASK_QUERY = gql`
   mutation(
+    $teamId: ID
     $userId: ID
     $header: String
     $text: String
@@ -400,6 +430,7 @@ export const ADD_TASK_QUERY = gql`
     $status: String
   ) {
     createTask(
+      teamId: $teamId
       userId: $userId
       header: $header
       text: $text
@@ -408,11 +439,20 @@ export const ADD_TASK_QUERY = gql`
     ) {
       id
       userId
+      teamId
       body {
         header
         text
+        points
       }
       status
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
     }
   }
 `;
@@ -420,6 +460,49 @@ export const EDIT_TASK_QUERY = gql`
   mutation($id: ID!, $status: String) {
     updateTask(id: $id, status: $status) {
       status
+    }
+  }
+`;
+
+export const ADD_USER_TO_TASK_QUERY = gql`
+  mutation($id: ID!, $userId: ID) {
+    addUserToTask(id: $id, userId: $userId) {
+      userId
+    }
+  }
+`;
+
+export const BACKLOG_QUERY = gql`
+  query($teamId: ID!) {
+    backlog(teamId: $teamId) {
+      id
+      userId
+      teamId
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const NOTIFICATIONS_USER_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
     }
   }
 `;

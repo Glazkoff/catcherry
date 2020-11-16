@@ -2,6 +2,8 @@ require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { v4 } = require("uuid");
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
@@ -89,14 +91,24 @@ module.exports = {
       return db.Users.findOne({ where: { id: args.id } });
     },
     organizations: (parent, args, { db }, info) =>
-      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+      db.Organizations.findAll({
+        order: [["id", "ASC"]],
+        include: [
+          { model: db.Users, as: "owner" },
+          { model: db.OrganizationsTypes, as: "organizationType" }
+        ]
+      }),
     organization: (parent, args, { db }, info) => {
       return db.Organizations.findOne({ where: { id: args.id } });
     },
+    organizationTypes: (parent, args, { db }, info) =>
+      db.OrganizationsTypes.findAll({
+        order: [["id", "ASC"]]
+      }),
     teams: (parent, args, { db }, info) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
     team: (parent, args, { db }, info) => {
-      return db.Teams.findOne({
+      return db.Teams.findAll({
         where: { organizationId: args.organizationId }
       });
     },
@@ -113,6 +125,19 @@ module.exports = {
         where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
+      }),
+    oneUserInTeams: (parent, args, { db }, info) =>
+      db.UsersInTeams.findAll({
+        where: { userId: args.userId },
+        order: [["id", "ASC"]],
+        include: [
+          { model: db.Users, as: "user" },
+          {
+            model: db.Teams,
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
       }),
     raitingInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
@@ -151,7 +176,7 @@ module.exports = {
       }),
     tasks: (parent, { teamId }, { db }, info) =>
       db.Tasks.findAll({
-        where: { teamId: teamId },
+        where: { teamId: teamId, userId: { [Op.ne]: null } },
         order: [["id", "DESC"]],
         include: [
           {
@@ -171,9 +196,29 @@ module.exports = {
             }
           }
         ]
-        // include: [
-        //
-        // ]
+      }),
+    backlog: (parent, { teamId }, { db }, info) =>
+      db.Tasks.findAll({
+        where: { teamId: teamId, userId: null },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
+          }
+        ]
       })
   },
   Mutation: {
@@ -533,11 +578,12 @@ module.exports = {
     */
     createTask: (
       parent,
-      { userId, header, text, points, status },
+      { teamId, userId, header, text, points, status },
       { db },
       info
     ) =>
       db.Tasks.create({
+        teamId: teamId,
         userId: userId,
         body: { header: header, text: text, points: points },
         status: status
@@ -552,6 +598,23 @@ module.exports = {
             id: id
           }
         }
-      )
+      ),
+    addUserToTask: (parent, { id, userId }, { db }, info) =>
+      db.Tasks.update(
+        {
+          userId: userId
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    deleteTask: (parent, args, { db }, info) =>
+      db.Tasks.destroy({
+        where: {
+          id: args.id
+        }
+      }),
   }
 };

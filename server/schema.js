@@ -31,8 +31,14 @@ type Organization {
   ownerId: Int
   organizationTypeId: Int
   maxTeamsLimit: Int
-  createdAt: String!
+  owner: User
+  organizationType: OrganizationType!
+  createdAt: String! 
   updatedAt: String!
+}
+type OrganizationType {
+  id: ID!
+  name: String!
 }
 
 type Team {
@@ -42,6 +48,7 @@ type Team {
   description: String
   maxUsersLimit: Int
   team: [UserInTeam]
+  organization: Organization
   createdAt: String!
   updatedAt: String!
 }
@@ -52,7 +59,8 @@ type UserInTeam {
   teamId: ID!
   status: String!
   roleId: ID!
-  user: User!
+  user: User
+  team: Team!
   createdAt: String!
   updatedAt: String!
 }
@@ -92,6 +100,7 @@ type PointOperations{
   pointAccountId: Int!
   delta: Int!
   operationDescription: String
+  createdAt: String
 }
 
 
@@ -122,7 +131,7 @@ type Task {
   body: bodyTask!
   status: String
   tasksTeam: Team!
-  tasksUser: User!
+  tasksUser: User
   createdAt: String
 }
 
@@ -138,9 +147,10 @@ type Query {
 
   organizations: [Organization!]
   organization(id: ID!): Organization
+  organizationTypes: [OrganizationType!]
 
   teams: [Team!]
-  team(organizationId: Int): Team
+  team(organizationId: Int): [Team]
   
   notifications: [Notification]!
   notification(id: ID!): Notification
@@ -152,10 +162,12 @@ type Query {
   getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
   
   usersInTeams (teamId:ID!):[UserInTeam]!
+  oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
   requests (teamId:ID!):[UserInTeam]
 
   tasks (teamId:ID!): [Task]!
+  backlog (teamId:ID!): [Task]!
 }
 
 type Mutation {
@@ -191,8 +203,10 @@ type Mutation {
   deletePointOperation(id: ID!): Int!	
   updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
 
-  createTask(userId: ID, header: String, text: String, points: Int, status: String): Task!
+  createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
   updateTask(id: ID!, status: String): Task!
+  addUserToTask(id: ID!, userId: ID): Task!
+  deleteTask(id: ID!): Int!
 }
 `;
 

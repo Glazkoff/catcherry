@@ -1,8 +1,8 @@
 <template>
 <div>
-  <div v-for="team in teams" :key="team.id">
-    <div v-if="team.id==id">
-      <h1>Команда {{ team.name }}</h1>
+  <div v-for="t in team" :key="t.id">
+    <div v-if="t.id==id">
+      <h1>Команда {{ t.name }}</h1>
       <div class="every">
         <NavBar class="navig" />
         <router-view class="cont" />
@@ -13,14 +13,20 @@
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
+import NavBar from "@/components/manager/NavBar";
 import {
-  TEAMS_QUERY
+  TEAM_IN_ORG_QUERY
 } from "@/graphql/queries";
 export default {
   apollo: {
-    teams: {
-      query: TEAMS_QUERY
+    // Массив команд организации
+    team: {
+      query: TEAM_IN_ORG_QUERY,
+      variables() {
+        return {
+          organizationId: 1
+        };
+      }
     }
   },
   components: {
@@ -28,7 +34,7 @@ export default {
   },
   data() {
     return {
-      id: this.$route.params.id
+      id: this.$route.params.id // id команды
     };
   }
 };

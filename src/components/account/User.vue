@@ -1,6 +1,7 @@
 <template>
   <div>
     <div>
+      <!-- боковое меню для пользователя без команды -->
       <div class="sidebar">
         <router-link tag="a" :to="'/user/' + $route.params.id + '/user_org'"
           >Организации</router-link
@@ -16,7 +17,7 @@
 
 <script>
 export default {
-  name: "User"
+  name: "User",
 };
 </script>
 
@@ -30,7 +31,6 @@ export default {
     display: block;
   }
 }
-
 .account-view {
   float: right;
   width: 80%;

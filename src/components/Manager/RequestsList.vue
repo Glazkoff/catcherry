@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import RequestsItem from "@/components/Manager/RequestsItem";
+import RequestsItem from "@/components/manager/RequestsItem";
 
 import {
   REQUESTS_QUERY,
@@ -25,6 +25,7 @@ export default {
   },
 
   apollo: {
+    // Массив заявок команды
     requests: {
       query: REQUESTS_QUERY,
       variables() {
@@ -33,6 +34,7 @@ export default {
         };
       }
     },
+    // Массив участников команды
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
@@ -48,6 +50,7 @@ export default {
   },
 
   methods: {
+    // Метод для принятия участника в команду
     toAccept(id) {
       this.$apollo
         .mutate({
@@ -56,21 +59,26 @@ export default {
             id
           },
           update: cache => {
+            // Записываем массив заявок
             let data = cache.readQuery({
               query: REQUESTS_QUERY,
               variables: {
                 teamId: this.teamId
               }
             });
+            // Записываем массив участников команды
             let data_user = cache.readQuery({
               query: USERS_IN_TEAMS_QUERY,
               variables: {
                 teamId: this.teamId
               }
             });
+            // Меняем статус заявки
             data.requests.find(el => el.id === id).status = "Принят";
             let index = data.requests.findIndex(el => el.id == id);
+            // Добавляем заявку с измененным статусом в массив участников команды
             data_user.usersInTeams.push(data.requests.find(el => el.id === id));
+            // Удаляем заявку с измененным статусом из массива заявок
             data.requests.splice(index, 1);
           }
         })
@@ -86,12 +94,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.request {
-  border: 1px solid black;
-  padding: 1rem;
-  margin: 1rem;
-}
-
 form {
   display: flex;
   flex-direction: column;
