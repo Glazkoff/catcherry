@@ -37,7 +37,7 @@ const routes = [
   {
     path: "/",
     name: "Home",
-    component: Home,
+    component: Home
     // beforeEnter: ifAuthenticated
   },
   // FIXME: [Фёдор]
@@ -92,7 +92,7 @@ const routes = [
         path: "organizations",
         component: Organization
       }
-    ],
+    ]
     // beforeEnter: ifAuthenticated
   },
   {
@@ -113,7 +113,7 @@ const routes = [
   {
     path: "/auth",
     name: "Authentication",
-    component: Authentication,
+    component: Authentication
     // beforeEnter: ifNotAuthenticated
   },
   {

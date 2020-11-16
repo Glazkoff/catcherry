@@ -98,7 +98,11 @@ export const i18n = new VueI18n({
       requiredLetters: "This field must contain only letters",
       male: "Male",
       female: "Female",
-      adminPanel: "Admin panel"
+      adminPanel: "Admin panel",
+      numberOfPoints: "Number of points",
+      editNumberOfPoints: "Edit number of points",
+      saveNumberOfPoints: "Save number of points",
+      role: "Role"
     },
     ru: {
       welcomeMsg: "Привет, Поливеб!",
@@ -156,7 +160,11 @@ export const i18n = new VueI18n({
       requiredLetters: "Данное поле должно содержать только цифры",
       male: "Мужской",
       female: "Женский",
-      adminPanel: "Административная панель"
+      adminPanel: "Административная панель",
+      numberOfPoints: "Количество баллов",
+      editNumberOfPoints: "Изменить количество баллов",
+      saveNumberOfPoints: "Сохранить количество баллов",
+      role: "Роль"
     }
   }
 });

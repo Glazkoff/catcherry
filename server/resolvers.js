@@ -2,7 +2,8 @@ require("dotenv").config({ path: "./.env" });
 const jwt = require("jsonwebtoken");
 const bcrypt = require("bcrypt");
 const { v4 } = require("uuid");
-
+const Sequelize = require("sequelize");
+const Op = Sequelize.Op;
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
 
@@ -83,18 +84,60 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
 
 module.exports = {
   Query: {
+    statisticsNewUsers: (parent, args, { db }) => {
+      return db.Users.count({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      });
+    },
+    statisticsNewOrgs: (parent, args, { db }) => {
+      return db.Organizations.count({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      });
+    },
+    statisticsDeleteUsers: (parent, args, { db }) => {
+      return db.Users.count({
+        where: {
+          deletedAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        },
+        paranoid: false
+      });
+    },
+    statisticsDeleteOrgs: (parent, args, { db }) => {
+      return db.Organizations.count({
+        where: {
+          deletedAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        },
+        paranoid: false
+      });
+    },
+    // Получаем список всех пользователей
     users: (parent, args, { db }) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
+    // Получаем данные про одного пользователя
     user: (parent, args, { db }) => {
       return db.Users.findOne({
         where: { id: args.id }
       });
     },
+    // Получаем данные о командах пользователя + информация о команде (об организации)
     oneUserInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
         where: { userId: args.userId },
         order: [["id", "ASC"]],
         include: [
+          { model: db.Roles, as: "role" },
           { model: db.Users, as: "user" },
           {
             model: db.Teams,
@@ -103,10 +146,10 @@ module.exports = {
           }
         ]
       }),
-
+    // Получаем список всех организаций
     organizations: (parent, args, { db }) =>
       db.Organizations.findAll({ order: [["id", "ASC"]] }),
-
+    // Получаем информацию про одну организацию + тип организации + владелец организации
     organization: (parent, args, { db }) => {
       return db.Organizations.findOne({
         where: { id: args.id },
@@ -116,12 +159,14 @@ module.exports = {
         ]
       });
     },
+    // Получаем тип организации по ее id
     teamsInOneOrganization: (parent, args, { db }) => {
       return db.Teams.findAll({
         order: [["id", "ASC"]],
         where: { organizationId: args.organizationId }
       });
     },
+    // Получаем список всех типов организации
     organizationTypes: (parent, args, { db }) =>
       db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
     teams: (parent, args, { db }) =>
@@ -208,9 +253,7 @@ module.exports = {
       })
   },
   Mutation: {
-    /*
-      [Ниже] Мутации регистрации и авторизации
-    */
+    /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
       { name, login, password, fingerprint },
@@ -344,6 +387,7 @@ module.exports = {
       db.Users.create({
         name: name
       }),
+    // Обновляем фамилию, имени, отчества, пола и логина пользователя
     updateUser: (
       parent,
       { surname, name, patricity, gender, login, id },
@@ -364,6 +408,7 @@ module.exports = {
           }
         }
       ),
+    // Меняем статус пользователя в команде (добавляем или удаляем)
     addUserInTeam: (parent, { status, id }, { db }, info) =>
       db.UsersInTeams.update(
         {
@@ -375,12 +420,14 @@ module.exports = {
           }
         }
       ),
+    // Удаляем пользователя
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
           id: args.id
         }
       }),
+    // Обновляем название, описание и максимальное количество пользователей команды
     updateTeam: (
       parent,
       { name, description, maxUsersLimit, id },
@@ -414,6 +461,7 @@ module.exports = {
         organizationTypeId: organizationTypeId,
         maxTeamsLimit: maxTeamsLimit
       }),
+    // Обновляем название и максимальное количество команд организации
     updateOrganization: (parent, { name, maxTeamsLimit, id }, { db }, info) =>
       db.Organizations.update(
         {
@@ -426,6 +474,7 @@ module.exports = {
           }
         }
       ),
+    // Удаляем организацию
     deleteOrganization: (parent, args, { db }, info) =>
       db.Organizations.destroy({
         where: {
@@ -439,7 +488,7 @@ module.exports = {
         }
       }),
     /*
-      [Ниже] Мутации работы с организациями (Organization)     
+      [Ниже] Мутации работы с командами (Teams)     
     */
     createTeam: (
       parent,

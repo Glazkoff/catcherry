@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
-// (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 
+// (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 export const SIGN_UP = gql`
   mutation(
     $name: String!
@@ -125,6 +125,7 @@ export const ONE_USER_QUERY = gql`
       gender
       birthday
       login
+      createdAt
     }
   }
 `;
@@ -137,6 +138,9 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
       teamId
       status
       roleId
+      role {
+        name
+      }
       user {
         id
         name
@@ -260,7 +264,15 @@ export const ONE_ORG_QUERY = gql`
       ownerId
       organizationTypeId
       maxTeamsLimit
+      createdAt
       organizationType {
+        name
+      }
+      owner {
+        surname
+        name
+        patricity
+      }
     }
   }
 `;
@@ -328,7 +340,7 @@ export const DELETE_ORG_QUERY = gql`
 `;
 
 export const UPDATE_ORG_QUERY = gql`
-  mutation($name: String!, $maxTeamsLimit: Int, $id: ID!) {
+  mutation($name: String, $maxTeamsLimit: Int, $id: ID!) {
     updateOrganization(name: $name, maxTeamsLimit: $maxTeamsLimit, id: $id)
   }
 `;
@@ -353,7 +365,8 @@ export const UPDATE_TEAM_QUERY = gql`
 export const ADD_IN_TEAM_QUERY = gql`
   mutation($status: String!, $id: ID!) {
     addUserInTeam(status: $status, id: $id)
-    `;
+  }
+`;
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
 
@@ -377,7 +390,7 @@ export const REVOKE_REQUEST_QUERY = gql`
 `;
 
 export const GET_POINTS_QUERY = gql`
-  query($userId: Int!) {
+  query($userId: ID!) {
     getPointsUser(userId: $userId) {
       id
       userId
@@ -509,5 +522,19 @@ export const EDIT_TASK_QUERY = gql`
     updateTask(id: $id, status: $status) {
       status
     }
+  }
+`;
+
+export const STATISTICS_NEW_QUERY = gql`
+  query statisticsNew {
+    statisticsNewUsers
+    statisticsNewOrgs
+  }
+`;
+
+export const STATISTICS_DELETE_QUERY = gql`
+  query {
+    statisticsDeleteUsers
+    statisticsDeleteOrgs
   }
 `;

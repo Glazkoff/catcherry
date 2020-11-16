@@ -63,8 +63,15 @@ type UserInTeam {
   roleId: ID!
   user: User!
   team: Team!
+  role: Role
   createdAt: String!
   updatedAt: String!
+}
+
+type Role {
+  id: ID!
+  name: String
+  description: String
 }
 
 input NotificationBody {
@@ -163,7 +170,7 @@ type Query {
   posts: [Post]!
   post(id: ID!): Post
 
-  getPointsUser(userId: Int!): PointsUser
+  getPointsUser(userId: ID!): PointsUser
   getOperationPointsUser(pointAccountId: Int!): [PointOperations]!
   
   usersInTeams (teamId:ID!):[UserInTeam]!
@@ -171,6 +178,11 @@ type Query {
   requests (teamId:ID!):[UserInTeam]
 
   tasks (teamId:ID!): [Task]!
+
+  statisticsNewUsers: Int
+  statisticsNewOrgs: Int
+  statisticsDeleteUsers: Int
+  statisticsDeleteOrgs: Int
 }
 
 type Mutation {
@@ -190,7 +202,7 @@ type Mutation {
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
   
-  updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
+  updateOrganization(id: ID, name: String, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
   updateTeam(id: ID!, name: String, description: String, maxUsersLimit: Int): [Int]!
 

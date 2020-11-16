@@ -125,13 +125,23 @@
       </div>
 
       <!-- Заголовок загрузки информации про одного пользователя -->
-      <h3
+      <div
         slot="header"
-        v-if="!isShowModalDelete && !isShowModalEdit && $apollo.loading"
+        v-if="
+          !isShowModalDelete &&
+            !isShowModalEdit &&
+            $apollo.loading &&
+            isShowFullInformation
+        "
       >
-        <i18n path="loading">{{ $t("loading") }}</i18n
-        >...
-      </h3>
+        <h3>
+          <i18n path="loading">{{ $t("loading") }}</i18n
+          >...
+        </h3>
+        <button @click="cancelFullInformation()">
+          <i18n path="cancel">{{ $t("cancel") }}</i18n>
+        </button>
+      </div>
 
       <!-- Подробная информация про одного пользователя -->
       <h3
@@ -163,15 +173,41 @@
         </p>
         <p>
           <i18n path="birthday">{{ $t("birthday") }}</i18n
-          >: {{ user.birthday }}
+          >: {{ $d(user.birthday, "long") }}
         </p>
         <p>
           <i18n path="login">{{ $t("login") }}</i18n
           >: {{ user.login }}
         </p>
+        <div v-if="!isEditPoints && getPointsUser !== null">
+          <p>
+            <i18n path="numberOfPoints">{{ $t("numberOfPoints") }}</i18n
+            >: {{ getPointsUser.pointQuantity }}
+          </p>
+          <button @click="editPoints()">
+            <i18n path="editNumberOfPoints">{{
+              $t("editNumberOfPoints")
+            }}</i18n>
+          </button>
+        </div>
+        <div v-if="isEditPoints">
+          <p>
+            <i18n path="numberOfPoints">{{ $t("numberOfPoints") }}</i18n
+            >: <input type="number" name="points" v-model.trim="points" />
+          </p>
+          <button @click="savePoints()">
+            <i18n path="saveNumberOfPoints">{{
+              $t("saveNumberOfPoints")
+            }}</i18n>
+          </button>
+          <button @click="cancelPoints()">
+            <i18n path="cancel">{{ $t("cancel") }}</i18n>
+          </button>
+        </div>
+
         <p>
           <i18n path="createdAt">{{ $t("createdAt") }}</i18n
-          >: {{ new Date(user.createdAt).toGMTString() }}
+          >: {{ $d(user.createdAt, "long") }}
         </p>
         <p v-if="oneUserInTeams.length === 0">
           <i18n path="noTeam">{{ $t("noTeam") }}</i18n>
@@ -192,6 +228,10 @@
           <p>
             <i18n path="status">{{ $t("status") }}</i18n
             >: {{ team.status }}
+          </p>
+          <p>
+            <i18n path="role">{{ $t("role") }}</i18n
+            >: {{ team.role.name }}
           </p>
           <div class="btn-group">
             <button
@@ -264,7 +304,7 @@
         <i18n path="minialertDeleteUser">{{ $t("minialertDeleteUser") }}</i18n>
       </p></minialert
     >
-    <minialert v-if="isError"
+    <minialert v-if="isError || $apollo.error"
       ><p slot="title">
         <i18n path="minialertError">{{ $t("minialertError") }}</i18n>
       </p></minialert
@@ -282,7 +322,9 @@ import {
   UPDATE_USER_QUERY,
   ONE_USER_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
-  ADD_IN_TEAM_QUERY
+  ADD_IN_TEAM_QUERY,
+  GET_POINTS_QUERY,
+  CARGE_POINTS_QUERY
 } from "@/graphql/queries";
 
 export default {
@@ -309,6 +351,15 @@ export default {
           userId: this.userId
         };
       }
+    },
+    // Получить количество баллов пользователя
+    getPointsUser: {
+      query: GET_POINTS_QUERY,
+      variables() {
+        return {
+          userId: this.userId
+        };
+      }
     }
   },
   data() {
@@ -325,6 +376,8 @@ export default {
       isShowModalEdit: false,
       isShowModalDelete: false,
       findString: "",
+      points: 0,
+      isEditPoints: false,
       oneUser: {
         id: -1,
         surname: "",
@@ -374,6 +427,15 @@ export default {
     },
     // Показать попап с удалением
     showModalDelete() {
+      if (this.user.surname === null) {
+        this.user.surname = "";
+      }
+      if (this.user.name === null) {
+        this.user.name = "";
+      }
+      if (this.user.patricity === null) {
+        this.user.patricity = "";
+      }
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`; // Запись полного имени пользователя
       this.isShowModalDelete = true;
     },
@@ -530,6 +592,56 @@ export default {
             this.isError = false; // Закрыть окно с ошибкой
           }, 3000);
         });
+    },
+    editPoints() {
+      this.points = this.getPointsUser.pointQuantity;
+      this.isEditPoints = true;
+    },
+    savePoints() {
+      this.isEditPoints = false;
+      this.$apollo
+        .mutate({
+          mutation: CARGE_POINTS_QUERY, // Изменяем в БД
+          variables: {
+            pointAccountId: parseInt(this.getPointsUser.id),
+            delta: parseInt(this.points - this.getPointsUser.pointQuantity),
+            operationDescription: "Действия администратора"
+          },
+          // Обновляем кеш
+          update: (cache, { data: { updatePoints } }) => {
+            let data = cache.readQuery({
+              query: GET_POINTS_QUERY,
+              variables: { userId: this.userId }
+            });
+            data.getPointsUser.pointQuantity = this.points; // Редактируем количество баллов
+            cache.writeQuery({
+              qquery: GET_POINTS_QUERY,
+              variables: { userId: this.userId },
+              data
+            });
+            console.log(updatePoints);
+          }
+        })
+        // В случае успеха
+        .then(data => {
+          console.log(data);
+          this.isShowAlertEdit = true; // Показать окно с успехом
+          setTimeout(() => {
+            this.isShowAlertEdit = false; // Закрыть окно с успехом
+          }, 3000);
+        })
+        // В случае ошибки
+        .catch(error => {
+          console.error(error);
+          this.isShowFullInformation = false; // Закрыть все попапы
+          this.isError = true; // Показать окно в ошибкой
+          setTimeout(() => {
+            this.isError = false; // Закрыть окно с ошибкой
+          }, 3000);
+        });
+    },
+    cancelPoints() {
+      this.isEditPoints = false;
     }
   },
   computed: {

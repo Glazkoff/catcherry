@@ -2,10 +2,23 @@
   <div class="main">
     <popup v-if="isShowFullInformation">
       <!-- Заголовок загрузки информации про одного пользователя -->
-      <h3 slot="header" v-if="$apollo.loading">
-        <i18n path="loading">{{ $t("loading") }}</i18n
-        >...
-      </h3>
+      <div
+        slot="header"
+        v-if="
+          !isShowModalDelete &&
+            !isShowModalEdit &&
+            $apollo.loading &&
+            isShowFullInformation
+        "
+      >
+        <h3>
+          <i18n path="loading">{{ $t("loading") }}</i18n
+          >...
+        </h3>
+        <button @click="cancelFullInformation()">
+          <i18n path="cancel">{{ $t("cancel") }}</i18n>
+        </button>
+      </div>
 
       <!-- Информация про одного пользователя -->
       <h3
@@ -41,7 +54,7 @@
         </p>
         <p>
           <i18n path="createdAt">{{ $t("createdAt") }}</i18n
-          >: {{ organization.createdAt }}
+          >: {{ $d(organization.createdAt, "long") }}
         </p>
         <p v-if="organization.owner !== null">
           <i18n path="organizationOwner">{{ $t("organizationOwner") }}</i18n
