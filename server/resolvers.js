@@ -381,12 +381,14 @@ module.exports = {
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
+    //Создать оповещение
     createNotification: (parent, { body, authorId, teamId }, { db }, info) =>
       db.Notifications.create({
         body: body,
         authorId: authorId,
         teamId: teamId
       }),
+    //Изменить оповещение
     updateNotification: (
       parent,
       { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
@@ -407,6 +409,7 @@ module.exports = {
           }
         }
       ),
+    //Удалить оповещение
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
         where: {
