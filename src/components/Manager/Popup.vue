@@ -25,10 +25,9 @@
                 <p>Пол: {{ userInTeam.user.gender }}</p>
                 <div>
                   Дата рождения:
-                  <span v-if="userInTeam.user.birthday">
-                    {{ stampToDate(userInTeam.user.birthday) }}
+                  <span>
+                    {{ $d(userInTeam.user.birthday) }}
                   </span>
-                  <span v-else>Не указана</span>
                 </div>
                 <p>Логин: {{ userInTeam.user.login }}</p>
                 <p>
@@ -89,7 +88,11 @@
 </template>
 
 <script>
-import { GET_POINTS_QUERY, CARGE_POINTS_QUERY } from "@/graphql/queries";
+import {
+  GET_POINTS_QUERY,
+  CARGE_POINTS_QUERY,
+  ADD_NOTIFICATION_QUERY
+} from "@/graphql/queries";
 export default {
   props: ["userInTeam"],
   apollo: {
@@ -146,29 +149,37 @@ export default {
         .catch(error => {
           console.error(error);
         });
-    },
-    stampToDate(stamp) {
-      console.log(stamp);
-      let a = new Date(+stamp);
-      var months = [
-        "Jan",
-        "Feb",
-        "Mar",
-        "Apr",
-        "May",
-        "Jun",
-        "Jul",
-        "Aug",
-        "Sep",
-        "Oct",
-        "Nov",
-        "Dec"
-      ];
-      var year = a.getFullYear();
-      var month = months[a.getMonth()];
-      var date = a.getDate();
-      var time = date + " " + month + " " + year;
-      return time;
+      let str = "";
+      let hdr = "";
+      if (+this.addPoints > 0) {
+        hdr = "Начисление";
+        str = "Вам начислено ";
+      } else {
+        hdr = "Списание";
+        str = "Со счета списано ";
+      }
+      this.$apollo
+        .mutate({
+          mutation: ADD_NOTIFICATION_QUERY,
+          variables: {
+            body: {
+              header: hdr,
+              text:
+                str +
+                this.addPoints +
+                " баллов с пометкой: " +
+                this.operationDescription
+            },
+            authorId: 1,
+            teamId: +this.$route.params.id
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 };

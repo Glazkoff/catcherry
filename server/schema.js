@@ -73,6 +73,8 @@ input NotificationBody {
 type BodyNotification {
   header: String!
   text: String!
+  button: String
+  buttonLink: String
 }
 
 type Notification {

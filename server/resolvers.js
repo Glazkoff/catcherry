@@ -113,7 +113,7 @@ module.exports = {
       });
     },
     notifications: (parent, args, { db }, info) =>
-      db.Notifications.findAll({ order: [["id", "ASC"]] }),
+      db.Notifications.findAll({ order: [["id", "DESC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
     posts: (parent, args, { db }, info) =>

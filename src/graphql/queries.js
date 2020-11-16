@@ -502,7 +502,19 @@ export const NOTIFICATIONS_USER_QUERY = gql`
       body {
         header
         text
+        buttonLink
       }
+      authorId
+      teamId
+      createdAt
+    }
+  }
+`;
+
+export const ADD_NOTIFICATION_QUERY = gql`
+  mutation($body: NotificationBody!, $authorId: Int!, $teamId: Int!) {
+    createNotification(body: $body, authorId: $authorId, teamId: $teamId) {
+      id
     }
   }
 `;
