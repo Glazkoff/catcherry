@@ -446,3 +446,15 @@ export const BACKLOG_QUERY = gql`
     }
   }
 `;
+
+export const NOTIFICATIONS_USER_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
+    }
+  }
+`;
