@@ -122,6 +122,19 @@ module.exports = {
       db.Posts.findOne({ where: { id: args.id } }),
     getPointsUser: (parent, args, { db }, info) =>
       db.Points.findOne({ where: { userId: args.userId } }),
+    comments: (parent, args, { db }, info) =>
+      db.Comments.findAll({
+        order: [["id", "ASC"]]
+        // include: [
+        //   {
+        //     model: db.Users,
+        //     as: "author",
+        //     attributes: ["name"]
+        //   }
+        // ]
+      }),
+    comment: (parent, args, { db }, info) =>
+      db.Comments.findOne({ where: { id: args.id } }),
     usersInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
@@ -459,6 +472,41 @@ module.exports = {
     //Удалить оповещение
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
+        where: {
+          id: args.id
+        }
+      }),
+    /*
+      [Ниже] Мутации работы с комментариями (Comments)     
+    */
+    //Создать комментарий
+    createComment: (
+      parent,
+      { body, authorId, postId, dateAdd },
+      { db },
+      info
+    ) =>
+      db.Comments.create({
+        body: body,
+        authorId: authorId,
+        postId: postId,
+        dateAdd: dateAdd
+      }),
+    //Изменить комментарий
+    updateComment: (parent, { body, id }, { db }, info) =>
+      db.Comments.update(
+        {
+          body: body
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    //Удалить комментарий
+    deleteComment: (parent, args, { db }, info) =>
+      db.Comments.destroy({
         where: {
           id: args.id
         }

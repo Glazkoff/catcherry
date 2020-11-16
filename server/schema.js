@@ -141,6 +141,24 @@ type BodyPost {
   header: String!
   text: String!
 }
+input CommentBody {
+  header: String!
+  text: String!
+}
+
+type BodyComment {
+  header: String!
+  text: String!
+}
+type Comment {
+  id: ID!
+  body: BodyComment!
+  authorId: Int!
+  postId: Int!
+  dateAdd: String!
+  createdAt: String!
+  updatedAt: String!
+}
 
 type Query { 
   users: [User!] 
@@ -155,6 +173,8 @@ type Query {
   
   notifications: [Notification]!
   notification(id: ID!): Notification
+  comments: [Comment]!
+  comment(id: ID!): Comment
 
   posts: [Post]!
   post(id: ID!): Post
@@ -186,6 +206,10 @@ type Mutation {
 
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
+ 
+  createComment(body: CommentBody!, authorId: Int!, postId: Int!, dateAdd: String!): Comment!
+  deleteComment(id: ID!): Int!
+  updateComment(body: CommentBody!, id: ID!): [Int]!
 
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
