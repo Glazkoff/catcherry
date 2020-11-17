@@ -1,90 +1,103 @@
 <template>
-  <transition name="modal">
-    <div class="modal-mask">
-      <div class="modal-wrapper">
-        <div class="modal-container">
-          <button class="modal-default-button" @click="$emit('close')">
-            &times;
-          </button>
-          <div class="modal-header">
-            <slot name="header">
-              <h3>Профиль участника</h3>
-            </slot>
-          </div>
-          <!-- отображение информации о просматриваемом пользователе  -->
-          <div class="modal-body">
-            <slot name="body">
-              <div>
-                <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
-              </div>
-              <div class="info">
-                <p>
-                  ФИО: {{ userInTeam.user.surname }} {{ userInTeam.user.name }}
-                  {{ userInTeam.user.patricity }}
-                </p>
-                <p>Пол: {{ userInTeam.user.gender }}</p>
+  <div>
+    <transition name="modal">
+      <div class="modal-mask">
+        <div class="modal-wrapper">
+          <div class="modal-container">
+            <button class="modal-default-button" @click="$emit('close')">
+              &times;
+            </button>
+            <div class="modal-header">
+              <slot name="header">
+                <h3>Профиль участника</h3>
+              </slot>
+            </div>
+            <!-- отображение информации о просматриваемом пользователе  -->
+            <div class="modal-body">
+              <slot name="body">
                 <div>
-                  Дата рождения:
-                  <span>
-                    {{ $d(userInTeam.user.birthday) }}
-                  </span>
-                </div>
-                <p>Логин: {{ userInTeam.user.login }}</p>
-                <p>
-                  Баллы:
-                  <b v-if="!getPointsUser.pointQuantity">Загрузка...</b>
-                  <b v-else>{{ getPointsUser.pointQuantity }}</b>
-                </p>
-                <button @click="editPoints = true" v-if="!editPoints">
-                  Управление баллами
-                </button>
-                <!-- форма для начисления или списания баллов  -->
-                <form v-if="editPoints" @submit.prevent="checkForm">
-                  <label>Количество баллов</label
-                  ><input
-                    type="number"
-                    v-model="addPoints"
-                    class="form-control form-text"
+                  <img
+                    src="@/assets/avatar.jpg"
+                    alt="photo"
+                    class="bigAvatar"
                   />
-                  <label>Описание</label
-                  ><input
-                    type="text"
-                    v-model="operationDescription"
-                    class="form-control form-text"
-                  /><br />
-                  <button
-                    @click="toAddPoints(getPointsUser.id)"
-                    class="btn btn-primary small"
-                  >
-                    Начислить
+                </div>
+                <div class="info">
+                  <p>
+                    ФИО: {{ userInTeam.user.surname }}
+                    {{ userInTeam.user.name }}
+                    {{ userInTeam.user.patricity }}
+                  </p>
+                  <p>Пол: {{ userInTeam.user.gender }}</p>
+                  <div>
+                    Дата рождения:
+                    <span>
+                      {{ $d(userInTeam.user.birthday) }}
+                    </span>
+                  </div>
+                  <p>Логин: {{ userInTeam.user.login }}</p>
+                  <p>
+                    Баллы:
+                    <b v-if="!getPointsUser.pointQuantity">Загрузка...</b>
+                    <b v-else>{{ getPointsUser.pointQuantity }}</b>
+                  </p>
+                  <button @click="editPoints = true" v-if="!editPoints">
+                    Управление баллами
                   </button>
-                </form>
-              </div>
-            </slot>
-          </div>
+                  <!-- форма для начисления или списания баллов  -->
+                  <form v-if="editPoints" @submit.prevent="checkForm">
+                    <label>Количество баллов</label
+                    ><input
+                      type="number"
+                      v-model="addPoints"
+                      class="form-control form-text"
+                    />
+                    <label>Описание</label
+                    ><input
+                      type="text"
+                      v-model="operationDescription"
+                      class="form-control form-text"
+                    /><br />
+                    <button
+                      @click="toAddPoints(getPointsUser.id)"
+                      class="btn btn-primary small"
+                    >
+                      Начислить
+                    </button>
+                  </form>
+                </div>
+              </slot>
+            </div>
 
-          <div class="modal-footer">
-            <slot name="footer">
-              <button
-                type="submit"
-                class="modal-avtive-button btn btn-link"
-                @click="$emit('del')"
-              >
-                Удалить
-              </button>
-              <button
-                type="submit"
-                class="modal-default-button btn btn-secondary"
-                @click="$emit('close')"
-              >
-                Отмена
-              </button>
-            </slot>
+            <div class="modal-footer">
+              <slot name="footer">
+                <button
+                  type="submit"
+                  class="modal-avtive-button btn btn-link"
+                  @click="$emit('del')"
+                >
+                  Удалить
+                </button>
+                <button
+                  type="submit"
+                  class="modal-default-button btn btn-secondary"
+                  @click="$emit('close')"
+                >
+                  Отмена
+                </button>
+              </slot>
+            </div>
           </div>
         </div>
       </div>
-    </div>
-  </transition>
+    </transition>
+    <!-- всплывающее информационное окошко  -->
+    <minialert v-if="isShowAlert"
+      ><p slot="title">
+        Участнику {{ userInTeam.user.surname }} начислено {{ addPoints }} баллов
+      </p></minialert
+    >
+  </div>
 </template>
 
 <script>
@@ -93,8 +106,10 @@ import {
   CARGE_POINTS_QUERY,
   ADD_NOTIFICATION_QUERY
 } from "@/graphql/queries";
+import minialert from "@/components/manager/MiniAlert.vue";
 export default {
   props: ["userInTeam"],
+  components: { minialert },
   apollo: {
     // массив получения баллов пользователя
     getPointsUser: {
@@ -114,7 +129,8 @@ export default {
       },
       editPoints: false,
       addPoints: 10,
-      operationDescription: ""
+      operationDescription: "",
+      isShowAlert: false
     };
   },
   methods: {
@@ -180,6 +196,10 @@ export default {
         .catch(error => {
           console.error(error);
         });
+      this.isShowAlert = true;
+      setTimeout(() => {
+        this.isShowAlert = false;
+      }, 3000);
     }
   }
 };

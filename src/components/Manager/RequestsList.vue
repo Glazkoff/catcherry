@@ -1,25 +1,35 @@
 <template>
-<div>
-  <h3>Заявки на вхождение</h3>
-  <hr />
-  <div v-for="request in requests" :key="request.id" class="request">
-    <RequestsItem :request="request" @accept="toAccept" @reject="toReject" />
+  <div>
+    <div v-for="t in team" :key="t.id">
+      <div v-if="t.id == teamId">
+        <h3>Заявки на вхождение {{ name = t.name }}</h3>
+        <hr />
+        <div v-for="request in requests" :key="request.id" class="request">
+          <RequestsItem
+            :request="request"
+            @accept="toAccept"
+            @reject="toReject"
+          />
+        </div>
+        <Minialert v-if="isShowAlert">
+          <p slot="title">{{ message }}</p>
+        </Minialert>
+      </div>
+    </div>
   </div>
-    <Minialert v-if="isShowAlert">
-    <p slot="title">{{ message }}</p>
-  </Minialert>
-</div>
 </template>
 
 <script>
 import RequestsItem from "@/components/manager/RequestsItem";
-import Minialert from "@/components/admin/MiniAlert.vue";
+import Minialert from "@/components/manager/MiniAlert.vue";
 
 import {
   REQUESTS_QUERY,
   ACCEPT_REQUEST_QUERY,
   USERS_IN_TEAMS_QUERY,
-  REJECT_REQUEST
+  REJECT_REQUEST,
+  ADD_NOTIFICATION_QUERY,
+  TEAM_IN_ORG_QUERY
 } from "@/graphql/queries";
 
 export default {
@@ -27,7 +37,8 @@ export default {
     return {
       isShowAlert: false, // Для показа уведомления об удалении
       message: "", // Для текста сообщения в уведомлении
-      teamId: this.$route.params.id
+      teamId: this.$route.params.id,
+      name: ""
     };
   },
 
@@ -47,6 +58,15 @@ export default {
       variables() {
         return {
           teamId: this.teamId
+        };
+      }
+    },
+    // Массив команд организации
+    team: {
+      query: TEAM_IN_ORG_QUERY,
+      variables() {
+        return {
+          organizationId: 1
         };
       }
     }
@@ -98,7 +118,7 @@ export default {
         })
         .then(data => {
           // Записываем в переменную текст уведомления
-          this.message = "Участник принят в команду";
+          this.message = "Участник принят в команду " + this.name;
           console.log(data);
         })
         .catch(error => {
@@ -106,9 +126,27 @@ export default {
           this.message = "Ошибка " + error;
           console.error(error);
         });
+      this.$apollo
+        .mutate({
+          mutation: ADD_NOTIFICATION_QUERY,
+          variables: {
+            body: {
+              header: "Заявка принята",
+              text: "Ваша заявка в команду " + this.name + " принята!"
+            },
+            authorId: 1,
+            teamId: +this.$route.params.id
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     },
     // Метод для отклонения заявки
-    toReject(id){
+    toReject(id) {
       this.$apollo
         .mutate({
           mutation: REJECT_REQUEST,
@@ -138,12 +176,30 @@ export default {
         })
         .then(data => {
           // Записываем в переменную текст уведомления
-          this.message = "Заявка отклонена";
+          this.message = "Заявка в команду " + this.name + " отклонена";
           console.log(data);
         })
         .catch(error => {
           // Записываем в переменную текст уведомления
           this.message = "Ошибка " + error;
+          console.error(error);
+        });
+      this.$apollo
+        .mutate({
+          mutation: ADD_NOTIFICATION_QUERY,
+          variables: {
+            body: {
+              header: "Заявка отклонена",
+              text: "Ваша заявка в команду " + this.name + " отклонена"
+            },
+            authorId: 1,
+            teamId: +this.$route.params.id
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
           console.error(error);
         });
     }
