@@ -8,20 +8,32 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Teams.hasOne(models.TeamCustomization, {
-        foreignKey: "teamId",
-        as: "customization",
-      });
-      // FIXME: При запросе на добавление оповещения возникает ошибка 
-      //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
-      
-      // Teams.hasMany(models.Notifications, {
+      // Teams.hasOne(models.TeamCustomization, {
       //   foreignKey: "teamId",
-      //   as: "notification",
+      //   as: "customization",
       // });
-      Teams.hasMany(models.Posts, {
+      // FIXME: При запросе на добавление оповещения возникает ошибка
+      //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
+
+      Teams.hasMany(models.Notifications, {
         foreignKey: "teamId",
-        as: "posts",
+        as: "notification"
+      });
+      Teams.belongsTo(models.Organizations, {
+        foreignKey: "organizationId",
+        as: "teamOrganization"
+      });
+      Teams.hasMany(models.Tasks, {
+        foreignKey: "teamId",
+        as: "tasksTeam"
+      });
+      Teams.hasMany(models.UsersInTeams, {
+        foreignKey: "teamId",
+        as: "team"
+      });
+      Teams.belongsTo(models.Organizations, {
+        foreignKey: "organizationId",
+        as: "organization"
       });
     }
   }
@@ -29,24 +41,24 @@ module.exports = (sequelize, DataTypes) => {
     {
       organizationId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: false
       },
       maxUsersLimit: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "Teams",
+      modelName: "Teams"
     }
   );
   return Teams;

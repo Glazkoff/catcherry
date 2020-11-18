@@ -1,6 +1,7 @@
 <template>
   <div>
     <h4>Тестовый Graphql компонент</h4>
+    <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>
     <div v-if="editUser.isEdit">
       <label for="editUserName"
@@ -19,13 +20,23 @@
       <button @click="toAddUser()">Добавить</button>
     </div>
     <table>
+      <tr>
+        <td>№</td>
+        <td>Имя</td>
+        <td>Логин</td>
+        <td>Дата регистрации</td>
+        <td>Дата обновления</td>
+        <td colspan="2">Действия</td>
+      </tr>
       <tr v-for="user in users" :key="user.id">
         <td>{{ user.id }}</td>
         <td v-if="user.isEdit">
           <input type="text" placeholder="Введите имя" v-model="user.name" />
         </td>
         <td v-else>{{ user.name }}</td>
-        <td>{{ user.__typename }}</td>
+        <td>{{ user.login }}</td>
+        <td>{{ $d(user.createdAt, "long") }}</td>
+        <td>{{ $d(user.updatedAt, "long") }}</td>
         <td v-if="user.isEdit">
           <button @click="toSaveEditUser(user.id)">Сохранить</button>
         </td>
@@ -42,16 +53,20 @@ import {
   USERS_QUERY,
   UPDATE_USER_QUERY,
   DELETE_USER_QUERY
-} from "../graphql/queries";
+} from "@/graphql/queries";
 export default {
   name: "TestGraphql",
   apollo: {
     users: {
-      query: USERS_QUERY
+      query: USERS_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      }
     }
   },
   data() {
     return {
+      queryError: null,
       newUser: "",
       editUser: {
         isEdit: false,
@@ -72,6 +87,7 @@ export default {
           },
           update: (cache, { data: { updateUser } }) => {
             let data = cache.readQuery({ query: USERS_QUERY });
+            console.log(data);
             data.users.find(
               el => el.id === this.editUser.id
             ).name = this.editUser.name;
