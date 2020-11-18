@@ -1,28 +1,58 @@
 <template>
-<div class="user">
-  <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
-  <div>
-    <p>{{ userInTeam.user.name }} {{ userInTeam.user.surname }}</p>
-    <p>{{ userInTeam.status }}</p>
+  <div class="user">
+    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
+    <div>
+      <p>{{ userInTeam.user.name }} {{ userInTeam.user.surname }}</p>
+      <p>{{ userInTeam.status }}</p>
+    </div>
+    <button type="submit" class="btn btn-link" @click="showModal = true">
+      Подробнее
+    </button>
+    <Popup
+      v-if="showModal"
+      @close="showModal = false"
+      :userInTeam="userInTeam"
+      @del="showModalConfirm = true"
+    />
+
+    <CommonPopup v-if="showModalConfirm" @close="showModalConfirm = false">
+      <h3 slot="header">
+        Вы действительно хотите удалить участника {{ userInTeam.user.name }}?
+      </h3>
+      <div slot="footer">
+        <button
+          type="submit"
+          class="modal-avtive-button"
+          @click="$emit('delete', userInTeam.id)"
+        >
+          Да
+        </button>
+        <button
+          type="submit"
+          class="modal-default-button"
+          @click="showModalConfirm = false"
+        >
+          Нет
+        </button>
+      </div>
+    </CommonPopup>
   </div>
-  <button type="submit" class="btn btn-link" @click="showModal = true">
-    Подробнее
-  </button>
-  <Popup v-if="showModal" @close="showModal = false" :userInTeam="userInTeam" @del="$emit('delete', userInTeam.id)" />
-</div>
 </template>
 
 <script>
 import Popup from "@/components/manager/Popup.vue";
+import CommonPopup from "@/components/manager/CommonPopup";
 export default {
   props: ["userInTeam"], // Переданный участник команды
   data() {
     return {
-      showModal: false
+      showModal: false,
+      showModalConfirm: false
     };
   },
   components: {
-    Popup
+    Popup,
+    CommonPopup
   }
 };
 </script>

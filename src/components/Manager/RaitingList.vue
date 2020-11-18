@@ -12,7 +12,7 @@
     <div v-for="raiting in raitingInTeams" :key="raiting.id" class="oneUser">
       <img src="@/assets/avatar.jpg" alt="photo" class="mediumAvatar" />
       <p>
-        <b>{{ raiting.user.name }}</b> 
+        <b>{{ raiting.user.name }}</b>
       </p>
       <p>Заработанные баллы: {{ raiting.user.userPoints.pointQuantity }}</p>
       <div>
