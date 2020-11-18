@@ -1,6 +1,6 @@
 import gql from "graphql-tag";
-// (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 
+// (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 export const SIGN_UP = gql`
   mutation(
     $name: String!
@@ -46,6 +46,53 @@ export const UPDATE_TOKENS = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
+export const CREATE_TEAM = gql`
+  mutation(
+    $organizationId: Int
+    $name: String!
+    $description: String
+    $maxUsersLimit: Int
+  ) {
+    createTeam(
+      organizationId: $organizationId
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+    ) {
+      id
+    }
+  }
+`;
+
+export const DELETE_IN_TEAMS_QUERY = gql`
+  mutation($id: ID!) {
+    deleteUserInTeam(id: $id)
+  }
+`;
+
+export const REQUESTS_QUERY = gql`
+  query {
+    requests {
+      id
+      userId
+      teamId
+      status
+      roleId
+      user {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const ACCEPT_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    acceptRequst(id: $id)
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {
@@ -60,11 +107,51 @@ export const ONE_USER_QUERY = gql`
   query($id: ID!) {
     user(id: $id) {
       id
+      surname
       name
       patricity
       gender
       birthday
       login
+      createdAt
+    }
+  }
+`;
+
+export const ONE_USER_IN_TEAMS_QUERY = gql`
+  query($userId: ID!) {
+    oneUserInTeams(userId: $userId) {
+      id
+      userId
+      teamId
+      status
+      roleId
+      role {
+        name
+      }
+      user {
+        id
+        name
+      }
+      team {
+        id
+        name
+        organization {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+export const TEAMS_IN_ONE_ORG_QUERY = gql`
+  query($organizationId: ID!) {
+    teamsInOneOrganization(organizationId: $organizationId) {
+      id
+      name
+      description
+      maxUsersLimit
     }
   }
 `;
@@ -147,6 +234,16 @@ export const ORGS_QUERY = gql`
     }
   }
 `;
+
+export const ORG_TYPES_QUERY = gql`
+  query {
+    organizationTypes {
+      id
+      name
+    }
+  }
+`;
+
 export const ONE_ORG_QUERY = gql`
   query($id: ID!) {
     organization(id: $id) {
@@ -155,6 +252,15 @@ export const ONE_ORG_QUERY = gql`
       ownerId
       organizationTypeId
       maxTeamsLimit
+      createdAt
+      organizationType {
+        name
+      }
+      owner {
+        surname
+        name
+        patricity
+      }
     }
   }
 `;
@@ -215,6 +321,11 @@ export const USERS_IN_TEAMS_QUERY = gql`
         id
         name
       }
+      owner {
+        surname
+        name
+        patricity
+      }
     }
   }
 `;
@@ -273,31 +384,38 @@ export const CREATE_TEAM = gql`
     }
   }
 `;
-
-export const DELETE_IN_TEAMS_QUERY = gql`
+export const DELETE_ORG_QUERY = gql`
   mutation($id: ID!) {
-    deleteUserInTeam(id: $id)
+    deleteOrganization(id: $id)
   }
 `;
 
-export const REQUESTS_QUERY = gql`
-  query($teamId: ID!) {
-    requests(teamId: $teamId) {
-      id
-      userId
-      status
-      roleId
-      user {
-        id
-        name
-      }
-    }
+export const UPDATE_ORG_QUERY = gql`
+  mutation($name: String, $maxTeamsLimit: Int, $id: ID!) {
+    updateOrganization(name: $name, maxTeamsLimit: $maxTeamsLimit, id: $id)
   }
 `;
 
-export const ACCEPT_REQUEST_QUERY = gql`
+export const DELETE_TEAM_QUERY = gql`
   mutation($id: ID!) {
-    acceptRequst(id: $id)
+    deleteTeam(id: $id)
+  }
+`;
+
+export const UPDATE_TEAM_QUERY = gql`
+  mutation($name: String, $description: String, $maxUsersLimit: Int, $id: ID!) {
+    updateTeam(
+      name: $name
+      description: $description
+      maxUsersLimit: $maxUsersLimit
+      id: $id
+    )
+  }
+`;
+
+export const ADD_IN_TEAM_QUERY = gql`
+  mutation($status: String!, $id: ID!) {
+    addUserInTeam(status: $status, id: $id)
   }
 `;
 
@@ -323,7 +441,7 @@ export const REVOKE_REQUEST_QUERY = gql`
 `;
 
 export const GET_POINTS_QUERY = gql`
-  query($userId: Int!) {
+  query($userId: ID!) {
     getPointsUser(userId: $userId) {
       id
       userId
@@ -504,5 +622,18 @@ export const NOTIFICATIONS_USER_QUERY = gql`
         text
       }
     }
+  }
+`;
+export const STATISTICS_NEW_QUERY = gql`
+  query statisticsNew {
+    statisticsNewUsers
+    statisticsNewOrgs
+  }
+`;
+
+export const STATISTICS_DELETE_QUERY = gql`
+  query {
+    statisticsDeleteUsers
+    statisticsDeleteOrgs
   }
 `;

@@ -6,7 +6,7 @@
           <ul>
             <label for="gepleasurprised">
               <li class="icon right">
-                <a v-on-clickaway="away">☰</a>
+                <!-- <a v-on-clickaway="away">☰</a> -->
               </li>
             </label>
 
@@ -18,6 +18,9 @@
             <li class="nav-logo">CATCHERRY</li>
             <li>
               <router-link to="/user/156">{{ $t("accountMsg") }}</router-link>
+            </li>
+            <li>
+              <router-link to="/admin">admin</router-link>
             </li>
             <li>
               <router-link to="/user/156/user_org">{{
@@ -46,20 +49,20 @@
 </template>
 
 <script>
-import { directive as onClickaway } from "vue-clickaway";
+// import { directive as onClickaway } from "vue-clickaway";
 
 export default {
   name: "top-bar",
-  directives: {
-    onClickaway: onClickaway
-  },
+  // directives: {
+  //   onClickaway: onClickaway
+  // },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
-    },
-    away: function() {
-      console.log("clicked away");
     }
+    // away: function() {
+    //   console.log("clicked away");
+    // }
   }
 };
 </script>

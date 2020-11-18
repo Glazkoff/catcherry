@@ -31,18 +31,26 @@ type User {
   createdAt: String
   updatedAt: String
   deletedAt: String
+  userInTeam: UserInTeam
 }
 
+type OrganizationType {
+  id: ID!
+  name: String
+}
 type Organization {
   id: ID!
   name: String!
+  organizationType: OrganizationType
   ownerId: Int
+  owner: User
   organizationTypeId: Int
   maxTeamsLimit: Int
   owner: User
   organizationType: OrganizationType!
   createdAt: String! 
   updatedAt: String!
+  teams: [Team]
 }
 
 type OrganizationType {
@@ -56,22 +64,29 @@ type Team {
   name: String!
   description: String
   maxUsersLimit: Int
+  organization: Organization
   team: [UserInTeam]
   organization: Organization
   createdAt: String!
   updatedAt: String!
 }
-
 type UserInTeam {
   id: ID!
   userId: ID!
   teamId: ID!
   status: String!
   roleId: ID!
-  user: User
+  user: User!
   team: Team!
+  role: Role
   createdAt: String!
   updatedAt: String!
+}
+
+type Role {
+  id: ID!
+  name: String
+  description: String
 }
 
 input NotificationBody {
@@ -171,6 +186,7 @@ type Comment {
 type Query { 
   users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  deletedUsers: [User!]
 
   teams: [Team!]
   team(organizationId: Int): [Team]
@@ -191,13 +207,20 @@ type Query {
   
   posts: [Post]!
   post(id: ID!): Post
+  origin/admin-panel-feature
   
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
+  teamsInOneOrganization(organizationId: ID!): [Team]
 
   tasks (teamId:ID!): [Task]!
   backlog (teamId:ID!): [Task]!
+
+  statisticsNewUsers: Int
+  statisticsNewOrgs: Int
+  statisticsDeleteUsers: Int
+  statisticsDeleteOrgs: Int
 }
 
 type Mutation {
@@ -208,6 +231,7 @@ type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
+  deleteUserFromTeam(id: ID!, ): [Int]!
 
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
@@ -221,11 +245,18 @@ type Mutation {
   updateComment(body: CommentBody!, id: ID!): [Int]!
 
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
-  updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
+  
+  updateOrganization(id: ID, name: String, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
+  updateTeam(id: ID!, name: String, description: String, maxUsersLimit: Int): [Int]!
+
+  updateTokens(fingerprint:String!): jwt!
+  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int, id: ID!): Organization!
+  addUserInTeam(status: String!, id: ID!): [Int]!
 
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
   createUserInTeam(userId: ID!, teamId: ID!, status: String!,  roleId: ID!): UserInTeam!
+  deleteTeam(id: ID!): Int!
   deleteUserInTeam(id: ID!): Int!
   updateTeam(id:ID!, name: String, description:String, maxUsersLimit: Int):[Int]!
   
@@ -247,5 +278,8 @@ type Mutation {
 
 // FIXME: Исправить в схеме или удалить
 // team(organizationId: Int): [Team]
+
+// FIXME: Неизвестно, что оставлять
+// updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!
 
 // FIXME: удалить createUser / заменить на signUp
