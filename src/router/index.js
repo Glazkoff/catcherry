@@ -96,6 +96,9 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: AdminPanel,
+    meta: {
+      requiresAuth: true
+    },
     // TODO: добавить защиту для администратора
     children: [
       {
