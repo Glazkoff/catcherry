@@ -16,7 +16,8 @@
 ## Ссылки
 
 - [User Story Map](https://miro.com/app/board/o9J_ko_Wcxs=/)
-- [Макет в Фигме](https://www.figma.com/file/xNlbSw5qeABBaTI40tbzvN/%D0%A4%D0%B8%D1%88%D0%BA%D0%B0?node-id=0%3A1)
+- [Мокапы в Фигме](https://www.figma.com/file/xNlbSw5qeABBaTI40tbzvN/%D0%A4%D0%B8%D1%88%D0%BA%D0%B0?node-id=0%3A1)
+- [Дизайн в Фигме](https://www.figma.com/file/nU9HNcIetZkjN6DJrSZEN9/Untitled?node-id=1%3A420)
 
 ## Библиотеки, используемые в проекте
 
