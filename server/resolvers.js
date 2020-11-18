@@ -4,10 +4,7 @@ const bcrypt = require("bcrypt");
 const { v4 } = require("uuid");
 const Sequelize = require("sequelize");
 const Op = Sequelize.Op;
-<<<<<<< HEAD
 
-=======
->>>>>>> origin/admin-panel-feature
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
 

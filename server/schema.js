@@ -34,20 +34,14 @@ type User {
   userInTeam: UserInTeam
 }
 
-type OrganizationType {
-  id: ID!
-  name: String
-}
 type Organization {
   id: ID!
   name: String!
-  organizationType: OrganizationType
   ownerId: Int
   owner: User
   organizationTypeId: Int
   maxTeamsLimit: Int
-  owner: User
-  organizationType: OrganizationType!
+  organizationType: OrganizationType
   createdAt: String! 
   updatedAt: String!
   teams: [Team]
@@ -66,10 +60,10 @@ type Team {
   maxUsersLimit: Int
   organization: Organization
   team: [UserInTeam]
-  organization: Organization
   createdAt: String!
   updatedAt: String!
 }
+
 type UserInTeam {
   id: ID!
   userId: ID!
@@ -207,7 +201,6 @@ type Query {
   
   posts: [Post]!
   post(id: ID!): Post
-  origin/admin-panel-feature
   
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
@@ -231,7 +224,7 @@ type Mutation {
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
-  deleteUserFromTeam(id: ID!, ): [Int]!
+  deleteUserFromTeam(id: ID!): [Int]!
 
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
   deleteNotification(id: ID!): Int!
@@ -243,14 +236,10 @@ type Mutation {
   createComment(body: CommentBody!, authorId: Int!, postId: Int!, dateAdd: String!): Comment!
   deleteComment(id: ID!): Int!
   updateComment(body: CommentBody!, id: ID!): [Int]!
-
-  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   
   updateOrganization(id: ID, name: String, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
-  updateTeam(id: ID!, name: String, description: String, maxUsersLimit: Int): [Int]!
 
-  updateTokens(fingerprint:String!): jwt!
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int, id: ID!): Organization!
   addUserInTeam(status: String!, id: ID!): [Int]!
 

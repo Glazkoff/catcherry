@@ -21,7 +21,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Teams.belongsTo(models.Organizations, {
         foreignKey: "organizationId",
-        as: "organization",
+        as: "teamOrganization"
       });
       Teams.hasMany(models.Tasks, {
         foreignKey: "teamId",

@@ -330,30 +330,6 @@ export const USERS_IN_TEAMS_QUERY = gql`
   }
 `;
 
-export const ONE_USER_IN_TEAMS_QUERY = gql`
-  query($userId: ID!) {
-    oneUserInTeams(userId: $userId) {
-      id
-      userId
-      teamId
-      status
-      roleId
-      user {
-        id
-        name
-      }
-      team {
-        id
-        name
-        organization {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-
 export const CREATE_USER_IN_TEAM = gql`
   mutation($userId: ID!, $teamId: ID!, $status: String!, $roleId: ID!) {
     createUserInTeam(
@@ -367,23 +343,6 @@ export const CREATE_USER_IN_TEAM = gql`
   }
 `;
 
-export const CREATE_TEAM = gql`
-  mutation(
-    $organizationId: Int
-    $name: String!
-    $description: String
-    $maxUsersLimit: Int
-  ) {
-    createTeam(
-      organizationId: $organizationId
-      name: $name
-      description: $description
-      maxUsersLimit: $maxUsersLimit
-    ) {
-      id
-    }
-  }
-`;
 export const DELETE_ORG_QUERY = gql`
   mutation($id: ID!) {
     deleteOrganization(id: $id)
