@@ -1,4 +1,12 @@
 module.exports = `
+directive @rateLimit(
+  max: Int,
+  window: String,
+  message: String,
+  identityArgs: [String],
+  arrayLengthField: String
+) on FIELD_DEFINITION
+
 type Error {
   errorStatus: Int!
   message: String!
@@ -161,21 +169,27 @@ type Comment {
 }
 
 type Query { 
-  users: [User!] 
-  user(id: ID!): User
-
-  organizations: [Organization!]
-  organization(id: ID!): Organization
-  organizationTypes: [OrganizationType!]
+  users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   teams: [Team!]
   team(organizationId: Int): [Team]
   
-  notifications: [Notification]!
-  notification(id: ID!): Notification
   comments: [Comment]!
   comment(id: ID!): Comment
 
+  organizations: [Organization!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  organization(id: ID!): Organization @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  organizationTypes: [OrganizationType!]
+  
+  notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+
+  usersInTeams:[UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  requests:[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getPointsUser(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(userId: Int!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  
   posts: [Post]!
   post(id: ID!): Post
 
@@ -185,7 +199,6 @@ type Query {
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
-  requests (teamId:ID!):[UserInTeam]
 
   tasks (teamId:ID!): [Task]!
   backlog (teamId:ID!): [Task]!
@@ -194,7 +207,7 @@ type Query {
 type Mutation {
   signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
   logIn(login: String!, password: String!, fingerprint:String!): jwt
-  updateAccessToken(fingerprint:String!): jwt!
+  updateTokens(fingerprint:String!): jwt!
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
@@ -235,5 +248,8 @@ type Mutation {
   deleteTask(id: ID!): Int!
 }
 `;
+
+// FIXME: Исправить в схеме или удалить
+// team(organizationId: Int): [Team]
 
 // FIXME: удалить createUser / заменить на signUp

@@ -30,16 +30,22 @@ import TeamSettings from "@/components/manager/TeamSettings.vue";
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
+
+import store from "@/store/index";
+
 Vue.use(VueRouter);
 
-import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
+// import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
 
 const routes = [
   {
     path: "/",
     name: "Home",
     component: Home,
-    beforeEnter: ifAuthenticated
+    meta: {
+      requiresAuth: true
+    }
+    // beforeEnter: ifAuthenticated
   },
   // FIXME: [Фёдор]
   /*
@@ -90,6 +96,7 @@ const routes = [
     path: "/admin",
     name: "Admin",
     component: AdminPanel,
+    // TODO: добавить защиту для администратора
     children: [
       {
         path: "",
@@ -103,8 +110,7 @@ const routes = [
         path: "organization",
         component: Organization
       }
-    ],
-    beforeEnter: ifAuthenticated
+    ]
   },
   {
     path: "/account",
@@ -125,12 +131,19 @@ const routes = [
     path: "/auth",
     name: "Authentication",
     component: Authentication,
-    beforeEnter: ifNotAuthenticated
+    meta: {
+      guest: true
+    }
+    // beforeEnter: ifNotAuthenticated
   },
   {
     path: "/registration",
     name: "Registration",
-    component: Registration
+    component: Registration,
+    meta: {
+      guest: true
+    }
+    // beforeEnter: ifNotAuthenticated
   },
 
   {
@@ -211,6 +224,40 @@ const router = new VueRouter({
   mode: "history",
   base: process.env.BASE_URL,
   routes
+});
+
+router.beforeEach((to, from, next) => {
+  // Если авторизация обязательна
+  if (to.matched.some(record => record.meta.requiresAuth)) {
+    // Если присутствует токен, пропускаем
+    if (store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    // Если отсутствует токен, редирект на страницу авторизации
+    else {
+      next("/auth");
+      return;
+    }
+  }
+  // Иначе если путь для гостя
+  else if (to.matched.some(record => record.meta.guest)) {
+    // Если нет токена, пропускаем
+    if (!store.getters.isAuthenticated) {
+      next();
+      return;
+    }
+    // Если есть токен, редирект на главную
+    else {
+      next("/");
+      return;
+    }
+  }
+  // Если авторизация НЕ обязательна, пропускаем
+  else {
+    next();
+    return;
+  }
 });
 
 export default router;

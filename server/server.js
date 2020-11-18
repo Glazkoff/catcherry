@@ -21,11 +21,10 @@ const chalk = require("chalk");
 const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
-const cors = require("cors");
 const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
-
+const { createRateLimitDirective } = require("graphql-rate-limit");
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 
@@ -35,11 +34,19 @@ const resolvers = require("./resolvers");
 // База данных
 const db = require("./models/index");
 
+// Rate Limit
+const rateLimitDirective = createRateLimitDirective({
+  identifyContext: ctx => ctx.id
+});
+
 // Соедняем всё в схему
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  context: { db }
+  context: { db },
+  schemaDirectives: {
+    rateLimit: rateLimitDirective
+  }
 });
 
 // Инициализация express-приложения
@@ -51,9 +58,6 @@ app.use(compression());
 
 // Настройка парсинга Cookie
 app.use(cookieParser());
-
-// Настройка CORS политики для разработки
-app.use(cors());
 
 // Безопасность заголовков
 // FIXME: не работает путь /graphiql при использовании
@@ -81,8 +85,6 @@ app.use(express.static(path.join(__dirname, "../dist")));
 
 // Работа со статическими файлами
 app.use("/public", express.static(path.join(__dirname, "/public")));
-
-// TODO: добавить заполнение фейковыми данными
 
 db.sequelize
   //.sync({ force: true })
@@ -114,6 +116,7 @@ db.sequelize
       );
     });
   });
+
 let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
