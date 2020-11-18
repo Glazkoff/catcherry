@@ -98,6 +98,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
+      addAllTables(true);
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -174,25 +175,27 @@ async function addAllTables(destroyTable) {
       readOrNot: faker.random.boolean()
     });
 
-    let tasks = await db.Tasks.create({
-      userId: user.dataValues.id,
-      body: {
-        text: faker.lorem.paragraph()
-      },
-      status: faker.random.word()
-    });
+    // let tasks = await db.Tasks.create({
+    //   userId: user.dataValues.id,
+    //   body: {
+    //     text: faker.lorem.paragraph()
+    //   },
+    //   status: faker.random.word()
+    // });
     let posts = await db.Posts.create({
       body: faker.lorem.paragraph(),
       authorId: user.dataValues.id,
-      organizationId: team.dataValues.id,
+      organizationId: organization.dataValues.id,
+      // teamId: team.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
+    console.log(posts);
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
     });
     let usersinteams = await db.UsersInTeams.create({
       userId: user.dataValues.id,
-      teamId: team.dataValues.id,
+      teamId: 1,
       status: faker.random.word(),
       roleId: role.dataValues.id
     });
@@ -200,14 +203,14 @@ async function addAllTables(destroyTable) {
       userId: user.dataValues.id,
       pointQuantity: faker.random.number()
     });
-    let pointsoperations = await db.PointsOperations.create({
-      pointAccountId: pointsuser.dataValues.id,
-      delta: faker.random.number(),
-      operationDescription: faker.lorem.paragraph()
-    });
-    let comments = await db.PointsOperations.create({
+    // let pointsoperations = await db.PointsOperations.create({
+    //   pointAccountId: pointsuser.dataValues.id,
+    //   delta: faker.random.number(),
+    //   operationDescription: faker.lorem.paragraph()
+    // });
+    let comments = await db.Comments.create({
       authorId: user.dataValues.id,
-      postId: posts.dataValues.id,
+      postId: 1,
       body: {
         header: faker.random.word(),
         text: faker.lorem.paragraph()
