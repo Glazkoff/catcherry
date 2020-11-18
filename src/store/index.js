@@ -83,7 +83,7 @@ const store = new Vuex.Store({
                 );
 
                 if (store.$app.$route.path !== "/") {
-                  store.$app.$router.replace({ name: "Home" });
+                  store.$app.$router.replace({ name: "Main" });
                 }
 
                 // Никаких ошибок, загрузка завершена

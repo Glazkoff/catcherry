@@ -1,38 +1,11 @@
 <template>
   <div id="app">
-    <div><top-bar></top-bar></div>
-    <div v-if="!isAppLoading" v-cloak>
-      <div class="locales">
-        <a @click="setLocale('en')"><flag iso="us"></flag></a>
-        <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
-      </div>
-      <h1>{{ $t("welcomeMsg") }}</h1>
-      <nav>
-        <!-- FIXME: сделать id пользователя динамическим -->
-        <router-link to="/user/1">Профиль</router-link> |
-        <router-link to="/admin">Админпанель</router-link>
-      </nav>
-      <hr />
-      <router-view></router-view>
-    </div>
-    <div v-else>Загрузка... Здесь будет спиннер!</div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import TopBar from "@/components/TopBar.vue";
 export default {
-  components: { TopBar },
-  methods: {
-    setLocale(locale) {
-      this.$i18n.locale = locale;
-    }
-  },
-  computed: {
-    isAppLoading() {
-      return this.$store.getters.isAppLoading;
-    }
-  },
   async mounted() {
     // Для глобального лоадера
     this.$store.commit("SET_AUTH_LOADING", true);
