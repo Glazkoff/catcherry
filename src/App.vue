@@ -1,38 +1,11 @@
 <template>
   <div id="app">
-    <div><top-bar></top-bar></div>
-    <div v-if="!isAppLoading" v-cloak>
-      <div class="locales">
-        <a @click="setLocale('en')"><flag iso="us"></flag></a>
-        <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
-      </div>
-      <h1>{{ $t("welcomeMsg") }}</h1>
-      <nav>
-        <!-- FIXME: сделать id пользователя динамическим -->
-        <router-link to="/user/1">Профиль</router-link> |
-        <router-link to="/admin">Админпанель</router-link>
-      </nav>
-      <hr />
-      <router-view></router-view>
-    </div>
-    <div v-else>Загрузка... Здесь будет спиннер!</div>
+    <router-view></router-view>
   </div>
 </template>
 
 <script>
-import TopBar from "@/components/TopBar.vue";
 export default {
-  components: { TopBar },
-  methods: {
-    setLocale(locale) {
-      this.$i18n.locale = locale;
-    }
-  },
-  computed: {
-    isAppLoading() {
-      return this.$store.getters.isAppLoading;
-    }
-  },
   async mounted() {
     // Для глобального лоадера
     this.$store.commit("SET_AUTH_LOADING", true);
@@ -147,29 +120,29 @@ small p a {
   cursor: pointer;
 }
 
-.primary {
+.btn-primary {
   color: $white;
   background: $violet_2;
   border: 1px solid $violet_2;
 }
-.primary:hover {
+.btn-primary:hover {
   background: $violet_3;
 }
-.primary:disabled {
+.btn-primary:disabled {
   background: $violet;
   color: $gray_3;
 }
 
-.alternate {
+.btn-alternate {
   color: $violet_2;
   background: transparent;
   border: 1px solid $violet_2;
 }
-.alternate:hover {
+.btn-alternate:hover {
   color: $violet_3;
   border: 1px solid $violet_3;
 }
-.alternate:disabled {
+.btn-alternate:disabled {
   color: $violet;
   border: 1px solid $violet;
 }
@@ -220,12 +193,12 @@ small p a {
   box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
 }
 
-.touch {
+.form-control-touch {
   border: 1px solid $bright_violet;
   color: $bright_violet;
 }
 
-.danger {
+.form-control-danger {
   border: 1px solid $red;
 }
 

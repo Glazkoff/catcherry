@@ -1,4 +1,4 @@
-import store from "@/store/index";
+// import store from "@/store/index";
 
 // Для перехода к компоненту
 // export const ifNotAuthenticated = (to, from, next) => {
