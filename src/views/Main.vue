@@ -1,10 +1,11 @@
 <template>
   <div id="main-view">
     <div id="side-bar">
-      <h1>Logo</h1>
+      <router-view name="sidebar"></router-view>
     </div>
     <div id="main-content">
       <div><top-bar></top-bar></div>
+      <router-view name="main"></router-view>
       <!--
       <div v-if="!isAppLoading" v-cloak>
         <div class="locales">

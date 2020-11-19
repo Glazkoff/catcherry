@@ -1,7 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 
-// import Home from "@/views/Home.vue";
+import Home from "@/views/Home.vue";
 import Main from "@/views/Main.vue";
 
 import Authentication from "@/views/Authentication.vue";
@@ -32,11 +32,11 @@ import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
 
+import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
+
 import store from "@/store/index";
 
 Vue.use(VueRouter);
-
-// import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
 
 const routes = [
   {
@@ -45,8 +45,17 @@ const routes = [
     component: Main,
     meta: {
       requiresAuth: true
-    }
-    // beforeEnter: ifAuthenticated
+    },
+    children: [
+      {
+        path: "",
+        name: "Home",
+        components: {
+          main: Home,
+          sidebar: SideBarDefault
+        }
+      }
+    ]
   },
   // FIXME: [Фёдор]
   /*
