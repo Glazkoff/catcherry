@@ -38,16 +38,20 @@ module.exports = (sequelize, DataTypes) => {
       },
       forAllUsers: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: true
       },
       forAllOrganization: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: true
       },
       forAllTeam: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: true
       },
+      checkNotification: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
+      }
     },
     {
       sequelize,

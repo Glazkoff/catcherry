@@ -73,6 +73,7 @@ type Notification {
   forAllUsers: Boolean
   forAllOrganization: Boolean
   forAllTeam: Boolean
+  checkNotification: Boolean
   createdAt: String!
   updatedAt: String!
 }

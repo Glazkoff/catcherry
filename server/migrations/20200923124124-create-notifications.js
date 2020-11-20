@@ -1,7 +1,7 @@
 'use strict';
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Notifications', {
+    await queryInterface.createTable("Notifications", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -24,6 +24,9 @@ module.exports = {
         type: Sequelize.BOOLEAN
       },
       forAllTeam: {
+        type: Sequelize.BOOLEAN
+      },
+      checkNotification: {
         type: Sequelize.BOOLEAN
       },
       createdAt: {

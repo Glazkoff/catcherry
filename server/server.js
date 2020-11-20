@@ -85,8 +85,8 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 // TODO: добавить заполнение фейковыми данными
 
 db.sequelize
-  // .sync({ alter: true })
-  .sync()
+  .sync({ alter: true })
+  // .sync()
   .then(async () => {
     app.listen(PORT, () => {
       // db.Users.destroy({ where: {} });
@@ -98,6 +98,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
+      addAllTables(false);
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -165,7 +166,8 @@ async function addAllTables(destroyTable) {
         text: faker.lorem.paragraph()
       },
       authorId: user.dataValues.id,
-      teamId: team.dataValues.id
+      teamId: team.dataValues.id,
+      checkNotification: faker.random.boolean(),
     });
     let readnotification = await db.ReadNotification.create({
       notificationId: notification.dataValues.id,
