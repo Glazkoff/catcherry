@@ -237,3 +237,49 @@ export const ACCEPT_REQUEST_QUERY = gql`
     acceptRequst(id: $id)
   }
 `;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ COMMENTS
+export const CREATE_COMMENT_QUERY = gql`
+  mutation ($body: CommentBody!, $authorId: Int!, $postId: Int!, $dateAdd: String!) {
+  createComment(body: $body, authorId: $authorId, postId: $postId, dateAdd: $dateAdd) {
+    id
+    body {
+      header
+      text
+    }
+    authorId
+    postId
+    dateAdd
+  }
+}
+`;
+
+export const COMMENTS_QUERY = gql`
+  query {
+    comments {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      author {
+        name
+      }
+      postId
+      dateAdd
+    }
+  }
+`;
+
+export const UPDATE_COMMENT_QUERY = gql`
+  mutation($body: CommentBody!, $id: ID!) {
+    updateComment(body: $body, id: $id)
+  }
+`;
+
+export const DELETE_COMMENT_QUERY = gql`
+  mutation($id: ID!) {
+    deleteComment(id: $id)
+  }
+`;

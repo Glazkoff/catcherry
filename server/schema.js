@@ -98,10 +98,14 @@ type BodyComment {
   header: String!
   text: String!
 }
+type Author{
+  name: String!
+}
 type Comment {
   id: ID!
   body: BodyComment!
   authorId: Int!
+  author: Author!
   postId: Int!
   dateAdd: String!
   createdAt: String!

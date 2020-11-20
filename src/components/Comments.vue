@@ -1,46 +1,164 @@
 <template>
-      <div class="postComments">
-        <div v-for="comment in comments" :key="comment.id">
-          <p>{{ comment.author }}</p>
-          <p>{{ comment.body }}</p>
-        </div>
-        <form @submit.prevent="onAddComment">
-          <textarea
-            v-model="message"
-            rows="10"
-            placeholder="Добавить комментарий"
-          ></textarea>
-          <input type="submit" value="Добавить" />
-        </form>
-      </div>
+  <div class="postComments">
+    <input
+      type="text"
+      placeholder="Введите заголовок комментария"
+      v-model="newComment"
+    />
+    <textarea
+      type="text"
+      placeholder="Введите текст комментария"
+      v-model="newComment"
+    />
+    <button @click="toAddComment()">Добавить</button>
+    <div v-for="comment in comments" :key="comment.id">
+      <h2>{{ comment.body.header }}</h2>
+      <p>{{ comment.author.name }}</p>
+      <p>{{ comment.dateAdd }}</p>
+      <p>{{ comment.body.text }}</p>
+      <button @click="toDeleteComment(comment.id)">Удалить</button>
+    </div>
+  </div>
 </template>
 
 <script>
+import {
+  CREATE_COMMENT_QUERY,
+  COMMENTS_QUERY,
+  UPDATE_COMMENT_QUERY,
+  DELETE_COMMENT_QUERY
+} from "@/graphql/queries";
 export default {
   name: "Comments",
-  computed: {
-    id() {
-      return this.$route.params.id
+  apollo: {
+    comments: {
+      query: COMMENTS_QUERY
     }
   },
   data() {
     return {
-      message: null,
-      comments: [
-        {
-          id: 1,
-          author: "Олег Дубенский",
-          body:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?",
+      newComment: "",
+      editComment: {
+        isEdit: false,
+        body: {
+          header: "",
+          text: ""
         },
-        {
-          id: 2,
-          author: "Олег Недубенский",
-          body:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?",
-        },
-      ],
+        authorId: "",
+        postId: "",
+        dateAdd: "",
+        id: -1
+      }
     };
+  },
+  methods: {
+    toSaveEditComment() {
+      this.editComment.isEdit = false;
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_COMMENT_QUERY,
+          variables: {
+            body: this.editComment.body,
+            authorId: this.editComment.authorId,
+            postId: this.editComment.postId,
+            dateAdd: this.editComment.dateAdd,
+            id: this.editComment.id
+          },
+          update: (cache, { data: { updateComment } }) => {
+            let data = cache.readQuery({ query: COMMENTS_QUERY });
+            console.log(data);
+            data.comments.find(
+              el => el.id === this.editComment.id
+            ).body = this.editComment.body;
+            cache.writeQuery({ query: COMMENTS_QUERY, data });
+            console.log(updateComment);
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createComment: {
+              __typename: "Comment",
+              id: -1,
+              name: this.editComment.name
+            }
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    },
+    toEditComment(id) {
+      let editComment = this.comments.find(el => el.id === id);
+      this.editComment.body = editComment.body;
+      this.editComment.authorId = editComment.authorId;
+      this.editComment.postId = editComment.postId;
+      this.editComment.dateAdd = editComment.dateAdd;
+      this.editComment.id = editComment.id;
+      this.editComment.isEdit = true;
+    },
+    toAddComment() {
+      let bodyComment = this.newComment;
+      let authorIdComment = this.newComment;
+      let postIdComment = this.newComment;
+      let dateAddComment = this.newComment;
+      this.newComment = "";
+      this.$apollo
+        .mutate({
+          mutation: CREATE_COMMENT_QUERY,
+          variables: {
+            body: bodyComment,
+            authorId: authorIdComment,
+            postId: postIdComment,
+            dateAdd: dateAddComment
+          },
+          update: (cache, { data: { createComment } }) => {
+            let data = cache.readQuery({ query: COMMENTS_QUERY });
+            data.comments.push(createComment);
+            cache.writeQuery({ query: COMMENTS_QUERY, data });
+          },
+          optimisticResponse: {
+            __typename: "Mutation",
+            createComment: {
+              __typename: "Comment",
+              id: -1,
+              body: bodyComment,
+              authorId: authorIdComment,
+              postId: postIdComment,
+              dateAdd: dateAddComment
+            }
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          // this.newComment = body;
+          console.error(error);
+        });
+    },
+    toDeleteComment(id) {
+      this.$apollo
+        .mutate({
+          mutation: DELETE_COMMENT_QUERY,
+          variables: {
+            id
+          },
+          update: cache => {
+            let data = cache.readQuery({ query: COMMENTS_QUERY });
+            let index = data.comments.findIndex(el => el.id == id);
+            data.comments.splice(index, 1);
+            cache.writeQuery({ query: COMMENTS_QUERY, data });
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   }
 };
 </script>

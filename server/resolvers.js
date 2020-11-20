@@ -106,15 +106,16 @@ module.exports = {
       db.Notifications.findOne({ where: { id: args.id } }),
     comments: (parent, args, { db }, info) =>
       db.Comments.findAll({
-        order: [["id", "ASC"]]
-        // include: [
-        //   {
-        //     model: db.Users,
-        //     as: "author",
-        //     attributes: ["name"]
-        //   }
-        // ]
+        order: [["id", "ASC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "author",
+            attributes: ["name"]
+          }
+        ]
       }),
+    
     comment: (parent, args, { db }, info) =>
       db.Comments.findOne({ where: { id: args.id } }),
 
