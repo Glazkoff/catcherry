@@ -4,8 +4,9 @@ import VueRouter from "vue-router";
 import Home from "@/views/Home.vue";
 import Main from "@/views/Main.vue";
 
-import Authentication from "@/views/Authentication.vue";
-import Registration from "@/views/Registration.vue";
+import Auth from "@/views/Auth.vue";
+import SignUp from "@/components/auth/SignUp.vue";
+import LogIn from "@/components/auth/LogIn.vue";
 
 import AdminPanel from "@/views/AdminPanel.vue";
 import Dashboard from "@/components/admin/Dashboard.vue";
@@ -57,19 +58,6 @@ const routes = [
       }
     ]
   },
-  // FIXME: [Фёдор]
-  /*
-    * Возможно, стоит рассмотреть следующий вариант:
-    path: "/users",
-    name: "User",
-    component: User,
-    children: [
-      {
-        path: "/:id",
-        name: "Account",
-        component: Account,
-      },
-  */
   {
     path: "/user/:id",
     name: "User",
@@ -141,24 +129,35 @@ const routes = [
     component: ListRequest
   },
   {
-    path: "/auth",
-    name: "Authentication",
-    component: Authentication,
+    path: "/login",
+    name: "LogIn",
+    components: {
+      default: Auth,
+      form: LogIn
+    },
+    children: [
+      {
+        path: "",
+        components: {
+          form: LogIn
+        }
+      }
+    ],
     meta: {
       guest: true
     }
-    // beforeEnter: ifNotAuthenticated
   },
   {
-    path: "/registration",
-    name: "Registration",
-    component: Registration,
+    path: "/signup",
+    name: "SignUp",
+    components: {
+      default: Auth,
+      form: SignUp
+    },
     meta: {
       guest: true
     }
-    // beforeEnter: ifNotAuthenticated
   },
-
   {
     path: "/createpost",
     name: "CreatePost",

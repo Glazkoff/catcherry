@@ -68,8 +68,8 @@ const store = new Vuex.Store({
                 resp.data.updateTokens.error
               ) {
                 state.authError = resp.data.updateTokens.error;
-                if (store.$app.$route.path !== "/auth") {
-                  store.$app.$router.replace({ name: "Authentication" });
+                if (store.$app.$route.path !== "/login") {
+                  store.$app.$router.replace({ name: "LogIn" });
                 }
                 state.authLoading = false;
                 reject(resp.data.updateTokens.error);

@@ -55,8 +55,7 @@ import TestGraphql from "@/components/TestGraphql.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import { LOG_IN } from "@/graphql/queries.js";
 export default {
-  // TODO: добавить защиту роутов
-  name: "Authentication",
+  name: "LogIn",
   components: { TestGraphql },
   data() {
     return {
