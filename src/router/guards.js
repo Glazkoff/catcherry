@@ -1,22 +1,24 @@
-import store from "../store/index";
+import store from "@/store/index";
 
 // Для перехода к компоненту
-export const ifNotAuthenticated = (to, from, next) => {
-  if (!store.getters.isAuthenticated) {
-    next();
-  } else {
-    next("/");
-  }
-};
+// export const ifNotAuthenticated = (to, from, next) => {
+//   if (!store.getters.isAuthenticated) {
+//     next();
+//   } else {
+//     next("/");
+//   }
+// };
 
 // Для перехода в защищённые компоненты
-export const ifAuthenticated = (to, from, next) => {
-  if (!store.getters.isAuthenticated) {
-    next("auth");
-  } else {
-    next();
-  }
-};
+// export const ifAuthenticated = (to, from, next) => {
+//   if (!store.getters.isAuthenticated) {
+//     next("auth");
+//   } else {
+//     next();
+//   }
+// };
+
+// -----------------------
 
 // // Для перехода в компоненты администратора
 // const ifAdmin = (to, from, next) => {

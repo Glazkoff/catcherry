@@ -15,24 +15,48 @@
 </template>
 
 <script>
-import NavBar from "@/components/manager/NavBar";
 import RequestsItem from "@/components/manager/RequestsItem";
 
-import { REQUESTS_QUERY, ACCEPT_REQUEST_QUERY } from "@/graphql/queries";
+import {
+  REQUESTS_QUERY,
+  ACCEPT_REQUEST_QUERY,
+  USERS_IN_TEAMS_QUERY
+} from "@/graphql/queries";
 
 export default {
+  data() {
+    return {
+      teamId: this.$route.params.id
+    };
+  },
+
   apollo: {
+    // Массив заявок команды
     requests: {
-      query: REQUESTS_QUERY
+      query: REQUESTS_QUERY,
+      variables() {
+        return {
+          teamId: this.teamId
+        };
+      }
+    },
+    // Массив участников команды
+    usersInTeams: {
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.teamId
+        };
+      }
     }
   },
 
   components: {
-    NavBar,
     RequestsItem
   },
 
   methods: {
+    // Метод для принятия участника в команду
     toAccept(id) {
       this.$apollo
         .mutate({
@@ -49,8 +73,24 @@ export default {
             data.requests.splice(index, 1);
             cache.writeQuery({
               query: REQUESTS_QUERY,
-              data
+              variables: {
+                teamId: this.teamId
+              }
             });
+            // Записываем массив участников команды
+            let data_user = cache.readQuery({
+              query: USERS_IN_TEAMS_QUERY,
+              variables: {
+                teamId: this.teamId
+              }
+            });
+            // Меняем статус заявки
+            data.requests.find(el => el.id === id).status = "Принят";
+            let index = data.requests.findIndex(el => el.id == id);
+            // Добавляем заявку с измененным статусом в массив участников команды
+            data_user.usersInTeams.push(data.requests.find(el => el.id === id));
+            // Удаляем заявку с измененным статусом из массива заявок
+            data.requests.splice(index, 1);
           }
         })
         .then(data => {
@@ -65,38 +105,19 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.request {
-  border: 1px solid black;
-  padding: 1rem;
-  margin: 1rem;
-}
-
-.every {
-  display: flex;
-  justify-content: baseline;
-}
-
-.navig {
-  width: 15%;
-}
-
-.partic {
-  width: 50%;
-}
-
-.partic form {
+form {
   display: flex;
   flex-direction: column;
   margin-top: 2rem;
 }
 
-.partic form input,
+form input,
 textarea {
   padding: 0.5rem;
   margin-bottom: 1rem;
 }
 
-.partic form button {
+form button {
   padding: 0.5rem;
 }
 </style>

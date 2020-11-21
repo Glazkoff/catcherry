@@ -1,6 +1,7 @@
 <template>
   <div>
     <h4>Тестовый Graphql компонент</h4>
+    <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>
     <div v-if="editUser.isEdit">
       <label for="editUserName"
@@ -23,7 +24,8 @@
         <td>№</td>
         <td>Имя</td>
         <td>Логин</td>
-        <td>Тип</td>
+        <td>Дата регистрации</td>
+        <td>Дата обновления</td>
         <td colspan="2">Действия</td>
       </tr>
       <tr v-for="user in users" :key="user.id">
@@ -33,7 +35,8 @@
         </td>
         <td v-else>{{ user.name }}</td>
         <td>{{ user.login }}</td>
-        <td>{{ user.__typename }}</td>
+        <td>{{ $d(user.createdAt, "long") }}</td>
+        <td>{{ $d(user.updatedAt, "long") }}</td>
         <td v-if="user.isEdit">
           <button @click="toSaveEditUser(user.id)">Сохранить</button>
         </td>
@@ -55,11 +58,15 @@ export default {
   name: "TestGraphql",
   apollo: {
     users: {
-      query: USERS_QUERY
+      query: USERS_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      }
     }
   },
   data() {
     return {
+      queryError: null,
       newUser: "",
       editUser: {
         isEdit: false,

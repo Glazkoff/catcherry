@@ -9,6 +9,9 @@
           <div class="modal-body">
             <slot name="body"> </slot>
           </div>
+          <div class="modal-footer">
+            <slot name="action"> </slot>
+          </div>
         </div>
       </div>
     </div>
@@ -55,6 +58,8 @@ export default {
 }
 .modal-body {
   margin: 20px 0;
+  height: 20em;
+  overflow-y: scroll;
 }
 .modal-enter {
   opacity: 0;

@@ -21,11 +21,10 @@ const chalk = require("chalk");
 const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
-const cors = require("cors");
 const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
-
+const { createRateLimitDirective } = require("graphql-rate-limit");
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 
@@ -35,11 +34,19 @@ const resolvers = require("./resolvers");
 // База данных
 const db = require("./models/index");
 
+// Rate Limit
+const rateLimitDirective = createRateLimitDirective({
+  identifyContext: ctx => ctx.id
+});
+
 // Соедняем всё в схему
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  context: { db }
+  context: { db },
+  schemaDirectives: {
+    rateLimit: rateLimitDirective
+  }
 });
 
 // Инициализация express-приложения
@@ -51,9 +58,6 @@ app.use(compression());
 
 // Настройка парсинга Cookie
 app.use(cookieParser());
-
-// Настройка CORS политики для разработки
-app.use(cors());
 
 // Безопасность заголовков
 // FIXME: не работает путь /graphiql при использовании
@@ -82,11 +86,9 @@ app.use(express.static(path.join(__dirname, "../dist")));
 // Работа со статическими файлами
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
-// TODO: добавить заполнение фейковыми данными
-
 db.sequelize
-  .sync({ alter: true })
-  // .sync()
+  //.sync({ force: true })
+  .sync()
   .then(async () => {
     app.listen(PORT, () => {
       // addAllTables(false);
@@ -99,6 +101,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
+      //addAllTables();
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -113,21 +116,23 @@ db.sequelize
       );
     });
   });
+
 let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
-    db.Administrators.destroy({ where: {} });
-    db.Notifications.destroy({ where: {} });
-    db.Organizations.destroy({ where: {} });
-    db.OrganizationsTypes.destroy({ where: {} });
-    db.Points.destroy({ where: {} });
-    db.PointsOperations.destroy({ where: {} });
-    db.Posts.destroy({ where: {} });
-    db.ReadNotification.destroy({ where: {} });
-    db.Roles.destroy({ where: {} });
-    db.Tasks.destroy({ where: {} });
-    db.TeamCustomization.destroy({ where: {} });
-    db.Teams.destroy({ where: {} });
+    db.Comments.destroy({ where: {} });
+    // db.Administrators.destroy({ where: {} });
+    // db.Notifications.destroy({ where: {} });
+    // db.Organizations.destroy({ where: {} });
+    // db.OrganizationsTypes.destroy({ where: {} });
+    // db.Points.destroy({ where: {} });
+    // db.PointsOperations.destroy({ where: {} });
+    // db.Posts.destroy({ where: {} });
+    // db.ReadNotification.destroy({ where: {} });
+    // db.Roles.destroy({ where: {} });
+    // db.Tasks.destroy({ where: {} });
+    // db.TeamCustomization.destroy({ where: {} });
+    // db.Teams.destroy({ where: {} });
   }
   //Можно менять количество заполнений в переменной quantity
   let quantity = 10;
@@ -137,7 +142,10 @@ async function addAllTables(destroyTable) {
     });
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
-      name: faker.name.findName(),
+      name: faker.name.firstName(),
+      surname: faker.name.lastName(),
+      patricity: faker.name.findName(),
+      gender: faker.name.gender(),
       login: faker.random.word(),
       password: bcrypt.hashSync("nikita", salt)
     });
@@ -175,16 +183,22 @@ async function addAllTables(destroyTable) {
     });
 
     let tasks = await db.Tasks.create({
+      teamId: team.dataValues.id,
       userId: user.dataValues.id,
       body: {
-        text: faker.lorem.paragraph()
+        header: faker.random.word(),
+        text: faker.lorem.paragraph(),
+        points: faker.random.number()
       },
       status: faker.random.word()
     });
     let posts = await db.Posts.create({
-      body: faker.lorem.paragraph(),
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph()
+      },
       authorId: user.dataValues.id,
-      organizationId: team.dataValues.id,
+      organizationId: organization.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
     let teamcustomization = await db.TeamCustomization.create({
@@ -203,12 +217,21 @@ async function addAllTables(destroyTable) {
     let pointsoperations = await db.PointsOperations.create({
       pointAccountId: pointsuser.dataValues.id,
       delta: faker.random.number(),
-      operationDescription: faker.lorem.paragraph()
+      operationDescription: faker.random.word()
     });
-  // console.log(organization);
-  //   console.log(team);
+    // console.log(organization);
+    //   console.log(team);
+    let comments = await db.Comments.create({
+      authorId: user.dataValues.id,
+      postId: posts.dataValues.id,
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph()
+      },
+      dateAdd: faker.random.number()
+    });
+    console.log(comments);
   }
-  
 }
 /* TODO: рекомендую использовать следующие библиотеки
   (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)

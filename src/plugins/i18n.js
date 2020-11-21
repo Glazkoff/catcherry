@@ -3,17 +3,53 @@ import VueI18n from "vue-i18n";
 
 Vue.use(VueI18n);
 
+const dateTimeFormats = {
+  en: {
+    short: {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    },
+    long: {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
+      weekday: "short",
+      hour: "numeric",
+      minute: "numeric"
+    }
+  },
+  ru: {
+    short: {
+      year: "numeric",
+      month: "short",
+      day: "numeric"
+    },
+    long: {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      // weekday: "short",
+      hour: "numeric",
+      minute: "numeric",
+      second: "numeric"
+    }
+  }
+};
+
 export const i18n = new VueI18n({
   locale: "ru",
   fallbackLocale: "en",
+  dateTimeFormats,
   messages: {
     en: {
       welcomeMsg: "Hello, PolyWeb!",
       startMsg: "The start of the {title} project",
       projectTitle: "CATCHERRY",
       editUser: "Edit user",
-      listUser: "A list of users",
-      listOrganization: "A list of organization",
+      editOrg: "Edit organization",
+      listUser: "List of users",
+      listOrganization: "List of organization",
       profileUser: "Profile",
       systemStatistics: "System statistics",
       surname: "Surname",
@@ -29,13 +65,51 @@ export const i18n = new VueI18n({
       edit: "Edit",
       delete: "Delete",
       deleteQuestion: "Are you sure you want to delete user",
-      placeholderSearchByUsers: "Search by users"
+      deleteOrgQuestion: "Are you sure you want to delete organization",
+      placeholderSearchByUsers: "Search by users",
+      user: "User",
+      organization: "Organization",
+      loading: "Loading",
+      createdAt: "Date of creation",
+      noTeam: "User is not a member of teams",
+      userTeams: "User teams",
+      nameInanimate: "Name",
+      description: "Description",
+      status: "Status",
+      more: "More",
+      addUserToTeam: "Add user to team",
+      deleteUserFromTeam: "Delete user from team",
+      minialertEditUser: "You have successfully changed user details",
+      minialertDeleteUser: "You have successfully deleted the user",
+      minialertError: "Sorry, some error has occurred",
+      noUser: "Sorry, no users yet",
+      minialertEditOrg: "You have successfully changed organization details",
+      minialertDeleteOrg: "You have successfully deleted the organization",
+      noOrg: "Sorry, no organizations yet",
+      numberOfParticipants: "Number of participants",
+      maxNumberOfTeams: "Maximum number of teams in organization",
+      typeOfOrg: "Type of organization",
+      organizationOwner: "Organization owner",
+      teamsInOrg: "Teams in the organization",
+      noTeamOrg: "There are no teams in this organization",
+      editTeam: "Edit team",
+      required: "This field is required",
+      requiredNumber: "This field must contain only numbers",
+      requiredLetters: "This field must contain only letters",
+      male: "Male",
+      female: "Female",
+      adminPanel: "Admin panel",
+      numberOfPoints: "Number of points",
+      editNumberOfPoints: "Edit number of points",
+      saveNumberOfPoints: "Save number of points",
+      role: "Role"
     },
     ru: {
       welcomeMsg: "Привет, Поливеб!",
       startMsg: "Старт проекта {title}",
       projectTitle: "Кэтчерри",
       editUser: "Редактировать пользователя",
+      editOrg: "Редактировать организацию",
       listUser: "Список пользователей",
       profileUser: "Профиль",
       listOrganization: "Список организаций",
@@ -53,7 +127,44 @@ export const i18n = new VueI18n({
       edit: "Редактировать",
       delete: "Удалить",
       deleteQuestion: "Вы действительно хотите удалить пользователя",
-      placeholderSearchByUsers: "Поиск по пользователям"
+      deleteOrgQuestion: "Вы действительно хотите удалить организацию",
+      placeholderSearchByUsers: "Поиск по пользователям",
+      user: "Пользователь",
+      loading: "Загрузка",
+      createdAt: "Дата создания",
+      noTeam: "Пользователь не состоит в командах",
+      userTeams: "Команды пользователя",
+      nameInanimate: "Название",
+      description: "Описание",
+      organization: "Организация",
+      status: "Статус",
+      more: "Подробнее",
+      addUserToTeam: "Добавить пользователя в команду",
+      deleteUserFromTeam: "Исключить пользователя из команды",
+      minialertEditUser: "Вы успешно изменили данные пользователя",
+      minialertDeleteUser: "Вы успешно удалили пользователя",
+      minialertError: "К сожалению, произошла какая-то ошибка",
+      noUser: "К сожалению, пока нет пользователей",
+      minialertEditOrg: "Вы успешно изменили данные организации",
+      minialertDeleteOrg: "Вы успешно удалили организацию",
+      noOrg: "К сожалению, пока нет организаций",
+      numberOfParticipants: "Количество участников",
+      maxNumberOfTeams: "Максимальное количество команд",
+      typeOfOrg: "Тип организации",
+      organizationOwner: "Владелец организации",
+      teamsInOrg: "Команды в организации",
+      noTeamOrg: "В данной организации нет команд",
+      editTeam: "Редактировать команду",
+      required: "Данное поле является обязательным",
+      requiredNumber: "Данное поле должно содержать только цифры",
+      requiredLetters: "Данное поле должно содержать только цифры",
+      male: "Мужской",
+      female: "Женский",
+      adminPanel: "Административная панель",
+      numberOfPoints: "Количество баллов",
+      editNumberOfPoints: "Изменить количество баллов",
+      saveNumberOfPoints: "Сохранить количество баллов",
+      role: "Роль"
     }
   }
 });
