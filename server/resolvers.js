@@ -442,11 +442,17 @@ module.exports = {
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
     //Создать оповещение
-    createNotification: (parent, { body, authorId, teamId }, { db }, info) =>
+    createNotification: (
+      parent,
+      { body, authorId, teamId, forAllUsers },
+      { db },
+      info
+    ) =>
       db.Notifications.create({
         body: body,
         authorId: authorId,
-        teamId: teamId
+        teamId: teamId,
+        forAllUsers: forAllUsers
       }),
     //Изменить оповещение
     updateNotification: (
@@ -620,7 +626,7 @@ module.exports = {
           }
         }
       ),
-      rejectRequst: (parent, { id }, { db }, info) =>
+    rejectRequst: (parent, { id }, { db }, info) =>
       db.UsersInTeams.update(
         {
           status: "Отклонен"

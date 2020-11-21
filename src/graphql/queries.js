@@ -513,14 +513,25 @@ export const NOTIFICATIONS_USER_QUERY = gql`
       }
       authorId
       teamId
+      forAllUsers
       createdAt
     }
   }
 `;
 
 export const ADD_NOTIFICATION_QUERY = gql`
-  mutation($body: NotificationBody!, $authorId: Int!, $teamId: Int!) {
-    createNotification(body: $body, authorId: $authorId, teamId: $teamId) {
+  mutation(
+    $body: NotificationBody!
+    $authorId: Int!
+    $teamId: Int!
+    $forAllUsers: Int
+  ) {
+    createNotification(
+      body: $body
+      authorId: $authorId
+      teamId: $teamId
+      forAllUsers: $forAllUsers
+    ) {
       id
     }
   }

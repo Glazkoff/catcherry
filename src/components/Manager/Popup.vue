@@ -187,7 +187,8 @@ export default {
                 this.operationDescription
             },
             authorId: 1,
-            teamId: +this.$route.params.id
+            teamId: +this.$route.params.id,
+            forAllUsers: +this.userInTeam.user.id
           }
         })
         .then(data => {
