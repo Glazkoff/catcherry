@@ -15,7 +15,8 @@ function generateTokens(user) {
 
   // Генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN
+    // В секундах
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN / 1000
   });
 
   // Возвращаем объект с двумя полями (refreshToken, accessToken)
@@ -25,6 +26,7 @@ function generateTokens(user) {
   };
 }
 
+// ФУНКЦИЯ: создание записи о новой сессии
 async function addRefreshSession(db, userId, refreshToken, fingerprint) {
   try {
     // Задаём объект сессии
@@ -83,32 +85,120 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
   }
 }
 
+// ФУНКЦИЯ: создание записи о новой сессии
+async function updateRefreshSession(
+  db,
+  userId,
+  oldRefreshToken,
+  newRefreshToken,
+  fingerprint
+) {
+  let result = await db.RefreshSessions.update(
+    {
+      refreshToken: newRefreshToken
+    },
+    {
+      where: {
+        refreshToken: oldRefreshToken,
+        fingerprint,
+        userId
+      }
+    }
+  );
+  return result;
+}
+
 module.exports = {
   Query: {
-    users: (parent, args, { db }, info) =>
-      db.Users.findAll({ order: [["id", "ASC"]] }),
-    user: (parent, args, { db }, info) => {
-      return db.Users.findOne({ where: { id: args.id } });
+    statisticsNewUsers: (parent, args, { db }) => {
+      return db.Users.count({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      });
     },
-    organizations: (parent, args, { db }, info) =>
-      db.Organizations.findAll({
+    statisticsNewOrgs: (parent, args, { db }) => {
+      return db.Organizations.count({
+        where: {
+          createdAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      });
+    },
+    statisticsDeleteUsers: (parent, args, { db }) => {
+      return db.Users.count({
+        where: {
+          deletedAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        },
+        paranoid: false
+      });
+    },
+    statisticsDeleteOrgs: (parent, args, { db }) => {
+      return db.Organizations.count({
+        where: {
+          deletedAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        },
+        paranoid: false
+      });
+    },
+    // Получаем список всех пользователей
+    users: (parent, args, { db }) =>
+      db.Users.findAll({ order: [["id", "ASC"]] }),
+    // Получаем данные про одного пользователя
+    user: (parent, args, { db }) => {
+      return db.Users.findOne({
+        where: { id: args.id }
+      });
+    },
+    // Получаем данные о командах пользователя + информация о команде (об организации)
+    oneUserInTeams: (parent, args, { db }) =>
+      db.UsersInTeams.findAll({
+        where: { userId: args.userId },
         order: [["id", "ASC"]],
         include: [
-          { model: db.Users, as: "owner" },
-          { model: db.OrganizationsTypes, as: "organizationType" }
+          { model: db.Roles, as: "role" },
+          { model: db.Users, as: "user" },
+          {
+            model: db.Teams,
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
         ]
       }),
-    organization: (parent, args, { db }, info) => {
-      return db.Organizations.findOne({ where: { id: args.id } });
+    // Получаем список всех организаций
+    organizations: (parent, args, { db }) =>
+      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+    // Получаем информацию про одну организацию + тип организации + владелец организации
+    organization: (parent, args, { db }) => {
+      return db.Organizations.findOne({
+        where: { id: args.id },
+        include: [
+          { model: db.OrganizationsTypes, as: "organizationType" },
+          { model: db.Users, as: "owner" }
+        ]
+      });
     },
-    organizationTypes: (parent, args, { db }, info) =>
-      db.OrganizationsTypes.findAll({
-        order: [["id", "ASC"]]
-      }),
-    teams: (parent, args, { db }, info) =>
-      db.Teams.findAll({ order: [["id", "ASC"]] }),
-    team: (parent, args, { db }, info) => {
+    // Получаем тип организации по ее id
+    teamsInOneOrganization: (parent, args, { db }) => {
       return db.Teams.findAll({
+        order: [["id", "ASC"]],
+        where: { organizationId: args.organizationId }
+      });
+    },
+    // Получаем список всех типов организации
+    organizationTypes: (parent, args, { db }) =>
+      db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
+    teams: (parent, args, { db }) =>
+      db.Teams.findAll({ order: [["id", "ASC"]] }),
+    team: (parent, args, { db }) => {
+      return db.Teams.findOne({
         where: { organizationId: args.organizationId }
       });
     },
@@ -116,9 +206,9 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "DESC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
-    posts: (parent, args, { db }, info) =>
+    posts: (parent, args, { db }) =>
       db.Posts.findAll({ order: [["id", "ASC"]] }),
-    post: (parent, args, { db }, info) =>
+    post: (parent, args, { db }) =>
       db.Posts.findOne({ where: { id: args.id } }),
     getPointsUser: (parent, args, { db }, info) =>
       db.Points.findOne({ where: { userId: args.userId } }),
@@ -172,24 +262,24 @@ module.exports = {
           }
         ]
       }),
-    requests: (parent, { teamId }, { db }, info) =>
+    requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
 
-    getPointsUser: (parent, args, { db }, info) =>
+    getPointsUser: (parent, args, { db }) =>
       db.Points.findOne({
         where: { userId: args.userId },
         order: [["id", "ASC"]]
       }),
-    getOperationPointsUser: (parent, args, { db }, info) =>
+    getOperationPointsUser: (parent, args, { db }) =>
       db.PointsOperations.findAll({
         where: { pointAccountId: args.pointAccountId },
         order: [["id", "ASC"]]
       }),
-    tasks: (parent, { teamId }, { db }, info) =>
+    tasks: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId, userId: { [Op.ne]: null } },
         order: [["id", "DESC"]],
@@ -237,14 +327,11 @@ module.exports = {
       })
   },
   Mutation: {
-    /*
-      [Ниже] Мутации регистрации и авторизации
-    */
+    /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
       { name, login, password, fingerprint },
-      { res, db },
-      info
+      { res, db }
     ) => {
       let hashPassword = bcrypt.hashSync(password, salt);
 
@@ -279,7 +366,6 @@ module.exports = {
       { res, db },
       info
     ) => {
-      console.log(login, password, fingerprint);
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
@@ -320,34 +406,75 @@ module.exports = {
         };
       }
     },
-    updateAccessToken: async (parent, {}, { req, res, db }, info) => {
+    updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
+      // Получаем refresh-токен из cookie
       let refreshToken = req.cookies.refreshToken;
-      if (
-        !refreshToken ||
-        !jwt.verify(refreshToken, process.env.REFRESH_TOKEN_SECRET)
-      ) {
+
+      // Если он пуст, отправляем ошибку
+      if (!refreshToken) {
         return {
           error: {
             errorStatus: 401,
-            message: "Refresh token is absent"
+            message: "Refresh token is absent!"
           }
-        };
-      } else {
-        let userId = jwt.decode(refreshToken).userId;
-        let user = await db.Users.findOne({ where: { id: userId } });
-        let accessToken = jwt.sign(
-          user.dataValues,
-          process.env.ACCESS_TOKEN_SECRET,
-          {
-            expiresIn: 100 * 60 * 60 * 24
-          }
-        );
-        return {
-          // TODO: выпустить токен
-          accessToken
         };
       }
+      // Если токен был получен
+      else {
+        // Ищем запись о сессии
+        let session = await db.RefreshSessions.findOne({
+          where: {
+            refreshToken,
+            fingerprint
+          }
+        });
+
+        // Если сессия не была найдена, отправляем ошибку
+        if (!session) {
+          return {
+            error: {
+              errorStatus: 401,
+              message: "Session was not found!"
+            }
+          };
+        }
+        // Если сессия была найдена, обновляем токены
+        else {
+          session = session.dataValues;
+
+          // Находим пользователя по ID
+          // TODO: оптимизация запросов с помощью Include
+          let user = await db.Users.findOne({
+            where: {
+              id: session.userId
+            }
+          });
+
+          // Генерируем новые токены
+          let tokens = generateTokens(user.dataValues);
+
+          // Записать в Cookie HttpOnly рефреш-токен
+          res.cookie("refreshToken", tokens.refreshToken, {
+            httpOnly: true,
+            maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
+          });
+
+          // Обновляем записи в БД
+          updateRefreshSession(
+            db,
+            session.userId,
+            refreshToken,
+            tokens.refreshToken,
+            fingerprint
+          );
+
+          return {
+            accessToken: tokens.accessToken
+          };
+        }
+      }
     },
+
     /*
       [Ниже] Мутации работы с пользователями (Users)     
     */
@@ -355,9 +482,10 @@ module.exports = {
       db.Users.create({
         name: name
       }),
+    // Обновляем фамилию, имени, отчества, пола и логина пользователя
     updateUser: (
       parent,
-      { name, surname, patricity, gender, birthday, login, id },
+      { surname, name, patricity, gender, login, id },
       { db },
       info
     ) =>
@@ -367,7 +495,6 @@ module.exports = {
           surname: surname,
           patricity: patricity,
           gender: gender,
-          birthday: birthday,
           login: login
         },
         {
@@ -376,12 +503,44 @@ module.exports = {
           }
         }
       ),
+    // Меняем статус пользователя в команде (добавляем или удаляем)
+    addUserInTeam: (parent, { status, id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: status
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
+    // Удаляем пользователя
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
           id: args.id
         }
       }),
+    // Обновляем название, описание и максимальное количество пользователей команды
+    updateTeam: (
+      parent,
+      { name, description, maxUsersLimit, id },
+      { db },
+      info
+    ) =>
+      db.Teams.update(
+        {
+          name: name,
+          description: description,
+          maxUsersLimit: maxUsersLimit
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
     /*
       [Ниже] Мутации работы с организациями (Organization)     
     */
@@ -397,17 +556,11 @@ module.exports = {
         organizationTypeId: organizationTypeId,
         maxTeamsLimit: maxTeamsLimit
       }),
-    updateOrganization: (
-      parent,
-      { name, ownerId, organizationTypeId, maxTeamsLimit, id },
-      { db },
-      info
-    ) =>
+    // Обновляем название и максимальное количество команд организации
+    updateOrganization: (parent, { name, maxTeamsLimit, id }, { db }, info) =>
       db.Organizations.update(
         {
           name: name,
-          ownerId: ownerId,
-          organizationTypeId: organizationTypeId,
           maxTeamsLimit: maxTeamsLimit
         },
         {
@@ -416,14 +569,21 @@ module.exports = {
           }
         }
       ),
+    // Удаляем организацию
     deleteOrganization: (parent, args, { db }, info) =>
       db.Organizations.destroy({
         where: {
           id: args.id
         }
       }),
+    deleteTeam: (parent, args, { db }, info) =>
+      db.Teams.destroy({
+        where: {
+          id: args.id
+        }
+      }),
     /*
-      [Ниже] Мутации работы с организациями (Organization)     
+      [Ниже] Мутации работы с командами (Teams)     
     */
     createTeam: (
       parent,
@@ -668,24 +828,6 @@ module.exports = {
     /*
       [Ниже] Мутации работы с командами     
     */
-    updateTeam: (
-      parent,
-      { id, name, description, maxUsersLimit },
-      { db },
-      info
-    ) =>
-      db.Teams.update(
-        {
-          name: name,
-          description: description,
-          maxUsersLimit: maxUsersLimit
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
 
     /*
       [Ниже] Мутации работы с задачами     
