@@ -28,7 +28,6 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.JSONB,
         allowNull: false
       },
-      dateAdd: DataTypes.STRING
     },
     {
       sequelize,

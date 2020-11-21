@@ -17,9 +17,6 @@ module.exports = {
       body: {
         type: Sequelize.JSONB
       },
-      dateAdd: {
-        type: Sequelize.STRING
-      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

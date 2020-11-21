@@ -240,40 +240,32 @@ export const ACCEPT_REQUEST_QUERY = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ COMMENTS
 export const CREATE_COMMENT_QUERY = gql`
-  mutation ($body: CommentBody!, $authorId: Int!, $postId: Int!, $dateAdd: String!) {
-  createComment(body: $body, authorId: $authorId, postId: $postId, dateAdd: $dateAdd) {
-    id
-    body {
-      header
-      text
+  mutation($body: String!, $authorId: Int!, $postId: Int!) {
+    createComment(body: $body, authorId: $authorId, postId: $postId) {
+      id
+      body
+      authorId
+      postId
     }
-    authorId
-    postId
-    dateAdd
   }
-}
 `;
 
 export const COMMENTS_QUERY = gql`
   query {
     comments {
       id
-      body {
-        header
-        text
-      }
+      body
       authorId
       author {
         name
       }
       postId
-      dateAdd
     }
   }
 `;
 
 export const UPDATE_COMMENT_QUERY = gql`
-  mutation($body: CommentBody!, $id: ID!) {
+  mutation($body: String!, $id: ID!) {
     updateComment(body: $body, id: $id)
   }
 `;

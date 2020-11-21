@@ -98,7 +98,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
-      // addAllTables(true);
+      // addAllTables(false);
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -175,13 +175,13 @@ async function addAllTables(destroyTable) {
       readOrNot: faker.random.boolean()
     });
 
-    // let tasks = await db.Tasks.create({
-    //   userId: user.dataValues.id,
-    //   body: {
-    //     text: faker.lorem.paragraph()
-    //   },
-    //   status: faker.random.word()
-    // });
+    let tasks = await db.Tasks.create({
+      userId: user.dataValues.id,
+      body: {
+        text: faker.lorem.paragraph()
+      },
+      status: faker.random.word()
+    });
     let posts = await db.Posts.create({
       body: faker.lorem.paragraph(),
       authorId: user.dataValues.id,
@@ -203,19 +203,15 @@ async function addAllTables(destroyTable) {
       userId: user.dataValues.id,
       pointQuantity: faker.random.number()
     });
-    // let pointsoperations = await db.PointsOperations.create({
-    //   pointAccountId: pointsuser.dataValues.id,
-    //   delta: faker.random.number(),
-    //   operationDescription: faker.lorem.paragraph()
-    // });
+    let pointsoperations = await db.PointsOperations.create({
+      pointAccountId: pointsuser.dataValues.id,
+      delta: faker.random.number(),
+      operationDescription: faker.lorem.paragraph()
+    });
     let comments = await db.Comments.create({
       authorId: user.dataValues.id,
       postId: 1,
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph()
-      },
-      dateAdd: faker.random.number()
+      body: faker.lorem.paragraph()
     });
     console.log(comments);
   }

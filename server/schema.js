@@ -89,25 +89,16 @@ type PointOperations{
   delta: Int!
   operationDescription: String
 }
-input CommentBody {
-  header: String!
-  text: String!
-}
 
-type BodyComment {
-  header: String!
-  text: String!
-}
 type Author{
   name: String!
 }
 type Comment {
   id: ID!
-  body: BodyComment!
+  body: String!
   authorId: Int!
   author: Author!
   postId: Int!
-  dateAdd: String!
   createdAt: String!
   updatedAt: String!
 }
@@ -147,9 +138,9 @@ type Mutation {
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
-  createComment(body: CommentBody!, authorId: Int!, postId: Int!, dateAdd: String!): Comment!
+  createComment(body: String!, authorId: Int!, postId: Int!): Comment!
   deleteComment(id: ID!): Int!
-  updateComment(body: CommentBody!, id: ID!): [Int]!
+  updateComment(body: String!, id: ID!): [Int]!
 
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   updateOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): [Int]!

@@ -1,10 +1,5 @@
 <template>
   <div class="postComments">
-    <input
-      type="text"
-      placeholder="Введите заголовок комментария"
-      v-model="newComment"
-    />
     <textarea
       type="text"
       placeholder="Введите текст комментария"
@@ -12,11 +7,10 @@
     />
     <button @click="toAddComment()">Добавить</button>
     <div v-for="comment in comments" :key="comment.id">
-      <h2>{{ comment.body.header }}</h2>
       <p>{{ comment.author.name }}</p>
-      <p>{{ comment.dateAdd }}</p>
-      <p>{{ comment.body.text }}</p>
-      <button @click="toDeleteComment(comment.id)">Удалить</button>
+      <p>{{ comment.createdAt }}</p>
+      <p>{{ comment.body}}</p>
+      <button v-if="comment.authorId==this.$store.getters.decodedToken.id" @click="toDeleteComment(comment.id)">Удалить</button>
     </div>
   </div>
 </template>
@@ -40,13 +34,9 @@ export default {
       newComment: "",
       editComment: {
         isEdit: false,
-        body: {
-          header: "",
-          text: ""
-        },
+        body: "",
         authorId: "",
         postId: "",
-        dateAdd: "",
         id: -1
       }
     };
@@ -61,7 +51,6 @@ export default {
             body: this.editComment.body,
             authorId: this.editComment.authorId,
             postId: this.editComment.postId,
-            dateAdd: this.editComment.dateAdd,
             id: this.editComment.id
           },
           update: (cache, { data: { updateComment } }) => {
@@ -94,15 +83,13 @@ export default {
       this.editComment.body = editComment.body;
       this.editComment.authorId = editComment.authorId;
       this.editComment.postId = editComment.postId;
-      this.editComment.dateAdd = editComment.dateAdd;
       this.editComment.id = editComment.id;
       this.editComment.isEdit = true;
     },
     toAddComment() {
       let bodyComment = this.newComment;
-      let authorIdComment = this.newComment;
-      let postIdComment = this.newComment;
-      let dateAddComment = this.newComment;
+      let authorIdComment = this.$store.getters.decodedToken.id;
+      let postIdComment = this.post.id;
       this.newComment = "";
       this.$apollo
         .mutate({
@@ -110,8 +97,7 @@ export default {
           variables: {
             body: bodyComment,
             authorId: authorIdComment,
-            postId: postIdComment,
-            dateAdd: dateAddComment
+            postId: postIdComment
           },
           update: (cache, { data: { createComment } }) => {
             let data = cache.readQuery({ query: COMMENTS_QUERY });
@@ -125,8 +111,7 @@ export default {
               id: -1,
               body: bodyComment,
               authorId: authorIdComment,
-              postId: postIdComment,
-              dateAdd: dateAddComment
+              postId: postIdComment
             }
           }
         })

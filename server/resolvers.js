@@ -375,15 +375,14 @@ module.exports = {
     //Создать комментарий
     createComment: (
       parent,
-      { body, authorId, postId, dateAdd },
+      { body, authorId, postId },
       { db },
       info
     ) =>
       db.Comments.create({
         body: body,
         authorId: authorId,
-        postId: postId,
-        dateAdd: dateAdd
+        postId: postId
       }),
     //Изменить комментарий
     updateComment: (parent, { body, id }, { db }, info) =>
