@@ -400,7 +400,7 @@ export const REVOKE_REQUEST_QUERY = gql`
 `;
 
 export const GET_POINTS_QUERY = gql`
-  query($userId: ID!) {
+  query($userId: ID) {
     getPointsUser(userId: $userId) {
       id
       userId
@@ -599,18 +599,10 @@ export const STATISTICS_DELETE_QUERY = gql`
 
 export const USER_OPERATION_POINTS_QUERY = gql`
   query($pointAccountId: Int) {
-    userOperationPoints(pointAccountId: $pointAccountId) {
+    getOperationPointsUser(pointAccountId: $pointAccountId) {
       delta
       operationDescription
       createdAt
-    }
-  }
-`;
-
-export const POINTS_USER_QUERY = gql`
-  query($userId: Int) {
-    getPointsUser(userId: $userId) {
-      pointQuantity
     }
   }
 `;

@@ -1,28 +1,62 @@
 <template>
   <div class="pointsUser account-view">
     <p class="pointsName">Баллы</p>
-    <hr class="">
-    <p class="pointsQan">{{ getPointsUser.pointQuantity }} балла</p>
-    <div class="pointsOperation"><ul>
-      <li v-for="operation in userOperationPoints" :key="operation.pointAccountId">
-        <span class="pointsDate">{{ operation.createdAt }}</span>
-        <span class="pointsDelta">{{ operation.delta }}</span>
-        <span>{{ operation.description }}</span>
-        <hr>
-      </li>
-    </ul></div>
-    <button class="showAllPoints">Показать полностью</button>
+    <hr class="" />
+    <div v-if="$apollo.loading">
+      <h3>
+        <i18n path="loading">{{ $t("loading") }}</i18n
+        >...
+      </h3>
+    </div>
+    <div v-if="!$apollo.loading">
+      <p class="pointsQan">{{ getPointsUser.pointQuantity }} балла</p>
+      <div>
+        <ul v-if="isMini">
+          <li
+            v-for="operation in miniPointsOperation"
+            :key="operation.pointAccountId"
+            class="pointsOperation"
+          >
+            <span class="pointsDate">{{
+              $d(operation.createdAt, "long")
+            }}</span>
+            <span class="pointsDelta">{{ operation.delta }}</span>
+            <span class="pointsDescription">{{
+              operation.operationDescription
+            }}</span>
+          </li>
+        </ul>
+        <ul v-if="isBig">
+          <li
+            v-for="operation in getOperationPointsUser"
+            :key="operation.pointAccountId"
+            class="pointsOperation"
+          >
+            <span class="pointsDate">{{
+              $d(operation.createdAt, "long")
+            }}</span>
+            <span class="pointsDelta">{{ operation.delta }}</span>
+            <span class="pointsDescription">{{
+              operation.operationDescription
+            }}</span>
+          </li>
+        </ul>
+      </div>
+      <button class="showAllPoints" @click="showFull()" v-if="isMini">
+        Показать полностью
+      </button>
+    </div>
   </div>
-
 </template>
 
 <script>
 import {
-  USER_OPERATION_POINTS_QUERY, POINTS_USER_QUERY
+  USER_OPERATION_POINTS_QUERY,
+  GET_POINTS_QUERY
 } from "@/graphql/queries";
 export default {
   apollo: {
-    userOperationPoints: {
+    getOperationPointsUser: {
       query: USER_OPERATION_POINTS_QUERY,
       variables() {
         return {
@@ -31,7 +65,7 @@ export default {
       }
     },
     getPointsUser: {
-      query: POINTS_USER_QUERY,
+      query: GET_POINTS_QUERY,
       variables() {
         return {
           userId: +this.$route.params.id
@@ -39,10 +73,29 @@ export default {
       }
     }
   },
-}
+  data() {
+    return {
+      isMini: true,
+      isBig: false
+    };
+  },
+  methods: {
+    showFull() {
+      this.isMini = false;
+      this.isBig = true;
+    }
+  },
+  computed: {
+    miniPointsOperation() {
+      return this.getOperationPointsUser.filter((el, index) => {
+        return index < 3;
+      });
+    }
+  }
+};
 </script>
 
-<style>
+<style lang="scss">
 *,
 *::before,
 *::after {
@@ -59,39 +112,38 @@ body {
   background-color: #fff;
 }
 li {
-    list-style-type: none;
-   }
-.showAllPoints{
+  list-style-type: none;
+}
+.showAllPoints {
   margin-left: 40px;
-   }
-.pointsQan{
-font-family: Montserrat;
-font-style: normal;
-font-weight: bold;
-font-size: 48px;
-line-height: 59px;
-padding-left: 40px;
 }
-.pointsName{
-font-family: Montserrat;
-font-style: normal;
-font-weight: normal;
-font-size: 24px;
-line-height: 29px;
-padding-left: 40px;
+.pointsQan {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: bold;
+  font-size: 48px;
+  line-height: 59px;
+  padding-left: 40px;
 }
-.pointsOperation{
+.pointsName {
+  font-family: Montserrat;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 24px;
+  line-height: 29px;
+  padding-left: 40px;
+}
+.pointsOperation {
+  font-family: Montserrat;
   display: flex;
-}
-.pointsDate, .pointsDelta{
-font-family: Montserrat;
-font-style: normal;
-font-weight: normal;
-font-size: 18px;
-line-height: 22px;
-}
-.pointsDelta{
-  float: right;
-  padding-left: 70px;
+  justify-content: space-between;
+  border-bottom: 1px solid black;
+  text-align: center;
+  width: 80%;
+  font-size: 20px;
+  padding: 1%;
+  span {
+    width: 33%;
+  }
 }
 </style>

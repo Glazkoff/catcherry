@@ -86,7 +86,7 @@ export default {
             });
             // Меняем статус заявки
             data.requests.find(el => el.id === id).status = "Принят";
-            let index = data.requests.findIndex(el => el.id == id);
+            index = data.requests.findIndex(el => el.id == id);
             // Добавляем заявку с измененным статусом в массив участников команды
             data_user.usersInTeams.push(data.requests.find(el => el.id === id));
             // Удаляем заявку с измененным статусом из массива заявок

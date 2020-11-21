@@ -107,8 +107,8 @@ type Notification {
 
 type PointsUser{
   id: ID!
-  userId: Int!
-  pointQuantity: Int!
+  userId: Int
+  pointQuantity: Int
   pointsOperation: [PointOperations]
   createdAt: String!
   updatedAt: String!
@@ -196,14 +196,14 @@ type Query {
   notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   requests:[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  getPointsUser(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  getOperationPointsUser(userId: Int!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getPointsUser(userId: ID): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(pointAccountId: Int): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   posts: [Post]!
   post(id: ID!): Post
   
   usersInTeams (teamId:ID!):[UserInTeam]!
-  oneUserInTeams(userId: ID!): [UserInTeam!]
+  oneUserInTeams(userId: ID): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
   teamsInOneOrganization(organizationId: ID!): [Team]
 

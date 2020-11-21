@@ -210,8 +210,6 @@ module.exports = {
       db.Posts.findAll({ order: [["id", "ASC"]] }),
     post: (parent, args, { db }) =>
       db.Posts.findOne({ where: { id: args.id } }),
-    getPointsUser: (parent, args, { db }, info) =>
-      db.Points.findOne({ where: { userId: args.userId } }),
     comments: (parent, args, { db }, info) =>
       db.Comments.findAll({
         order: [["id", "ASC"]]
@@ -272,7 +270,6 @@ module.exports = {
     getPointsUser: (parent, args, { db }) =>
       db.Points.findOne({
         where: { userId: args.userId },
-        order: [["id", "ASC"]]
       }),
     getOperationPointsUser: (parent, args, { db }) =>
       db.PointsOperations.findAll({
