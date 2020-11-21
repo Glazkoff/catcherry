@@ -1,7 +1,9 @@
 <template>
   <div id="auth-screen">
     <div class="bg-half">
-      <div class="logo-block">Catcherry</div>
+      <div class="logo-block">
+        <img src="../assets/full_logo.svg" alt="Catcherry's logo" />
+      </div>
     </div>
     <div class="form-half">
       <router-view name="form"></router-view>
@@ -39,6 +41,12 @@ export default {
   .form-half {
     overflow-x: hidden;
     overflow-y: auto;
+  }
+
+  .logo-block img {
+    width: 14rem;
+    padding-left: 2rem;
+    padding-top: 3rem;
   }
 }
 </style>
