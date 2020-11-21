@@ -79,7 +79,7 @@ export default {
 
   methods: {
     // Метод для принятия участника в команду
-    toAccept(id) {
+    toAccept(id, userId) {
       this.$apollo
         .mutate({
           mutation: ACCEPT_REQUEST_QUERY,
@@ -135,7 +135,8 @@ export default {
               text: "Ваша заявка в команду " + this.name + " принята!"
             },
             authorId: 1,
-            teamId: +this.$route.params.id
+            teamId: +this.$route.params.id,
+            forAllUsers: +userId
           }
         })
         .then(data => {
@@ -146,7 +147,7 @@ export default {
         });
     },
     // Метод для отклонения заявки
-    toReject(id) {
+    toReject(id, userId) {
       this.$apollo
         .mutate({
           mutation: REJECT_REQUEST,
@@ -193,7 +194,8 @@ export default {
               text: "Ваша заявка в команду " + this.name + " отклонена"
             },
             authorId: 1,
-            teamId: +this.$route.params.id
+            teamId: +this.$route.params.id,
+            forAllUsers: +userId
           }
         })
         .then(data => {

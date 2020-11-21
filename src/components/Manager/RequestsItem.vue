@@ -20,14 +20,14 @@
         <button
           type="submit"
           class="modal-avtive-button"
-          @click="$emit('accept', request.id)"
+          @click="$emit('accept', request.id, request.user.id)"
         >
           Принять
         </button>
         <button
           type="submit"
           class="modal-default-button"
-          @click="$emit('reject', request.id)"
+          @click="$emit('reject', request.id, request.user.id)"
         >
           Отклонить
         </button>
