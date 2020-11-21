@@ -18,9 +18,9 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import ListOfNotifications from "@/components/ListOfNotifications.vue";
-import TeamMembers from "@/components/Manager/TeamMembers.vue";
-import EditTeam from "@/components/Manager/EditTeam.vue";
-import RequestsList from "@/components/Manager/RequestsList.vue";
+import TeamMembers from "@/components/manager/TeamMembers.vue";
+import EditTeam from "@/components/manager/EditTeam.vue";
+import RequestsList from "@/components/manager/RequestsList.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";

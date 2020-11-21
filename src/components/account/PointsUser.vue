@@ -2,14 +2,14 @@
   <div class="pointsUser account-view">
     <p class="pointsName">Баллы</p>
     <hr class="">
-    <p class="pointsQan">322 балла</p>
+    <p class="pointsQan">{{ getPointsUser.pointQuantity }} балла</p>
     <div class="pointsOperation"><ul>
-      <li><span class="pointsDate">14.10.14</span><span class="pointsDelta">+10 баллов</span><hr></li>
-      <li><span class="pointsDate">14.10.14</span><span class="pointsDelta">+10 баллов</span><hr></li>
-      <li><span class="pointsDate">14.10.14</span><span class="pointsDelta">+10 баллов</span><hr></li>
-      <li><span class="pointsDate">14.10.14</span><span class="pointsDelta">+10 баллов</span><hr></li>
-      <li><span class="pointsDate">14.10.14</span><span class="pointsDelta">+10 баллов</span><hr></li>
-      <li><span class="pointsDate">14.10.14</span><span class="pointsDelta">+10 баллов</span><hr></li>
+      <li v-for="operation in userOperationPoints" :key="operation.pointAccountId">
+        <span class="pointsDate">{{ operation.createdAt }}</span>
+        <span class="pointsDelta">{{ operation.delta }}</span>
+        <span>{{ operation.description }}</span>
+        <hr>
+      </li>
     </ul></div>
     <button class="showAllPoints">Показать полностью</button>
   </div>
@@ -17,8 +17,28 @@
 </template>
 
 <script>
+import {
+  USER_OPERATION_POINTS_QUERY, POINTS_USER_QUERY
+} from "@/graphql/queries";
 export default {
-name:"PointsUser",
+  apollo: {
+    userOperationPoints: {
+      query: USER_OPERATION_POINTS_QUERY,
+      variables() {
+        return {
+          pointAccountId: +this.$route.params.id
+        };
+      }
+    },
+    getPointsUser: {
+      query: POINTS_USER_QUERY,
+      variables() {
+        return {
+          userId: +this.$route.params.id
+        };
+      }
+    }
+  },
 }
 </script>
 

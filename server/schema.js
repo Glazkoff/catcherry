@@ -85,10 +85,11 @@ type PointsUser{
   updatedAt: String!
 }
 type PointOperations{
-  id: ID!
-  pointAccountId: Int!
-  delta: Int!
+  id: ID
+  pointAccountId: Int
+  delta: Int
   operationDescription: String
+  createdAt: String
 }
 
 input PostBody {
@@ -125,8 +126,8 @@ type Query {
   usersInTeams:[UserInTeam]!
 
   requests:[UserInTeam]
-  getPointsUser(userId: Int!): PointsUser
-  getOperationPointsUser(userId: Int!): [PointOperations]
+  getPointsUser(userId: Int): PointsUser
+  userOperationPoints(pointAccountId: Int): [PointOperations]
 }
 
 type Mutation {

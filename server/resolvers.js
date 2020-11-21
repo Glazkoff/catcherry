@@ -118,6 +118,11 @@ module.exports = {
         where: { status: "Не принят" },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
+      }),
+      userOperationPoints: (parent, args, { db }) =>
+      db.PointsOperations.findAll({
+        where: { pointAccountId: args.pointAccountId },
+        order: [["id", "ASC"]]
       })
   },
   Mutation: {
