@@ -237,3 +237,43 @@ export const ACCEPT_REQUEST_QUERY = gql`
     acceptRequst(id: $id)
   }
 `;
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ NOTIFICATIONS
+export const NOTIFICATIONS_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      teamId
+      forAllUsers
+      forAllOrganization
+      forAllTeam
+      checkNotification
+    }
+  }
+`;
+
+export const UPDATE_NOTIFICATION_QUERY = gql`
+  mutation(
+    $body: NotificationBody!
+    $teamId: Int!
+    $forAllUsers: Boolean
+    $forAllOrganization: Boolean
+    $forAllTeam: Boolean
+    $checkNotification: Boolean
+    $id: ID!
+  ) {
+    updateNotification(
+      body: $body
+      teamId: $teamId
+      forAllUsers: $forAllUsers
+      forAllOrganization: $forAllOrganization
+      forAllTeam: $forAllTeam
+      checkNotification: $checkNotification
+      id: $id
+    )
+  }
+`;

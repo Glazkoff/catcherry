@@ -1,83 +1,88 @@
 <template>
-    <div class="list">
-        <notification @delete="onDelete" v-for="notification in notifications" :key="notification.id" :notification="notification" ></notification>
-    </div>
+  <div class="list">
+    <notification
+      v-for="notification in notifications"
+      :key="notification.id"
+      :notification="notification"
+    ></notification>
+  </div>
 </template>
 
 <script>
-import Notification from "../components/Notification.vue";
+import {
+  NOTIFICATIONS_QUERY,
+  // UPDATE_NOTIFICATION_QUERY
+} from "@/graphql/queries";
 export default {
-  name: 'ListOfNotifications',
-  components: {
-        Notification
-    },
-  data() {
-    return {
-    notifications: [
-      {
-        id: 1,
-        name: "Закрытие спринта",
-        text: "В зум-конференции планируется к проведению закрытие спринта, в состав данного мероприятия войдут следующие части: очищение обзора, просмотр задач в работе ...",
-        button: "Zoom-link",
-        buttonLink: "https://us04web.zoom.us/j/8118194172?pwd=UmpJTnAzbFZQUjZLYUJZU2VwN0pPUT09"
-      },
-
-      {
-        id: 2,
-        name: "Внимание!",
-        text: "Важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация...",
-        button: false
-      }, 
-
-      {
-        id: 3,
-        name: "Закрытие спринтаммм",
-        text: "В зум-конференции в субботу планируется к проведению закрытие спринта. Ссылка будет прислана в следующем оповещении. В состав данного мероприятия войдут следующие части: очищение обзора, просмотр задач в работе ...",
-        button: false
-      },
-      {
-        id: 4,
-        name: "Внимание!",
-        text: "Важная информация.",
-        button: false
-      }, 
-
-      {
-        id: 5,
-        name: "Закрытие спринта",
-        text: "В зум-конференции в субботу планируется к проведению закрытие спринта. Ссылка будет прислана в следующем оповещении. В состав данного мероприятия войдут следующие части: очищение обзора, просмотр задач в работе ...",
-        button: false
-      }
-    ],
+  name: "Notification",
+  apollo: {
+    notifications: {
+      query: NOTIFICATIONS_QUERY
     }
   },
+  data() {
+    return {
+      newNotification: "",
+      editNotification: {
+        isEdit: false,
+        name: "",
+        id: -1
+      }
+    };
+  },
   methods: {
-    onDelete(object){
-      // console.log(object);
-      // console.log(object.id);
-      let index = this.notifications.findIndex(
-              (el) => el.id === object.id
-            );
-      // console.log(index);
-      this.notifications.splice(index, 1);
+    // toSaveEditNotification() {
+    //   this.editNotification.isEdit = false;
+    //   this.$apollo
+    //     .mutate({
+    //       mutation: UPDATE_NOTIFICATION_QUERY,
+    //       variables: {
+    //         name: this.editNotification.name,
+    //         id: this.editNotification.id
+    //       },
+    //       update: (cache, { data: { updateNotification } }) => {
+    //         let data = cache.readQuery({ query: NOTIFICATIONS_QUERY });
+    //         console.log(data);
+    //         data.notifications.find(
+    //           el => el.id === this.editNotification.id
+    //         ).name = this.editNotification.name;
+    //         cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
+    //         console.log(updateNotification);
+    //       },
+    //       optimisticResponse: {
+    //         __typename: "Mutation"
+    //       }
+    //     })
+    //     .then(data => {
+    //       console.log(data);
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // },
+    toEditNotification(id) {
+      let editNotification = this.notifications.find(el => el.id === id);
+      this.editNotification.name = editNotification.name;
+      this.editNotification.id = editNotification.id;
+      this.editNotification.isEdit = true;
     }
   }
-}
+};
 </script>
 
 <style>
-.list{
-    height: 100%;
-    width: 20rem;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    position: fixed; 
-    z-index: 10;
-    top: 0; 
-    right: 0;
-    background: #f7f7f7;
-    overflow-x: hidden; 
-    padding-top: 30px;
+.list {
+  height: 100%;
+  width: 20rem;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  position: fixed;
+  z-index: 10;
+  top: 0;
+  right: 0;
+  background: #f7f7f7;
+  overflow-x: hidden;
+  padding-top: 30px;
 }
 </style>

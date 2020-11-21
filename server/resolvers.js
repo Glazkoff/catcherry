@@ -333,7 +333,15 @@ module.exports = {
     //Изменить оповещение
     updateNotification: (
       parent,
-      { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
+      {
+        body,
+        teamId,
+        forAllUsers,
+        forAllOrganization,
+        forAllTeam,
+        checkNotification,
+        id
+      },
       { db },
       info
     ) =>
@@ -343,7 +351,8 @@ module.exports = {
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam
+          forAllTeam: forAllTeam,
+          checkNotification: checkNotification
         },
         {
           where: {
