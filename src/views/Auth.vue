@@ -15,7 +15,9 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
+@import "@/styles/_variables.scss";
+
 #auth-screen {
   display: grid;
   width: 100vw;
@@ -26,7 +28,7 @@ export default {
 
   .bg-half {
     grid-area: 1/1/2/2;
-    background: url("../assets/bg_auth.png"), $dark_blue;
+    background: url("../assets/bg_auth.png") no-repeat, $dark_blue;
   }
 
   .form-half {

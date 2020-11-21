@@ -25,6 +25,8 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles/_variables.scss";
+
 // Типографика
 h1 {
   font-weight: 500;
