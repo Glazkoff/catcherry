@@ -4,14 +4,16 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <h2><slot name="header"></slot></h2>
+            <slot name="header"></slot>
+          </div>
+          <div class="modal-exit">
+            <slot name="exit"></slot>
           </div>
           <div class="modal-body">
-            <slot name="body"> </slot>
+            <slot name="body"></slot>
           </div>
-
           <div class="modal-footer">
-            <slot name="action"></slot>
+            <slot name="footer"></slot>
           </div>
         </div>
       </div>
@@ -51,13 +53,23 @@ export default {};
   transition: all 0.3s ease;
   max-height: 90vh;
   overflow-y: scroll;
+  position: relative;
 }
 
 .modal-header {
   margin-top: 0;
-  h2 {
-    text-align: center;
-  }
+  text-align: center;
+}
+
+.modal-exit {
+  position: absolute;
+  right: 2%;
+  top: 2%;
+  cursor: pointer;
+}
+
+.modal-exit:hover {
+  font-weight: 900;
 }
 
 .modal-body {

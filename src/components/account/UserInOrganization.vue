@@ -216,8 +216,8 @@
 </template>
 
 <script>
-import popup from "@/components/account/Popup.vue";
-import minialert from "@/components/account/MiniAlert.vue";
+import popup from "@/components/Popup.vue";
+import minialert from "@/components/MiniAlert.vue";
 import {
   ORGS_QUERY,
   ONE_ORG_QUERY,

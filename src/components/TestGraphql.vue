@@ -13,11 +13,11 @@
           v-model="editUser.name"
         />
       </label>
-      <button class="btn" @click="toSaveEditUser()">Сохранить</button>
+      <button class="primary" @click="toSaveEditUser()">Сохранить</button>
     </div>
     <div v-else>
       <input type="text" placeholder="Введите имя" v-model="newUser" />
-      <button @click="toAddUser()">Добавить</button>
+      <button class="primary block" @click="toAddUser()">Добавить</button>
     </div>
     <table>
       <tr>
@@ -38,10 +38,10 @@
         <td>{{ $d(user.createdAt, "long") }}</td>
         <td>{{ $d(user.updatedAt, "long") }}</td>
         <td v-if="user.isEdit">
-          <button @click="toSaveEditUser(user.id)">Сохранить</button>
+          <button class="primary" @click="toSaveEditUser(user.id)">Сохранить</button>
         </td>
-        <td><button @click="toEditUser(user.id)">Редактировать</button></td>
-        <td><button @click="toDeleteUser(user.id)">Удалить</button></td>
+        <td><button class="primary" @click="toEditUser(user.id)">Редактировать</button></td>
+        <td><button class="alternate" @click="toDeleteUser(user.id)">Удалить</button></td>
       </tr>
     </table>
   </div>
@@ -173,63 +173,12 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-* {
-  font-family: sans-serif;
-}
-.btn {
-  padding: 0.5rem;
-  margin-bottom: 0.5rem;
-  border-radius: 2px;
-  border: 0px;
-  cursor: pointer;
-  font-size: 1rem;
-  padding: 0.5rem 1rem;
-  background: linear-gradient(to top left, #647ce6, #3721ff);
-  color: #fff;
-  transition: all 3s ease-in;
-  &:hover {
-    background: linear-gradient(to top left, #3721ff, #39498f);
-  }
-}
-input[type="text"] {
-  margin-right: 0.5rem;
-  &,
-  & + button {
-    padding: 0.5rem;
-    margin-bottom: 0.5rem;
-  }
-  & + button {
-    border-radius: 2px;
-    border: 0px;
-    cursor: pointer;
-    font-size: 1rem;
-    padding: 0.5rem 1rem;
-    background: linear-gradient(to top left, #647ce6, #3721ff);
-    color: #fff;
-    transition: all 3s ease-in;
-    &:hover {
-      background: linear-gradient(to top left, #3721ff, #39498f);
-    }
-  }
-}
 table {
   border-spacing: 0px;
   td {
     font-family: sans-serif;
     padding: 0.25rem;
     border: 1px solid #000;
-    button {
-      border: 0px solid #fff;
-      font-size: 1rem;
-      padding: 0.5rem 1rem;
-      cursor: pointer;
-      background: linear-gradient(to top left, #e66465, #ff2121);
-      color: #fff;
-      transition: all 3s ease-in;
-      &:hover {
-        background: linear-gradient(to top left, #b14242, #ff2121);
-      }
-    }
   }
 }
 </style>

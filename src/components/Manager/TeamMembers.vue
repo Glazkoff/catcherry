@@ -13,7 +13,7 @@
 
 <script>
 import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
-import Minialert from "@/components/admin/MiniAlert.vue";
+import Minialert from "@/components/MiniAlert.vue";
 
 import { USERS_IN_TEAMS_QUERY, DELETE_IN_TEAMS_QUERY } from "@/graphql/queries";
 
