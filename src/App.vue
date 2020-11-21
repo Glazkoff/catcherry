@@ -134,13 +134,13 @@ small p a {
   border: 1px solid $violet;
 }
 
-.natification {
+.notification {
   color: $white;
   background: $violet_2;
   border-radius: 10px;
   padding: 2%;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  .natification_footer {
+  .notification_footer {
     display: flex;
     color: $gray_3;
   }
