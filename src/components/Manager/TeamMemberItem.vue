@@ -15,7 +15,7 @@
       @del="showModalConfirm = true"
     />
 
-    <CommonPopup v-if="showModalConfirm" @close="showModalConfirm = false">
+    <popup v-if="showModalConfirm" @close="showModalConfirm = false">
       <h3 slot="header">
         Вы действительно хотите удалить участника {{ userInTeam.user.name }}?
       </h3>
@@ -35,13 +35,13 @@
           Нет
         </button>
       </div>
-    </CommonPopup>
+    </popup>
   </div>
 </template>
 
 <script>
 import Popup from "@/components/manager/Popup.vue";
-import CommonPopup from "@/components/manager/CommonPopup";
+import popup from "@/components/Popup.vue";
 export default {
   props: ["userInTeam"], // Переданный участник команды
   data() {
@@ -52,7 +52,7 @@ export default {
   },
   components: {
     Popup,
-    CommonPopup
+    popup
   }
 };
 </script>

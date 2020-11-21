@@ -6,9 +6,12 @@
     <button type="submit" @click="showModal = true" class="btn btn-secondary">
       Подробнее
     </button>
-    <CommonPopup v-if="showModal" @close="showModal = false">
+    <popup v-if="showModal" @close="showModal = false">
       <h3 slot="header">
         Заявка в команду
+        <button class="modal-default-button" @click="$emit('close')">
+          &times;
+        </button>
       </h3>
       <div slot="body">
         <img src="" alt="photo" />
@@ -32,12 +35,12 @@
           Отклонить
         </button>
       </div>
-    </CommonPopup>
+    </popup>
   </div>
 </template>
 
 <script>
-import CommonPopup from "@/components/manager/CommonPopup";
+import popup from "@/components/Popup.vue";
 export default {
   props: ["request"], // переданная заявка
   data() {
@@ -46,7 +49,7 @@ export default {
     };
   },
   components: {
-    CommonPopup
+    popup
   }
 };
 </script>
