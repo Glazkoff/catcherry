@@ -8,7 +8,9 @@
         <h1 class="heading">
           {{ post.body.header }}
         </h1>
-        <p class="infoDate">{{ post.createdAt }}</p>
+        <p class="infoDate">
+          {{ $d(post.createdAt, "short") }}
+        </p>
         <p class="infoBody">
           {{ post.body.text }}
         </p>
@@ -71,18 +73,16 @@ export default {
       query: ONE_POST_QUERY,
       variables() {
         return {
-          id: this.$route.params.id
+          id: this.$route.params.id,
         };
-      }
-    }
+      },
+    },
   },
   components: {
-    Comments
+    Comments,
   },
   data() {
-    return {
-      
-    };
+    return {};
   },
   methods: {
     onLike() {
@@ -90,8 +90,8 @@ export default {
     },
     onComment() {
       console.log("Нажата кнопка комментария");
-    }
-  }
+    },
+  },
 };
 </script>
 

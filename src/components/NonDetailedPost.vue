@@ -10,7 +10,9 @@
         class="heading"
         >{{ post.body.header }}</router-link
       >
-      <p class="infoDate">{{ post.createdAt }}</p>
+      <p class="infoDate">
+        {{ $d(post.createdAt, "short") }}
+      </p>
       <p class="infoBody">
         {{ post.body.text }}
       </p>
@@ -78,8 +80,8 @@ export default {
     },
     onLink(id) {
       this.$router.push({ name: "Posts", params: { id: id } });
-    }
-  }
+    },
+  },
 };
 </script>
 
@@ -108,7 +110,6 @@ export default {
 .infoContainer {
   padding: 2rem 3.5rem;
   position: relative;
-
 }
 
 .heading {
