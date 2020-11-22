@@ -23,6 +23,9 @@
               <router-link to="/admin">admin</router-link>
             </li>
             <li>
+              <router-link to="/feed">Feed</router-link>
+            </li>
+            <li>
               <router-link to="/user/156/user_org">{{
                 $t("orgMsg")
               }}</router-link>
@@ -59,11 +62,11 @@ export default {
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
-    }
+    },
     // away: function() {
     //   console.log("clicked away");
     // }
-  }
+  },
 };
 </script>
 
