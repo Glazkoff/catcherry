@@ -29,6 +29,7 @@ export default {
 
 // Типографика
 h1 {
+  margin: 0;
   font-weight: 500;
   font-size: 38px;
   line-height: 45.6px;
@@ -140,7 +141,7 @@ small p a {
   border-radius: 10px;
   padding: 2%;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  .notification_footer {
+  &_footer {
     display: flex;
     color: $gray_3;
   }
@@ -233,6 +234,29 @@ small p a {
     }
   }
 }
+
+.side-bar__nav-list {
+  &__nav-element {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    padding-left: 0.8rem;
+    display: flex;
+    &__icon {
+      height: 20px;
+      width: 20px;
+      margin-right: 0.8rem;
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    &__text {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+}
+
 // .btn {
 //   display: block;
 //   font-weight: 400;

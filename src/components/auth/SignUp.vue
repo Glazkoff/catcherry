@@ -61,7 +61,7 @@
       /><br />
       <p>
         Уже есть аккаунт?
-        <router-link tag="a" to="/auth">Войти!</router-link>
+        <router-link tag="a" to="/login ">Войти!</router-link>
       </p>
     </form>
   </div>

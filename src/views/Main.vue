@@ -1,6 +1,9 @@
 <template>
   <div id="main-view">
     <div id="side-bar">
+      <div class="logo-block">
+        <img src="../assets/full_logo.svg" alt="Catcherry's logo" />
+      </div>
       <router-view name="sidebar"></router-view>
     </div>
     <div id="main-content">
@@ -31,11 +34,7 @@ import TopBar from "@/components/TopBar.vue";
 export default {
   name: "Main",
   components: { TopBar },
-  methods: {
-    setLocale(locale) {
-      this.$i18n.locale = locale;
-    }
-  },
+  methods: {},
   computed: {
     isAppLoading() {
       return this.$store.getters.isAppLoading;
@@ -45,12 +44,21 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_variables.scss";
 #main-view {
   display: grid;
   grid-template-columns: 1.2fr 5fr;
   grid-template-rows: auto;
   #side-bar {
     grid-area: 1/1/2/2;
+    background-color: $violet;
+
+    .logo-block img {
+      padding-left: 1rem;
+      padding-top: 1rem;
+      padding-bottom: 1rem;
+      width: 10rem;
+    }
   }
 
   #main-content {
