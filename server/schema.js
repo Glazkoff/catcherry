@@ -207,6 +207,7 @@ type Query {
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
+  personalUserStatistics(userId: Int!): PointsUser
   teamsInOneOrganization(organizationId: ID!): [Team]
 
   tasks (teamId:ID!): [Task]!

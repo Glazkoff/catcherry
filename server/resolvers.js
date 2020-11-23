@@ -262,6 +262,11 @@ module.exports = {
           }
         ]
       }),
+    personalUserStatistics: (parent, { userId }, { db }) =>
+      db.Points.findOne({
+        where: { userId: userId },
+        include: [{ model: db.PointsOperations, as: "pointsOperation" }]
+      }),
     requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
