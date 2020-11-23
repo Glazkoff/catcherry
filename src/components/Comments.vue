@@ -10,7 +10,7 @@
       <p>{{ comment.author.name }}</p>
       <p>{{ comment.createdAt }}</p>
       <p>{{ comment.body}}</p>
-      <button @click="toDeleteComment(comment.id)">Удалить</button>
+      <button v-if="comment.authorId==$store.getters.decodedToken.id" @click="toDeleteComment(comment.id)">Удалить</button>
     </div>
   </div>
 </template>
@@ -90,7 +90,7 @@ export default {
     toAddComment() {
       let bodyComment = this.newComment;
       let authorIdComment = this.$store.getters.decodedToken.id;
-      let postIdComment = this.$route.params.id;
+      let postIdComment = Number(this.$route.params.id);
       this.newComment = "";
       this.$apollo
         .mutate({
@@ -140,7 +140,7 @@ export default {
         })
         .then(data => {
           console.log(data);
-          console.log(this.$route.params.id);
+          console.log(this.$store.getters.decodedToken.id);
         })
         .catch(error => {
           console.error(error);
@@ -151,24 +151,41 @@ export default {
 </script>
 
 <style scoped>
-.postComments {
-  margin: 0 5% 0 5%;
-}
-
-h1 {
-  text-align: center;
-}
-
 textarea {
   width: 100%;
+  background: #ffffff;
+  border: 1px solid #aa87ce;
+  box-sizing: border-box;
+  border-radius: 0.5rem;
+  resize: none;
+  padding: 0.6rem;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  font-family: sans-serif;
 }
 
-button {
-  margin: 0 1% 3% 0;
+textarea:focus,
+input.btn {
+  outline: none;
+}
+.heading {
+  font-weight: bold;
+  font-size: 1.5rem;
+  line-height: 2rem;
+  color: #613490;
 }
 
-input[type="submit"] {
-  display: block;
-  margin: 0 0 0 auto;
+.authorOfComment {
+  font-weight: bold;
+  font-size: 1rem;
+  line-height: 1.5rem;
+  margin-bottom: 0;
+  color: #4c235b;
+}
+.bodyOfComment {
+  margin-top: 0.6rem;
+}
+.oneComment {
+  margin-bottom: 1.5px;
 }
 </style>

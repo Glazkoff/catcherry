@@ -23,6 +23,7 @@ export default {};
   bottom: 2%;
   right: 1%;
   transition: all 0.3s ease;
+  z-index: 10000;
 }
 
 .alert-enter .alert,

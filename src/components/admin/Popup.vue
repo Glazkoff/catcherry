@@ -6,16 +6,12 @@
           <div class="modal-header">
             <h2><slot name="header"></slot></h2>
           </div>
-
           <div class="modal-body">
             <slot name="body"> </slot>
           </div>
 
           <div class="modal-footer">
             <slot name="action"></slot>
-            <button class="modal-default-button" @click="onCancel()">
-              Отменить
-            </button>
           </div>
         </div>
       </div>
@@ -24,14 +20,7 @@
 </template>
 
 <script>
-export default {
-  props: ["user"],
-  methods: {
-    onCancel() {
-      this.$emit("answer", { ans: false });
-    }
-  }
-};
+export default {};
 </script>
 
 <style lang="scss" scoped>
@@ -60,6 +49,8 @@ export default {
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
+  max-height: 90vh;
+  overflow-y: scroll;
 }
 
 .modal-header {

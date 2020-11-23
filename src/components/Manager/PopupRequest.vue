@@ -14,17 +14,21 @@
 
         <div class="modal-body">
           <slot name="body">
-            <img src="" alt="photo">
-            <p>{{request.user.name}}</p>
-            <p>Пол: </p>
-            <p>Дата рождения: </p>
+            <img src="" alt="photo" />
+            <p>{{ request.user.name }}</p>
+            <p>Пол:</p>
+            <p>Дата рождения:</p>
           </slot>
         </div>
 
         <div class="modal-footer">
           <slot name="footer">
-            <button type="submit" class="modal-avtive-button" @click="$emit('act')">Принять</button>
-            <button type="submit" class="modal-default-button" @click="$emit('close')">Назад</button>
+            <button type="submit" class="modal-avtive-button" @click="$emit('act')">
+              Принять
+            </button>
+            <button type="submit" class="modal-default-button">
+              Отклонить
+            </button>
           </slot>
         </div>
       </div>
@@ -35,7 +39,7 @@
 
 <script>
 export default {
-  props: ['request'],
+  props: ["request"] // переданная заявка
 };
 </script>
 

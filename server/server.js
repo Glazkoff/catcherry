@@ -21,11 +21,10 @@ const chalk = require("chalk");
 const cookieParser = require("cookie-parser");
 const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
 const { makeExecutableSchema } = require("graphql-tools");
-const cors = require("cors");
 const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
-
+const { createRateLimitDirective } = require("graphql-rate-limit");
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 
@@ -35,11 +34,19 @@ const resolvers = require("./resolvers");
 // База данных
 const db = require("./models/index");
 
+// Rate Limit
+const rateLimitDirective = createRateLimitDirective({
+  identifyContext: ctx => ctx.id
+});
+
 // Соедняем всё в схему
 const schema = makeExecutableSchema({
   typeDefs,
   resolvers,
-  context: { db }
+  context: { db },
+  schemaDirectives: {
+    rateLimit: rateLimitDirective
+  }
 });
 
 // Инициализация express-приложения
@@ -51,9 +58,6 @@ app.use(compression());
 
 // Настройка парсинга Cookie
 app.use(cookieParser());
-
-// Настройка CORS политики для разработки
-app.use(cors());
 
 // Безопасность заголовков
 // FIXME: не работает путь /graphiql при использовании
@@ -82,13 +86,12 @@ app.use(express.static(path.join(__dirname, "../dist")));
 // Работа со статическими файлами
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
-// TODO: добавить заполнение фейковыми данными
-
 db.sequelize
-  .sync({ alter: true })
-  // .sync()
+  //.sync({ force: true })
+  .sync()
   .then(async () => {
     app.listen(PORT, () => {
+      // addAllTables(false);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
@@ -98,7 +101,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
-      addAllTables(true);
+      //addAllTables();
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -113,6 +116,7 @@ db.sequelize
       );
     });
   });
+
 let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
@@ -138,76 +142,85 @@ async function addAllTables(destroyTable) {
     // });
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
-      name: faker.name.findName(),
+      name: faker.name.firstName(),
+      surname: faker.name.lastName(),
+      patricity: faker.name.findName(),
+      gender: faker.name.gender(),
       login: faker.random.word(),
       password: bcrypt.hashSync("nikita", salt)
     });
-    // let administrators = await db.Administrators.create({
-    //   userId: user.dataValues.id
-    // });
-    // let role = await db.Roles.create({
-    //   name: faker.name.findName(),
-    //   description: faker.lorem.paragraph()
-    // });
-    // let organization = await db.Organizations.create({
-    //   name: faker.name.findName(),
-    //   ownerId: user.dataValues.id,
-    //   organizationTypeId: type.dataValues.id,
-    //   maxTeamsLimit: faker.random.number()
-    // });
-    // let team = await db.Teams.create({
-    //   organizationId: organization.dataValues.id,
-    //   name: faker.name.findName(),
-    //   description: faker.lorem.paragraph(),
-    //   maxUsersLimit: faker.random.number()
-    // });
-    // let notification = await db.Notifications.create({
-    //   body: {
-    //     header: faker.random.word(),
-    //     text: faker.lorem.paragraph()
-    //   },
-    //   authorId: user.dataValues.id,
-    //   teamId: team.dataValues.id
-    // });
-    // let readnotification = await db.ReadNotification.create({
-    //   notificationId: notification.dataValues.id,
-    //   userId: user.dataValues.id,
-    //   readOrNot: faker.random.boolean()
-    // });
+    let administrators = await db.Administrators.create({
+      userId: user.dataValues.id
+    });
+    let role = await db.Roles.create({
+      name: faker.name.findName(),
+      description: faker.lorem.paragraph()
+    });
+    let organization = await db.Organizations.create({
+      name: faker.name.findName(),
+      ownerId: user.dataValues.id,
+      organizationTypeId: type.dataValues.id,
+      maxTeamsLimit: faker.random.number()
+    });
+    let team = await db.Teams.create({
+      organizationId: organization.dataValues.id,
+      name: faker.name.findName(),
+      description: faker.lorem.paragraph(),
+      maxUsersLimit: faker.random.number()
+    });
+    let notification = await db.Notifications.create({
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph()
+      },
+      authorId: user.dataValues.id,
+      teamId: team.dataValues.id
+    });
+    let readnotification = await db.ReadNotification.create({
+      notificationId: notification.dataValues.id,
+      userId: user.dataValues.id,
+      readOrNot: faker.random.boolean()
+    });
 
-    // let tasks = await db.Tasks.create({
-    //   userId: user.dataValues.id,
-    //   body: {
-    //     text: faker.lorem.paragraph()
-    //   },
-    //   status: faker.random.word()
-    // });
-    // let posts = await db.Posts.create({
-    //   body: faker.lorem.paragraph(),
-    //   authorId: user.dataValues.id,
-    //   organizationId: organization.dataValues.id,
-    //   teamId: team.dataValues.id,
-    //   forAllTeam: faker.random.boolean()
-    // });
-    // console.log(posts);
-    // let teamcustomization = await db.TeamCustomization.create({
-    //   settings: faker.lorem.paragraph()
-    // });
-    // let usersinteams = await db.UsersInTeams.create({
-    //   userId: user.dataValues.id,
-    //   teamId: 1,
-    //   status: faker.random.word(),
-    //   roleId: role.dataValues.id
-    // });
-    // let pointsuser = await db.Points.create({
-    //   userId: user.dataValues.id,
-    //   pointQuantity: faker.random.number()
-    // });
-    // let pointsoperations = await db.PointsOperations.create({
-    //   pointAccountId: pointsuser.dataValues.id,
-    //   delta: faker.random.number(),
-    //   operationDescription: faker.lorem.paragraph()
-    // });
+    let tasks = await db.Tasks.create({
+      teamId: team.dataValues.id,
+      userId: user.dataValues.id,
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph(),
+        points: faker.random.number()
+      },
+      status: faker.random.word()
+    });
+    let posts = await db.Posts.create({
+      body: {
+        header: faker.random.word(),
+        text: faker.lorem.paragraph()
+      },
+      authorId: user.dataValues.id,
+      organizationId: organization.dataValues.id,
+      forAllTeam: faker.random.boolean()
+    });
+    let teamcustomization = await db.TeamCustomization.create({
+      settings: faker.lorem.paragraph()
+    });
+    let usersinteams = await db.UsersInTeams.create({
+      userId: user.dataValues.id,
+      teamId: team.dataValues.id,
+      status: faker.random.word(),
+      roleId: role.dataValues.id
+    });
+    let pointsuser = await db.Points.create({
+      userId: user.dataValues.id,
+      pointQuantity: faker.random.number()
+    });
+    let pointsoperations = await db.PointsOperations.create({
+      pointAccountId: pointsuser.dataValues.id,
+      delta: faker.random.number(),
+      operationDescription: faker.random.word()
+    });
+    // console.log(organization);
+    //   console.log(team);
     let comments = await db.Comments.create({
       authorId: user.dataValues.id,
       postId: 1,
@@ -215,8 +228,6 @@ async function addAllTables(destroyTable) {
     });
     console.log(comments);
   }
-
-  // console.log(pointsuser);
 }
 /* TODO: рекомендую использовать следующие библиотеки
   (перед использованием необходимо установить, см. документацию каждой библиотеки в Интернете)

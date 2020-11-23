@@ -1,68 +1,90 @@
 <template>
   <div id="app">
     <div><top-bar></top-bar></div>
-    <div class="locales">
-      <a @click="setLocale('en')"><flag iso="us"></flag></a>
-      <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
+    <div v-if="!isAppLoading" v-cloak>
+      <div class="locales">
+        <a @click="setLocale('en')"><flag iso="us"></flag></a>
+        <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
+      </div>
+      <h1>{{ $t("welcomeMsg") }}</h1>
+      <nav>
+        <!-- FIXME: сделать id пользователя динамическим -->
+        <router-link to="/user/1">Профиль</router-link> |
+        <router-link to="/admin">Админпанель</router-link>
+      </nav>
+      <hr />
+      <router-view></router-view>
     </div>
-    <h1>{{ $t("welcomeMsg") }}</h1>
-    <nav>
-      <!-- FIXME: сделать id пользователя динамическим -->
-      <router-link to="/user/1">Профиль</router-link>
-    </nav>
-    <hr />
-    <router-view></router-view>
+    <div v-else>Загрузка... Здесь будет спиннер!</div>
   </div>
 </template>
 
 <script>
 import TopBar from "@/components/TopBar.vue";
-// import { UPDATE_TOKENS } from "@/graphql/queries.js";
 export default {
   components: { TopBar },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
     }
+  },
+  computed: {
+    isAppLoading() {
+      return this.$store.getters.isAppLoading;
+    }
+  },
+  async mounted() {
+    // Для глобального лоадера
+    this.$store.commit("SET_AUTH_LOADING", true);
+
+    // Запрашиваем токены при запуске приложения
+    this.$store.dispatch("GET_TOKENS").then(
+      () => {
+        this.$store.commit("SET_AUTH_LOADING", false);
+      },
+      err => {
+        this.$store.commit("SET_AUTH_LOADING", false);
+        console.warn(err);
+      }
+    );
   }
-  // async beforeMount() {
-  //   const fp = await this.$fingerprint.load();
-  //   const result = await fp.get();
-  //   const visitorId = result.visitorId;
-  //   this.fingerprint = visitorId;
-  //   this.$apollo
-  //     .mutate({
-  //       mutation: UPDATE_TOKENS,
-  //       variables: {
-  //         fingerprint: this.fingerprint
-  //       }
-  //     })
-  //     .then(resp => {
-  //       console.log("UPD", resp);
-  //       // Если сервер не вернул токен
-  //       if (
-  //         !resp.data.updateTokens ||
-  //         resp.data.updateTokens.accessToken === null ||
-  //         resp.data.updateTokens.error
-  //       ) {
-  //         if (this.$route.path !== "/auth") {
-  //           this.$router.push("/auth");
-  //         }
-  //       } else {
-  //         this.$store.commit(
-  //           "SET_ACCESS_TOKEN",
-  //           resp.data.updateTokens.accessToken
-  //         );
-  //       }
-  //     })
-  //     .catch(error => {
-  //       console.error(error);
-  //     });
-  // }
 };
 </script>
 
 <style lang="scss">
+[v-cloak] {
+  display: block;
+  padding: 50px 0;
+
+  @keyframes spinner {
+    to {
+      transform: rotate(360deg);
+    }
+  }
+
+  &:before {
+    content: "";
+    box-sizing: border-box;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 20px;
+    height: 20px;
+    margin-top: -10px;
+    margin-left: -10px;
+    border-radius: 50%;
+    border: 2px solid #ccc;
+    border-top-color: #333;
+    animation: spinner 0.6s linear infinite;
+    text-indent: 100%;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+
+  & > div {
+    display: none;
+  }
+}
 h1 {
   color: purple;
 }
