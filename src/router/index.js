@@ -55,6 +55,14 @@ const routes = [
           main: Home,
           sidebar: SideBarDefault
         }
+      },
+      {
+        path: "/feed",
+        name: "FeedOfPosts",
+        components: {
+          main: FeedOfPosts,
+          sidebar: SideBarDefault
+        }
       }
     ]
   },
@@ -97,7 +105,6 @@ const routes = [
     meta: {
       requiresAuth: true
     },
-    // TODO: добавить защиту для администратора
     children: [
       {
         path: "",
@@ -210,11 +217,6 @@ const routes = [
     path: "/posts/:id",
     name: "Posts",
     component: DetailedPost
-  },
-  {
-    path: "/feed",
-    name: "FeedOfPosts",
-    component: FeedOfPosts
   },
   {
     path: "/points",

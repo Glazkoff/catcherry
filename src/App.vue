@@ -28,6 +28,11 @@ export default {
 @import "@/styles/_variables.scss";
 @import "@/styles/_classes.scss";
 
+#app {
+  width: 100vw;
+  max-width: 100vw;
+}
+
 [v-cloak] {
   display: block;
   padding: 50px 0;
@@ -74,6 +79,9 @@ export default {
 }
 
 .side-bar__nav-list {
+  a {
+    text-decoration: none;
+  }
   &__nav-element {
     padding-top: 0.8rem;
     padding-bottom: 0.8rem;
@@ -87,11 +95,29 @@ export default {
         width: 100%;
         height: 100%;
       }
+      & svg .fill {
+        fill: $white;
+      }
+      & svg .fill-stroke {
+        stroke: $white;
+      }
+      .nav-checked & svg .fill {
+        fill: $bright_violet;
+      }
+      .nav-checked & svg .fill-stroke {
+        stroke: $bright_violet;
+      }
     }
     &__text {
+      .nav-checked & {
+        color: $bright_violet;
+      }
       color: $white;
       text-decoration: none;
     }
+  }
+  .nav-checked {
+    color: $bright_violet;
   }
 }
 
@@ -201,7 +227,6 @@ export default {
 // .form-text.large {
 //   font-size: 1.3rem;
 // }
-
 
 // .form-name {
 //   color: #472669;
