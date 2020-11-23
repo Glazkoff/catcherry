@@ -51,6 +51,7 @@ import {
   UPDATE_USER_QUERY,
   DELETE_USER_QUERY
 } from "@/graphql/queries";
+
 export default {
   name: "TestGraphql",
   apollo: {
@@ -163,6 +164,7 @@ export default {
     }
   }
 };
+
 </script>
 
 <style lang="scss" scoped>

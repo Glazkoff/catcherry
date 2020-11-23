@@ -98,7 +98,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
-      // addAllTables(false);
+      addAllTables(true);
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -133,81 +133,81 @@ async function addAllTables(destroyTable) {
   //Можно менять количество заполнений в переменной quantity
   let quantity = 10;
   for (let index = 0; index < quantity; index++) {
-    let type = await db.OrganizationsTypes.create({
-      name: faker.name.findName()
-    });
+    // let type = await db.OrganizationsTypes.create({
+    //   name: faker.name.findName()
+    // });
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
       name: faker.name.findName(),
       login: faker.random.word(),
       password: bcrypt.hashSync("nikita", salt)
     });
-    let administrators = await db.Administrators.create({
-      userId: user.dataValues.id
-    });
-    let role = await db.Roles.create({
-      name: faker.name.findName(),
-      description: faker.lorem.paragraph()
-    });
-    let organization = await db.Organizations.create({
-      name: faker.name.findName(),
-      ownerId: user.dataValues.id,
-      organizationTypeId: type.dataValues.id,
-      maxTeamsLimit: faker.random.number()
-    });
-    let team = await db.Teams.create({
-      organizationId: organization.dataValues.id,
-      name: faker.name.findName(),
-      description: faker.lorem.paragraph(),
-      maxUsersLimit: faker.random.number()
-    });
-    let notification = await db.Notifications.create({
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph()
-      },
-      authorId: user.dataValues.id,
-      teamId: team.dataValues.id
-    });
-    let readnotification = await db.ReadNotification.create({
-      notificationId: notification.dataValues.id,
-      userId: user.dataValues.id,
-      readOrNot: faker.random.boolean()
-    });
+    // let administrators = await db.Administrators.create({
+    //   userId: user.dataValues.id
+    // });
+    // let role = await db.Roles.create({
+    //   name: faker.name.findName(),
+    //   description: faker.lorem.paragraph()
+    // });
+    // let organization = await db.Organizations.create({
+    //   name: faker.name.findName(),
+    //   ownerId: user.dataValues.id,
+    //   organizationTypeId: type.dataValues.id,
+    //   maxTeamsLimit: faker.random.number()
+    // });
+    // let team = await db.Teams.create({
+    //   organizationId: organization.dataValues.id,
+    //   name: faker.name.findName(),
+    //   description: faker.lorem.paragraph(),
+    //   maxUsersLimit: faker.random.number()
+    // });
+    // let notification = await db.Notifications.create({
+    //   body: {
+    //     header: faker.random.word(),
+    //     text: faker.lorem.paragraph()
+    //   },
+    //   authorId: user.dataValues.id,
+    //   teamId: team.dataValues.id
+    // });
+    // let readnotification = await db.ReadNotification.create({
+    //   notificationId: notification.dataValues.id,
+    //   userId: user.dataValues.id,
+    //   readOrNot: faker.random.boolean()
+    // });
 
-    let tasks = await db.Tasks.create({
-      userId: user.dataValues.id,
-      body: {
-        text: faker.lorem.paragraph()
-      },
-      status: faker.random.word()
-    });
-    let posts = await db.Posts.create({
-      body: faker.lorem.paragraph(),
-      authorId: user.dataValues.id,
-      organizationId: organization.dataValues.id,
-      teamId: team.dataValues.id,
-      forAllTeam: faker.random.boolean()
-    });
-    console.log(posts);
-    let teamcustomization = await db.TeamCustomization.create({
-      settings: faker.lorem.paragraph()
-    });
-    let usersinteams = await db.UsersInTeams.create({
-      userId: user.dataValues.id,
-      teamId: 1,
-      status: faker.random.word(),
-      roleId: role.dataValues.id
-    });
-    let pointsuser = await db.Points.create({
-      userId: user.dataValues.id,
-      pointQuantity: faker.random.number()
-    });
-    let pointsoperations = await db.PointsOperations.create({
-      pointAccountId: pointsuser.dataValues.id,
-      delta: faker.random.number(),
-      operationDescription: faker.lorem.paragraph()
-    });
+    // let tasks = await db.Tasks.create({
+    //   userId: user.dataValues.id,
+    //   body: {
+    //     text: faker.lorem.paragraph()
+    //   },
+    //   status: faker.random.word()
+    // });
+    // let posts = await db.Posts.create({
+    //   body: faker.lorem.paragraph(),
+    //   authorId: user.dataValues.id,
+    //   organizationId: organization.dataValues.id,
+    //   teamId: team.dataValues.id,
+    //   forAllTeam: faker.random.boolean()
+    // });
+    // console.log(posts);
+    // let teamcustomization = await db.TeamCustomization.create({
+    //   settings: faker.lorem.paragraph()
+    // });
+    // let usersinteams = await db.UsersInTeams.create({
+    //   userId: user.dataValues.id,
+    //   teamId: 1,
+    //   status: faker.random.word(),
+    //   roleId: role.dataValues.id
+    // });
+    // let pointsuser = await db.Points.create({
+    //   userId: user.dataValues.id,
+    //   pointQuantity: faker.random.number()
+    // });
+    // let pointsoperations = await db.PointsOperations.create({
+    //   pointAccountId: pointsuser.dataValues.id,
+    //   delta: faker.random.number(),
+    //   operationDescription: faker.lorem.paragraph()
+    // });
     let comments = await db.Comments.create({
       authorId: user.dataValues.id,
       postId: 1,

@@ -10,7 +10,7 @@
       <p>{{ comment.author.name }}</p>
       <p>{{ comment.createdAt }}</p>
       <p>{{ comment.body}}</p>
-      <button v-if="comment.authorId==this.$store.getters.decodedToken.id" @click="toDeleteComment(comment.id)">Удалить</button>
+      <button @click="toDeleteComment(comment.id)">Удалить</button>
     </div>
   </div>
 </template>
@@ -29,6 +29,7 @@ export default {
       query: COMMENTS_QUERY
     }
   },
+  props: ['DetailedPost'],
   data() {
     return {
       newComment: "",
@@ -89,7 +90,7 @@ export default {
     toAddComment() {
       let bodyComment = this.newComment;
       let authorIdComment = this.$store.getters.decodedToken.id;
-      let postIdComment = this.post.id;
+      let postIdComment = this.$route.params.id;
       this.newComment = "";
       this.$apollo
         .mutate({
@@ -139,6 +140,7 @@ export default {
         })
         .then(data => {
           console.log(data);
+          console.log(this.$route.params.id);
         })
         .catch(error => {
           console.error(error);
