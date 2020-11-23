@@ -388,23 +388,11 @@ export const ONE_POST_QUERY = gql`
         header
         text
       }
+      likesOfPost {
+        id
+        userId
+      }
       createdAt
-    }
-  }
-`;
-
-export const REVOKE_REQUEST_QUERY = gql`
-  mutation($id: ID!) {
-    revokeRequst(id: $id)
-  }
-`;
-
-export const GET_POINTS_QUERY = gql`
-  query($userId: ID!) {
-    getPointsUser(userId: $userId) {
-      id
-      userId
-      pointQuantity
     }
   }
 `;
@@ -416,6 +404,10 @@ export const POSTS_QUERY = gql`
       body {
         header
         text
+      }
+      likesOfPost {
+        id
+        userId
       }
       createdAt
     }
@@ -438,6 +430,81 @@ export const CREATE_POST = gql`
 export const DELETE_POST = gql`
   mutation($id: ID!) {
     deletePost(id: $id)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfPosts
+
+// Количество лайков у данного поста
+export const LIKES_OF_POST = gql`
+  query($postId: ID!) {
+    likesOfPost(postId: $postId)
+  }
+`;
+
+// Наличие лайка у данного поста от данного пользователя
+export const LIKES_OF_POST_FROM_USER = gql`
+  query($userId: ID!, $postId: ID!) {
+    likesOfPostFromUser(userId: $userId, postId: $postId)
+  }
+`;
+
+// Лайкнуть данный пост данным пользователем
+export const CREATE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    addLikeOfPost(userId: $userId, postId: $postId)
+  }
+`;
+
+// Удалить лайк с данного поста данным пользователем
+export const DELETE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    deleteLikeOfPost(userId: $userId, postId: $postId)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfComments
+
+// Количество лайков у данного комментария
+export const LIKES_OF_COMMENT = gql`
+  query($commentId: ID!) {
+    likesOfComment(commentId: $commentId)
+  }
+`;
+// Наличие лайка у данного комментария от данного пользователя
+export const LIKES_OF_COMMENT_FROM_USER = gql`
+  query($userId: ID!, $commentId: ID!) {
+    likesOfCommentFromUser(userId: $userId, commentId: $commentId)
+  }
+`;
+// Лайкнуть данный комментарий данным пользователем
+export const CREATE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    addLikeOfComment(userId: $userId, commentId: $commentId)
+  }
+`;
+// Удалить лайк с данного комментария данным пользователем
+export const DELETE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    deleteLikeOfComment(userId: $userId, commentId: $commentId)
+  }
+`;
+
+// -- //
+
+export const REVOKE_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    revokeRequst(id: $id)
+  }
+`;
+
+export const GET_POINTS_QUERY = gql`
+  query($userId: ID!) {
+    getPointsUser(userId: $userId) {
+      id
+      userId
+      pointQuantity
+    }
   }
 `;
 

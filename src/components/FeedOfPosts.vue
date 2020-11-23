@@ -17,11 +17,11 @@ export default {
   name: "FeedOfPosts",
   apollo: {
     posts: {
-      query: POSTS_QUERY,
-    },
+      query: POSTS_QUERY
+    }
   },
   components: {
-    NonDetailedPost,
+    NonDetailedPost
   },
   data() {
     return {};
@@ -29,12 +29,12 @@ export default {
   methods: {
     onLike(object) {
       console.log("Нажата кнопка лайка для поста с id " + object.id);
-      console.log(this.posts);
+      // console.log(this.posts);
     },
     onComment(object) {
       console.log("Нажата кнопка комментария для поста с id " + object.id);
     }
-  },
+  }
 };
 </script>
 

@@ -128,6 +128,7 @@ type Post {
   authorId: Int!
   organizationId: Int!
   forAllTeam: Boolean
+  likesOfPost: [LikeOfPost]
   createdAt: String!
   updatedAt: String!
 }
@@ -209,7 +210,13 @@ type Query {
   
   posts: [Post]!
   post(id: ID!): Post
+
+  likesOfPost (postId:ID!): Int! 
+  likesOfComment (commentId:ID!): Int! 
   
+  likesOfPostFromUser (userId:ID!, postId:ID!): Int! 
+  likesOfCommentFromUser (userId:ID!, commentId:ID!): Int! 
+
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
@@ -241,6 +248,12 @@ type Mutation {
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
  
+  addLikeOfPost(userId: ID!, postId: ID!): Int!
+  deleteLikeOfPost(userId: ID!, postId: ID!): Int!
+
+  addLikeOfComment(userId: ID!, commentId: ID!): Int!
+  deleteLikeOfComment(userId: ID!, commentId: ID!): Int!
+
   createComment(body: CommentBody!, authorId: Int!, postId: Int!, dateAdd: String!): Comment!
   deleteComment(id: ID!): Int!
   updateComment(body: CommentBody!, id: ID!): [Int]!
