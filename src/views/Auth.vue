@@ -7,13 +7,17 @@
     </div>
     <div class="form-half">
       <router-view name="form"></router-view>
+      <hr />
+      <TestGraphql></TestGraphql>
     </div>
   </div>
 </template>
 
 <script>
+import TestGraphql from "@/components/TestGraphql.vue";
 export default {
-  name: "Auth"
+  name: "Auth",
+  components: { TestGraphql }
 };
 </script>
 
@@ -31,22 +35,28 @@ export default {
   .bg-half {
     grid-area: 1/1/2/2;
     background: url("../assets/bg_auth.png") no-repeat, $dark_blue;
+    .logo-block img {
+      width: 14rem;
+      padding-left: 2rem;
+      padding-top: 3rem;
+    }
   }
 
   .form-half {
     grid-area: 1/2/2/3;
+    display: flex;
+    flex-direction: column;
+    & .form-auth {
+      padding-top: 3rem;
+      margin: 0 auto;
+      width: 20rem;
+    }
   }
 
   .bg-half,
   .form-half {
     overflow-x: hidden;
     overflow-y: auto;
-  }
-
-  .logo-block img {
-    width: 14rem;
-    padding-left: 2rem;
-    padding-top: 3rem;
   }
 }
 </style>

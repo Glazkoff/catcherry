@@ -28,10 +28,6 @@ export default {
 @import "@/styles/_variables.scss";
 @import "@/styles/_classes.scss";
 
-.block {
-  width: 100%;
-}
-
 [v-cloak] {
   display: block;
   padding: 50px 0;
@@ -76,6 +72,29 @@ export default {
     }
   }
 }
+
+.side-bar__nav-list {
+  &__nav-element {
+    padding-top: 0.8rem;
+    padding-bottom: 0.8rem;
+    padding-left: 0.8rem;
+    display: flex;
+    &__icon {
+      height: 20px;
+      width: 20px;
+      margin-right: 0.8rem;
+      svg {
+        width: 100%;
+        height: 100%;
+      }
+    }
+    &__text {
+      color: $white;
+      text-decoration: none;
+    }
+  }
+}
+
 // .btn {
 //   display: block;
 //   font-weight: 400;

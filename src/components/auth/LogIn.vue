@@ -1,62 +1,58 @@
 <template>
-  <div>
-    <form @submit.prevent="logIn">
-      <h1>Вход</h1>
-      <p>* - обязательное поле</p>
-      <div v-if="loginPasswordError" class="error">
-        <span>Ошибка ввода логина или пароля!</span>
-      </div>
-      <label>Логин *</label><br />
-      <input
-        :disabled="authLoading"
-        type="text"
-        v-model.trim="$v.login.$model"
-        placeholder="Введите логин"
-        class="formControl"
-        @input="hideErrors()"
-      />
-      <div v-if="$v.login.$error" class="error">
-        <span v-if="!$v.login.required">Login is required</span>
-      </div>
-      <br />
-      <label>Пароль *</label><br />
-      <input
-        :disabled="authLoading"
-        type="password"
-        v-model.trim="$v.password.$model"
-        placeholder="Введите пароль"
-        class="formControl"
-        @input="hideErrors()"
-      />
-      <div v-if="$v.password.$error" class="error">
-        <span v-if="!$v.password.required">Password is required</span>
-        <span v-else-if="!$v.password.minLength"
-          >Password must have at least
-          {{ $v.password.$params.minLength.min }} letters.</span
-        >
-      </div>
-      <br />
-      <input :disabled="authLoading" type="submit" value="Войти" /><br />
-      <p>
-        Нет аккаунта?
-        <router-link tag="a" to="/registration"
-          >Зарегистрироваться!</router-link
-        >
-      </p>
-    </form>
-    <h1>{{ authLoading }}</h1>
-    <hr />
-    <TestGraphql></TestGraphql>
-  </div>
+  <form class="form-auth" @submit.prevent="logIn">
+    <h1>Вход в Catcherry</h1>
+    <p>* - обязательное поле</p>
+    <div v-if="loginPasswordError" class="error">
+      <span>Ошибка ввода логина или пароля!</span>
+    </div>
+    <label>Логин *</label><br />
+    <input
+      :disabled="authLoading"
+      type="text"
+      v-model.trim="$v.login.$model"
+      placeholder="Введите логин"
+      class="form-control block"
+      @input="hideErrors()"
+    />
+    <div v-if="$v.login.$error" class="error">
+      <span v-if="!$v.login.required" class="form-text danger">Login is required</span>
+    </div>
+    <br />
+    <label>Пароль *</label><br />
+    <input
+      :disabled="authLoading"
+      type="password"
+      v-model.trim="$v.password.$model"
+      placeholder="Введите пароль"
+      class="form-control block"
+      @input="hideErrors()"
+    />
+    <div v-if="$v.password.$error" class="error">
+      <span v-if="!$v.password.required" class="form-text danger"git >Password is required</span>
+      <span v-else-if="!$v.password.minLength" class="form-text danger"
+        >Password must have at least
+        {{ $v.password.$params.minLength.min }} letters.</span
+      >
+    </div>
+    <br />
+    <input
+      class="btn btn-primary block"
+      :disabled="authLoading"
+      type="submit"
+      value="Войти"
+    /><br />
+    <p>
+      Нет аккаунта?
+      <router-link tag="a" to="/signup">Зарегистрироваться!</router-link>
+    </p>
+  </form>
 </template>
 
 <script>
-import TestGraphql from "@/components/TestGraphql.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import { LOG_IN } from "@/graphql/queries.js";
 export default {
   name: "LogIn",
-  components: { TestGraphql },
   data() {
     return {
       login: "",

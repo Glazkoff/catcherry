@@ -1,83 +1,73 @@
 @import "@/styles/_variables.scss";
-//@import "@/assets/fonts/Lato/stylesheet.scss";
+@import "@/assets/fonts/Lato/stylesheet.scss";
+@import "@/assets/fonts/Roboto/stylesheet.scss";
 
 // Типографика
 h1 {
   font-weight: 500;
   font-size: 38px;
   line-height: 45.6px;
-  //font-family: Lato;
+  font-family: Lato;
+  font-weight: 500;
 }
 
 h2 {
   font-weight: 500;
-  font-size: 38px;
-  line-height: 45.6px;
+  font-size: 28px;
+  line-height: 34px;
+  font-family: Lato;
+  font-weight: 500;
 }
 
 h3 {
   font-weight: 500;
-  font-size: 28px;
-  line-height: 34px;
-}
-
-h4 {
-  font-weight: normal;
   font-size: 21px;
   line-height: 25px;
+  font-family: Lato;
 }
 
 p {
+  font-family: Lato;
+  font-style: normal;
   font-weight: normal;
   font-size: 16px;
   line-height: 20px;
 }
 
 small {
+  font-family: Lato;
+  font-style: normal;
   font-weight: normal;
   font-size: 12px;
   line-height: 14px;
-
-  .danger {
-    color: $red;
-  }
-}
-
-p strong {
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 19px;
 }
 
 a {
+  font-family: Lato;
+  font-style: normal;
   font-weight: normal;
   font-size: 16px;
   line-height: 19px;
   text-decoration: underline;
+  color: $black;
 }
 
-h3 a {
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 25px;
-  letter-spacing: 1px;
-  text-decoration: underline;
-}
-
-small p a {
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 16px;
-  text-decoration: underline;
+.block {
+  width: 100%;
 }
 
 // Кнопки
 .btn {
   display: block;
-  size: 16px;
   line-height: 18px;
   border-radius: 8px;
   cursor: pointer;
+  padding: 1rem 4rem;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
 }
 
 .btn-primary {
@@ -151,6 +141,11 @@ small p a {
 .form-name {
   color: $black;
   margin-bottom: 1rem;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
 }
 
 .form-control {
@@ -158,12 +153,18 @@ small p a {
   position: relative;
   border: 1px solid $gray_3;
   background: $white;
-  padding: 1%;
+  padding: 0.5rem 1rem;
   border-radius: 10px;
   box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 21px;
+  line-height: 25px;
   &:focus {
-    border: 1px solid $bright_violet;
-    color: $bright_violet;
+    border: 1px solid $bright_violet !important;
+    color: $bright_violet !important;
+    outline: none;
   }
 }
 
@@ -181,37 +182,24 @@ small p a {
   color: $bright_violet;
 }
 
-.form-text-danger {
-  color: $red;
-}
-
-.box-label input[type="checkbox"] {
-  display: none;
-}
-
 .box-label {
   display: inline-block;
   margin: 5px;
   cursor: pointer;
-}
-
-#checkbox:checked+.box::before {
-  background: url("../assets/check-square.svg");
-  color: $violet;
-  animation: checkanimate 200ms;
-}
-
-.box::before {
-  background: url("../assets/square.svg");
-  font-weight: normal;
-  font-style: normal;
-  font-variant: normal;
-  text-transform: none;
-  line-height: 1;
-  margin-right: 5px;
-  width: 1em;
-  display: inline-block;
-  font-size: 1.6em;
+  input[type="checkbox"] {
+    display: none;
+  }
+  .box::before {
+    content: url(../assets/check-square.svg);
+    line-height: 1rem;
+    margin-right: 5px;
+    width: 1rem;
+    display: inline-block;
+  }
+  #checkbox:checked+.box::before {
+    content: url(../assets/square.svg);
+    animation: checkanimate 200ms;
+  }
 }
 
 @keyframes checkanimate {
@@ -226,4 +214,8 @@ small p a {
   100% {
     transform: scale(1);
   }
+}
+
+.danger {
+  color: $red;
 }
