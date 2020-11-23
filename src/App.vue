@@ -26,6 +26,7 @@ export default {
 
 <style lang="scss">
 @import "@/styles/_variables.scss";
+@import "@/styles/fonts/Lato/stylesheet.scss";
 
 // Типографика
 h1 {
@@ -33,6 +34,7 @@ h1 {
   font-weight: 500;
   font-size: 38px;
   line-height: 45.6px;
+  font-family: "Lato";
 }
 
 h2 {
