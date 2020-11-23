@@ -28,7 +28,7 @@
       @input="hideErrors()"
     />
     <div v-if="$v.password.$error" class="error">
-      <span v-if="!$v.password.required" class="form-text danger"git >Password is required</span>
+      <span v-if="!$v.password.required" class="form-text danger">Password is required</span>
       <span v-else-if="!$v.password.minLength" class="form-text danger"
         >Password must have at least
         {{ $v.password.$params.minLength.min }} letters.</span
