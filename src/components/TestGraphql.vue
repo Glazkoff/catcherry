@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link :to="{ name: 'TeamList' }">Панель менеджера</router-link>
     <h4>Тестовый Graphql компонент</h4>
     <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>
@@ -38,10 +39,20 @@
         <td>{{ $d(user.createdAt, "long") }}</td>
         <td>{{ $d(user.updatedAt, "long") }}</td>
         <td v-if="user.isEdit">
-          <button class="primary" @click="toSaveEditUser(user.id)">Сохранить</button>
+          <button class="primary" @click="toSaveEditUser(user.id)">
+            Сохранить
+          </button>
         </td>
-        <td><button class="primary" @click="toEditUser(user.id)">Редактировать</button></td>
-        <td><button class="alternate" @click="toDeleteUser(user.id)">Удалить</button></td>
+        <td>
+          <button class="primary" @click="toEditUser(user.id)">
+            Редактировать
+          </button>
+        </td>
+        <td>
+          <button class="alternate" @click="toDeleteUser(user.id)">
+            Удалить
+          </button>
+        </td>
       </tr>
     </table>
   </div>

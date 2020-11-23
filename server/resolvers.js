@@ -198,7 +198,7 @@ module.exports = {
     teams: (parent, args, { db }) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
     team: (parent, args, { db }) => {
-      return db.Teams.findOne({
+      return db.Teams.findAll({
         where: { organizationId: args.organizationId }
       });
     },

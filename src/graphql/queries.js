@@ -72,8 +72,8 @@ export const DELETE_IN_TEAMS_QUERY = gql`
 `;
 
 export const REQUESTS_QUERY = gql`
-  query {
-    requests {
+  query($teamId: ID!) {
+    requests(teamId: $teamId) {
       id
       userId
       teamId
@@ -321,11 +321,7 @@ export const USERS_IN_TEAMS_QUERY = gql`
       user {
         id
         name
-      }
-      owner {
         surname
-        name
-        patricity
       }
     }
   }
