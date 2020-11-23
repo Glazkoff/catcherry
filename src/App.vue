@@ -26,167 +26,10 @@ export default {
 
 <style lang="scss">
 @import "@/styles/_variables.scss";
-
-// Типографика
-h1 {
-  font-weight: 500;
-  font-size: 38px;
-  line-height: 45.6px;
-}
-
-h2 {
-  font-weight: 500;
-  font-size: 38px;
-  line-height: 45.6px;
-}
-
-h3 {
-  font-weight: 500;
-  font-size: 28px;
-  line-height: 34px;
-}
-
-h4 {
-  font-weight: normal;
-  font-size: 21px;
-  line-height: 25px;
-}
-
-p {
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 20px;
-}
-
-small {
-  font-weight: normal;
-  font-size: 12px;
-  line-height: 14px;
-  .danger {
-    color: $red;
-  }
-}
-
-p strong {
-  font-weight: bold;
-  font-size: 16px;
-  line-height: 19px;
-}
-
-a {
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
-  text-decoration: underline;
-}
-
-h3 a {
-  font-weight: 500;
-  font-size: 18px;
-  line-height: 25px;
-  letter-spacing: 1px;
-  text-decoration: underline;
-}
-
-small p a {
-  font-weight: normal;
-  font-size: 13px;
-  line-height: 16px;
-  text-decoration: underline;
-}
+@import "@/styles/_classes.scss";
 
 .block {
   width: 100%;
-}
-
-.btn {
-  display: block;
-  size: 16px;
-  line-height: 18px;
-  border-radius: 8px;
-  cursor: pointer;
-}
-
-.btn-primary {
-  color: $white;
-  background: $violet_2;
-  border: 1px solid $violet_2;
-}
-.btn-primary:hover {
-  background: $violet_3;
-}
-.btn-primary:disabled {
-  background: $violet;
-  color: $gray_3;
-}
-
-.btn-alternate {
-  color: $violet_2;
-  background: transparent;
-  border: 1px solid $violet_2;
-}
-.btn-alternate:hover {
-  color: $violet_3;
-  border: 1px solid $violet_3;
-}
-.btn-alternate:disabled {
-  color: $violet;
-  border: 1px solid $violet;
-}
-
-.notification {
-  color: $white;
-  background: $violet_2;
-  border-radius: 10px;
-  padding: 2%;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  .notification_footer {
-    display: flex;
-    color: $gray_3;
-  }
-}
-
-.card {
-  background: $violet;
-  border-radius: 10px;
-  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  padding: 1.5%;
-  display: flex;
-  margin-bottom: 1%;
-  align-items: center;
-  .card_img {
-    border-radius: 100%;
-    width: 100%;
-    width: 15%;
-  }
-  .card_body {
-    color: $white;
-    width: 75%;
-  }
-  .card_action {
-    color: $bright_violet;
-    width: 10%;
-    font-size: 30px;
-  }
-}
-
-.form-control {
-  display: block;
-  position: relative;
-  border: 1px solid $gray_3;
-  background: $white;
-  padding: 1%;
-  border-radius: 10px;
-  box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
-}
-
-.form-control-touch {
-  border: 1px solid $bright_violet;
-  color: $bright_violet;
-}
-
-.form-control-danger {
-  border: 1px solid $red;
 }
 
 [v-cloak] {
@@ -340,9 +183,6 @@ small p a {
 //   font-size: 1.3rem;
 // }
 
-// .form-group {
-//   margin-bottom: 1rem;
-// }
 
 // .form-name {
 //   color: #472669;

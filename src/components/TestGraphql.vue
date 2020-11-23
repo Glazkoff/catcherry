@@ -3,6 +3,10 @@
     <h4>Тестовый Graphql компонент</h4>
     <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>
+    <label class="box-label">
+      <input type="checkbox" id="checkbox" checked="">
+      <span class="box"></span>
+    </label>
     <div v-if="editUser.isEdit">
       <label for="editUserName"
         >Редактирование пользователя #{{ editUser.id }}
@@ -38,10 +42,20 @@
         <td>{{ $d(user.createdAt, "long") }}</td>
         <td>{{ $d(user.updatedAt, "long") }}</td>
         <td v-if="user.isEdit">
-          <button class="primary" @click="toSaveEditUser(user.id)">Сохранить</button>
+          <button class="primary" @click="toSaveEditUser(user.id)">
+            Сохранить
+          </button>
         </td>
-        <td><button class="primary" @click="toEditUser(user.id)">Редактировать</button></td>
-        <td><button class="alternate" @click="toDeleteUser(user.id)">Удалить</button></td>
+        <td>
+          <button class="primary" @click="toEditUser(user.id)">
+            Редактировать
+          </button>
+        </td>
+        <td>
+          <button class="alternate" @click="toDeleteUser(user.id)">
+            Удалить
+          </button>
+        </td>
       </tr>
     </table>
   </div>
@@ -173,6 +187,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_classes.scss";
 table {
   border-spacing: 0px;
   td {
