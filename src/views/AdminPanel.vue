@@ -11,7 +11,7 @@
           ><span place="title">{{ $t("listUser") }}</span></i18n
         ></router-link
       >
-      <router-link to="/admin/organization"
+      <router-link to="/admin/organizations"
         ><i18n path="listOrganization"
           ><span place="title">{{ $t("listUser") }}</span></i18n
         ></router-link

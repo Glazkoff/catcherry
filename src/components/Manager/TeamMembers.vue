@@ -1,92 +1,92 @@
 <template>
 <div>
-    <h1>Команда "Название"</h1>
-    <div class="every">
-        <NavBar class="navig" />
-        <div class="partic">
-            <h3>Участники</h3>
-            <hr>
-            <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
-                <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
-            </div>
-        </div>
-    </div>
+  <h3>Участники</h3>
+  <hr />
+  <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
+    <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+  </div>
+  <Minialert v-if="isShowAlert">
+    <p slot="title">{{ message }}</p>
+  </Minialert>
 </div>
 </template>
 
 <script>
-import NavBar from "@/components/Manager/NavBar";
-import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
+import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
+import Minialert from "@/components/admin/MiniAlert.vue";
 
 import {
-    USERS_IN_TEAMS_QUERY,
-    DELETE_IN_TEAMS_QUERY
+  USERS_IN_TEAMS_QUERY,
+  DELETE_IN_TEAMS_QUERY
 } from "@/graphql/queries";
 
 export default {
+  data() {
+    return {
+      isShowAlert: false, // Для показа уведомления об удалении
+      message: "", // Для текста сообщения в уведомлении
+      teamId: this.$route.params.id // id команды
+    };
+  },
 
-    apollo: {
-        usersInTeams: {
-            query: USERS_IN_TEAMS_QUERY,
-        },
-    },
-
-    data() {
-        return {}
-    },
-    components: {
-        TeamMemberItem,
-        NavBar,
-    },
-    methods: {
-        toDeleteUser(id) {
-            this.$apollo
-                .mutate({
-                    mutation: DELETE_IN_TEAMS_QUERY,
-                    variables: {
-                        id,
-                    },
-                    update: (cache) => {
-                        let data = cache.readQuery({
-                            query: USERS_IN_TEAMS_QUERY
-                        });
-                        let index = data.usersInTeams.findIndex((el) => el.id == id);
-                        data.usersInTeams.splice(index, 1);
-                        cache.writeQuery({
-                            query: USERS_IN_TEAMS_QUERY,
-                            data
-                        });
-                    },
-                })
-                .then((data) => {
-                    console.log(data);
-                })
-                .catch((error) => {
-                    console.error(error);
-                });
-        },
+  apollo: {
+    // Массив участников команды
+    usersInTeams: {
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.teamId
+        };
+      }
     }
+  },
 
-}
+  components: {
+    TeamMemberItem,
+    Minialert
+  },
+  methods: {
+    // Для удаления участника команды
+    toDeleteUser(id) {
+      this.$apollo
+        .mutate({
+          mutation: DELETE_IN_TEAMS_QUERY,
+          variables: {
+            id
+          },
+          update: cache => {
+            // Записываем в переменную массив участников команды
+            let data = cache.readQuery({
+              query: USERS_IN_TEAMS_QUERY,
+              variables: {
+                teamId: this.teamId
+              }
+            });
+            // Зписываем в переменную участника команды по id
+            let index = data.usersInTeams.findIndex(el => el.id == id);
+            // Удаляем участника команды из массива
+            data.usersInTeams.splice(index, 1);
+            // Меняем значение переменной для отображения уведомления
+            this.isShowAlert = true;
+            // Задаем время показа уведомления
+            setTimeout(() => {
+              this.isShowAlert = false;
+            }, 3000);
+          }
+        })
+        .then(data => {
+          // Записываем в переменную текст уведомления
+          this.message = "Участник удален";
+          console.log(data);
+        })
+        .catch(error => {
+          // Записываем в переменную текст уведомления
+          this.message = "Ошибка " + error;
+          console.error(error);
+        });
+    }
+  }
+};
 </script>
 
-<style lang="scss" scoped>
-.member {
-    border: 1px solid black;
-    padding: 1rem;
-    margin: 1rem;
-}
-
-.every {
-    display: flex;
-    justify-content: baseline;
-}
-
-.navig {
-    width: 15%;
-}
-
-.partic {
-    width: 50%;
-}
-</style>
+<style lang="scss" scoped></style>
