@@ -854,6 +854,26 @@ module.exports = {
         where: {
           id: args.id
         }
-      })
+      }),
+    logOut: async (parent, { fingerprint }, { db, req, res }, info) => {
+      // Получаем refresh-токен из cookie
+      let refreshToken = req.cookies.refreshToken;
+      if (refreshToken != null) {
+        // res.cookie.set("refreshToken", { httpOnly: true, expires: Date.now() });
+        // Очищаем куки с токеном
+        res.clearCookie("refreshToken");
+
+        // Удаляем записи о сессии
+        let result = await db.RefreshSessions.destroy({
+          where: {
+            refreshToken,
+            fingerprint
+          }
+        });
+        return result;
+      } else {
+        return 0;
+      }
+    }
   }
 };

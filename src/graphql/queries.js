@@ -596,3 +596,9 @@ export const STATISTICS_DELETE_QUERY = gql`
     statisticsDeleteOrgs
   }
 `;
+
+export const LOG_OUT = gql`
+  mutation($fingerprint: String!) {
+    logOut(fingerprint: $fingerprint)
+  }
+`;

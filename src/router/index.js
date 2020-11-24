@@ -137,7 +137,6 @@ const routes = [
   },
   {
     path: "/login",
-    name: "LogIn",
     components: {
       default: Auth,
       form: LogIn
@@ -145,6 +144,7 @@ const routes = [
     children: [
       {
         path: "",
+        name: "LogIn",
         components: {
           form: LogIn
         }

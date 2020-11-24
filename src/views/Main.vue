@@ -40,7 +40,9 @@
             </div>
           </router-link>
         </div>
-        <button id="logOutBtn" class="btn btn-alternate">Выйти</button>
+        <button id="logOutBtn" class="btn btn-alternate" @click="logOut()">
+          Выйти
+        </button>
       </div>
     </div>
     <div id="main-content">
@@ -71,7 +73,12 @@ import TopBar from "@/components/TopBar.vue";
 export default {
   name: "Main",
   components: { TopBar },
-  methods: {},
+  methods: {
+    logOut() {
+      console.log("LOG OUT!");
+      this.$store.dispatch("LOG_OUT");
+    }
+  },
   computed: {
     isAppLoading() {
       return this.$store.getters.isAppLoading;
@@ -85,6 +92,7 @@ export default {
 
 $topBarHeight: 100px;
 $sideBarWidth: 200px;
+$scrollBarVerticalWidth: 17px;
 
 #main-view {
   display: grid;
@@ -117,12 +125,12 @@ $sideBarWidth: 200px;
 
   #main-content {
     grid-area: 1/2/3/3;
-    width: calc(100vw - $sideBarWidth);
+    width: calc(100vw - #{$sideBarWidth});
     overflow-x: auto;
     padding-top: $topBarHeight;
     #top-bar {
       position: fixed;
-      width: 100%;
+      width: calc(100vw - #{$sideBarWidth} - #{$scrollBarVerticalWidth});
       top: 0;
       z-index: 10000;
       box-sizing: border-box;

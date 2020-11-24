@@ -220,6 +220,7 @@ type Mutation {
   signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
   logIn(login: String!, password: String!, fingerprint:String!): jwt
   updateTokens(fingerprint:String!): jwt!
+  logOut(fingerprint:String!): Int
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
