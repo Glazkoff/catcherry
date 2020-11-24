@@ -41,7 +41,6 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Main",
     component: Main,
     meta: {
       requiresAuth: true
@@ -72,7 +71,6 @@ const routes = [
   */
   {
     path: "/user/:id",
-    name: "User",
     component: User,
     children: [
       {
@@ -114,7 +112,6 @@ const routes = [
   },
   {
     path: "/admin",
-    name: "Admin",
     component: AdminPanel,
     meta: {
       requiresAuth: true
@@ -134,21 +131,6 @@ const routes = [
         component: Organization
       }
     ]
-  },
-  {
-    path: "/account",
-    name: "Account",
-    component: Account
-  },
-  {
-    path: "/user_org",
-    name: "UserInOrganization",
-    component: UserInOrganization
-  },
-  {
-    path: "/list_req",
-    name: "ListReguest",
-    component: ListRequest
   },
   {
     path: "/auth",
