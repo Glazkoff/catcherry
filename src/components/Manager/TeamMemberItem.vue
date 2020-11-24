@@ -18,7 +18,7 @@
 </template>
 
 <script>
-import Popup from "@/components/Manager/Popup.vue";
+import Popup from "@/components/manager/Popup.vue";
 export default {
   props: ["userInTeam"],
   data() {

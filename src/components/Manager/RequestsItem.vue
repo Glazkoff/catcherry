@@ -14,7 +14,7 @@
 </template>
 
 <script>
-import PopupRequest from "@/components/Manager/PopupRequest";
+import PopupRequest from "@/components/manager/PopupRequest";
 export default {
   props: ["request"],
   data() {

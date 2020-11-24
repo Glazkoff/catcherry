@@ -9,7 +9,7 @@
 </template>
 
 <script>
-import RequestsItem from "@/components/Manager/RequestsItem";
+import RequestsItem from "@/components/manager/RequestsItem";
 
 import {
   REQUESTS_QUERY,

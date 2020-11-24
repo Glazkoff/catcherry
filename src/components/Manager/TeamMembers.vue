@@ -12,7 +12,7 @@
 </template>
 
 <script>
-import TeamMemberItem from "@/components/Manager/TeamMemberItem.vue";
+import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
 import Minialert from "@/components/admin/MiniAlert.vue";
 
 import {

@@ -15,7 +15,7 @@ import {
   TEAMS_QUERY,
   UPDATE_TEAMS_QUERY
 } from "@/graphql/queries";
-import EditForm from "@/components/Manager/EditForm"
+import EditForm from "@/components/manager/EditForm"
 export default {
   apollo: {
     teams: {
