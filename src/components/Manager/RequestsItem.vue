@@ -6,13 +6,17 @@
     <button type="submit" @click="showModal = true" class="btn btn-secondary">
       Подробнее
     </button>
-    <popup v-if="showModal" @close="showModal = false">
+    <popup v-if="showModal">
       <h3 slot="header">
         Заявка в команду
-        <button class="modal-default-button" @click="$emit('close')">
-          &times;
-        </button>
       </h3>
+      <button
+        slot="exit"
+        class="modal-default-button"
+        @click="showModal = false"
+      >
+        &times;
+      </button>
       <div slot="body">
         <img src="" alt="photo" />
         <p>{{ request.user.name }}</p>

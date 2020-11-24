@@ -106,7 +106,7 @@ import {
   CARGE_POINTS_QUERY,
   ADD_NOTIFICATION_QUERY
 } from "@/graphql/queries";
-import minialert from "@/components/manager/MiniAlert.vue";
+import minialert from "@/components/MiniAlert.vue";
 export default {
   props: ["userInTeam"],
   components: { minialert },

@@ -21,7 +21,7 @@
 
 <script>
 import RequestsItem from "@/components/manager/RequestsItem";
-import Minialert from "@/components/manager/MiniAlert.vue";
+import Minialert from "@/components/MiniAlert.vue";
 
 import {
   REQUESTS_QUERY,

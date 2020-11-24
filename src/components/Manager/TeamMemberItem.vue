@@ -19,6 +19,9 @@
       <h3 slot="header">
         Вы действительно хотите удалить участника {{ userInTeam.user.name }}?
       </h3>
+      <button slot="exit" @click="showModalConfirm = false">
+        &times;
+      </button>
       <div slot="footer">
         <button
           type="submit"
