@@ -166,7 +166,7 @@ type Comment {
   id: ID!
   body: String!
   authorId: Int!
-  author: Author!
+  author: Author
   postId: Int!
   createdAt: String!
   updatedAt: String!

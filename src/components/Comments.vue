@@ -9,8 +9,13 @@
     <div v-for="comment in comments" :key="comment.id">
       <p>{{ comment.author.name }}</p>
       <p>{{ comment.createdAt }}</p>
-      <p>{{ comment.body}}</p>
-      <button v-if="comment.authorId==$store.getters.decodedToken.id" @click="toDeleteComment(comment.id)">Удалить</button>
+      <p>{{ comment.body }}</p>
+      <button
+        v-if="comment.authorId == $store.getters.decodedToken.id"
+        @click="toDeleteComment(comment.id)"
+      >
+        Удалить
+      </button>
     </div>
   </div>
 </template>
@@ -29,7 +34,7 @@ export default {
       query: COMMENTS_QUERY
     }
   },
-  props: ['DetailedPost'],
+  props: ["DetailedPost"],
   data() {
     return {
       newComment: "",
@@ -37,6 +42,7 @@ export default {
         isEdit: false,
         body: "",
         authorId: "",
+        author: { name: "" },
         postId: "",
         id: -1
       }
@@ -52,6 +58,7 @@ export default {
             body: this.editComment.body,
             authorId: this.editComment.authorId,
             postId: this.editComment.postId,
+            author: this.editComment.author.name,
             id: this.editComment.id
           },
           update: (cache, { data: { updateComment } }) => {
@@ -68,7 +75,10 @@ export default {
             createComment: {
               __typename: "Comment",
               id: -1,
-              name: this.editComment.name
+              body: this.editComment.body,
+              authorId: this.editCommentauthorId,
+              postId: this.editCommentpostId,
+              author: this.editComment.author
             }
           }
         })
@@ -84,6 +94,7 @@ export default {
       this.editComment.body = editComment.body;
       this.editComment.authorId = editComment.authorId;
       this.editComment.postId = editComment.postId;
+      this.editComment.author = { name: editComment.author.name };
       this.editComment.id = editComment.id;
       this.editComment.isEdit = true;
     },
@@ -91,14 +102,17 @@ export default {
       let bodyComment = this.newComment;
       let authorIdComment = this.$store.getters.decodedToken.id;
       let postIdComment = Number(this.$route.params.id);
+      let authorComment = { name: this.$store.getters.decodedToken.name };
       this.newComment = "";
+
       this.$apollo
         .mutate({
           mutation: CREATE_COMMENT_QUERY,
           variables: {
             body: bodyComment,
             authorId: authorIdComment,
-            postId: postIdComment
+            postId: postIdComment,
+            author: authorComment
           },
           update: (cache, { data: { createComment } }) => {
             let data = cache.readQuery({ query: COMMENTS_QUERY });
@@ -112,12 +126,14 @@ export default {
               id: -1,
               body: bodyComment,
               authorId: authorIdComment,
-              postId: postIdComment
+              postId: postIdComment,
+              author: authorComment
             }
           }
         })
         .then(data => {
           console.log(data);
+          console.log(authorComment);
         })
         .catch(error => {
           // this.newComment = body;
