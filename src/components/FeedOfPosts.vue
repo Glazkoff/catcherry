@@ -1,5 +1,6 @@
 <template>
   <div class="flexbox">
+    <h1>Лента новостей</h1>
     <h1 v-if="this.$apollo.queries.posts.loading">Это лоадер</h1>
     <div v-else>
       <div v-if="!this.isEmpty">
@@ -19,6 +20,7 @@
 <script>
 import NonDetailedPost from "../components/NonDetailedPost.vue";
 import { POSTS_QUERY } from "@/graphql/queries";
+// import { CREATE_LIKE_OF_POST } from "@/graphql/queries";
 export default {
   name: "FeedOfPosts",
   apollo: {
@@ -32,7 +34,12 @@ export default {
         if (this.posts != undefined || this.posts.length != 0) return false;
         else return true;
       } else return false;
-    }
+    },
+    userId() {
+      if (this.$store.getters.decodedToken != null) {
+        return this.$store.getters.decodedToken.id;
+      } else return null;
+    },
   },
   components: {
     NonDetailedPost
@@ -43,7 +50,34 @@ export default {
   methods: {
     onLike(object) {
       console.log("Нажата кнопка лайка для поста с id " + object.id);
-      // console.log(this.posts);
+      // this.$apollo
+      //   .mutate({
+      //     mutation: CREATE_LIKE_OF_POST,
+      //     variables: {
+      //       userId: this.userId,
+      //       postId: object.id
+      //     },
+      //     update: (cache, { data: { createLikeOfPost } }) => {
+      //       let data = cache.readQuery({ query: POSTS_QUERY });
+      //       // data.users.push(createLikeOfPost);
+      //       cache.writeQuery({ query: POSTS_QUERY, data });
+      //     },
+      //     optimisticResponse: {
+      //       __typename: "Mutation",
+      //       createLikeOfPost: {
+      //         __typename: "User",
+      //         id: -1,
+      //         name: username
+      //       }
+      //     }
+      //   })
+      //   .then(data => {
+      //     console.log(data);
+      //   })
+      //   .catch(error => {
+      //     this.newUser = username;
+      //     console.error(error);
+      //   });
     },
     onComment(object) {
       console.log("Нажата кнопка комментария для поста с id " + object.id);
