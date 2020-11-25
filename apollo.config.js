@@ -3,9 +3,9 @@ module.exports = {
     service: {
       name: "my-app",
       // URL для GraphQL API
-      url: "/graphql",
+      url: "/graphql"
     },
     // Файлы, обрабатываемые расширением
-    includes: ["src/**/*.vue", "src/**/*.js"],
-  },
+    includes: ["src/**/*.vue", "src/**/*.js"]
+  }
 };

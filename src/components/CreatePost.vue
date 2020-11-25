@@ -17,7 +17,11 @@
 
 <script>
 export default {
-  name: "CreatePost"
+  name: "CreatePost",
+  data() {
+    return {};
+  },
+  methods: {}
 };
 </script>
 

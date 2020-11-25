@@ -314,8 +314,8 @@
 </template>
 
 <script>
-import popup from "@/components/admin/Popup.vue";
-import minialert from "@/components/admin/MiniAlert.vue";
+import popup from "@/components/Popup.vue";
+import minialert from "@/components/MiniAlert.vue";
 import { required } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,

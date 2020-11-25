@@ -1,40 +1,44 @@
 <template>
-<transition name="modal">
-  <div class="modal-mask">
-    <div class="modal-wrapper">
-      <div class="modal-container">
-        <button class="modal-default-button" @click="$emit('close')">
-          &times;
-        </button>
-        <div class="modal-header">
-          <slot name="header">
-            <h3>Заявка в команду</h3>
-          </slot>
-        </div>
+  <transition name="modal">
+    <div class="modal-mask">
+      <div class="modal-wrapper">
+        <div class="modal-container">
+          <button class="modal-default-button" @click="$emit('close')">
+            &times;
+          </button>
+          <div class="modal-header">
+            <slot name="header">
+              <h3>Заявка в команду</h3>
+            </slot>
+          </div>
 
-        <div class="modal-body">
-          <slot name="body">
-            <img src="" alt="photo" />
-            <p>{{ request.user.name }}</p>
-            <p>Пол:</p>
-            <p>Дата рождения:</p>
-          </slot>
-        </div>
+          <div class="modal-body">
+            <slot name="body">
+              <img src="" alt="photo" />
+              <p>{{ request.user.name }}</p>
+              <p>Пол:</p>
+              <p>Дата рождения:</p>
+            </slot>
+          </div>
 
-        <div class="modal-footer">
-          <slot name="footer">
-            <button type="submit" class="modal-avtive-button" @click="$emit('act')">
-              Принять
-            </button>
-            <button type="submit" class="modal-default-button">
-              Отклонить
-            </button>
-          </slot>
+          <div class="modal-footer">
+            <slot name="footer">
+              <button
+                type="submit"
+                class="modal-avtive-button"
+                @click="$emit('act')"
+              >
+                Принять
+              </button>
+              <button type="submit" class="modal-default-button">
+                Отклонить
+              </button>
+            </slot>
+          </div>
         </div>
       </div>
     </div>
-  </div>
-</transition>
+  </transition>
 </template>
 
 <script>

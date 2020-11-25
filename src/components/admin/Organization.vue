@@ -34,6 +34,7 @@
           organization.name
         }}"
       </h3>
+      <div slot="exit">×</div>
       <div
         slot="body"
         v-if="
@@ -274,17 +275,21 @@
           placeholder="Поиск по организациям"
         />
         <div
-          class="oneOrganization"
+          class="card"
           v-for="organization in filterOrganization"
           :key="organization.id"
         >
-          <div>
-            <p>{{ organization.name }}</p>
+          <div class="card_img">ФОТО</div>
+          <div class="card_body">
+            <h3>{{ organization.name }}</h3>
             <p>№ {{ organization.id }}</p>
           </div>
-          <a @click="showFullInformation(organization.id)"
-            ><i18n path="more">{{ $t("more") }}</i18n></a
+          <div
+            @click="showFullInformation(organization.id)"
+            class="card_action"
           >
+            >
+          </div>
         </div>
       </div>
     </div>
@@ -307,8 +312,8 @@
 </template>
 
 <script>
-import popup from "@/components/admin/Popup.vue";
-import minialert from "@/components/admin/MiniAlert.vue";
+import popup from "@/components/Popup.vue";
+import minialert from "@/components/MiniAlert.vue";
 import { required, numeric } from "vuelidate/lib/validators";
 import {
   ORGS_QUERY,
