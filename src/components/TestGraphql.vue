@@ -1,5 +1,6 @@
 <template>
   <div>
+    <router-link :to="{ name: 'TeamList' }">Панель менеджера</router-link>
     <h4>Тестовый Graphql компонент</h4>
     <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>

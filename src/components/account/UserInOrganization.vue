@@ -27,7 +27,7 @@
           </div>
         </div>
       </div>
-      <div slot="action">
+      <div slot="footer">
         <button
           class="modal-default-button btn btn-secondary"
           @click="isShowInfoModal = false"

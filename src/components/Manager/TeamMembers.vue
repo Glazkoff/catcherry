@@ -1,24 +1,21 @@
 <template>
-<div>
-  <h3>Участники</h3>
-  <hr />
-  <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
-    <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+  <div>
+    <h3>Участники</h3>
+    <hr />
+    <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
+      <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+    </div>
+    <Minialert v-if="isShowAlert">
+      <p slot="title">{{ message }}</p>
+    </Minialert>
   </div>
-  <Minialert v-if="isShowAlert">
-    <p slot="title">{{ message }}</p>
-  </Minialert>
-</div>
 </template>
 
 <script>
 import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
 import Minialert from "@/components/MiniAlert.vue";
 
-import {
-  USERS_IN_TEAMS_QUERY,
-  DELETE_IN_TEAMS_QUERY
-} from "@/graphql/queries";
+import { USERS_IN_TEAMS_QUERY, DELETE_IN_TEAMS_QUERY } from "@/graphql/queries";
 
 export default {
   data() {

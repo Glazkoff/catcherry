@@ -8,7 +8,7 @@
         <h1 class="heading">
           {{ post.body.header }}
         </h1>
-        <p class="infoDate">{{ post.createdAt }}</p>
+        <p class="infoDate">{{ $d(post.createdAt, "long") }}</p>
         <p class="infoBody">
           {{ post.body.text }}
         </p>

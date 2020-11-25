@@ -20,7 +20,7 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
-import ListOfNotifications from "@/components/ListOfNotifications.vue";
+import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import TeamMembers from "@/components/manager/TeamMembers.vue";
 import RaitingList from "@/components/manager/RaitingList.vue";
 import EditTeam from "@/components/manager/EditTeam.vue";
@@ -30,7 +30,7 @@ import TeamList from "@/components/manager/TeamList.vue";
 import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
-import FeedOfPosts from "@/components/FeedOfPosts.vue";
+import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
@@ -42,7 +42,6 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Main",
     component: Main,
     meta: {
       requiresAuth: true
@@ -68,7 +67,6 @@ const routes = [
   },
   {
     path: "/user/:id",
-    name: "User",
     component: User,
     children: [
       {
@@ -95,12 +93,21 @@ const routes = [
         path: "points",
         name: "PointsUser",
         component: PointsUser
+      },
+      {
+        path: "/posts/:id",
+        name: "Posts",
+        component: DetailedPost
+      },
+      {
+        path: "feed",
+        name: "FeedOfPosts",
+        component: FeedOfPosts
       }
     ]
   },
   {
     path: "/admin",
-    name: "Admin",
     component: AdminPanel,
     meta: {
       requiresAuth: true
@@ -223,6 +230,7 @@ const routes = [
     name: "PointsUser",
     component: PointsUser
   }
+
   // {
   //   path: "/about",
   //   name: "About",

@@ -1,4 +1,5 @@
 <template>
+<div class="doubleColumn">
   <div class="flexbox">
     <non-detailed-post
       @like="onLike"
@@ -8,11 +9,14 @@
       :key="post.id"
       :post="post"
     ></non-detailed-post>
+    </div>
+    <list-of-notifications></list-of-notifications>
   </div>
 </template>
 
 <script>
-import NonDetailedPost from "../components/NonDetailedPost.vue";
+import NonDetailedPost from "@/components/NonDetailedPost.vue";
+import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import { POSTS_QUERY } from "@/graphql/queries";
 export default {
   name: "FeedOfPosts",
@@ -22,7 +26,8 @@ export default {
     }
   },
   components: {
-    NonDetailedPost
+    NonDetailedPost,
+    ListOfNotifications
   },
   data() {
     return {};
@@ -47,5 +52,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 30px;
+}
+.doubleColumn {
+  display: flex;
 }
 </style>

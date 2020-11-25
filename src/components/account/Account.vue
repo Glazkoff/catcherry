@@ -68,7 +68,7 @@
           />
         </form>
       </div>
-      <div slot="action" class="btn-group"  v-if="isShowModalEdit">
+      <div slot="footer" class="btn-group"  v-if="isShowModalEdit">
         <button
           class="modal-default-button btn btn-primary"
           @click="saveUserOnPopup()"
@@ -93,7 +93,7 @@
       <div slot="body" v-if="isShowModalDelete" class="btn-group">
         <button
           @click="deleteUser()"
-          slot="action"
+          slot="footer"
           class="modal-default-button"
         >
           <i18n path="delete"
@@ -140,7 +140,7 @@
         <p>Логин: {{ user.login }}</p>
         <p>Пароль: {{ user.password }}</p>
       </div>
-      <div slot="action" class="btn-group" v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading">
+      <div slot="footer" class="btn-group" v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading">
         <button class="btn btn-primary" @click="showModalEdit()">
           Редактировать
         </button>
@@ -410,10 +410,6 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
-  float: right;
-  width: 80%;
-}
 .btn-group {
   display: flex;
   justify-content: space-between;
