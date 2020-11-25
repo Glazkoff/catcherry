@@ -1,12 +1,18 @@
 <template>
   <div class="flexbox">
-    <non-detailed-post
-      @like="onLike"
-      @comment="onComment"
-      v-for="post in posts"
-      :key="post.id"
-      :post="post"
-    ></non-detailed-post>
+    <h1 v-if="this.$apollo.queries.posts.loading">Это лоадер</h1>
+    <div v-else>
+      <div v-if="!this.isEmpty">
+        <non-detailed-post
+          @like="onLike"
+          @comment="onComment"
+          v-for="post in posts"
+          :key="post.id"
+          :post="post"
+        ></non-detailed-post>
+      </div>
+      <h2 v-else>Постов пока нет, мне очень жаль</h2>
+    </div>
   </div>
 </template>
 
@@ -18,6 +24,14 @@ export default {
   apollo: {
     posts: {
       query: POSTS_QUERY
+    }
+  },
+  computed: {
+    isEmpty() {
+      if (!this.$apollo.queries.posts.loading) {
+        if (this.posts != undefined || this.posts.length != 0) return false;
+        else return true;
+      } else return false;
     }
   },
   components: {

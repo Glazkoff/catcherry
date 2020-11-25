@@ -208,8 +208,6 @@ async function addAllTables(destroyTable) {
       postId: posts.dataValues.id
     });
     console.log("Likes: ", likesOfPost.dataValues);
-
-
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
     });
