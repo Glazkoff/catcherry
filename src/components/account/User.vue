@@ -45,11 +45,8 @@ export default {
     display: block;
   }
 }
-<<<<<<< HEAD
 .account-view {
   float: right;
   width: 80%;
 }
-=======
->>>>>>> origin/ui-feature
 </style>
