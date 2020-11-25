@@ -1,14 +1,14 @@
 <template>
-<div class="doubleColumn">
-  <div class="flexbox">
-    <non-detailed-post
-      @like="onLike"
-      @comment="onComment"
-      @share="onShare"
-      v-for="post in posts"
-      :key="post.id"
-      :post="post"
-    ></non-detailed-post>
+  <div class="doubleColumn">
+    <div class="flexbox">
+      <non-detailed-post
+        @like="onLike"
+        @comment="onComment"
+        @share="onShare"
+        v-for="post in posts"
+        :key="post.id"
+        :post="post"
+      ></non-detailed-post>
     </div>
     <list-of-notifications></list-of-notifications>
   </div>

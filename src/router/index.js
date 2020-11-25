@@ -62,85 +62,119 @@ const routes = [
           main: FeedOfPosts,
           sidebar: SideBarDefault
         }
+      },
+      {
+        path: "/manager/teams",
+        name: "TeamList",
+        components: {
+          main: TeamList,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/manager/teams/:id",
+        name: "TeamSettings",
+        components: {
+          main: TeamSettings,
+          sidebar: SideBarDefault
+        },
+        props: true,
+        children: [
+          {
+            path: "team_members",
+            name: "TeamMembers",
+            component: TeamMembers
+          },
+          {
+            path: "raiting",
+            name: "RaitingList",
+            component: RaitingList
+          },
+          {
+            path: "team_edit",
+            name: "EditTeam",
+            component: EditTeam
+          },
+          {
+            path: "requests",
+            name: "RequestsList",
+            component: RequestsList
+          },
+          {
+            path: "tasks",
+            name: "TasksTeam",
+            component: TasksTeam
+          }
+        ]
+      },
+      {
+        path: "/user/:id",
+        components: {
+          main: User,
+          sidebar: SideBarDefault
+        },
+        children: [
+          {
+            path: "",
+            name: "Account",
+            component: Account
+          },
+          {
+            path: "user_org",
+            name: "UserInOrganization",
+            component: UserInOrganization
+          },
+          {
+            path: "list_req",
+            name: "ListReguest",
+            component: ListRequest
+          },
+          {
+            path: "tasks",
+            name: "Tasks",
+            component: Tasks
+          },
+          {
+            path: "points",
+            name: "PointsUser",
+            component: PointsUser
+          },
+          {
+            path: "/posts/:id",
+            name: "Posts",
+            component: DetailedPost
+          }
+        ]
+      },
+      {
+        path: "/admin",
+        name: "AdminPanel",
+        components: {
+          main: AdminPanel,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          requiresAuth: true
+        },
+        children: [
+          {
+            path: "",
+            name: "Dashboard",
+            component: Dashboard
+          },
+          {
+            path: "users",
+            name: "Users",
+            component: Users
+          },
+          {
+            path: "organizations",
+            name: "Organization",
+            component: Organization
+          }
+        ]
       }
     ]
-  },
-  {
-    path: "/user/:id",
-    component: User,
-    children: [
-      {
-        path: "",
-        name: "Account",
-        component: Account
-      },
-      {
-        path: "user_org",
-        name: "UserInOrganization",
-        component: UserInOrganization
-      },
-      {
-        path: "list_req",
-        name: "ListReguest",
-        component: ListRequest
-      },
-      {
-        path: "tasks",
-        name: "Tasks",
-        component: Tasks
-      },
-      {
-        path: "points",
-        name: "PointsUser",
-        component: PointsUser
-      },
-      {
-        path: "/posts/:id",
-        name: "Posts",
-        component: DetailedPost
-      },
-      {
-        path: "feed",
-        name: "FeedOfPosts",
-        component: FeedOfPosts
-      }
-    ]
-  },
-  {
-    path: "/admin",
-    component: AdminPanel,
-    meta: {
-      requiresAuth: true
-    },
-    children: [
-      {
-        path: "",
-        component: Dashboard
-      },
-      {
-        path: "users",
-        component: Users
-      },
-      {
-        path: "organizations",
-        component: Organization
-      }
-    ]
-  },
-  {
-    path: "/account",
-    name: "Account",
-    component: Account
-  },
-  {
-    path: "/user_org",
-    name: "UserInOrganization",
-    component: UserInOrganization
-  },
-  {
-    path: "/list_req",
-    name: "ListReguest",
-    component: ListRequest
   },
   {
     path: "/login",
@@ -181,44 +215,6 @@ const routes = [
     path: "/notification",
     name: "ListOfNotifications",
     component: ListOfNotifications
-  },
-  {
-    path: "/manager/teams",
-    name: "TeamList",
-    component: TeamList
-  },
-  {
-    path: "/manager/teams/:id",
-    name: "TeamSettings",
-    component: TeamSettings,
-    props: true,
-    children: [
-      {
-        path: "team_members",
-        name: "TeamMembers",
-        component: TeamMembers
-      },
-      {
-        path: "raiting",
-        name: "RaitingList",
-        component: RaitingList
-      },
-      {
-        path: "team_edit",
-        name: "EditTeam",
-        component: EditTeam
-      },
-      {
-        path: "requests",
-        name: "RequestsList",
-        component: RequestsList
-      },
-      {
-        path: "tasks",
-        name: "TasksTeam",
-        component: TasksTeam
-      }
-    ]
   },
   {
     path: "/posts/:id",

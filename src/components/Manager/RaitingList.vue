@@ -26,7 +26,9 @@
         За период заработано:
         <!-- функция отображения баллов пользователя -->
         <div
-          v-if="+summOperations(raiting.user.userPoints.pointsOperation).summ > 0"
+          v-if="
+            +summOperations(raiting.user.userPoints.pointsOperation).summ > 0
+          "
           class="up"
         >
           ↑ +{{ summOperations(raiting.user.userPoints.pointsOperation).summ }}
@@ -40,7 +42,10 @@
           ↓ {{ summOperations(raiting.user.userPoints.pointsOperation).summ }}
         </div>
         <div v-else>0</div>
-        <div>Процентный показатель: {{summOperations(raiting.user.userPoints.pointsOperation).percent}}%</div>
+        <div>
+          Процентный показатель:
+          {{ summOperations(raiting.user.userPoints.pointsOperation).percent }}%
+        </div>
       </div>
     </div>
   </div>
@@ -205,7 +210,7 @@ export default {
       }
       summ = summCurrent - summComparsion; //текущая сумма минус предыдущая сумма
       let percent = ((summCurrent * 100) / summComparsion - 100).toFixed(2); //текущая сумма *100 поделена на предыдущую сумму с вычетом 100
-      return {summ, percent};
+      return { summ, percent };
     },
     // отображение тайм-штампа в фотмате для input date
     stampToDate(stamp) {

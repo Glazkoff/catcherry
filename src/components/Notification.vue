@@ -1,5 +1,11 @@
 <template>
-  <div v-if="notification.forAllUsers == $route.params.id || notification.forAllUsers == null" class="notification">
+  <div
+    v-if="
+      notification.forAllUsers == $route.params.id ||
+        notification.forAllUsers == null
+    "
+    class="notification"
+  >
     <div class="header">
       <span>{{ notification.body.header }}</span>
       <div class="icon" @click="onDelete(notification.id)">

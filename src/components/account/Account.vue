@@ -68,7 +68,7 @@
           />
         </form>
       </div>
-      <div slot="footer" class="btn-group"  v-if="isShowModalEdit">
+      <div slot="footer" class="btn-group" v-if="isShowModalEdit">
         <button
           class="modal-default-button btn btn-primary"
           @click="saveUserOnPopup()"
@@ -140,7 +140,11 @@
         <p>Логин: {{ user.login }}</p>
         <p>Пароль: {{ user.password }}</p>
       </div>
-      <div slot="footer" class="btn-group" v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading">
+      <div
+        slot="footer"
+        class="btn-group"
+        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+      >
         <button class="btn btn-primary" @click="showModalEdit()">
           Редактировать
         </button>

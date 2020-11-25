@@ -1,7 +1,11 @@
 <template>
   <div>
     <div class="side-bar__nav-list">
-      <router-link to="/" :exact="true" active-class="nav-checked">
+      <router-link
+        :to="{ name: 'Account' }"
+        :exact="true"
+        active-class="nav-checked"
+      >
         <div class="side-bar__nav-list__nav-element">
           <div class="side-bar__nav-list__nav-element__icon">
             <svg
@@ -23,7 +27,11 @@
           </div>
         </div>
       </router-link>
-      <router-link to="/" :exact="true" active-class="nav-checked">
+      <router-link
+        :to="{ name: 'UserInOrganization', params: { id: 1 } }"
+        :exact="true"
+        active-class="nav-checked"
+      >
         <div class="side-bar__nav-list__nav-element">
           <div class="side-bar__nav-list__nav-element__icon">
             <svg
@@ -83,7 +91,14 @@
           </div>
         </div>
       </router-link>
-      <router-link to="/" :exact="true" active-class="nav-checked">
+      <router-link
+        :to="{
+          name: 'PointsUser',
+          params: { id: $store.getters.decodedToken.id }
+        }"
+        :exact="true"
+        active-class="nav-checked"
+      >
         <div class="side-bar__nav-list__nav-element">
           <div class="side-bar__nav-list__nav-element__icon">
             <svg
@@ -115,11 +130,17 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Личная статистика
+            Личная статитика
           </div>
         </div>
       </router-link>
-      <router-link to="/" :exact="true" active-class="nav-checked">
+      <router-link
+        :to="{
+          name: 'PointsUser'
+        }"
+        :exact="true"
+        active-class="nav-checked"
+      >
         <div class="side-bar__nav-list__nav-element">
           <div class="side-bar__nav-list__nav-element__icon">
             <svg
@@ -141,7 +162,16 @@
           </div>
         </div>
       </router-link>
-      <router-link to="/" :exact="true" active-class="nav-checked">
+      <router-link
+        :to="{
+          name: 'Tasks',
+          params: {
+            id: $store.getters.decodedToken.id
+          }
+        }"
+        :exact="true"
+        active-class="nav-checked"
+      >
         <div class="side-bar__nav-list__nav-element">
           <div class="side-bar__nav-list__nav-element__icon">
             <svg
@@ -175,6 +205,54 @@
           </div>
           <div class="side-bar__nav-list__nav-element__text">
             Задания
+          </div>
+        </div>
+      </router-link>
+      <router-link
+        :to="{ name: 'TeamList' }"
+        :exact="true"
+        active-class="nav-checked"
+      >
+        <div class="side-bar__nav-list__nav-element">
+          <div class="side-bar__nav-list__nav-element__icon">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 0C6.93667 0 4.44444 2.36105 4.44444 5.26316C4.44444 8.16526 6.93667 10.5263 10 10.5263C13.0633 10.5263 15.5556 8.16526 15.5556 5.26316C15.5556 2.36105 13.0633 0 10 0ZM10 8.42105C8.16222 8.42105 6.66667 7.00421 6.66667 5.26316C6.66667 3.5221 8.16222 2.10526 10 2.10526C11.8378 2.10526 13.3333 3.5221 13.3333 5.26316C13.3333 7.00421 11.8378 8.42105 10 8.42105ZM20 20V18.9474C20 14.8853 16.51 11.5789 12.2222 11.5789H7.77778C3.48889 11.5789 0 14.8853 0 18.9474V20H2.22222V18.9474C2.22222 16.0453 4.71444 13.6842 7.77778 13.6842H12.2222C15.2856 13.6842 17.7778 16.0453 17.7778 18.9474V20H20Z"
+                fill="white"
+                class="fill"
+              />
+            </svg>
+          </div>
+          <div class="side-bar__nav-list__nav-element__text">
+            Панель менеджера
+          </div>
+        </div>
+      </router-link>
+      <router-link :to="{ name: 'Dashboard' }" active-class="nav-checked">
+        <div class="side-bar__nav-list__nav-element">
+          <div class="side-bar__nav-list__nav-element__icon">
+            <svg
+              width="20"
+              height="20"
+              viewBox="0 0 20 20"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M10 0C6.93667 0 4.44444 2.36105 4.44444 5.26316C4.44444 8.16526 6.93667 10.5263 10 10.5263C13.0633 10.5263 15.5556 8.16526 15.5556 5.26316C15.5556 2.36105 13.0633 0 10 0ZM10 8.42105C8.16222 8.42105 6.66667 7.00421 6.66667 5.26316C6.66667 3.5221 8.16222 2.10526 10 2.10526C11.8378 2.10526 13.3333 3.5221 13.3333 5.26316C13.3333 7.00421 11.8378 8.42105 10 8.42105ZM20 20V18.9474C20 14.8853 16.51 11.5789 12.2222 11.5789H7.77778C3.48889 11.5789 0 14.8853 0 18.9474V20H2.22222V18.9474C2.22222 16.0453 4.71444 13.6842 7.77778 13.6842H12.2222C15.2856 13.6842 17.7778 16.0453 17.7778 18.9474V20H20Z"
+                fill="white"
+                class="fill"
+              />
+            </svg>
+          </div>
+          <div class="side-bar__nav-list__nav-element__text">
+            Админпанель
           </div>
         </div>
       </router-link>

@@ -284,7 +284,12 @@
             <h3>{{ organization.name }}</h3>
             <p>№ {{ organization.id }}</p>
           </div>
-          <div @click="showFullInformation(organization.id)" class="card_action">></div>
+          <div
+            @click="showFullInformation(organization.id)"
+            class="card_action"
+          >
+            >
+          </div>
         </div>
       </div>
     </div>
