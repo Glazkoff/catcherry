@@ -28,8 +28,8 @@
 </template>
 
 <script>
-import NewStatistics from "@/components/admin/NewStatistics.vue";
-import DeleteStatistics from "@/components/admin/DeleteStatistics.vue";
+import NewStatistics from "@/components/admin/charts/NewStatistics.vue";
+import DeleteStatistics from "@/components/admin/charts/DeleteStatistics.vue";
 import {
   STATISTICS_NEW_QUERY,
   STATISTICS_DELETE_QUERY

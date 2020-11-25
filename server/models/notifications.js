@@ -37,17 +37,17 @@ module.exports = (sequelize, DataTypes) => {
         allowNull: false
       },
       forAllUsers: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
+        type: DataTypes.INTEGER, //если в поле занесен id пользователя,
+        allowNull: true // значит оповещение предназначено только ему, если null - всей команде
       },
       forAllOrganization: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: true
       },
       forAllTeam: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
+        allowNull: true
+      }
     },
     {
       sequelize,

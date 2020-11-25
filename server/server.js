@@ -214,7 +214,13 @@ async function addAllTables(destroyTable) {
       organizationId: organization.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
-    //Создание команды
+    console.log("Posts: ", post.dataValues);
+    let likesOfPost = await db.LikesOfPosts.create({
+      userId: user.dataValues.id,
+      postId: post.dataValues.id
+    });
+    console.log("Likes: ", likesOfPost.dataValues);
+
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
     });
