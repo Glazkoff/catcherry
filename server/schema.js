@@ -134,6 +134,14 @@ type Post {
   updatedAt: String!
 }
 
+type LikeOfPost {
+  id: ID!
+  userId: ID!
+  postId: ID!
+  createdAt: String!
+  updatedAt: String!
+}
+
 type Task {
   id: ID!
   teamId: ID!
