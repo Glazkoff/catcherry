@@ -87,7 +87,8 @@ app.use(express.static(path.join(__dirname, "../dist")));
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
 db.sequelize
-  //.sync({ force: true })
+  // .sync({ force: true })
+  // .sync({ alter: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
@@ -101,7 +102,7 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
-      //addAllTables();
+      // addAllTables();
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -201,6 +202,14 @@ async function addAllTables(destroyTable) {
       organizationId: organization.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
+    console.log("Posts: ", posts.dataValues);
+    let likesOfPost = await db.LikesOfPosts.create({
+      userId: user.dataValues.id,
+      postId: posts.dataValues.id
+    });
+    console.log("Likes: ", likesOfPost.dataValues);
+
+
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
     });

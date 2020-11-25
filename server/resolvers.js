@@ -16,13 +16,13 @@ function generateTokens(user) {
   // Генерируем JWT токен (в токен заносим общедоступные данные)
   let accessToken = jwt.sign(user, process.env.ACCESS_TOKEN_SECRET, {
     // В секундах
-    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN / 1000
+    expiresIn: process.env.ACCESS_TOKEN_EXPIRES_IN / 1000,
   });
 
   // Возвращаем объект с двумя полями (refreshToken, accessToken)
   return {
     refreshToken,
-    accessToken
+    accessToken,
   };
 }
 
@@ -36,14 +36,14 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
       // ua,
       fingerprint,
       // ip: ip
-      expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN
+      expiresIn: process.env.REFRESH_TOKEN_EXPIRES_IN,
     };
 
     // Находим предыдущую сессию на этом клиенте
     let prevSession = await db.RefreshSessions.findOne({
       where: {
-        fingerprint
-      }
+        fingerprint,
+      },
     });
 
     // Если нет предыдущая сессия на этом клиенте, создаём новую для клиента
@@ -51,16 +51,16 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
       // Считаем количество клиентов (сессий) для пользователя
       let sessionsCount = await db.RefreshSessions.count({
         where: {
-          userId
-        }
+          userId,
+        },
       });
 
       // Если количество клиентов для пользователя больше 5, удаляем все сессии
       if (sessionsCount > 5) {
         await db.RefreshSessions.destroy({
           where: {
-            userId
-          }
+            userId,
+          },
         });
       }
 
@@ -73,8 +73,8 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
       await db.RefreshSessions.destroy({
         where: {
           userId,
-          fingerprint
-        }
+          fingerprint,
+        },
       });
       let sessionsUpdate = await db.RefreshSessions.create(USER_OBJECT);
       return sessionsUpdate;
@@ -95,14 +95,14 @@ async function updateRefreshSession(
 ) {
   let result = await db.RefreshSessions.update(
     {
-      refreshToken: newRefreshToken
+      refreshToken: newRefreshToken,
     },
     {
       where: {
         refreshToken: oldRefreshToken,
         fingerprint,
-        userId
-      }
+        userId,
+      },
     }
   );
   return result;
@@ -114,38 +114,38 @@ module.exports = {
       return db.Users.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
-        }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
       });
     },
     statisticsNewOrgs: (parent, args, { db }) => {
       return db.Organizations.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
-        }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
       });
     },
     statisticsDeleteUsers: (parent, args, { db }) => {
       return db.Users.count({
         where: {
           deletedAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
         },
-        paranoid: false
+        paranoid: false,
       });
     },
     statisticsDeleteOrgs: (parent, args, { db }) => {
       return db.Organizations.count({
         where: {
           deletedAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
         },
-        paranoid: false
+        paranoid: false,
       });
     },
     // Получаем список всех пользователей
@@ -154,7 +154,7 @@ module.exports = {
     // Получаем данные про одного пользователя
     user: (parent, args, { db }) => {
       return db.Users.findOne({
-        where: { id: args.id }
+        where: { id: args.id },
       });
     },
     // Получаем данные о командах пользователя + информация о команде (об организации)
@@ -168,9 +168,9 @@ module.exports = {
           {
             model: db.Teams,
             as: "team",
-            include: [{ model: db.Organizations, as: "organization" }]
-          }
-        ]
+            include: [{ model: db.Organizations, as: "organization" }],
+          },
+        ],
       }),
     // Получаем список всех организаций
     organizations: (parent, args, { db }) =>
@@ -181,15 +181,15 @@ module.exports = {
         where: { id: args.id },
         include: [
           { model: db.OrganizationsTypes, as: "organizationType" },
-          { model: db.Users, as: "owner" }
-        ]
+          { model: db.Users, as: "owner" },
+        ],
       });
     },
     // Получаем тип организации по ее id
     teamsInOneOrganization: (parent, args, { db }) => {
       return db.Teams.findAll({
         order: [["id", "ASC"]],
-        where: { organizationId: args.organizationId }
+        where: { organizationId: args.organizationId },
       });
     },
     // Получаем список всех типов организации
@@ -199,20 +199,26 @@ module.exports = {
       db.Teams.findAll({ order: [["id", "ASC"]] }),
     team: (parent, args, { db }) => {
       return db.Teams.findOne({
-        where: { organizationId: args.organizationId }
+        where: { organizationId: args.organizationId },
       });
     },
     notifications: (parent, args, { db }) =>
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }) =>
       db.Notifications.findOne({ where: { id: args.id } }),
-    posts: (parent, args, { db }) =>
-      db.Posts.findAll({ order: [["id", "ASC"]] }),
+    posts: async (parent, args, { db }) => {
+      let resultOfPosts = db.Posts.findAll({
+        order: [["id", "ASC"]],
+        // include: [{ model: db.LikesOfPosts, as: "likesOfPost" }],
+      });
+      console.log(await resultOfPosts);
+      return resultOfPosts;
+    },
     post: (parent, args, { db }) =>
       db.Posts.findOne({ where: { id: args.id } }),
     comments: (parent, args, { db }, info) =>
       db.Comments.findAll({
-        order: [["id", "ASC"]]
+        order: [["id", "ASC"]],
         // include: [
         //   {
         //     model: db.Users,
@@ -227,7 +233,7 @@ module.exports = {
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
+        include: [{ model: db.Users, as: "user" }],
       }),
     oneUserInTeams: (parent, args, { db }, info) =>
       db.UsersInTeams.findAll({
@@ -238,9 +244,9 @@ module.exports = {
           {
             model: db.Teams,
             as: "team",
-            include: [{ model: db.Organizations, as: "organization" }]
-          }
-        ]
+            include: [{ model: db.Organizations, as: "organization" }],
+          },
+        ],
       }),
     raitingInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
@@ -254,17 +260,17 @@ module.exports = {
               as: "userPoints",
               include: {
                 model: db.PointsOperations,
-                as: "pointsOperation"
-              }
-            }
-          }
-        ]
+                as: "pointsOperation",
+              },
+            },
+          },
+        ],
       }),
     requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
         order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
+        include: [{ model: db.Users, as: "user" }],
       }),
 
     getPointsUser: (parent, args, { db }) =>
@@ -274,7 +280,7 @@ module.exports = {
     getOperationPointsUser: (parent, args, { db }) =>
       db.PointsOperations.findAll({
         where: { pointAccountId: args.pointAccountId },
-        order: [["id", "ASC"]]
+        order: [["id", "ASC"]],
       }),
     tasks: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
@@ -286,18 +292,18 @@ module.exports = {
             as: "tasksUser",
             include: {
               model: db.Points,
-              as: "userPoints"
-            }
+              as: "userPoints",
+            },
           },
           {
             model: db.Teams,
             as: "tasksTeam",
             include: {
               model: db.UsersInTeams,
-              as: "team"
-            }
-          }
-        ]
+              as: "team",
+            },
+          },
+        ],
       }),
     backlog: (parent, { teamId }, { db }, info) =>
       db.Tasks.findAll({
@@ -309,19 +315,19 @@ module.exports = {
             as: "tasksUser",
             include: {
               model: db.Points,
-              as: "userPoints"
-            }
+              as: "userPoints",
+            },
           },
           {
             model: db.Teams,
             as: "tasksTeam",
             include: {
               model: db.UsersInTeams,
-              as: "team"
-            }
-          }
-        ]
-      })
+              as: "team",
+            },
+          },
+        ],
+      }),
   },
   Mutation: {
     /* [Ниже] Мутации регистрации и авторизации */
@@ -336,7 +342,7 @@ module.exports = {
       let user = await db.Users.create({
         login,
         name,
-        password: hashPassword
+        password: hashPassword,
       });
 
       // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -353,7 +359,7 @@ module.exports = {
       // Записать в Cookie HttpOnly рефреш-токен
       res.cookie("refreshToken", tokens.refreshToken, {
         httpOnly: true,
-        maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
+        maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
       });
       return tokens;
     },
@@ -366,16 +372,16 @@ module.exports = {
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login
-        }
+          login,
+        },
       });
       // Проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
         return {
           errror: {
             errorStatus: 401,
-            message: "Incorrect login or password!"
-          }
+            message: "Incorrect login or password!",
+          },
         };
       } else if (bcrypt.compareSync(password, user.password)) {
         // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -390,7 +396,7 @@ module.exports = {
         // Записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
           httpOnly: true,
-          maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
+          maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
         });
         // Отправить в ответ оба токен
         return tokens;
@@ -398,8 +404,8 @@ module.exports = {
         return {
           errror: {
             errorStatus: 401,
-            message: "Incorrect login or password!"
-          }
+            message: "Incorrect login or password!",
+          },
         };
       }
     },
@@ -412,8 +418,8 @@ module.exports = {
         return {
           error: {
             errorStatus: 401,
-            message: "Refresh token is absent!"
-          }
+            message: "Refresh token is absent!",
+          },
         };
       }
       // Если токен был получен
@@ -422,8 +428,8 @@ module.exports = {
         let session = await db.RefreshSessions.findOne({
           where: {
             refreshToken,
-            fingerprint
-          }
+            fingerprint,
+          },
         });
 
         // Если сессия не была найдена, отправляем ошибку
@@ -431,8 +437,8 @@ module.exports = {
           return {
             error: {
               errorStatus: 401,
-              message: "Session was not found!"
-            }
+              message: "Session was not found!",
+            },
           };
         }
         // Если сессия была найдена, обновляем токены
@@ -443,8 +449,8 @@ module.exports = {
           // TODO: оптимизация запросов с помощью Include
           let user = await db.Users.findOne({
             where: {
-              id: session.userId
-            }
+              id: session.userId,
+            },
           });
 
           // Генерируем новые токены
@@ -453,7 +459,7 @@ module.exports = {
           // Записать в Cookie HttpOnly рефреш-токен
           res.cookie("refreshToken", tokens.refreshToken, {
             httpOnly: true,
-            maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN
+            maxAge: process.env.REFRESH_TOKEN_EXPIRES_IN,
           });
 
           // Обновляем записи в БД
@@ -466,7 +472,7 @@ module.exports = {
           );
 
           return {
-            accessToken: tokens.accessToken
+            accessToken: tokens.accessToken,
           };
         }
       }
@@ -477,7 +483,7 @@ module.exports = {
     */
     createUser: (parent, { name }, { db }, info) =>
       db.Users.create({
-        name: name
+        name: name,
       }),
     // Обновляем фамилию, имени, отчества, пола и логина пользователя
     updateUser: (
@@ -492,32 +498,32 @@ module.exports = {
           surname: surname,
           patricity: patricity,
           gender: gender,
-          login: login
+          login: login,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     // Меняем статус пользователя в команде (добавляем или удаляем)
     addUserInTeam: (parent, { status, id }, { db }, info) =>
       db.UsersInTeams.update(
         {
-          status: status
+          status: status,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     // Удаляем пользователя
     deleteUser: (parent, args, { db }, info) =>
       db.Users.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
     // Обновляем название, описание и максимальное количество пользователей команды
     updateTeam: (
@@ -530,12 +536,12 @@ module.exports = {
         {
           name: name,
           description: description,
-          maxUsersLimit: maxUsersLimit
+          maxUsersLimit: maxUsersLimit,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     /*
@@ -551,33 +557,33 @@ module.exports = {
         name: name,
         ownerId: ownerId,
         organizationTypeId: organizationTypeId,
-        maxTeamsLimit: maxTeamsLimit
+        maxTeamsLimit: maxTeamsLimit,
       }),
     // Обновляем название и максимальное количество команд организации
     updateOrganization: (parent, { name, maxTeamsLimit, id }, { db }, info) =>
       db.Organizations.update(
         {
           name: name,
-          maxTeamsLimit: maxTeamsLimit
+          maxTeamsLimit: maxTeamsLimit,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     // Удаляем организацию
     deleteOrganization: (parent, args, { db }, info) =>
       db.Organizations.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
     deleteTeam: (parent, args, { db }, info) =>
       db.Teams.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
     /*
       [Ниже] Мутации работы с командами (Teams)     
@@ -592,7 +598,7 @@ module.exports = {
         organizationId: organizationId,
         name: name,
         description: description,
-        maxUsersLimit: maxUsersLimit
+        maxUsersLimit: maxUsersLimit,
       }),
 
     /*
@@ -603,7 +609,7 @@ module.exports = {
       db.Notifications.create({
         body: body,
         authorId: authorId,
-        teamId: teamId
+        teamId: teamId,
       }),
     //Изменить оповещение
     updateNotification: (
@@ -618,20 +624,20 @@ module.exports = {
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam
+          forAllTeam: forAllTeam,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     //Удалить оповещение
     deleteNotification: (parent, args, { db }, info) =>
       db.Notifications.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
     /*
       [Ниже] Мутации работы с комментариями (Comments)     
@@ -647,26 +653,26 @@ module.exports = {
         body: body,
         authorId: authorId,
         postId: postId,
-        dateAdd: dateAdd
+        dateAdd: dateAdd,
       }),
     //Изменить комментарий
     updateComment: (parent, { body, id }, { db }, info) =>
       db.Comments.update(
         {
-          body: body
+          body: body,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     //Удалить комментарий
     deleteComment: (parent, args, { db }, info) =>
       db.Comments.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
 
     /*
@@ -676,13 +682,13 @@ module.exports = {
       db.Posts.create({
         body: body,
         authorId: authorId,
-        organizationId: organizationId
+        organizationId: organizationId,
       }),
     deletePost: (parent, args, { db }, info) =>
       db.Posts.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
 
     // ----- //
@@ -696,13 +702,13 @@ module.exports = {
         userId: userId,
         teamId: teamId,
         status: status,
-        roleId: roleId
+        roleId: roleId,
       }),
     deleteUserInTeam: (parent, args, { db }, info) =>
       db.UsersInTeams.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
     /*
       [Ниже] Мутации работы с баллами (PointsOperstion)     
@@ -717,39 +723,39 @@ module.exports = {
       db.PointsOperations.update(
         {
           pointAccountId: pointAccountId,
-          delta: delta
+          delta: delta,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     //Напрямую изменить количество баллов у конкретного пользователя
     updatePoints: (parent, { pointQuantity, id }, { db }, info) =>
       db.PointsOperations.update(
         {
-          pointQuantity: pointQuantity
+          pointQuantity: pointQuantity,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     //Удалить операцию с баллами
     deletePointOperation: (parent, args, { db }, info) =>
       db.PointsOperations.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
     //Удалить счет пользователя
     deletePoints: (parent, args, { db }, info) =>
       db.Points.destroy({
         where: {
-          id: args.id
-        }
+          id: args.id,
+        },
       }),
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
@@ -757,24 +763,24 @@ module.exports = {
     acceptRequst: (parent, { id }, { db }, info) =>
       db.UsersInTeams.update(
         {
-          status: "Принят"
+          status: "Принят",
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
 
     revokeRequst: (parent, { id }, { db }, info) =>
       db.UsersInTeams.update(
         {
-          status: "Не принят"
+          status: "Не принят",
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     /*
@@ -787,22 +793,22 @@ module.exports = {
       info
     ) => {
       let total = await db.Points.findOne({
-        where: { id: pointAccountId }
+        where: { id: pointAccountId },
       });
       db.Points.update(
         {
-          pointQuantity: total.pointQuantity + delta
+          pointQuantity: total.pointQuantity + delta,
         },
         {
           where: {
-            id: pointAccountId
-          }
+            id: pointAccountId,
+          },
         }
       );
       return db.PointsOperations.create({
         pointAccountId: pointAccountId,
         delta: delta,
-        operationDescription: operationDescription
+        operationDescription: operationDescription,
       });
     },
     /*
@@ -822,35 +828,35 @@ module.exports = {
         teamId: teamId,
         userId: userId,
         body: { header: header, text: text, points: points },
-        status: status
+        status: status,
       }),
     updateTask: (parent, { id, status }, { db }, info) =>
       db.Tasks.update(
         {
-          status: status
+          status: status,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     addUserToTask: (parent, { id, userId }, { db }, info) =>
       db.Tasks.update(
         {
-          userId: userId
+          userId: userId,
         },
         {
           where: {
-            id: id
-          }
+            id: id,
+          },
         }
       ),
     deleteTask: (parent, args, { db }, info) =>
       db.Tasks.destroy({
         where: {
-          id: args.id
-        }
-      })
-  }
+          id: args.id,
+        },
+      }),
+  },
 };
