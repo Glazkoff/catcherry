@@ -2,9 +2,9 @@
 <div>
   <h3>Редактирование</h3>
   <hr />
-  <div v-for="team in teams" :key="team.id">
-    <div v-if="team.id==id">
-      <EditForm :team="team" @update="toSaveEditTeam" />
+  <div v-for="t in team" :key="t.id">
+    <div v-if="t.id == id">
+      <EditForm :t="t" @update="toSaveEditTeam" />
     </div>
   </div>
 </div>
@@ -12,25 +12,32 @@
 
 <script>
 import {
-  TEAMS_QUERY,
+  TEAM_IN_ORG_QUERY,
   UPDATE_TEAMS_QUERY
 } from "@/graphql/queries";
 import EditForm from "@/components/manager/EditForm"
 export default {
   apollo: {
-    teams: {
-      query: TEAMS_QUERY
+    // Массив команд организации
+    team: {
+      query: TEAM_IN_ORG_QUERY,
+      variables() {
+        return {
+          organizationId: 1
+        };
+      }
     }
   },
   data() {
     return {
-      id: this.$route.params.id
+      id: this.$route.params.id // id команды
     };
   },
   components: {
     EditForm
   },
   methods: {
+    // Метод для редактирования команды; сохраняет внесенные пользователем изменения
     toSaveEditTeam(name, description, maxUsersLimit) {
       this.$apollo
         .mutate({
@@ -42,14 +49,19 @@ export default {
             maxUsersLimit: maxUsersLimit
           },
           update: cache => {
+            // Записываем в переменную массив команд организации
             let data = cache.readQuery({
-              query: TEAMS_QUERY
+              query: TEAM_IN_ORG_QUERY,
+              variables() {
+                return {
+                  organizationId: 1
+                };
+              }
             });
-            data.teams.find(el => el.id === this.id).name = name;
-            data.teams.find(
-              el => el.id === this.id
-            ).description = description;
-            data.teams.find(
+            // Меняем поля определенной команды
+            data.team.find(el => el.id === this.id).name = name;
+            data.team.find(el => el.id === this.id).description = description;
+            data.team.find(
               el => el.id === this.id
             ).maxUsersLimit = maxUsersLimit;
           }
@@ -65,5 +77,4 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped>
-</style>
+<style lang="scss" scoped></style>

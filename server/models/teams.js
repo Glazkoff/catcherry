@@ -12,16 +12,16 @@ module.exports = (sequelize, DataTypes) => {
       //   foreignKey: "teamId",
       //   as: "customization",
       // });
-      // FIXME: При запросе на добавление оповещения возникает ошибка 
+      // FIXME: При запросе на добавление оповещения возникает ошибка
       //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
-      
+
       Teams.hasMany(models.Notifications, {
         foreignKey: "teamId",
-        as: "notification",
+        as: "notification"
       });
       Teams.belongsTo(models.Organizations, {
         foreignKey: "organizationId",
-        as: "organization",
+        as: "teamOrganization"
       });
       Teams.hasMany(models.Tasks, {
         foreignKey: "teamId",
@@ -31,31 +31,34 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "teamId",
         as: "team"
       });
-
+      Teams.belongsTo(models.Organizations, {
+        foreignKey: "organizationId",
+        as: "organization"
+      });
     }
   }
   Teams.init(
     {
       organizationId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       description: {
         type: DataTypes.TEXT,
-        allowNull: false,
+        allowNull: false
       },
       maxUsersLimit: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "Teams",
+      modelName: "Teams"
     }
   );
   return Teams;

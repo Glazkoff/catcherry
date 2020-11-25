@@ -65,18 +65,6 @@ export const CREATE_TEAM = gql`
   }
 `;
 
-export const TEAM_IN_ORG_QUERY = gql`
-  query($organizationId: Int) {
-    team(organizationId: $organizationId) {
-      id
-      organizationId
-      name
-      description
-      maxUsersLimit
-    }
-  }
-`;
-
 export const DELETE_IN_TEAMS_QUERY = gql`
   mutation($id: ID!) {
     deleteUserInTeam(id: $id)
@@ -291,6 +279,19 @@ export const TEAMS_QUERY = gql`
   }
 `;
 
+export const TEAM_IN_ORG_QUERY = gql`
+  query($organizationId: Int) {
+    team(organizationId: $organizationId) {
+      id
+      organizationId
+      name
+      description
+      maxUsersLimit
+      updatedAt
+    }
+  }
+`;
+
 export const UPDATE_TEAMS_QUERY = gql`
   mutation(
     $name: String!
@@ -313,22 +314,31 @@ export const USERS_IN_TEAMS_QUERY = gql`
     usersInTeams(teamId: $teamId) {
       id
       userId
+      teamId
       status
       roleId
       user {
         id
         name
-        surname
-        patricity
-        gender
-        birthday
-        login
       }
       owner {
         surname
         name
         patricity
       }
+    }
+  }
+`;
+
+export const CREATE_USER_IN_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!, $status: String!, $roleId: ID!) {
+    createUserInTeam(
+      userId: $userId
+      teamId: $teamId
+      status: $status
+      roleId: $roleId
+    ) {
+      id
     }
   }
 `;
@@ -457,6 +467,7 @@ export const RAITING_IN_TEAMS_QUERY = gql`
           pointQuantity
           pointsOperation {
             delta
+            createdAt
           }
         }
       }
@@ -476,12 +487,6 @@ export const TASKS_QUERY = gql`
         points
       }
       status
-      tasksTeam {
-        name
-        team {
-          roleId
-        }
-      }
       tasksUser {
         name
         surname
@@ -494,6 +499,7 @@ export const TASKS_QUERY = gql`
 `;
 export const ADD_TASK_QUERY = gql`
   mutation(
+    $teamId: ID
     $userId: ID
     $header: String
     $text: String
@@ -501,6 +507,7 @@ export const ADD_TASK_QUERY = gql`
     $status: String
   ) {
     createTask(
+      teamId: $teamId
       userId: $userId
       header: $header
       text: $text
@@ -509,11 +516,20 @@ export const ADD_TASK_QUERY = gql`
     ) {
       id
       userId
+      teamId
       body {
         header
         text
+        points
       }
       status
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
     }
   }
 `;
@@ -525,6 +541,48 @@ export const EDIT_TASK_QUERY = gql`
   }
 `;
 
+export const ADD_USER_TO_TASK_QUERY = gql`
+  mutation($id: ID!, $userId: ID) {
+    addUserToTask(id: $id, userId: $userId) {
+      userId
+    }
+  }
+`;
+
+export const BACKLOG_QUERY = gql`
+  query($teamId: ID!) {
+    backlog(teamId: $teamId) {
+      id
+      userId
+      teamId
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const NOTIFICATIONS_USER_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
+    }
+  }
+`;
 export const STATISTICS_NEW_QUERY = gql`
   query statisticsNew {
     statisticsNewUsers

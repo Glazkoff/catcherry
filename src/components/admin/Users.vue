@@ -138,6 +138,7 @@
           <i18n path="loading">{{ $t("loading") }}</i18n
           >...
         </h3>
+        <h4 v-if="queryError">{{ queryError }}</h4>
         <button @click="cancelFullInformation()">
           <i18n path="cancel">{{ $t("cancel") }}</i18n>
         </button>
@@ -229,7 +230,7 @@
             <i18n path="status">{{ $t("status") }}</i18n
             >: {{ team.status }}
           </p>
-          <p>
+          <p v-if="team.role !== null">
             <i18n path="role">{{ $t("role") }}</i18n
             >: {{ team.role.name }}
           </p>
@@ -337,6 +338,9 @@ export default {
     // Получить всю информацию про одного пользователя
     user: {
       query: ONE_USER_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
           id: this.userId
@@ -346,6 +350,9 @@ export default {
     // Получить список всех команд пользователя
     oneUserInTeams: {
       query: ONE_USER_IN_TEAMS_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
           userId: this.userId
@@ -355,6 +362,9 @@ export default {
     // Получить количество баллов пользователя
     getPointsUser: {
       query: GET_POINTS_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
           userId: this.userId
@@ -365,6 +375,7 @@ export default {
   data() {
     return {
       nameOfUser: "",
+      queryError: "",
       isError: false,
       isShowFullInformation: false,
       index: 0,

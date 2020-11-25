@@ -6,7 +6,7 @@ module.exports = (sequelize, DataTypes) => {
       Users.hasMany(models.Organizations, {
         onDelete: "cascade",
         foreignKey: "ownerId",
-        as: "owner",
+        as: "owner"
       });
       // FIXME: При запросе на добавление оповещения возникает ошибка
       //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
@@ -27,6 +27,14 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "userId",
         as: "userPoints"
       });
+      Users.hasMany(models.Posts, {
+        foreignKey: "authorId",
+        as: "posts"
+      });
+      Users.hasMany(models.Comments, {
+        foreignKey: "authorId",
+        as: "author"
+      });
       // Users.hasMany(models.UsersInTeams, {
       //   foreignKey: "id",
       //   as: "userInTeam"
@@ -34,6 +42,14 @@ module.exports = (sequelize, DataTypes) => {
       Users.hasOne(models.Administrators, {
         foreignKey: "userId",
         as: "users"
+      });
+      Users.hasMany(models.LikesOfComments, {
+        foreignKey: "userId",
+        as: "likesCommentsOfUser"
+      });
+      Users.hasMany(models.LikesOfPosts, {
+        foreignKey: "userId",
+        as: "likesPostsOfUser"
       });
     }
   }

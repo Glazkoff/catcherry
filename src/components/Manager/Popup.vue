@@ -11,7 +11,7 @@
               <h3>Профиль участника</h3>
             </slot>
           </div>
-
+          <!-- отображение информации о просматриваемом пользователе  -->
           <div class="modal-body">
             <slot name="body">
               <div>
@@ -23,16 +23,13 @@
                   {{ userInTeam.user.patricity }}
                 </p>
                 <p>Пол: {{ userInTeam.user.gender }}</p>
-                <p>
+                <div>
                   Дата рождения:
-                  {{
-                    new Date(userInTeam.user.birthday).toLocaleString("ru", {
-                      day: "numeric",
-                      month: "long",
-                      year: "numeric"
-                    })
-                  }}
-                </p>
+                  <span v-if="userInTeam.user.birthday">
+                    {{ stampToDate(userInTeam.user.birthday) }}
+                  </span>
+                  <span v-else>Не указана</span>
+                </div>
                 <p>Логин: {{ userInTeam.user.login }}</p>
                 <p>
                   Баллы:
@@ -42,6 +39,7 @@
                 <button @click="editPoints = true" v-if="!editPoints">
                   Управление баллами
                 </button>
+                <!-- форма для начисления или списания баллов  -->
                 <form v-if="editPoints" @submit.prevent="checkForm">
                   <label>Количество баллов</label
                   ><input
@@ -95,6 +93,7 @@ import { GET_POINTS_QUERY, CARGE_POINTS_QUERY } from "@/graphql/queries";
 export default {
   props: ["userInTeam"],
   apollo: {
+    // массив получения баллов пользователя
     getPointsUser: {
       query: GET_POINTS_QUERY,
       variables() {
@@ -116,6 +115,7 @@ export default {
     };
   },
   methods: {
+    // метод начисления баллов пользователю
     toAddPoints(id) {
       this.editPoints = false;
       this.$apollo
@@ -146,6 +146,29 @@ export default {
         .catch(error => {
           console.error(error);
         });
+    },
+    stampToDate(stamp) {
+      console.log(stamp);
+      let a = new Date(+stamp);
+      var months = [
+        "Jan",
+        "Feb",
+        "Mar",
+        "Apr",
+        "May",
+        "Jun",
+        "Jul",
+        "Aug",
+        "Sep",
+        "Oct",
+        "Nov",
+        "Dec"
+      ];
+      var year = a.getFullYear();
+      var month = months[a.getMonth()];
+      var date = a.getDate();
+      var time = date + " " + month + " " + year;
+      return time;
     }
   }
 };
