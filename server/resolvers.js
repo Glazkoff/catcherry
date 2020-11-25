@@ -206,8 +206,14 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "ASC"]] }),
     notification: (parent, args, { db }) =>
       db.Notifications.findOne({ where: { id: args.id } }),
-    posts: (parent, args, { db }) =>
-      db.Posts.findAll({ order: [["id", "ASC"]] }),
+    posts: async (parent, args, { db }) => {
+      let resultOfPosts = db.Posts.findAll({
+        order: [["id", "ASC"]]
+        // include: [{ model: db.LikesOfPosts, as: "likesOfPost" }],
+      });
+      console.log(await resultOfPosts);
+      return resultOfPosts;
+    },
     post: (parent, args, { db }) =>
       db.Posts.findOne({ where: { id: args.id } }),
     getPointsUser: (parent, args, { db }, info) =>
