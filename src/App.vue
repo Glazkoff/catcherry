@@ -25,7 +25,7 @@ export default {
 </script>
 
 <style lang="scss">
-@import "@/styles/_variables.scss";
+@import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
 
 #app {

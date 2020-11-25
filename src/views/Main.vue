@@ -88,11 +88,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-@import "@/styles/_variables.scss";
-
-$topBarHeight: 100px;
-$sideBarWidth: 200px;
-$scrollBarVerticalWidth: 17px;
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
 
 #main-view {
   display: grid;
