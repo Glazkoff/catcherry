@@ -623,10 +623,7 @@ module.exports = {
         body: body,
         authorId: authorId,
         teamId: teamId,
-<<<<<<< HEAD
         forAllUsers: forAllUsers
-=======
->>>>>>> origin/dev
       }),
     //Изменить оповещение
     updateNotification: (
