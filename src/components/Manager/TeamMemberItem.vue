@@ -1,15 +1,20 @@
 <template>
-<div class="user">
-  <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
-  <div>
-    <p>{{ userInTeam.user.name }} {{ userInTeam.user.surname }}</p>
-    <p>{{ userInTeam.status }}</p>
+  <div class="user">
+    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
+    <div>
+      <p>{{ userInTeam.user.name }} {{ userInTeam.user.surname }}</p>
+      <p>{{ userInTeam.status }}</p>
+    </div>
+    <button type="submit" class="btn btn-link" @click="showModal = true">
+      Подробнее
+    </button>
+    <Popup
+      v-if="showModal"
+      @close="showModal = false"
+      :userInTeam="userInTeam"
+      @del="$emit('delete', userInTeam.id)"
+    />
   </div>
-  <button type="submit" class="btn btn-link" @click="showModal = true">
-    Подробнее
-  </button>
-  <Popup v-if="showModal" @close="showModal = false" :userInTeam="userInTeam" @del="$emit('delete', userInTeam.id)" />
-</div>
 </template>
 
 <script>

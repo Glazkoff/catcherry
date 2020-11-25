@@ -1,11 +1,18 @@
 <template>
-<div class="user">
-  <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
-  <p>{{ request.user.name }}</p>
-  <p>{{ request.status }}</p>
-  <button type="submit" @click="showModal = true" class="btn btn-secondary">Подробнее</button>
-  <PopupRequest v-if="showModal" @close="showModal = false" :request="request" @act="$emit('accept', request.id)" />
-</div>
+  <div class="user">
+    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
+    <p>{{ request.user.name }}</p>
+    <p>{{ request.status }}</p>
+    <button type="submit" @click="showModal = true" class="btn btn-secondary">
+      Подробнее
+    </button>
+    <PopupRequest
+      v-if="showModal"
+      @close="showModal = false"
+      :request="request"
+      @act="$emit('accept', request.id)"
+    />
+  </div>
 </template>
 
 <script>
