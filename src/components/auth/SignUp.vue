@@ -9,7 +9,7 @@
         type="text"
         v-model.trim="$v.fullName.$model"
         placeholder="Иванов Иван Иванович"
-        class="formControl"
+        class="form-control"
       />
       <div v-if="$v.fullName.$error" class="error">
         <span v-if="!$v.fullName.required">FullName is required</span>
@@ -44,7 +44,7 @@
         :disabled="signUpLoading"
         v-model.trim="$v.password.$model"
         placeholder="password"
-        class="formControl"
+        class="form-control"
       />
       <div v-if="$v.password.$error" class="error">
         <span v-if="!$v.password.required">Password is required</span>
@@ -61,7 +61,7 @@
       /><br />
       <p>
         Уже есть аккаунт?
-        <router-link tag="a" to="/auth">Войти!</router-link>
+        <router-link tag="a" to="/login ">Войти!</router-link>
       </p>
     </form>
   </div>

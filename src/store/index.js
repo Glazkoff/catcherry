@@ -1,6 +1,6 @@
 import Vue from "vue";
 import Vuex from "vuex";
-import { UPDATE_TOKENS } from "@/graphql/queries.js";
+import { UPDATE_TOKENS, LOG_OUT } from "@/graphql/queries.js";
 import jwt from "jsonwebtoken";
 
 Vue.use(Vuex);
@@ -83,7 +83,7 @@ const store = new Vuex.Store({
                 );
 
                 if (store.$app.$route.path !== "/") {
-                  store.$app.$router.replace({ path: "/" });
+                  store.$app.$router.replace({ name: "FeedOfPosts" });
                 }
 
                 // Никаких ошибок, загрузка завершена
@@ -103,6 +103,62 @@ const store = new Vuex.Store({
         }
         // Если нет отпечатка браузера
         else {
+          state.authError = true;
+          state.authLoading = false;
+          reject();
+        }
+      });
+      return promise;
+    },
+    LOG_OUT: async state => {
+      // Устанавливаю загрузку в приложении
+      state.authLoading = true;
+
+      // Получаю отпечаток браузера
+      const fingerprint = await getFingerprint();
+
+      // Собственный промис с запросом к серверу
+      let promise = new Promise((resolve, reject) => {
+        if (fingerprint) {
+          store.$app.$apollo
+            .mutate({
+              mutation: LOG_OUT,
+              variables: {
+                fingerprint
+              }
+            })
+            .then(resp => {
+              // Если сервер не вернул ответ
+              if (
+                !resp.data.logOut ||
+                resp.data.logOut === null ||
+                resp.data.logOut.error
+              ) {
+                state.authError = true;
+                state.authLoading = false;
+                reject(resp.data.logOut.error);
+              }
+              // Если запрос произошёл удачно
+              else {
+                // Очищаем в store access-токен
+                state.commit("SET_ACCESS_TOKEN", "");
+                if (store.$app.$route.path !== "/login") {
+                  store.$app.$router.replace({ path: "/login" });
+                }
+                // Никаких ошибок, загрузка завершена
+                state.authError = null;
+                state.authLoading = false;
+                // Разрешаю промис
+                resolve(resp.data.logOut);
+              }
+            })
+            .catch(error => {
+              console.warn(error);
+              state.authError = error;
+              state.authLoading = false;
+              reject(error);
+            });
+        } else {
           state.authError = true;
           state.authLoading = false;
           reject();

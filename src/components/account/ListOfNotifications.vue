@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import Notification from "../components/Notification.vue";
+import Notification from "@/components/Notification.vue";
 import { NOTIFICATIONS_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "ListOfNotifications",
@@ -70,14 +70,11 @@ export default {
 <style>
 .list {
   height: 100%;
-  width: 20rem;
+  width: 18rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  position: fixed;
-  z-index: 10;
-  top: 0;
-  right: 0;
+  float: right;
   background: #f7f7f7;
   overflow-x: hidden;
   padding-top: 30px;

@@ -1,24 +1,28 @@
 <template>
   <div class="flexbox">
-    <h1>Лента новостей</h1>
-    <h1 v-if="this.$apollo.queries.posts.loading">Это лоадер</h1>
-    <div v-else>
-      <div v-if="!this.isEmpty">
-        <non-detailed-post
-          @like="onLike"
-          @comment="onComment"
-          v-for="post in posts"
-          :key="post.id"
-          :post="post"
-        ></non-detailed-post>
+    <div class="doubleColumn">
+      <h1>Лента новостей</h1>
+      <h1 v-if="this.$apollo.queries.posts.loading">Это лоадер</h1>
+      <div v-else>
+        <div v-if="!this.isEmpty">
+          <non-detailed-post
+            @like="onLike"
+            @comment="onComment"
+            v-for="post in posts"
+            :key="post.id"
+            :post="post"
+          ></non-detailed-post>
+        </div>
+        <h2 v-else>Постов пока нет, мне очень жаль</h2>
       </div>
-      <h2 v-else>Постов пока нет, мне очень жаль</h2>
     </div>
+    <list-of-notifications></list-of-notifications>
   </div>
 </template>
 
 <script>
-import NonDetailedPost from "../components/NonDetailedPost.vue";
+import NonDetailedPost from "@/components/NonDetailedPost.vue";
+import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import { POSTS_QUERY } from "@/graphql/queries";
 // import { CREATE_LIKE_OF_POST } from "@/graphql/queries";
 export default {
@@ -39,10 +43,11 @@ export default {
       if (this.$store.getters.decodedToken != null) {
         return this.$store.getters.decodedToken.id;
       } else return null;
-    },
+    }
   },
   components: {
-    NonDetailedPost
+    NonDetailedPost,
+    ListOfNotifications
   },
   data() {
     return {};
@@ -91,5 +96,9 @@ export default {
   display: flex;
   flex-direction: column;
   align-items: center;
+  padding: 30px;
+}
+.doubleColumn {
+  display: flex;
 }
 </style>

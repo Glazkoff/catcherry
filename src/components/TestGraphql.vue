@@ -1,23 +1,32 @@
 <template>
   <div>
+    <router-link :to="{ name: 'TeamList' }">Панель менеджера</router-link>
     <h4>Тестовый Graphql компонент</h4>
     <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>
-    <div v-if="editUser.isEdit">
-      <label for="editUserName"
-        >Редактирование пользователя #{{ editUser.id }}
-        <input
-          id="editUserName"
-          type="text"
-          placeholder="Введите имя"
-          v-model="editUser.name"
-        />
-      </label>
-      <button class="primary" @click="toSaveEditUser()">Сохранить</button>
+    <label class="box-label">
+      <input type="checkbox" id="checkbox" checked="" />
+      <span class="box"></span>
+      Нажмите сюда!
+    </label>
+    <div v-if="editUser.isEdit" class="form-group">
+      <label for="editUserName" class="form-name"
+        >Редактирование пользователя #{{ editUser.id }}</label
+      >
+      <input
+        id="editUserName"
+        type="text"
+        placeholder="Введите имя"
+        v-model="editUser.name"
+        class="form-control"
+      />
+      <button class="btn btn-primary" @click="toSaveEditUser()">
+        Сохранить
+      </button>
     </div>
     <div v-else>
       <input type="text" placeholder="Введите имя" v-model="newUser" />
-      <button class="primary block" @click="toAddUser()">Добавить</button>
+      <button class="btn btn-alternate" @click="toAddUser()">Добавить</button>
     </div>
     <table>
       <tr>
@@ -38,10 +47,20 @@
         <td>{{ $d(user.createdAt, "long") }}</td>
         <td>{{ $d(user.updatedAt, "long") }}</td>
         <td v-if="user.isEdit">
-          <button class="primary" @click="toSaveEditUser(user.id)">Сохранить</button>
+          <button class="btn btn-primary" @click="toSaveEditUser(user.id)">
+            Сохранить
+          </button>
         </td>
-        <td><button class="primary" @click="toEditUser(user.id)">Редактировать</button></td>
-        <td><button class="alternate" @click="toDeleteUser(user.id)">Удалить</button></td>
+        <td>
+          <button class="btn btn-primary" @click="toEditUser(user.id)">
+            Редактировать
+          </button>
+        </td>
+        <td>
+          <button class="btn btn-alternate" @click="toDeleteUser(user.id)">
+            Удалить
+          </button>
+        </td>
       </tr>
     </table>
   </div>
@@ -173,6 +192,7 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_classes.scss";
 table {
   border-spacing: 0px;
   td {

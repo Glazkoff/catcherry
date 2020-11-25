@@ -20,7 +20,7 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
-import ListOfNotifications from "@/components/ListOfNotifications.vue";
+import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import TeamMembers from "@/components/manager/TeamMembers.vue";
 import RaitingList from "@/components/manager/RaitingList.vue";
 import EditTeam from "@/components/manager/EditTeam.vue";
@@ -30,7 +30,7 @@ import TeamList from "@/components/manager/TeamList.vue";
 import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
-import FeedOfPosts from "@/components/FeedOfPosts.vue";
+import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
@@ -42,7 +42,6 @@ Vue.use(VueRouter);
 const routes = [
   {
     path: "/",
-    name: "Main",
     component: Main,
     meta: {
       requiresAuth: true
@@ -55,82 +54,162 @@ const routes = [
           main: Home,
           sidebar: SideBarDefault
         }
-      }
-    ]
-  },
-  {
-    path: "/user/:id",
-    name: "User",
-    component: User,
-    children: [
-      {
-        path: "",
-        name: "Account",
-        component: Account
       },
       {
-        path: "user_org",
-        name: "UserInOrganization",
-        component: UserInOrganization
+        path: "/feed",
+        name: "FeedOfPosts",
+        components: {
+          main: FeedOfPosts,
+          sidebar: SideBarDefault
+        }
       },
       {
-        path: "list_req",
-        name: "ListReguest",
-        component: ListRequest
+        path: "/manager/teams",
+        name: "TeamList",
+        components: {
+          main: TeamList,
+          sidebar: SideBarDefault
+        }
       },
       {
-        path: "tasks",
-        name: "Tasks",
-        component: Tasks
+        path: "/manager/teams/:id",
+        name: "TeamSettings",
+        components: {
+          main: TeamSettings,
+          sidebar: SideBarDefault
+        },
+        props: true,
+        children: [
+          {
+            path: "team_members",
+            name: "TeamMembers",
+            component: TeamMembers
+          },
+          {
+            path: "raiting",
+            name: "RaitingList",
+            component: RaitingList
+          },
+          {
+            path: "team_edit",
+            name: "EditTeam",
+            component: EditTeam
+          },
+          {
+            path: "requests",
+            name: "RequestsList",
+            component: RequestsList
+          },
+          {
+            path: "tasks",
+            name: "TasksTeam",
+            component: TasksTeam
+          }
+        ]
       },
       {
-        path: "points",
+        path: "/user/:id",
+        components: {
+          main: User,
+          sidebar: SideBarDefault
+        },
+        children: [
+          {
+            path: "",
+            name: "Account",
+            component: Account
+          },
+          {
+            path: "user_org",
+            name: "UserInOrganization",
+            component: UserInOrganization
+          },
+          {
+            path: "list_req",
+            name: "ListReguest",
+            component: ListRequest
+          },
+          {
+            path: "tasks",
+            name: "Tasks",
+            component: Tasks
+          },
+          {
+            path: "points",
+            name: "PointsUser",
+            component: PointsUser
+          },
+          {
+            path: "/posts/:id",
+            name: "Posts",
+            component: DetailedPost
+          }
+        ]
+      },
+      {
+        path: "/admin",
+        name: "AdminPanel",
+        components: {
+          main: AdminPanel,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          requiresAuth: true
+        },
+        children: [
+          {
+            path: "",
+            name: "Dashboard",
+            component: Dashboard
+          },
+          {
+            path: "users",
+            name: "Users",
+            component: Users
+          },
+          {
+            path: "organizations",
+            name: "Organization",
+            component: Organization
+          }
+        ]
+      },
+      {
+        path: "/createpost",
+        name: "CreatePost",
+        components: {
+          main: CreatePost,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/notification",
+        name: "ListOfNotifications",
+        components: {
+          main: ListOfNotifications,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/posts/:id",
+        name: "Posts",
+        components: {
+          main: DetailedPost,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/points",
         name: "PointsUser",
-        component: PointsUser
+        components: {
+          main: PointsUser,
+          sidebar: SideBarDefault
+        }
       }
     ]
-  },
-  {
-    path: "/admin",
-    name: "Admin",
-    component: AdminPanel,
-    meta: {
-      requiresAuth: true
-    },
-    // TODO: добавить защиту для администратора
-    children: [
-      {
-        path: "",
-        component: Dashboard
-      },
-      {
-        path: "users",
-        component: Users
-      },
-      {
-        path: "organizations",
-        component: Organization
-      }
-    ]
-  },
-  {
-    path: "/account",
-    name: "Account",
-    component: Account
-  },
-  {
-    path: "/user_org",
-    name: "UserInOrganization",
-    component: UserInOrganization
-  },
-  {
-    path: "/list_req",
-    name: "ListReguest",
-    component: ListRequest
   },
   {
     path: "/login",
-    name: "LogIn",
     components: {
       default: Auth,
       form: LogIn
@@ -138,6 +217,7 @@ const routes = [
     children: [
       {
         path: "",
+        name: "LogIn",
         components: {
           form: LogIn
         }
@@ -157,69 +237,6 @@ const routes = [
     meta: {
       guest: true
     }
-  },
-  {
-    path: "/createpost",
-    name: "CreatePost",
-    component: CreatePost
-  },
-  {
-    path: "/notification",
-    name: "ListOfNotifications",
-    component: ListOfNotifications
-  },
-  {
-    path: "/manager/teams",
-    name: "TeamList",
-    component: TeamList
-  },
-  {
-    path: "/manager/teams/:id",
-    name: "TeamSettings",
-    component: TeamSettings,
-    props: true,
-    children: [
-      {
-        path: "team_members",
-        name: "TeamMembers",
-        component: TeamMembers
-      },
-      {
-        path: "raiting",
-        name: "RaitingList",
-        component: RaitingList
-      },
-      {
-        path: "team_edit",
-        name: "EditTeam",
-        component: EditTeam
-      },
-      {
-        path: "requests",
-        name: "RequestsList",
-        component: RequestsList
-      },
-      {
-        path: "tasks",
-        name: "TasksTeam",
-        component: TasksTeam
-      }
-    ]
-  },
-  {
-    path: "/posts/:id",
-    name: "Posts",
-    component: DetailedPost
-  },
-  {
-    path: "/feed",
-    name: "FeedOfPosts",
-    component: FeedOfPosts
-  },
-  {
-    path: "/points",
-    name: "PointsUser",
-    component: PointsUser
   }
   // {
   //   path: "/about",

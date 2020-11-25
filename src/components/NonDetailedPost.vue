@@ -108,13 +108,13 @@ export default {
 
 <style scoped>
 .container {
-  width: 56rem;
+  width: 45rem;
   height: 17rem;
   background: #ffffff;
   box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
     0px 20px 32px rgba(96, 97, 112, 0.24);
   border-radius: 0.5rem;
-  margin-bottom: 4rem;
+  margin-bottom: 16px;
   display: grid;
   grid-template-rows: 1fr;
   grid-template-columns: 2fr 3fr;
