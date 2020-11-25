@@ -2,9 +2,11 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Home from "@/views/Home.vue";
+import Main from "@/views/Main.vue";
 
-import Authentication from "@/views/Authentication.vue";
-import Registration from "@/views/Registration.vue";
+import Auth from "@/views/Auth.vue";
+import SignUp from "@/components/auth/SignUp.vue";
+import LogIn from "@/components/auth/LogIn.vue";
 
 import AdminPanel from "@/views/AdminPanel.vue";
 import Dashboard from "@/components/admin/Dashboard.vue";
@@ -31,35 +33,31 @@ import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
 
+import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
+
 import store from "@/store/index";
 
 Vue.use(VueRouter);
 
-// import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
-
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    name: "Main",
+    component: Main,
     meta: {
       requiresAuth: true
-    }
-    // beforeEnter: ifAuthenticated
-  },
-  // FIXME: [Фёдор]
-  /*
-    * Возможно, стоит рассмотреть следующий вариант:
-    path: "/users",
-    name: "User",
-    component: User,
+    },
     children: [
       {
-        path: "/:id",
-        name: "Account",
-        component: Account,
-      },
-  */
+        path: "",
+        name: "Home",
+        components: {
+          main: Home,
+          sidebar: SideBarDefault
+        }
+      }
+    ]
+  },
   {
     path: "/user/:id",
     name: "User",
@@ -131,24 +129,35 @@ const routes = [
     component: ListRequest
   },
   {
-    path: "/auth",
-    name: "Authentication",
-    component: Authentication,
+    path: "/login",
+    name: "LogIn",
+    components: {
+      default: Auth,
+      form: LogIn
+    },
+    children: [
+      {
+        path: "",
+        components: {
+          form: LogIn
+        }
+      }
+    ],
     meta: {
       guest: true
     }
-    // beforeEnter: ifNotAuthenticated
   },
   {
-    path: "/registration",
-    name: "Registration",
-    component: Registration,
+    path: "/signup",
+    name: "SignUp",
+    components: {
+      default: Auth,
+      form: SignUp
+    },
     meta: {
       guest: true
     }
-    // beforeEnter: ifNotAuthenticated
   },
-
   {
     path: "/createpost",
     name: "CreatePost",

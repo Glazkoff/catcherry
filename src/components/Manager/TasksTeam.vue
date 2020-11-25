@@ -98,7 +98,7 @@ import {
   EDIT_TASK_QUERY,
   CARGE_POINTS_QUERY
 } from "@/graphql/queries";
-import minialert from "@/components/account/MiniAlert.vue";
+import minialert from "@/components/MiniAlert.vue";
 
 export default {
   components: { minialert },

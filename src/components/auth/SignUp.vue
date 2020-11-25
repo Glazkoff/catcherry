@@ -77,7 +77,7 @@ import { SIGN_UP } from "@/graphql/queries.js";
 
 export default {
   // TODO: добавить защиту роутов
-  name: "Registration",
+  name: "SignUp",
   data() {
     return {
       fullName: "",
