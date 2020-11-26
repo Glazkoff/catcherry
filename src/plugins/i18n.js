@@ -10,6 +10,11 @@ const dateTimeFormats = {
       month: "short",
       day: "numeric"
     },
+    number: {
+      year: "numeric",
+      month: "numeric",
+      day: "numeric"
+    },
     long: {
       year: "numeric",
       month: "short",
@@ -23,6 +28,11 @@ const dateTimeFormats = {
     short: {
       year: "numeric",
       month: "short",
+      day: "numeric"
+    },
+    number: {
+      year: "numeric",
+      month: "numeric",
       day: "numeric"
     },
     long: {

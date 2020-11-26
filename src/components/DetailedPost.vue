@@ -1,6 +1,8 @@
 <template>
   <div class="container">
-    <div class="post">
+    <h1 v-if="this.$apollo.queries.post.loading">Это лоадер</h1>
+      
+    <div v-else class="post">
       <div class="imageContainer">
         <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
       </div>
@@ -9,7 +11,7 @@
           {{ post.body.header }}
         </h1>
         <p class="infoDate">
-          {{ $d(post.createdAt, "short") }}
+          {{ $d(post.createdAt, "number") }}
         </p>
         <p class="infoBody">
           {{ post.body.text }}
@@ -115,7 +117,9 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
 .container {
   display: flex;
   justify-content: center;

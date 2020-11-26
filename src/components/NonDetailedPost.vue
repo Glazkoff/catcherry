@@ -5,65 +5,68 @@
     </div>
     <div class="infoContainer">
       <router-link
-        tag="p"
+        tag="h2"
         :to="{ name: 'Posts', params: { id: post.id } }"
         class="heading"
         >{{ post.body.header }}</router-link
       >
-      <p class="infoDate">
-        {{ $d(post.createdAt, "short") }}
-      </p>
-      <p class="infoBody">
+      <small class="infoBody">
         {{ post.body.text }}
-      </p>
+      </small>
 
+      <small class="infoDate">
+        {{ $d(post.createdAt, "number") }}
+      </small>
       <div class="iconContainer">
         <div class="iconAndNumber">
           <div class="icon" v-on:click="onLike(post.id)">
             <svg
-              aria-hidden="true"
-              focusable="false"
-              data-prefix="fas"
-              data-icon="heart"
-              role="img"
+              v-if="!isLikedByUser"
+              width="18"
+              height="18"
+              viewBox="0 1 18 16"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-              class="svg-inline--fa fa-heart fa-w-16 fa-3x"
             >
               <path
-                v-if="!isLikedByUser"
-                fill="#C4C4C4"
-                d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
-              ></path>
+                d="M8.9999 1.8291C8.0919 0.994182 6.90341 0.530801 5.6699 0.530762C5.01702 0.531441 4.37071 0.661228 3.76818 0.912652C3.16565 1.16408 2.61879 1.53217 2.15907 1.99576C0.198236 3.96493 0.199069 7.04493 2.16074 9.00576L8.27074 15.1158C8.4124 15.3649 8.68574 15.5258 8.9999 15.5258C9.1289 15.5245 9.25581 15.493 9.37043 15.4338C9.48505 15.3746 9.5842 15.2894 9.6599 15.1849L15.8391 9.00576C17.8007 7.0441 17.8007 3.96493 15.8374 1.99243C15.3779 1.52969 14.8315 1.16234 14.2295 0.911498C13.6276 0.660653 12.982 0.531261 12.3299 0.530762C11.0964 0.530963 9.90799 0.994322 8.9999 1.8291ZM14.6591 3.17076C15.9616 4.47993 15.9624 6.52493 14.6607 7.82743L8.9999 13.4883L3.33907 7.82743C2.0374 6.52493 2.03824 4.47993 3.3374 3.1741C3.97074 2.5441 4.79907 2.19743 5.6699 2.19743C6.54074 2.19743 7.36574 2.5441 7.99407 3.17243L8.41074 3.5891C8.48806 3.66655 8.5799 3.728 8.68099 3.76992C8.78209 3.81185 8.89046 3.83343 8.9999 3.83343C9.10935 3.83343 9.21772 3.81185 9.31881 3.76992C9.41991 3.728 9.51175 3.66655 9.58907 3.5891L10.0057 3.17243C11.2657 1.91493 13.4007 1.91826 14.6591 3.17076Z"
+                fill="white"
+              />
+            </svg>
+
+            <svg
+              v-else
+              width="18"
+              height="18"
+              viewBox="1 2 18 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
               <path
-                v-else
-                fill="#ED4C67"
-                d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
-              ></path>
+                d="M16.8375 3.9925C16.378 3.52976 15.8316 3.16241 15.2296 2.91157C14.6277 2.66072 13.9821 2.53133 13.33 2.53083C12.0965 2.53103 10.9081 2.99439 9.99999 3.82917C9.09199 2.99425 7.9035 2.53087 6.66999 2.53083C6.01711 2.53151 5.37081 2.6613 4.76827 2.91272C4.16574 3.16415 3.61888 3.53225 3.15916 3.99583C1.19833 5.965 1.19916 9.045 3.16083 11.0058L9.99999 17.845L16.8392 11.0058C18.8008 9.045 18.8017 5.965 16.8375 3.9925V3.9925Z"
+                fill="white"
+              />
             </svg>
           </div>
-          <span class="numOfIcon">{{ post.likesOfPost.length }}</span>
+          <p class="numOfIcon">{{ post.likesOfPost.length }}</p>
         </div>
 
         <div class="iconAndNumber">
-          <div class="icon" v-on:click="onComment(post.id)">
+          <div class="icon" v-on:click="onLink(post.id)">
             <svg
-              aria-hidden="true"
-              focusable="false"
-              data-prefix="fas"
-              data-icon="comment"
-              role="img"
+              width="18"
+              height="18"
+              viewBox="0 0 18 18"
+              fill="none"
               xmlns="http://www.w3.org/2000/svg"
-              viewBox="0 0 512 512"
-              class="svg-inline--fa fa-comment fa-w-16 fa-3x"
             >
               <path
-                fill="#C4C4C4"
-                d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32z"
-              ></path>
+                d="M15.6665 0.666504H2.33317C1.414 0.666504 0.666504 1.414 0.666504 2.33317V17.3332L5.11067 13.9998H15.6665C16.5857 13.9998 17.3332 13.2523 17.3332 12.3332V2.33317C17.3332 1.414 16.5857 0.666504 15.6665 0.666504ZM15.6665 12.3332H4.55567L2.33317 13.9998V2.33317H15.6665V12.3332Z"
+                fill="white"
+              />
             </svg>
           </div>
-          <span class="numOfIcon">3</span>
+          <p class="numOfIcon">3</p>
         </div>
       </div>
     </div>
@@ -95,10 +98,6 @@ export default {
     onLike(id) {
       this.$emit("like", { id: id, isLikedByUser: this.isLikedByUser });
     },
-
-    onComment(id) {
-      this.$emit("comment", { id: id });
-    },
     onLink(id) {
       this.$router.push({ name: "Posts", params: { id: id } });
     }
@@ -106,83 +105,84 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+
 .container {
-  width: 45rem;
-  height: 17rem;
-  background: #ffffff;
-  box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
-    0px 20px 32px rgba(96, 97, 112, 0.24);
-  border-radius: 0.5rem;
-  margin-bottom: 16px;
+  background: $violet;
+  border-radius: 0.625rem;
+  width: 44rem;
+  height: 19rem;
+  margin-bottom: 1rem;
   display: grid;
   grid-template-rows: 1fr;
-  grid-template-columns: 2fr 3fr;
+  grid-template-columns: 4fr 5fr;
 }
 
 .imageContainer img {
-  width: auto;
-  border-top-left-radius: 0.5rem;
-  border-bottom-left-radius: 0.5rem;
-  height: 17rem;
+  width: 100%;
+  border-top-left-radius: 0.625rem;
+  border-bottom-left-radius: 0.625rem;
+  height: 19rem;
   cursor: pointer;
 }
 
 .infoContainer {
-  padding: 2rem 3.5rem;
+  padding-top: 3rem;
+  padding-right: 3rem;
+  padding-bottom: 2.25rem;
+  padding-left: 2.25rem;
   position: relative;
 }
 
 .heading {
   cursor: pointer;
+  color: $white;
   margin-top: 0;
-  margin-bottom: 0.7rem;
-  font-weight: bold;
-  font-size: 1.15rem;
-  line-height: 1.4rem;
-  color: #613490;
+  margin-bottom: 2rem;
 }
 
-.infoDate,
-.infoBody {
-  font-size: 0.8rem;
-  line-height: 1rem;
-  color: #4c235b;
+.infoDate {
+  color: $gray_3;
 }
 
 .infoBody {
   width: 100%;
+  color: $gray_3;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
   -webkit-line-clamp: 4;
-  line-height: 1.2rem;
-  max-height: 5rem;
+  max-height: 4.25rem;
 }
 
 .iconContainer {
   display: flex;
   position: absolute;
-  bottom: 32px;
+  bottom: 36px;
 }
 
 .iconAndNumber {
   display: flex;
-  margin-right: 2rem;
   align-items: center;
 }
 
+.iconAndNumber:first-child {
+  margin-right: 2.8rem;
+}
+
 .numOfIcon {
-  font-size: 0.8rem;
-  line-height: 0.8rem;
-  color: #000000;
+  display: inline;
+  color: $white;
 }
 
 .icon {
-  width: 1.8rem;
-  height: 1.8rem;
+  width: 1.25rem;
+  height: 1.25rem;
   cursor: pointer;
-  margin-right: 0.7rem;
+  margin-left: 0;
+  margin-right: 0.3rem;
 }
 </style>

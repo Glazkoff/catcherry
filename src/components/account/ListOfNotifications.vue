@@ -70,7 +70,7 @@ export default {
 <style>
 .list {
   height: 100%;
-  width: 18rem;
+  width: 30rem;
   display: flex;
   flex-direction: column;
   align-items: center;

@@ -1,19 +1,18 @@
 <template>
-  <div class="flexbox">
-    <div class="doubleColumn">
-      <h1>Лента новостей</h1>
+  <div class="doubleColumn">
+    <div class="flexbox">
+      <h2>Лента новостей</h2>
       <h1 v-if="this.$apollo.queries.posts.loading">Это лоадер</h1>
       <div v-else>
         <div v-if="!this.isEmpty">
           <non-detailed-post
             @like="onLike"
-            @comment="onComment"
             v-for="post in posts"
             :key="post.id"
             :post="post"
           ></non-detailed-post>
         </div>
-        <h2 v-else>Постов пока нет, мне очень жаль</h2>
+        <h3 v-else>Постов пока нет, мне очень жаль</h3>
       </div>
     </div>
     <list-of-notifications></list-of-notifications>
@@ -122,14 +121,18 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+
 .flexbox {
   display: flex;
+  padding: 3rem;
   flex-direction: column;
-  align-items: center;
-  padding: 30px;
+  
 }
 .doubleColumn {
   display: flex;
+  justify-content: space-between;
 }
 </style>
