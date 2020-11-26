@@ -4,16 +4,13 @@
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
-            <slot name="header"></slot>
-          </div>
-          <div class="modal-exit">
-            <slot name="exit"></slot>
+            <h2><slot name="header"></slot></h2>
           </div>
           <div class="modal-body">
-            <slot name="body"></slot>
+            <slot name="body"> </slot>
           </div>
           <div class="modal-footer">
-            <slot name="footer"></slot>
+            <slot name="action"> </slot>
           </div>
         </div>
       </div>
@@ -22,27 +19,28 @@
 </template>
 
 <script>
-export default {};
+export default {
+  props: ["user"]
+};
 </script>
 
 <style lang="scss" scoped>
 .modal-mask {
   position: fixed;
-  z-index: 15000;
+  z-index: 9998;
   top: 0;
   left: 0;
   width: 100%;
   height: 100%;
   background-color: rgba(0, 0, 0, 0.5);
   display: table;
-  transition: opacity 0.3s ease;
+  transition: opacity 0.5s ease;
 }
-
 .modal-wrapper {
   display: table-cell;
   vertical-align: middle;
+  transition: opacity 0.5s ease;
 }
-
 .modal-container {
   width: 50vw;
   margin: 0px auto;
@@ -50,36 +48,22 @@ export default {};
   background-color: #fff;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
-  transition: all 0.3s ease;
-  max-height: 90vh;
-  overflow-y: scroll;
-  position: relative;
+  transition: all 0.5s ease;
 }
-
 .modal-header {
   margin-top: 0;
-  text-align: center;
+  h2 {
+    text-align: center;
+  }
 }
-
-.modal-exit {
-  position: absolute;
-  right: 2%;
-  top: 2%;
-  cursor: pointer;
-}
-
-.modal-exit:hover {
-  font-weight: 900;
-}
-
 .modal-body {
   margin: 20px 0;
+  height: 20em;
+  overflow-y: scroll;
 }
-
 .modal-enter {
   opacity: 0;
 }
-
 .modal-footer {
   display: flex;
   justify-content: space-between;
@@ -88,11 +72,9 @@ export default {};
     margin: 0 5%;
   }
 }
-
 .modal-leave-active {
   opacity: 0;
 }
-
 .modal-enter .modal-container,
 .modal-leave-active .modal-container {
   -webkit-transform: scale(1.1);

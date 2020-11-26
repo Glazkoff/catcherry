@@ -172,6 +172,38 @@ const routes = [
             component: Organization
           }
         ]
+      },
+      {
+        path: "/createpost",
+        name: "CreatePost",
+        components: {
+          main: CreatePost,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/notification",
+        name: "ListOfNotifications",
+        components: {
+          main: ListOfNotifications,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/posts/:id",
+        name: "Posts",
+        components: {
+          main: DetailedPost,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/points",
+        name: "PointsUser",
+        components: {
+          main: PointsUser,
+          sidebar: SideBarDefault
+        }
       }
     ]
   },
@@ -210,16 +242,6 @@ const routes = [
     meta: {
       guest: true
     }
-  },
-  {
-    path: "/createpost",
-    name: "CreatePost",
-    component: CreatePost
-  },
-  {
-    path: "/notification",
-    name: "ListOfNotifications",
-    component: ListOfNotifications
   }
   // {
   //   path: "/about",
