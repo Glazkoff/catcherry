@@ -212,7 +212,6 @@ module.exports = {
         order: [["id", "ASC"]]
         // include: [{ model: db.LikesOfPosts, as: "likesOfPost" }],
       });
-      console.log(await resultOfPosts);
       return resultOfPosts;
     },
     post: (parent, args, { db }) =>
