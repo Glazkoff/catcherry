@@ -97,6 +97,7 @@ export const i18n = new VueI18n({
       requiredNumber: "This field must contain only numbers",
       requiredLetters: "This field must contain only letters",
       requredSomeSymbols: "This field must have at least {{ num }} letters",
+      reuiredEmail: "This field must be an email",
       male: "Male",
       female: "Female",
       adminPanel: "Admin panel",
@@ -126,6 +127,18 @@ export const i18n = new VueI18n({
         buttonSubmit: "Log in",
         noAccountQuestion: "Don't have an account?",
         signUpLink: "Sign up!"
+      },
+      signUp: {
+        title: "Sign up",
+        fullName: "Full name",
+        fullNamePlaceholder: "Enter full name",
+        login: "Login",
+        loginPlaceholder: "Enter login",
+        password: "Password",
+        passwordPlaceholder: "Enter password",
+        buttonSubmit: "Sign up",
+        accountQuestion: "Already have an account?",
+        logInLink: "Log in!"
       },
       markRequiredField: "* - required field"
     },
@@ -182,9 +195,10 @@ export const i18n = new VueI18n({
       editTeam: "Редактировать команду",
       required: "Данное поле является обязательным",
       requiredNumber: "Данное поле должно содержать только цифры",
-      requiredLetters: "Данное поле должно содержать только цифры",
+      requiredLetters: "Данное поле должно содержать только символы алфавита",
       requredSomeSymbols:
         "Данное поле должно сожержать как минимум {num} символов",
+      reuiredEmail: "Данное поле должно содержать только email",
       male: "Мужской",
       female: "Женский",
       adminPanel: "Административная панель",
@@ -214,6 +228,18 @@ export const i18n = new VueI18n({
         buttonSubmit: "Войти",
         noAccountQuestion: "Нет аккаунта?",
         signUpLink: "Зарегистрироваться!"
+      },
+      signUp: {
+        title: "Регистрация",
+        fullName: "Фамилия Имя Отчество",
+        fullNamePlaceholder: "Введите полное имя",
+        login: "Логин",
+        loginPlaceholder: "Введите логин",
+        password: "Пароль",
+        passwordPlaceholder: "Введите пароль",
+        buttonSubmit: "Зарегистрироваться",
+        accountQuestion: "Уже есть аккаунт?",
+        logInLink: "Войти!"
       },
       markRequiredField: "* - обязательное поле"
     }
