@@ -2,7 +2,10 @@
   <div>
     <div class="side-bar__nav-list">
       <router-link
-        :to="{ name: 'Account' }"
+        :to="{
+          name: 'Account',
+          params: { id: $store.getters.decodedToken.id }
+        }"
         :exact="true"
         active-class="nav-checked"
       >

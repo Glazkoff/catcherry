@@ -133,16 +133,6 @@ const routes = [
             path: "tasks",
             name: "Tasks",
             component: Tasks
-          },
-          {
-            path: "points",
-            name: "PointsUser",
-            component: PointsUser
-          },
-          {
-            path: "/posts/:id",
-            name: "Posts",
-            component: DetailedPost
           }
         ]
       },
