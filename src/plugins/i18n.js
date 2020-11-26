@@ -96,13 +96,38 @@ export const i18n = new VueI18n({
       required: "This field is required",
       requiredNumber: "This field must contain only numbers",
       requiredLetters: "This field must contain only letters",
+      requredSomeSymbols: "This field must have at least {{ num }} letters",
       male: "Male",
       female: "Female",
       adminPanel: "Admin panel",
       numberOfPoints: "Number of points",
       editNumberOfPoints: "Edit number of points",
       saveNumberOfPoints: "Save number of points",
-      role: "Role"
+      role: "Role",
+      sideBar: {
+        profile: "Profile",
+        organization: "Organization",
+        newsFeed: "News",
+        personalStatistics: "Your statistics",
+        points: "Points",
+        tasks: "Tasks",
+        managersPanel: "Manager's board",
+        adminPanel: "Administrator's board",
+        settings: "Settings",
+        quit: "Quit"
+      },
+      logIn: {
+        title: "Entering Catcherry",
+        loginPasswordError: "Login or password entered error!",
+        login: "Login",
+        loginInputPlaceholder: "Enter login",
+        password: "Password",
+        passwordInputPlaceholder: "Enter password",
+        buttonSubmit: "Log in",
+        noAccountQuestion: "Don't have an account?",
+        signUpLink: "Sign up!"
+      },
+      markRequiredField: "* - required field"
     },
     ru: {
       welcomeMsg: "Привет, Поливеб!",
@@ -158,13 +183,39 @@ export const i18n = new VueI18n({
       required: "Данное поле является обязательным",
       requiredNumber: "Данное поле должно содержать только цифры",
       requiredLetters: "Данное поле должно содержать только цифры",
+      requredSomeSymbols:
+        "Данное поле должно сожержать как минимум {num} символов",
       male: "Мужской",
       female: "Женский",
       adminPanel: "Административная панель",
       numberOfPoints: "Количество баллов",
       editNumberOfPoints: "Изменить количество баллов",
       saveNumberOfPoints: "Сохранить количество баллов",
-      role: "Роль"
+      role: "Роль",
+      sideBar: {
+        profile: "Профиль",
+        organization: "Организация",
+        newsFeed: "Лента новостей",
+        personalStatistics: "Личная статистика",
+        points: "Баллы",
+        tasks: "Задания",
+        managersPanel: "Панель менеджера",
+        adminPanel: "Панель администратора",
+        settings: "Настройки",
+        quit: "Выход"
+      },
+      logIn: {
+        title: "Вход в Catcherry",
+        loginPasswordError: "Ошибка ввода логина или пароля!",
+        login: "Логин",
+        loginInputPlaceholder: "Введите логин",
+        password: "Пароль",
+        passwordInputPlaceholder: "Введите пароль",
+        buttonSubmit: "Войти",
+        noAccountQuestion: "Нет аккаунта?",
+        signUpLink: "Зарегистрироваться!"
+      },
+      markRequiredField: "* - обязательное поле"
     }
   }
 });

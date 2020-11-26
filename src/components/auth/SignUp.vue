@@ -1,70 +1,77 @@
 <template>
-  <div>
-    <form @submit.prevent="submit">
-      <h1>Регистрация</h1>
-      <p>* - обязательное поле</p>
-      <label>Фамилия Имя Отчество</label><br />
-      <input
-        :disabled="signUpLoading"
-        type="text"
-        v-model.trim="$v.fullName.$model"
-        placeholder="Иванов Иван Иванович"
-        class="form-control"
-      />
-      <div v-if="$v.fullName.$error" class="error">
-        <span v-if="!$v.fullName.required">FullName is required</span>
-        <span v-else-if="!$v.fullName.alpha"
-          >FullName accepts only alphabet characters.</span
-        >
-      </div>
-      <br />
-      <!-- TODO: добавить обработку даты рождения -->
-      <!-- <label>Дата рождения</label><br />
+  <form class="form-auth" @submit.prevent="submit">
+    <h1>Регистрация</h1>
+    <p>* - обязательное поле</p>
+    <label>Фамилия Имя Отчество</label><br />
+    <input
+      :disabled="signUpLoading"
+      type="text"
+      v-model.trim="$v.fullName.$model"
+      placeholder="Иванов Иван Иванович"
+      class="form-control block"
+    />
+    <div v-if="$v.fullName.$error" class="error">
+      <span class="form-text danger" v-if="!$v.fullName.required"
+        >FullName is required</span
+      >
+      <span class="form-text danger" v-else-if="!$v.fullName.alpha"
+        >FullName accepts only alphabet characters.</span
+      >
+    </div>
+    <br />
+    <!-- TODO: добавить обработку даты рождения -->
+    <!-- <label>Дата рождения</label><br />
     <input type="date" v-model.trim="$v.birthday.$model" class="formControl" />
     <div v-if="$v.birthday.$error" class="error">
       <span v-if="!$v.birthday.required">Birthday is required</span>
     </div>
     <br /> -->
-      <label>Логин</label><br />
-      <input
-        :disabled="signUpLoading"
-        type="text"
-        v-model.trim="$v.login.$model"
-        placeholder="login"
-        class="formControl"
-      />
-      <div v-if="$v.login.$error" class="error">
-        <span v-if="!$v.login.required">Login is required</span>
-        <span v-else-if="!$v.login.email">Login must be an email</span>
-      </div>
-      <br />
-      <label>Пароль</label><br />
-      <input
-        type="password"
-        :disabled="signUpLoading"
-        v-model.trim="$v.password.$model"
-        placeholder="password"
-        class="form-control"
-      />
-      <div v-if="$v.password.$error" class="error">
-        <span v-if="!$v.password.required">Password is required</span>
-        <span v-else-if="!$v.password.minLength"
-          >Password must have at least
-          {{ $v.password.$params.minLength.min }} letters.</span
-        >
-      </div>
-      <br />
-      <input
-        :disabled="signUpLoading"
-        type="submit"
-        value="Зарегистрироваться"
-      /><br />
-      <p>
-        Уже есть аккаунт?
-        <router-link tag="a" :to="{ name: 'LogIn' }">Войти!</router-link>
-      </p>
-    </form>
-  </div>
+    <label>Логин</label><br />
+    <input
+      :disabled="signUpLoading"
+      type="text"
+      v-model.trim="$v.login.$model"
+      placeholder="login"
+      class="form-control block"
+    />
+    <div v-if="$v.login.$error" class="error">
+      <span class="form-text danger" v-if="!$v.login.required"
+        >Login is required</span
+      >
+      <span class="form-text danger" v-else-if="!$v.login.email"
+        >Login must be an email</span
+      >
+    </div>
+    <br />
+    <label>Пароль</label><br />
+    <input
+      type="password"
+      :disabled="signUpLoading"
+      v-model.trim="$v.password.$model"
+      placeholder="password"
+      class="form-control block"
+    />
+    <div v-if="$v.password.$error" class="error">
+      <span class="form-text danger" v-if="!$v.password.required"
+        >Password is required</span
+      >
+      <span class="form-text danger" v-else-if="!$v.password.minLength"
+        >Password must have at least
+        {{ $v.password.$params.minLength.min }} letters.</span
+      >
+    </div>
+    <br />
+    <input
+      :disabled="signUpLoading"
+      type="submit"
+      class="btn btn-primary block"
+      value="Зарегистрироваться"
+    /><br />
+    <p>
+      Уже есть аккаунт?
+      <router-link tag="a" :to="{ name: 'LogIn' }">Войти!</router-link>
+    </p>
+  </form>
 </template>
 
 <script>

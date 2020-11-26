@@ -148,7 +148,6 @@ const routes = [
       },
       {
         path: "/admin",
-        name: "AdminPanel",
         components: {
           main: AdminPanel,
           sidebar: SideBarDefault
@@ -221,18 +220,7 @@ const routes = [
     path: "/notification",
     name: "ListOfNotifications",
     component: ListOfNotifications
-  },
-  {
-    path: "/posts/:id",
-    name: "Posts",
-    component: DetailedPost
-  },
-  {
-    path: "/points",
-    name: "PointsUser",
-    component: PointsUser
   }
-
   // {
   //   path: "/about",
   //   name: "About",
