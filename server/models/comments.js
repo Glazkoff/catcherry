@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Comments.belongsTo(models.Posts, {
         foreignKey: "postId",
-        as: "post"
+        as: "comments"
       });
     }
   };
@@ -24,10 +24,7 @@ module.exports = (sequelize, DataTypes) => {
     {
       authorId: DataTypes.INTEGER,
       postId: DataTypes.INTEGER,
-      body: {
-        type: DataTypes.JSONB,
-        allowNull: false
-      },
+      body: DataTypes.TEXT
     },
     {
       sequelize,

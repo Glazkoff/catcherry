@@ -91,6 +91,8 @@ input NotificationBody {
 type BodyNotification {
   header: String!
   text: String!
+  button: String
+  buttonLink: String
 }
 
 type Notification {
@@ -98,7 +100,7 @@ type Notification {
   body: BodyNotification!
   authorId: Int!
   teamId: Int!
-  forAllUsers: Boolean
+  forAllUsers: Int
   forAllOrganization: Boolean
   forAllTeam: Boolean
   createdAt: String!
@@ -127,7 +129,16 @@ type Post {
   body: BodyPost!
   authorId: Int!
   organizationId: Int!
+  commentsByPost: [Comment]
   forAllTeam: Boolean
+  createdAt: String!
+  updatedAt: String!
+}
+
+type LikeOfPost {
+  id: ID!
+  userId: ID!
+  postId: ID!
   createdAt: String!
   updatedAt: String!
 }
@@ -190,7 +201,7 @@ type Query {
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  requests:[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  requests(teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getPointsUser(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getOperationPointsUser(userId: Int!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
@@ -200,6 +211,7 @@ type Query {
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
+  personalUserStatistics(userId: Int!): PointsUser
   teamsInOneOrganization(organizationId: ID!): [Team]
 
   tasks (teamId:ID!): [Task]!
@@ -215,15 +227,16 @@ type Mutation {
   signUp(name: String!, login: String!, password: String!, fingerprint:String!): jwt
   logIn(login: String!, password: String!, fingerprint:String!): jwt
   updateTokens(fingerprint:String!): jwt!
+  logOut(fingerprint:String!): Int
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
-  createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!): Notification!
+  createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!, forAllUsers: Int): Notification!
   deleteNotification(id: ID!): Int!
-  updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
+  updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Int, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
@@ -246,6 +259,7 @@ type Mutation {
   
   acceptRequst(id: ID!): [Int]!
   revokeRequst(id: ID!): [Int]!
+  rejectRequst(id: ID!): [Int]!
 
   createPointOperation(pointAccountId: Int!, delta: Int!, operationDescription: String!): PointsUser!	 
   deletePointOperation(id: ID!): Int!	

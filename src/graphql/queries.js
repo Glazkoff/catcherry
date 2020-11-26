@@ -72,8 +72,8 @@ export const DELETE_IN_TEAMS_QUERY = gql`
 `;
 
 export const REQUESTS_QUERY = gql`
-  query {
-    requests {
+  query($teamId: ID!) {
+    requests(teamId: $teamId) {
       id
       userId
       teamId
@@ -109,6 +109,7 @@ export const ONE_USER_QUERY = gql`
       id
       surname
       name
+      surname
       patricity
       gender
       birthday
@@ -320,11 +321,7 @@ export const USERS_IN_TEAMS_QUERY = gql`
       user {
         id
         name
-      }
-      owner {
         surname
-        name
-        patricity
       }
     }
   }
@@ -375,6 +372,12 @@ export const UPDATE_TEAM_QUERY = gql`
 export const ADD_IN_TEAM_QUERY = gql`
   mutation($status: String!, $id: ID!) {
     addUserInTeam(status: $status, id: $id)
+  }
+`;
+
+export const REJECT_REQUEST = gql`
+  mutation($id: ID!) {
+    rejectRequst(id: $id)
   }
 `;
 
@@ -579,7 +582,30 @@ export const NOTIFICATIONS_USER_QUERY = gql`
       body {
         header
         text
+        buttonLink
       }
+      authorId
+      teamId
+      forAllUsers
+      createdAt
+    }
+  }
+`;
+
+export const ADD_NOTIFICATION_QUERY = gql`
+  mutation(
+    $body: NotificationBody!
+    $authorId: Int!
+    $teamId: Int!
+    $forAllUsers: Int
+  ) {
+    createNotification(
+      body: $body
+      authorId: $authorId
+      teamId: $teamId
+      forAllUsers: $forAllUsers
+    ) {
+      id
     }
   }
 `;
@@ -632,5 +658,10 @@ export const UPDATE_COMMENT_QUERY = gql`
 export const DELETE_COMMENT_QUERY = gql`
   mutation($id: ID!) {
     deleteComment(id: $id)
+  }
+`;
+export const LOG_OUT = gql`
+  mutation($fingerprint: String!) {
+    logOut(fingerprint: $fingerprint)
   }
 `;

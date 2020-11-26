@@ -87,7 +87,8 @@ app.use(express.static(path.join(__dirname, "../dist")));
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
 db.sequelize
-  //.sync({ force: true })
+  // .sync({ force: true })
+  // .sync({ alter: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
@@ -101,7 +102,6 @@ db.sequelize
       //     password: bcrypt.hashSync("nikita", salt),
       //   });
       // }
-      //addAllTables();
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -120,35 +120,43 @@ db.sequelize
 let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
+    db.Administrators.destroy({ where: {} });
     db.Comments.destroy({ where: {} });
-    // db.Administrators.destroy({ where: {} });
-    // db.Notifications.destroy({ where: {} });
-    // db.Organizations.destroy({ where: {} });
-    // db.OrganizationsTypes.destroy({ where: {} });
-    // db.Points.destroy({ where: {} });
-    // db.PointsOperations.destroy({ where: {} });
-    // db.Posts.destroy({ where: {} });
-    // db.ReadNotification.destroy({ where: {} });
-    // db.Roles.destroy({ where: {} });
-    // db.Tasks.destroy({ where: {} });
-    // db.TeamCustomization.destroy({ where: {} });
-    // db.Teams.destroy({ where: {} });
+    db.LikesOfComments.destroy({ where: {} });
+    db.LikesOfPosts.destroy({ where: {} });
+    db.Notifications.destroy({ where: {} });
+    db.Organizations.destroy({ where: {} });
+    db.OrganizationsTypes.destroy({ where: {} });
+    db.Points.destroy({ where: {} });
+    db.PointsOperations.destroy({ where: {} });
+    db.Posts.destroy({ where: {} });
+    db.ReadNotification.destroy({ where: {} });
+    db.Roles.destroy({ where: {} });
+    db.Tasks.destroy({ where: {} });
+    db.TeamCustomization.destroy({ where: {} });
+    db.Teams.destroy({ where: {} });
+    db.Users.destroy({ where: {} });
+    db.UsersInTeams.destroy({ where: {} });
   }
   //Можно менять количество заполнений в переменной quantity
   let quantity = 10;
   for (let index = 0; index < quantity; index++) {
-    // let type = await db.OrganizationsTypes.create({
-    //   name: faker.name.findName()
-    // });
+    //Тип организации
+    let type = await db.OrganizationsTypes.create({
+      name: faker.name.findName()
+    });
+    //Пользователи
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
       name: faker.name.firstName(),
       surname: faker.name.lastName(),
       patricity: faker.name.findName(),
       gender: faker.name.gender(),
+      birthday: faker.date.past(),
       login: faker.random.word(),
       password: bcrypt.hashSync("nikita", salt)
     });
+    //Администраторы
     let administrators = await db.Administrators.create({
       userId: user.dataValues.id
     });
@@ -156,18 +164,21 @@ async function addAllTables(destroyTable) {
       name: faker.name.findName(),
       description: faker.lorem.paragraph()
     });
+    //Организации
     let organization = await db.Organizations.create({
       name: faker.name.findName(),
       ownerId: user.dataValues.id,
       organizationTypeId: type.dataValues.id,
       maxTeamsLimit: faker.random.number()
     });
+    //Команды
     let team = await db.Teams.create({
       organizationId: organization.dataValues.id,
       name: faker.name.findName(),
       description: faker.lorem.paragraph(),
       maxUsersLimit: faker.random.number()
     });
+    //Оповещения
     let notification = await db.Notifications.create({
       body: {
         header: faker.random.word(),
@@ -181,7 +192,7 @@ async function addAllTables(destroyTable) {
       userId: user.dataValues.id,
       readOrNot: faker.random.boolean()
     });
-
+    //Задачи
     let tasks = await db.Tasks.create({
       teamId: team.dataValues.id,
       userId: user.dataValues.id,
@@ -192,7 +203,8 @@ async function addAllTables(destroyTable) {
       },
       status: faker.random.word()
     });
-    let posts = await db.Posts.create({
+    //Посты
+    let post = await db.Posts.create({
       body: {
         header: faker.random.word(),
         text: faker.lorem.paragraph()
@@ -201,32 +213,50 @@ async function addAllTables(destroyTable) {
       organizationId: organization.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
+    console.log("Posts: ", post.dataValues);
+    let likesOfPost = await db.LikesOfPosts.create({
+      userId: user.dataValues.id,
+      postId: post.dataValues.id
+    });
+    console.log("Likes: ", likesOfPost.dataValues);
+
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
     });
+    //Пользователи в команде
     let usersinteams = await db.UsersInTeams.create({
       userId: user.dataValues.id,
       teamId: team.dataValues.id,
       status: faker.random.word(),
       roleId: role.dataValues.id
     });
+    //Баллы
     let pointsuser = await db.Points.create({
       userId: user.dataValues.id,
       pointQuantity: faker.random.number()
     });
+    //Операции с баллами
     let pointsoperations = await db.PointsOperations.create({
       pointAccountId: pointsuser.dataValues.id,
       delta: faker.random.number(),
       operationDescription: faker.random.word()
     });
-    // console.log(organization);
-    //   console.log(team);
-    let comments = await db.Comments.create({
+    //Комментарии
+    let comment = await db.Comments.create({
       authorId: user.dataValues.id,
-      postId: 1,
+      postId: post.dataValues.id,
       body: faker.lorem.paragraph()
     });
-    console.log(comments);
+    //Лайки для комментариев
+    let likesofcomments = await db.LikesOfComments.create({
+      userId: user.dataValues.id,
+      commentId: comment.dataValues.id
+    });
+    //Лайки для постов
+    let likesofposts = await db.LikesOfPosts.create({
+      userId: user.dataValues.id,
+      postId: post.dataValues.id
+    });
   }
 }
 /* TODO: рекомендую использовать следующие библиотеки
