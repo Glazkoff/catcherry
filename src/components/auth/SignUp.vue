@@ -61,7 +61,7 @@
       /><br />
       <p>
         Уже есть аккаунт?
-        <router-link tag="a" to="/login ">Войти!</router-link>
+        <router-link tag="a" :to="{ name: 'LogIn' }">Войти!</router-link>
       </p>
     </form>
   </div>
@@ -142,7 +142,7 @@ export default {
                 "SET_ACCESS_TOKEN",
                 resp.data.signUp.accessToken
               );
-              this.$router.push("/");
+              this.$router.push({ name: "FeedOfPosts" });
             } else {
               // TODO: добавить обработку ошибок
               console.error("ERROR");

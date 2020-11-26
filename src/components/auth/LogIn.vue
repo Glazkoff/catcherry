@@ -47,7 +47,9 @@
     /><br />
     <p>
       Нет аккаунта?
-      <router-link tag="a" to="/signup">Зарегистрироваться!</router-link>
+      <router-link tag="a" :to="{ name: 'SignUp' }"
+        >Зарегистрироваться!</router-link
+      >
     </p>
   </form>
 </template>
@@ -113,7 +115,7 @@ export default {
                   "SET_ACCESS_TOKEN",
                   resp.data.logIn.accessToken
                 );
-                this.$router.push("/");
+                this.$router.push({ name: "FeedOfPosts" });
               } else {
                 this.loginPasswordError = true;
               }
