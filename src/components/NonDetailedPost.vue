@@ -93,7 +93,7 @@ export default {
   },
   methods: {
     onLike(id) {
-      this.$emit("like", { id: id });
+      this.$emit("like", { id: id, isLikedByUser: this.isLikedByUser });
     },
 
     onComment(id) {

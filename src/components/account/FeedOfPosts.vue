@@ -23,8 +23,11 @@
 <script>
 import NonDetailedPost from "@/components/NonDetailedPost.vue";
 import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
-import { POSTS_QUERY } from "@/graphql/queries";
-// import { CREATE_LIKE_OF_POST } from "@/graphql/queries";
+import {
+  POSTS_QUERY,
+  CREATE_LIKE_OF_POST,
+  DELETE_LIKE_OF_POST
+} from "@/graphql/queries";
 export default {
   name: "FeedOfPosts",
   apollo: {
@@ -54,35 +57,63 @@ export default {
   },
   methods: {
     onLike(object) {
-      console.log("Нажата кнопка лайка для поста с id " + object.id);
-      // this.$apollo
-      //   .mutate({
-      //     mutation: CREATE_LIKE_OF_POST,
-      //     variables: {
-      //       userId: this.userId,
-      //       postId: object.id
-      //     },
-      //     update: (cache, { data: { createLikeOfPost } }) => {
-      //       let data = cache.readQuery({ query: POSTS_QUERY });
-      //       // data.users.push(createLikeOfPost);
-      //       cache.writeQuery({ query: POSTS_QUERY, data });
-      //     },
-      //     optimisticResponse: {
-      //       __typename: "Mutation",
-      //       createLikeOfPost: {
-      //         __typename: "User",
-      //         id: -1,
-      //         name: username
-      //       }
-      //     }
-      //   })
-      //   .then(data => {
-      //     console.log(data);
-      //   })
-      //   .catch(error => {
-      //     this.newUser = username;
-      //     console.error(error);
-      //   });
+      if (object.isLikedByUser) {
+        this.$apollo
+          .mutate({
+            mutation: DELETE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: object.id
+            },
+            update: cache => {
+              let data = cache.readQuery({ query: POSTS_QUERY });
+              let indexlikedPost = data.posts.findIndex(
+                el => el.id === object.id
+              );
+              if (data.posts[indexlikedPost] != null) {
+                let indexLike = data.posts[
+                  indexlikedPost
+                ].likesOfPost.findIndex(el => el.userId == this.userId);
+                data.posts[indexlikedPost].likesOfPost.splice(indexLike, 1);
+              }
+              cache.writeQuery({ query: POSTS_QUERY, data });
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      } else {
+        this.$apollo
+          .mutate({
+            mutation: CREATE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: object.id
+            },
+            update: cache => {
+              let data = cache.readQuery({ query: POSTS_QUERY });
+              let indexlikedPost = data.posts.findIndex(
+                el => el.id === object.id
+              );
+              if (data.posts[indexlikedPost] != null) {
+                data.posts[indexlikedPost].likesOfPost.push({
+                  userId: this.userId,
+                  __typename: "LikeOfPost"
+                });
+              }
+              cache.writeQuery({ query: POSTS_QUERY, data });
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
     },
     onComment(object) {
       console.log("Нажата кнопка комментария для поста с id " + object.id);

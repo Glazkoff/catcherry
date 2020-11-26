@@ -409,7 +409,6 @@ export const POSTS_QUERY = gql`
         text
       }
       likesOfPost {
-        id
         userId
       }
       createdAt

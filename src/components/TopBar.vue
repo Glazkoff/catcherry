@@ -62,11 +62,11 @@ export default {
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
-    },
+    }
     // away: function() {
     //   console.log("clicked away");
     // }
-  },
+  }
 };
 </script>
 
