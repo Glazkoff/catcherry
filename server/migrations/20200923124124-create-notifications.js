@@ -18,7 +18,7 @@ module.exports = {
         type: Sequelize.INTEGER
       },
       forAllUsers: {
-        type: Sequelize.BOOLEAN
+        type: Sequelize.INTEGER
       },
       forAllOrganization: {
         type: Sequelize.BOOLEAN

@@ -1,5 +1,11 @@
 <template>
-  <div class="notification">
+  <div
+    v-if="
+      notification.forAllUsers == $route.params.id ||
+        notification.forAllUsers == null
+    "
+    class="notification"
+  >
     <div class="header">
       <span>{{ notification.body.header }}</span>
       <div class="icon" @click="onDelete(notification.id)">
@@ -22,9 +28,12 @@
     </div>
     <div class="main">
       <p>{{ notification.body.text }}</p>
-      <!-- <div v-if="notification.button" class="blockForButton">
-                <a v-bind:href="notification.buttonLink"  target="_blank">{{notification.button}}</a>
-            </div> -->
+      <span>{{ $d(notification.createdAt, "long") }}</span>
+      <div v-if="notification.body.button" class="blockForButton">
+        <a v-bind:href="notification.body.buttonLink" target="_blank">{{
+          notification.body.button
+        }}</a>
+      </div>
     </div>
   </div>
 </template>
@@ -171,5 +180,10 @@ export default {
 }
 .blockForButton a:hover {
   background: #fff;
+}
+
+span {
+  color: #878787;
+  font-size: 12px;
 }
 </style>

@@ -1,15 +1,50 @@
 <template>
-<div class="user">
-  <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
-  <p>{{ request.user.name }}</p>
-  <p>{{ request.status }}</p>
-  <button type="submit" @click="showModal = true" class="btn btn-secondary">Подробнее</button>
-  <PopupRequest v-if="showModal" @close="showModal = false" :request="request" @act="$emit('accept', request.id)" />
-</div>
+  <div class="user">
+    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
+    <p>{{ request.user.name }}</p>
+    <p>{{ request.status }}</p>
+    <button type="submit" @click="showModal = true" class="btn btn-secondary">
+      Подробнее
+    </button>
+    <popup v-if="showModal">
+      <h3 slot="header">
+        Заявка в команду
+      </h3>
+      <button
+        slot="exit"
+        class="modal-default-button"
+        @click="showModal = false"
+      >
+        &times;
+      </button>
+      <div slot="body">
+        <img src="" alt="photo" />
+        <p>{{ request.user.name }}</p>
+        <p>Пол:</p>
+        <p>Дата рождения:</p>
+      </div>
+      <div slot="footer">
+        <button
+          type="submit"
+          class="modal-avtive-button"
+          @click="$emit('accept', request.id, request.user.id)"
+        >
+          Принять
+        </button>
+        <button
+          type="submit"
+          class="modal-default-button"
+          @click="$emit('reject', request.id, request.user.id)"
+        >
+          Отклонить
+        </button>
+      </div>
+    </popup>
+  </div>
 </template>
 
 <script>
-import PopupRequest from "@/components/manager/PopupRequest";
+import popup from "@/components/Popup.vue";
 export default {
   props: ["request"], // переданная заявка
   data() {
@@ -18,7 +53,7 @@ export default {
     };
   },
   components: {
-    PopupRequest
+    popup
   }
 };
 </script>

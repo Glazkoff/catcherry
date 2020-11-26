@@ -197,17 +197,23 @@ module.exports = {
       db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
     teams: (parent, args, { db }) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
+    // Команды в организации
     team: (parent, args, { db }) => {
-      return db.Teams.findOne({
+      return db.Teams.findAll({
         where: { organizationId: args.organizationId }
       });
     },
-    notifications: (parent, args, { db }) =>
-      db.Notifications.findAll({ order: [["id", "ASC"]] }),
-    notification: (parent, args, { db }) =>
+    notifications: (parent, args, { db }, info) =>
+      db.Notifications.findAll({ order: [["id", "DESC"]] }),
+    notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
-    posts: (parent, args, { db }) =>
-      db.Posts.findAll({ order: [["id", "ASC"]] }),
+    posts: async (parent, args, { db }) => {
+      let resultOfPosts = db.Posts.findAll({
+        order: [["id", "ASC"]]
+        // include: [{ model: db.LikesOfPosts, as: "likesOfPost" }],
+      });
+      return resultOfPosts;
+    },
     post: (parent, args, { db }) =>
       db.Posts.findOne({ where: { id: args.id } }),
     getPointsUser: (parent, args, { db }, info) =>
@@ -261,6 +267,11 @@ module.exports = {
             }
           }
         ]
+      }),
+    personalUserStatistics: (parent, { userId }, { db }) =>
+      db.Points.findOne({
+        where: { userId: userId },
+        include: [{ model: db.PointsOperations, as: "pointsOperation" }]
       }),
     requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
@@ -602,11 +613,17 @@ module.exports = {
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
     //Создать оповещение
-    createNotification: (parent, { body, authorId, teamId }, { db }, info) =>
+    createNotification: (
+      parent,
+      { body, authorId, teamId, forAllUsers },
+      { db },
+      info
+    ) =>
       db.Notifications.create({
         body: body,
         authorId: authorId,
-        teamId: teamId
+        teamId: teamId,
+        forAllUsers: forAllUsers
       }),
     //Изменить оповещение
     updateNotification: (
@@ -789,6 +806,17 @@ module.exports = {
           }
         }
       ),
+    rejectRequst: (parent, { id }, { db }, info) =>
+      db.UsersInTeams.update(
+        {
+          status: "Отклонен"
+        },
+        {
+          where: {
+            id: id
+          }
+        }
+      ),
     /*
       [Ниже] Мутации работы с баллами     
     */
@@ -863,6 +891,26 @@ module.exports = {
         where: {
           id: args.id
         }
-      })
+      }),
+    logOut: async (parent, { fingerprint }, { db, req, res }, info) => {
+      // Получаем refresh-токен из cookie
+      let refreshToken = req.cookies.refreshToken;
+      if (refreshToken != null) {
+        // res.cookie.set("refreshToken", { httpOnly: true, expires: Date.now() });
+        // Очищаем куки с токеном
+        res.clearCookie("refreshToken");
+
+        // Удаляем записи о сессии
+        let result = await db.RefreshSessions.destroy({
+          where: {
+            refreshToken,
+            fingerprint
+          }
+        });
+        return result;
+      } else {
+        return 0;
+      }
+    }
   }
 };

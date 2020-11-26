@@ -32,7 +32,7 @@ import {
   DELETE_IN_TEAMS_QUERY,
   ONE_USER_IN_TEAMS_QUERY
 } from "@/graphql/queries";
-import minialert from "@/components/account/MiniAlert.vue";
+import minialert from "@/components/MiniAlert.vue";
 export default {
   name: "ListRequest",
   components: { minialert },
@@ -53,7 +53,7 @@ export default {
     }
   },
   methods: {
-    // метод отмены заявки, поданной в команду организации 
+    // метод отмены заявки, поданной в команду организации
     deleteRequest(id) {
       this.$apollo
         .mutate({
