@@ -2,7 +2,8 @@
   <div id="main-view">
     <div id="side-bar">
       <div class="logo-block">
-        <img src="../assets/full_logo.svg" alt="Catcherry's logo" />
+        <!-- <img src="../assets/full_logo.svg" alt="Catcherry's logo" /> -->
+        <FullLogo class="logo-img"></FullLogo>
       </div>
       <router-view name="sidebar" class="side-bar__inner"></router-view>
       <div class="bottom-panel-list">
@@ -71,9 +72,11 @@
 
 <script>
 import TopBar from "@/components/TopBar.vue";
+import FullLogo from "@/assets/full_logo.svg";
+
 export default {
   name: "Main",
-  components: { TopBar },
+  components: { TopBar, FullLogo },
   methods: {
     logOut() {
       this.$store.dispatch("LOG_OUT");
@@ -114,7 +117,7 @@ export default {
     background-color: $violet;
 
     .logo-block {
-      & img {
+      & .logo-img {
         padding-left: 1rem;
         padding-top: 1rem;
         padding-bottom: 1rem;
