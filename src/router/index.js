@@ -133,22 +133,11 @@ const routes = [
             path: "tasks",
             name: "Tasks",
             component: Tasks
-          },
-          {
-            path: "points",
-            name: "PointsUser",
-            component: PointsUser
-          },
-          {
-            path: "/posts/:id",
-            name: "Posts",
-            component: DetailedPost
           }
         ]
       },
       {
         path: "/admin",
-        name: "AdminPanel",
         components: {
           main: AdminPanel,
           sidebar: SideBarDefault
@@ -211,8 +200,7 @@ const routes = [
   {
     path: "/login",
     components: {
-      default: Auth,
-      form: LogIn
+      default: Auth
     },
     children: [
       {
@@ -229,11 +217,18 @@ const routes = [
   },
   {
     path: "/signup",
-    name: "SignUp",
     components: {
-      default: Auth,
-      form: SignUp
+      default: Auth
     },
+    children: [
+      {
+        path: "",
+        name: "SignUp",
+        components: {
+          form: SignUp
+        }
+      }
+    ],
     meta: {
       guest: true
     }
@@ -265,7 +260,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если отсутствует токен, редирект на страницу авторизации
     else {
-      next("/auth");
+      next("/login");
       return;
     }
   }
@@ -278,7 +273,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если есть токен, редирект на главную
     else {
-      next("/");
+      next("/feed");
       return;
     }
   }

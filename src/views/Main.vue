@@ -7,7 +7,6 @@
       <router-view name="sidebar" class="side-bar__inner"></router-view>
       <div class="bottom-panel-list">
         <div class="side-bar__locales">
-          <!-- <h5>{{ $t("welcomeMsg") }}</h5> -->
           <div class="locales">
             <a @click="setLocale('en')"><flag iso="us"></flag></a>
             <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
@@ -37,13 +36,13 @@
                 </svg>
               </div>
               <div class="side-bar__nav-list__nav-element__text">
-                Настройки
+                {{ $t("sideBar.settings") }}
               </div>
             </div>
           </router-link>
         </div>
         <button id="logOutBtn" class="btn btn-alternate" @click="logOut()">
-          Выйти
+          {{ $t("sideBar.quit") }}
         </button>
       </div>
     </div>
@@ -77,8 +76,10 @@ export default {
   components: { TopBar },
   methods: {
     logOut() {
-      console.log("LOG OUT!");
       this.$store.dispatch("LOG_OUT");
+    },
+    setLocale(locale) {
+      this.$i18n.locale = locale;
     }
   },
   computed: {

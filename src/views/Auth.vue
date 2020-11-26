@@ -49,7 +49,9 @@ export default {
     & .form-auth {
       padding-top: 3rem;
       margin: 0 auto;
-      width: 20rem;
+      max-width: 30rem;
+      width: 50%;
+      min-width: 20rem;
     }
   }
 
