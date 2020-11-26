@@ -220,12 +220,18 @@ module.exports = {
         include: [
           {
             model: db.Comments,
-            as: "comments",
-            where: { postId: args.id }
+            as: "commentsByPost",
+            where: { postId: args.id },
+            include: [
+              {
+                model: db.Users,
+                as: "author",
+                attributes: ["name"]
+              }
+            ]
           }
         ]
       });
-      console.log("пост:" + JSON.stringify(resultOfPost));
       return resultOfPost;
     },
     getPointsUser: (parent, args, { db }, info) =>
