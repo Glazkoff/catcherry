@@ -34,6 +34,7 @@ import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
+import SideBarManager from "@/components/sidebar/SideBarManager.vue";
 
 import store from "@/store/index";
 
@@ -76,7 +77,7 @@ const routes = [
         name: "TeamSettings",
         components: {
           main: TeamSettings,
-          sidebar: SideBarDefault
+          sidebar: SideBarManager
         },
         props: true,
         children: [

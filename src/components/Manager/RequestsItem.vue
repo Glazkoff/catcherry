@@ -1,9 +1,8 @@
 <template>
-  <div class="user">
-    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
-    <p>{{ request.user.name }}</p>
-    <p>{{ request.status }}</p>
-    <button type="submit" @click="showModal = true" class="btn btn-secondary">
+  <div class="card">
+    <img src="@/assets/avatar.jpg" alt="photo" class="big_avatar" />
+    <h3>{{ request.user.name }}</h3>
+    <button type="submit" @click="showModal = true" class="btn btn-alternate">
       Подробнее
     </button>
     <popup v-if="showModal">
@@ -59,20 +58,22 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.user {
-  margin: 15px;
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px gray;
-  display: flex;
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+.btn {
+  float: right;
 }
-
+h3 {
+  margin-left: 40px;
+}
 p {
   margin: 10px 20px;
 }
 
-.bigAvatar {
-  height: 100px;
-  border-radius: 50px;
+.big_avatar {
+  height: 70px;
+  border-radius: 35px;
+  margin: 20px;
+  border: 2px solid $bright_violet;
 }
 </style>

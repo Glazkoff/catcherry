@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="main_users_in_teams">
     <h3>Участники</h3>
     <hr />
     <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
@@ -86,4 +86,7 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+
+
+</style>
