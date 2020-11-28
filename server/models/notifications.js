@@ -8,13 +8,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-
-      
-      Notifications.belongsTo(models.Teams);
-      Notifications.belongsTo(models.Users);
+      Notifications.belongsTo(models.Teams, {
+        foreignKey: "teamId"
+        // as: "team"
+      });
+      Notifications.belongsTo(models.Users, {
+        foreignKey: "authorId",
+        as: "author"
+      });
       Notifications.hasMany(models.ReadNotification, {
         foreignKey: "notificationId",
-        as: "readNotification",
+        as: "readNotification"
       });
     }
   }
@@ -22,32 +26,32 @@ module.exports = (sequelize, DataTypes) => {
     {
       body: {
         type: DataTypes.JSONB,
-        allowNull: false,
+        allowNull: false
       },
       authorId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       teamId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       forAllUsers: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true,
+        type: DataTypes.INTEGER, //если в поле занесен id пользователя,
+        allowNull: true // значит оповещение предназначено только ему, если null - всей команде
       },
       forAllOrganization: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
+        allowNull: true
       },
       forAllTeam: {
         type: DataTypes.BOOLEAN,
-        allowNull: true,
-      },
+        allowNull: true
+      }
     },
     {
       sequelize,
-      modelName: "Notifications",
+      modelName: "Notifications"
     }
   );
   return Notifications;

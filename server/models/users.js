@@ -6,9 +6,9 @@ module.exports = (sequelize, DataTypes) => {
       Users.hasMany(models.Organizations, {
         onDelete: "cascade",
         foreignKey: "ownerId",
-        as: "organizations",
+        as: "owner"
       });
-      // FIXME: При запросе на добавление оповещения возникает ошибка 
+      // FIXME: При запросе на добавление оповещения возникает ошибка
       //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
 
       // Users.hasMany(models.Notifications, {
@@ -17,23 +17,39 @@ module.exports = (sequelize, DataTypes) => {
       // });
       Users.hasMany(models.ReadNotification, {
         foreignKey: "userId",
-        as: "readNotificationUser",
+        as: "readNotificationUser"
       });
-      Users.hasMany(models.ReadNotification, {
+      Users.hasMany(models.Tasks, {
         foreignKey: "userId",
-        as: "tasksUser",
+        as: "tasksUser"
       });
-      Users.hasMany(models.Points, {
+      Users.hasOne(models.Points, {
         foreignKey: "userId",
-        as: "points",
+        as: "userPoints"
       });
       Users.hasMany(models.Posts, {
         foreignKey: "authorId",
-        as: "posts",
+        as: "posts"
       });
+      Users.hasMany(models.Comments, {
+        foreignKey: "authorId",
+        as: "author"
+      });
+      // Users.hasMany(models.UsersInTeams, {
+      //   foreignKey: "id",
+      //   as: "userInTeam"
+      // });
       Users.hasOne(models.Administrators, {
         foreignKey: "userId",
-        as: "users",
+        as: "users"
+      });
+      Users.hasMany(models.LikesOfComments, {
+        foreignKey: "userId",
+        as: "likesCommentsOfUser"
+      });
+      Users.hasMany(models.LikesOfPosts, {
+        foreignKey: "userId",
+        as: "likesPostsOfUser"
       });
     }
   }
@@ -41,38 +57,39 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING(255),
-        allowNull: true,
+        allowNull: true
       },
       surname: {
         type: DataTypes.STRING(255),
-        allowNull: true,
+        allowNull: true
       },
       patricity: {
         type: DataTypes.STRING(255),
-        allowNull: true,
+        allowNull: true
       },
       gender: {
         type: DataTypes.STRING(255),
-        allowNull: true,
+        allowNull: true
       },
       birthday: {
         type: DataTypes.DATE,
-        allowNull: true,
+        allowNull: true
       },
       login: {
         type: DataTypes.STRING(255),
-        allowNull: true,
+        allowNull: true
       },
       password: {
         // TODO: вспомнить, почему binary
         // type: DataTypes.STRING.BINARY,
         type: DataTypes.STRING,
-        allowNull: true,
-      },
+        allowNull: true
+      }
     },
     {
       sequelize,
-      modelName: "Users",
+      paranoid: true,
+      modelName: "Users"
     }
   );
   return Users;

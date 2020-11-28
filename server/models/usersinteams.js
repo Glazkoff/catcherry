@@ -20,6 +20,7 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "roleId",
         as: "role",
       });
+      
     }
   }
   UsersInTeams.init(

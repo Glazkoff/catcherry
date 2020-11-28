@@ -15,6 +15,8 @@
 - [[ENG] How to authenticate using GraphQL Cookies and JWT](https://flaviocopes.com/graphql-auth-apollo-jwt-cookies/) - очень важная статья. Продемонстрирован принцип разделения REST API и GraphQL, а также работа с HttpOnly Cookies
 - [[ENG] Refresh token with JWT authentication in Node.js](https://solidgeargroup.com/en/refresh-token-with-jwt-authentication-node-js/)
 - [[ENG] Solution! GraphQL Server Not Setting JWT Cookie](https://dev.to/doylecodes/graphql-server-not-setting-jwt-cookie-1gme) - интересный вариант использования "ctx.response.cookie"
+- [[ENG] Refreshing Token Based Authentication With Apollo Client 2.0](https://medium.com/@lucasmcgartland/refreshing-token-based-authentication-with-apollo-client-2-0-7d45c20dc703)
+- [[ENG] Handling authentication in your GraphQL-powered Vue app](https://blog.logrocket.com/handling-authentication-in-your-graphql-powered-vue-app/)
 
 ## Статьи по теме "Работа с GraphQL и Apollo"
 
@@ -23,4 +25,6 @@
 - [[ENG] START WITH A GRAPHQL API, APOLLO, SEQUELIZE, POSTGRESQL, NODE.JS AND EXPRESS.JS](https://markomatic.me/blog/node-express-sequelize-pg-graphql/)
 - [[ENG] How To Set Up a GraphQL Server in Node.js with Apollo Server and Sequelize](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize)
 
+## Особенности роутинга
+- [[RUS] Именованные представления](https://router.vuejs.org/ru/guide/essentials/named-views.html#%D0%B2n%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5-%D0%B8%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5-%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2n%D0%B5%D0%BD%D0%B8%D1%8F)
 ---

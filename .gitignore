@@ -1,6 +1,9 @@
+# git rm --cached package-lock.json - удалит из кэша гита
+
 .DS_Store
 node_modules
 /dist
+package-lock.json
 
 /tests/e2e/reports/
 selenium-debug.log
