@@ -251,6 +251,11 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  let lang = localStorage.getItem("lang");
+  if (!lang) {
+    lang = process.env.VUE_APP_I18N_LOCALE;
+    localStorage.setItem("lang", lang);
+  }
   // Если авторизация обязательна
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // Если присутствует токен, пропускаем
