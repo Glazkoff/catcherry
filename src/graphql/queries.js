@@ -424,6 +424,25 @@ export const POSTS_QUERY = gql`
     }
   }
 `;
+export const POST_QUERY = gql`
+query($id: ID!) {
+    post(id:$id) {
+      id
+      body {
+        header
+        text
+      }
+      createdAt
+      commentsByPost{
+        body
+        author{
+          name
+        }
+        createdAt
+      }
+    }
+  }
+    `;
 
 export const CREATE_POST = gql`
   mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {

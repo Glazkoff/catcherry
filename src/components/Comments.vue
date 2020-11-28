@@ -23,15 +23,16 @@
 <script>
 import {
   CREATE_COMMENT_QUERY,
-  COMMENTS_QUERY,
+  POST_QUERY,
   UPDATE_COMMENT_QUERY,
-  DELETE_COMMENT_QUERY
+  DELETE_COMMENT_QUERY,
+  COMMENTS_QUERY
 } from "@/graphql/queries";
 export default {
   name: "Comments",
   apollo: {
     comments: {
-      query: COMMENTS_QUERY
+      query: POST_QUERY
     }
   },
   props: ["DetailedPost"],
@@ -62,12 +63,12 @@ export default {
             id: this.editComment.id
           },
           update: (cache, { data: { updateComment } }) => {
-            let data = cache.readQuery({ query: COMMENTS_QUERY });
+            let data = cache.readQuery({ query: POST_QUERY });
             console.log(data);
             data.comments.find(
               el => el.id === this.editComment.id
             ).body = this.editComment.body;
-            cache.writeQuery({ query: COMMENTS_QUERY, data });
+            cache.writeQuery({ query: POST_QUERY, data });
             console.log(updateComment);
           },
           optimisticResponse: {
