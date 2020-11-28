@@ -128,7 +128,9 @@ export default {
     width: calc(100vw - #{$sideBarWidth});
     overflow-x: auto;
     padding-top: $topBarHeight;
-    #top-bar {
+    background: $dark_blue;
+    color: $white;
+    #top-bar { 
       position: fixed;
       width: calc(100vw - #{$sideBarWidth} - #{$scrollBarVerticalWidth});
       top: 0;

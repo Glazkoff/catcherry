@@ -3,7 +3,6 @@
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == teamId">
         <h3>Заявки на вхождение {{ (name = t.name) }}</h3>
-        <hr />
         <div v-for="request in requests" :key="request.id" class="request">
           <RequestsItem
             :request="request"

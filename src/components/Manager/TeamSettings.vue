@@ -35,9 +35,6 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
 .main_team {
-  background: $dark_blue;
-  color: $white;
-  height: 100%;
   padding: 0 50px;
 }
 </style>
