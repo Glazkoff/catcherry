@@ -659,7 +659,9 @@ export const UPDATE_NOTIFICATION_QUERY = gql`
       forAllTeam: $forAllTeam
       checkNotification: $checkNotification
       id: $id
-    )`;
+    )
+  }
+`;
 
 export const LOG_OUT = gql`
   mutation($fingerprint: String!) {
