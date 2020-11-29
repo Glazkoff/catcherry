@@ -239,7 +239,7 @@ type Mutation {
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
-  createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!, forAllUsers: Int): Notification!
+  createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!, forAllUsers: Int, checkNotification: Boolean ): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(body: NotificationBody!, id: ID!,checkNotification: Boolean, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
 

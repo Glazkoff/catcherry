@@ -623,7 +623,8 @@ module.exports = {
         body: body,
         authorId: authorId,
         teamId: teamId,
-        forAllUsers: forAllUsers
+        forAllUsers: forAllUsers,
+        checkNotification: false
       }),
     //Изменить оповещение
     updateNotification: (

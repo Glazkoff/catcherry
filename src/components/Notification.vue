@@ -1,14 +1,16 @@
 <template>
   <div
     v-if="
-      notification.forAllUsers == $route.params.id ||
-        notification.forAllUsers == null
+      (notification.forAllUsers == $route.params.id &&
+        notification.checkNotification == false) ||
+        (notification.forAllUsers == null &&
+          notification.checkNotification == false)
     "
     class="notification"
   >
     <div class="header">
       <span>{{ notification.body.header }}</span>
-      <div class="icon" @click="onDelete(notification.id)">
+      <div class="icon" @click="onCheckNotification(notification.id)">
         <svg
           aria-hidden="true"
           focusable="false"
@@ -52,30 +54,48 @@ export default {
   },
   data() {
     return {
-      newNotification: "",
-      editNotification: {
-        isEdit: false,
-        name: "",
-        id: -1
-      }
+      // newNotification: "",
+      // editNotification: {
+      //   isEdit: false,
+      //   name: "",
+      //   id: -1
+      // }
     };
   },
   methods: {
-    toSaveEditNotification() {
-      this.editNotification.isEdit = false;
+    onCheckNotification(id) {
+      // let editNotification = this.notifications.find(el => el.id === id);
+      // this.editNotification.body = {
+      //   header: editNotification.body.header,
+      //   text: editNotification.body.text
+      // };
+      // this.editNotification.teamId = editNotification.teamId;
+      // this.editNotification.id = editNotification.id;
+      // this.editNotification.checkNotification = true;
+      // this.editNotification.isEdit = true;
       this.$apollo
         .mutate({
           mutation: UPDATE_NOTIFICATION_QUERY,
           variables: {
-            name: this.editNotification.name,
-            id: this.editNotification.id
+            body: {
+              header: this.editNotification.body.header,
+              text: this.editNotification.body.text
+            },
+            teamId: this.editNotification.teamId,
+            checkNotification: this.editNotification.checkNotification,
+            id: this.notification.id
           },
           update: (cache, { data: { updateNotification } }) => {
             let data = cache.readQuery({ query: NOTIFICATIONS_QUERY });
             console.log(data);
-            data.notifications.find(
-              el => el.id === this.editNotification.id
-            ).name = this.editNotification.name;
+            data.notifications.find(el => el.id === this.editNotification.id);
+            this.editNotification.body = {
+              header: editNotification.body.header,
+              text: editNotification.body.text
+            };
+            this.editNotification.teamId = editNotification.teamId;
+            this.editNotification.id = editNotification.id;
+            this.editNotification.checkNotification = true;
             cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
             console.log(updateNotification);
           },
@@ -89,13 +109,13 @@ export default {
         .catch(error => {
           console.error(error);
         });
-    },
-    toEditNotification(id) {
-      let editNotification = this.notifications.find(el => el.id === id);
-      this.editNotification.name = editNotification.name;
-      this.editNotification.id = editNotification.id;
-      this.editNotification.isEdit = true;
     }
+    // toEditNotification(id) {
+    //   let editNotification = this.notifications.find(el => el.id === id);
+    //   this.editNotification.name = editNotification.name;
+    //   this.editNotification.id = editNotification.id;
+    //   this.editNotification.isEdit = true;
+    // }
   }
 };
 </script>

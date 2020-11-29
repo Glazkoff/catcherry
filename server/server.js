@@ -92,7 +92,7 @@ db.sequelize
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
-      // addAllTables(false);
+      // addAllTables(true);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
@@ -185,13 +185,13 @@ async function addAllTables(destroyTable) {
         header: faker.random.word(),
         text: faker.lorem.paragraph()
       },
-      authorId: 10,
-      teamId: 10,
-      checkNotification: faker.random.boolean(),
+      authorId: user.dataValues.id,
+      teamId: team.dataValues.id,
+      checkNotification: faker.random.boolean()
     });
     let readnotification = await db.ReadNotification.create({
       notificationId: notification.dataValues.id,
-      userId: 10,
+      userId: user.dataValues.id,
       readOrNot: faker.random.boolean()
     });
     //Задачи
@@ -244,20 +244,20 @@ async function addAllTables(destroyTable) {
       operationDescription: faker.random.word()
     });
     //Комментарии
-    let comment = await db.Comments.create({
-      authorId: user.dataValues.id,
-      postId: post.dataValues.id,
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph()
-      },
-      dateAdd: faker.random.number()
-    });
+    // let comment = await db.Comments.create({
+    //   authorId: user.dataValues.id,
+    //   postId: post.dataValues.id,
+    //   body: {
+    //     header: faker.random.word(),
+    //     text: faker.lorem.paragraph()
+    //   },
+    //   dateAdd: faker.random.number()
+    // });
     //Лайки для комментариев
-    let likesofcomments = await db.LikesOfComments.create({
-      userId: user.dataValues.id,
-      commentId: comment.dataValues.id
-    });
+    // let likesofcomments = await db.LikesOfComments.create({
+    //   userId: user.dataValues.id,
+    //   commentId: comment.dataValues.id
+    // });
     //Лайки для постов
     let likesofposts = await db.LikesOfPosts.create({
       userId: user.dataValues.id,
