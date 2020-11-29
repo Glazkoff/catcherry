@@ -1,70 +1,74 @@
 <template>
-  <div>
-    <form @submit.prevent="submit">
-      <h1>Регистрация</h1>
-      <p>* - обязательное поле</p>
-      <label>Фамилия Имя Отчество</label><br />
-      <input
-        :disabled="signUpLoading"
-        type="text"
-        v-model.trim="$v.fullName.$model"
-        placeholder="Иванов Иван Иванович"
-        class="form-control"
-      />
-      <div v-if="$v.fullName.$error" class="error">
-        <span v-if="!$v.fullName.required">FullName is required</span>
-        <span v-else-if="!$v.fullName.alpha"
-          >FullName accepts only alphabet characters.</span
-        >
-      </div>
-      <br />
-      <!-- TODO: добавить обработку даты рождения -->
-      <!-- <label>Дата рождения</label><br />
-    <input type="date" v-model.trim="$v.birthday.$model" class="formControl" />
-    <div v-if="$v.birthday.$error" class="error">
-      <span v-if="!$v.birthday.required">Birthday is required</span>
+  <form class="form-auth" @submit.prevent="submit">
+    <h1>{{ $t("signUp.title") }}</h1>
+    <p>{{ $t("markRequiredField") }}</p>
+    <label>{{ $t("signUp.fullName") }}</label
+    ><br />
+    <input
+      :disabled="signUpLoading"
+      type="text"
+      v-model.trim="$v.fullName.$model"
+      :placeholder="$t('signUp.fullNamePlaceholder')"
+      class="form-control block"
+    />
+    <div v-if="$v.fullName.$error" class="error">
+      <span class="form-text danger" v-if="!$v.fullName.required">{{
+        $t("required")
+      }}</span>
+      <span class="form-text danger" v-else-if="!$v.fullName.alpha"
+        >$t("requiredLetters")</span
+      >
     </div>
-    <br /> -->
-      <label>Логин</label><br />
-      <input
-        :disabled="signUpLoading"
-        type="text"
-        v-model.trim="$v.login.$model"
-        placeholder="login"
-        class="formControl"
-      />
-      <div v-if="$v.login.$error" class="error">
-        <span v-if="!$v.login.required">Login is required</span>
-        <span v-else-if="!$v.login.email">Login must be an email</span>
-      </div>
-      <br />
-      <label>Пароль</label><br />
-      <input
-        type="password"
-        :disabled="signUpLoading"
-        v-model.trim="$v.password.$model"
-        placeholder="password"
-        class="form-control"
-      />
-      <div v-if="$v.password.$error" class="error">
-        <span v-if="!$v.password.required">Password is required</span>
-        <span v-else-if="!$v.password.minLength"
-          >Password must have at least
-          {{ $v.password.$params.minLength.min }} letters.</span
-        >
-      </div>
-      <br />
-      <input
-        :disabled="signUpLoading"
-        type="submit"
-        value="Зарегистрироваться"
-      /><br />
-      <p>
-        Уже есть аккаунт?
-        <router-link tag="a" to="/login ">Войти!</router-link>
-      </p>
-    </form>
-  </div>
+    <br />
+    <label>{{ $t("signUp.login") }}</label
+    ><br />
+    <input
+      :disabled="signUpLoading"
+      type="text"
+      v-model.trim="$v.login.$model"
+      :placeholder="$t('signUp.loginPlaceholder')"
+      class="form-control block"
+    />
+    <div v-if="$v.login.$error" class="error">
+      <span class="form-text danger" v-if="!$v.login.required">{{
+        $t("required")
+      }}</span>
+      <span class="form-text danger" v-else-if="!$v.login.email">{{
+        $t("reuiredEmail")
+      }}</span>
+    </div>
+    <br />
+    <label>{{ $t("signUp.password") }}</label
+    ><br />
+    <input
+      type="password"
+      :disabled="signUpLoading"
+      v-model.trim="$v.password.$model"
+      :placeholder="$t('signUp.passwordPlaceholder')"
+      class="form-control block"
+    />
+    <div v-if="$v.password.$error" class="error">
+      <span class="form-text danger" v-if="!$v.password.required">{{
+        $t("required")
+      }}</span>
+      <span class="form-text danger" v-else-if="!$v.password.minLength"
+        >$t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
+      </span>
+    </div>
+    <br />
+    <input
+      :disabled="signUpLoading"
+      type="submit"
+      class="btn btn-primary block"
+      :value="$t('signUp.buttonSubmit')"
+    /><br />
+    <p>
+      {{ $t("signUp.accountQuestion") }}
+      <router-link tag="a" :to="{ name: 'LogIn' }">{{
+        $t("signUp.logInLink")
+      }}</router-link>
+    </p>
+  </form>
 </template>
 
 <script>
@@ -142,7 +146,7 @@ export default {
                 "SET_ACCESS_TOKEN",
                 resp.data.signUp.accessToken
               );
-              this.$router.push("/");
+              this.$router.push({ name: "FeedOfPosts" });
             } else {
               // TODO: добавить обработку ошибок
               console.error("ERROR");
