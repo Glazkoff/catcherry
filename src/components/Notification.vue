@@ -7,6 +7,7 @@
           notification.checkNotification == false)
     "
     class="notification"
+    
   >
     <div class="header">
       <span>{{ notification.body.header }}</span>
@@ -42,14 +43,14 @@
 
 <script>
 import {
-  NOTIFICATIONS_QUERY,
-  UPDATE_NOTIFICATION_QUERY
+  NOTIFICATIONS_USER_QUERY,
+  // UPDATE_NOTIFICATION_QUERY
 } from "@/graphql/queries";
 export default {
   name: "Notification",
   apollo: {
-    notifications: {
-      query: NOTIFICATIONS_QUERY
+    notification: {
+      query: NOTIFICATIONS_USER_QUERY
     }
   },
   data() {
@@ -63,53 +64,53 @@ export default {
     };
   },
   methods: {
-    onCheckNotification(id) {
-      // let editNotification = this.notifications.find(el => el.id === id);
-      // this.editNotification.body = {
-      //   header: editNotification.body.header,
-      //   text: editNotification.body.text
-      // };
-      // this.editNotification.teamId = editNotification.teamId;
-      // this.editNotification.id = editNotification.id;
-      // this.editNotification.checkNotification = true;
-      // this.editNotification.isEdit = true;
-      this.$apollo
-        .mutate({
-          mutation: UPDATE_NOTIFICATION_QUERY,
-          variables: {
-            body: {
-              header: this.editNotification.body.header,
-              text: this.editNotification.body.text
-            },
-            teamId: this.editNotification.teamId,
-            checkNotification: this.editNotification.checkNotification,
-            id: this.notification.id
-          },
-          update: (cache, { data: { updateNotification } }) => {
-            let data = cache.readQuery({ query: NOTIFICATIONS_QUERY });
-            console.log(data);
-            data.notifications.find(el => el.id === this.editNotification.id);
-            this.editNotification.body = {
-              header: editNotification.body.header,
-              text: editNotification.body.text
-            };
-            this.editNotification.teamId = editNotification.teamId;
-            this.editNotification.id = editNotification.id;
-            this.editNotification.checkNotification = true;
-            cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
-            console.log(updateNotification);
-          },
-          optimisticResponse: {
-            __typename: "Mutation"
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    }
+    // onCheckNotification(id) {
+    //   let editNotification = this.notifications.find(el => el.id === id);
+    //   this.editNotification.body = {
+    //     header: editNotification.body.header,
+    //     text: editNotification.body.text
+    //   };
+    //   this.editNotification.teamId = editNotification.teamId;
+    //   this.editNotification.id = editNotification.id;
+    //   this.editNotification.checkNotification = true;
+    //   this.editNotification.isEdit = true;
+    //   this.$apollo
+    //     .mutate({
+    //       mutation: UPDATE_NOTIFICATION_QUERY,
+    //       variables: {
+    //         body: {
+    //           header: this.editNotification.body.header,
+    //           text: this.editNotification.body.text
+    //         },
+    //         teamId: this.editNotification.teamId,
+    //         checkNotification: this.editNotification.checkNotification,
+    //         id: this.notification.id
+    //       },
+    //       update: (cache, { data: { updateNotification } }) => {
+    //         let data = cache.readQuery({ query: NOTIFICATIONS_QUERY });
+    //         console.log(data);
+    //         data.notifications.find(el => el.id === this.editNotification.id);
+    //         this.editNotification.body = {
+    //           header: editNotification.body.header,
+    //           text: editNotification.body.text
+    //         };
+    //         this.editNotification.teamId = editNotification.teamId;
+    //         this.editNotification.id = editNotification.id;
+    //         this.editNotification.checkNotification = true;
+    //         cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
+    //         console.log(updateNotification);
+    //       },
+    //       optimisticResponse: {
+    //         __typename: "Mutation"
+    //       }
+    //     })
+    //     .then(data => {
+    //       console.log(data);
+    //     })
+    //     .catch(error => {
+    //       console.error(error);
+    //     });
+    // }
     // toEditNotification(id) {
     //   let editNotification = this.notifications.find(el => el.id === id);
     //   this.editNotification.name = editNotification.name;

@@ -588,6 +588,9 @@ export const NOTIFICATIONS_USER_QUERY = gql`
       teamId
       forAllUsers
       createdAt
+      forAllOrganization
+      forAllTeam
+      checkNotification
     }
   }
 `;
