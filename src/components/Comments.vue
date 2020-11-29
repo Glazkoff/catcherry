@@ -6,9 +6,10 @@
       v-model="newComment"
     />
     <button @click="toAddComment()">Добавить</button>
-    <div v-for="comment in comments" :key="comment.id">
+    <div v-for="comment in post.commentsByPost" :key="comment.id">
       <p>{{ comment.author.name }}</p>
       <p>{{ comment.createdAt }}</p>
+      <!-- <p>{{ $d(comment.createdAt, "number") }}</p> -->
       <p>{{ comment.body }}</p>
       <button
         v-if="comment.authorId == $store.getters.decodedToken.id"
@@ -30,9 +31,14 @@ import {
 } from "@/graphql/queries";
 export default {
   name: "Comments",
-  apollo: {
-    comments: {
-      query: POST_QUERY
+    apollo: {
+    post: {
+      query: POST_QUERY,
+      variables() {
+        return {
+          id: this.$route.params.id
+        };
+      }
     }
   },
   props: ["DetailedPost"],
@@ -149,15 +155,14 @@ export default {
             id
           },
           update: cache => {
-            let data = cache.readQuery({ query: COMMENTS_QUERY });
-            let index = data.comments.findIndex(el => el.id == id);
-            data.comments.splice(index, 1);
-            cache.writeQuery({ query: COMMENTS_QUERY, data });
+            let data = cache.readQuery({ query: POST_QUERY });
+            let index = data.post.commentsByPost.findIndex(el => el.id == id);
+            data.post.commentsByPost.splice(index, 1);
+            cache.writeQuery({ query: POST_QUERY, data });
           }
         })
         .then(data => {
           console.log(data);
-          console.log(this.$store.getters.decodedToken.id);
         })
         .catch(error => {
           console.error(error);

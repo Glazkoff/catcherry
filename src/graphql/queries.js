@@ -434,10 +434,12 @@ query($id: ID!) {
       }
       createdAt
       commentsByPost{
+        id
         body
         author{
           name
         }
+        authorId
         createdAt
       }
     }
