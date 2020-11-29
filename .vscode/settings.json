@@ -8,5 +8,26 @@
   "i18n-ally.fullReloadOnChanged": true,
   "i18n-ally.annotationDelimiter": "",
   "i18n-ally.displayLanguage": "ru",
-  "i18n-ally.keystyle": "nested"
+  "i18n-ally.keystyle": "nested",
+  "editor.formatOnPaste": true,
+  "editor.formatOnSave": true,
+  "editor.formatOnType": true,
+  "[vue]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "[json]": {
+    "editor.defaultFormatter": "vscode.json-language-features"
+  },
+  "[javascript]": {
+    "editor.defaultFormatter": "esbenp.prettier-vscode"
+  },
+  "editor.tabSize": 2,
+  "diffEditor.ignoreTrimWhitespace": false,
+  "prettier.trailingComma": "none",
+  "prettier.arrowParens": "avoid",
+  "formattingToggle.affects": [
+    "formatOnPaste",
+    "formatOnSave",
+    "formatOnType"
+  ]
 }
