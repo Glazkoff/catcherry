@@ -1,4 +1,4 @@
-const supportedLocales = {
+export const supportedLocales = {
   en: "English",
   ru: "Русский (Russian)"
 };

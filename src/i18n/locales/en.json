@@ -1,6 +1,4 @@
 {
-  "welcomeMsg": "Hello, PolyWeb!",
-  "startMsg": "The start of the {title} project",
   "projectTitle": "CATCHERRY",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
