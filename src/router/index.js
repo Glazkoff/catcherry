@@ -197,7 +197,7 @@ const routes = [
           sidebar: SideBarDefault
         }
       },
-            {
+      {
         path: "/statistic",
         name: "UserStatistic",
         components: {

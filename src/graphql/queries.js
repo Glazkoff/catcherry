@@ -473,7 +473,6 @@ export const LIKES_OF_COMMENT_FROM_USER = gql`
   }
 `;
 
-
 // Лайкнуть данный комментарий данным пользователем
 export const CREATE_LIKE_OF_COMMENT = gql`
   mutation($userId: ID!, $commentId: ID!) {
@@ -551,9 +550,9 @@ export const PERSONAL_USER_STATISTIC_QUERY = gql`
         delta
         operationDescription
         createdAt
-          }
-        }
       }
+    }
+  }
 `;
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TASKS
 export const TASKS_QUERY = gql`

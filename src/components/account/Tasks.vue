@@ -28,7 +28,8 @@
         <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
         {{ task.tasksUser.name }} {{ task.tasksUser.surname }} -->
             <div class="oneUser__points">
-              <div><h3>Награда:<br>+{{ task.body.points }} баллов</h3>
+              <div>
+                <h3>Награда:<br />+{{ task.body.points }} баллов</h3>
               </div>
               <div>
                 <select
@@ -48,7 +49,7 @@
                   <option>Готово</option></select
                 >
               </div>
-              
+
               <minialert v-if="isShowAlertPoints"
                 ><p slot="title">
                   Вам начислено {{ task.body.points }} баллов
@@ -206,7 +207,7 @@ export default {
   padding: 15px;
   background: $violet;
   border-radius: 10px;
-  margin-right: 2*$scrollBarVerticalWidth;
+  margin-right: 2 * $scrollBarVerticalWidth;
 }
 .oneUser__points {
   display: grid;
@@ -218,17 +219,17 @@ export default {
 .oneUser p {
   color: $gray_3;
 }
-.form-control{
+.form-control {
   margin-top: 20px;
   background: $violet;
   border-radius: 10px;
   color: $bright_violet;
   border: 1px solid $bright_violet;
   font-family: Roboto;
-font-style: normal;
-font-weight: 500;
-font-size: 16px;
-line-height: 18px
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 18px;
 }
 .smallAvatar {
   height: 24px;

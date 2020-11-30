@@ -112,7 +112,7 @@ export default {
     padding-top: $topBarHeight;
     background: $dark_blue;
     color: $white;
-    #top-bar { 
+    #top-bar {
       position: fixed;
       width: calc(100vw - #{$sideBarWidth} - #{$scrollBarVerticalWidth});
       top: 0;
