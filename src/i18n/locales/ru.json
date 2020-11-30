@@ -1,5 +1,9 @@
 {
   "projectTitle": "Кэтчерри",
+  "nameuserMsg": "Дарья",
+  "roleuserMsg": "Администратор",
+  "pointsMsg": "балла",
+  "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",
   "listUser": "Список пользователей",
