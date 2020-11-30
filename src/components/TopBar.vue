@@ -11,10 +11,11 @@
               style="display: none;"
             />
             <li class="nav-logo"><h1>Личный кабинет</h1></li>
-            <li class="right">
+            <li class="right ">
+              <a class="userFoto"></a>
               <a class="nav-name"
-                >{{ $t("hellouserMsg") }}<br />
-                {{ $t("nameuserMsg") }}</a
+                ><p>{{ $t("hellouserMsg") }}</p>
+                <small>{{ $t("nameuserMsg") }}</small></a
               >
             </li>
             <li class="right icon-notificationTopBar">
@@ -193,19 +194,55 @@
                 </a>
               </div>
             </li>
-            <!-- <li class="right emailCard"><p><svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" width="20" height="18" viewBox="0 0 350 350" xml:space="preserve">
-<g id="icon" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;" transform="translate(-1.9444444444444287 -1.9444444444444287) scale(3.89 3.89)" >
-	<path d="M 45 51.815 l 45 -33.87 v -1.967 c 0 -2.03 -1.646 -3.676 -3.676 -3.676 H 3.676 C 1.646 12.302 0 13.948 0 15.978 v 1.967 L 45 51.815 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-	<path d="M 47.405 60.019 c -0.712 0.536 -1.559 0.804 -2.405 0.804 s -1.693 -0.268 -2.405 -0.804 L 0 27.958 v 46.064 c 0 2.03 1.646 3.676 3.676 3.676 h 82.648 c 2.03 0 3.676 -1.646 3.676 -3.676 V 27.958 L 47.405 60.019 z" style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;" transform=" matrix(1 0 0 1 0 0) " stroke-linecap="round" />
-</g>
-</svg></p></li> -->
-<li class="right">
-              <p class="nav-point">52 {{ $t("pointsMsg") }} 
-              <svg width="18" height="17" viewBox="0 0 18 17" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path d="M16.7365 5.89649L11.7775 5.17579L9.56073 0.681648C9.50019 0.558601 9.40058 0.458992 9.27753 0.398445C8.96894 0.246101 8.59394 0.373054 8.43964 0.681648L6.22284 5.17579L1.26386 5.89649C1.12714 5.91602 1.00214 5.98048 0.906439 6.07813C0.790739 6.19705 0.726984 6.35704 0.729181 6.52294C0.731378 6.68884 0.799349 6.84708 0.918158 6.9629L4.50605 10.4609L3.65839 15.4004C3.63851 15.5153 3.65123 15.6335 3.6951 15.7415C3.73896 15.8496 3.81222 15.9432 3.90657 16.0117C4.00092 16.0802 4.11259 16.1209 4.2289 16.1292C4.34521 16.1375 4.46152 16.113 4.56464 16.0586L9.00019 13.7266L13.4357 16.0586C13.5568 16.1231 13.6975 16.1445 13.8322 16.1211C14.1721 16.0625 14.4006 15.7402 14.342 15.4004L13.4943 10.4609L17.0822 6.9629C17.1799 6.86719 17.2443 6.74219 17.2639 6.60548C17.3166 6.26368 17.0783 5.94727 16.7365 5.89649Z" fill="white"/>
-</svg></p>
+            <li class="right">
+              <p class="emailCard">
+                <svg
+                  xmlns="http://www.w3.org/2000/svg"
+                  xmlns:xlink="http://www.w3.org/1999/xlink"
+                  version="1.1"
+                  width="20"
+                  height="18"
+                  viewBox="0 0 350 350"
+                  xml:space="preserve"
+                >
+                  <g
+                    id="icon"
+                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
+                    transform="translate(-1.9444444444444287 -1.9444444444444287) scale(3.89 3.89)"
+                  >
+                    <path
+                      d="M 45 51.815 l 45 -33.87 v -1.967 c 0 -2.03 -1.646 -3.676 -3.676 -3.676 H 3.676 C 1.646 12.302 0 13.948 0 15.978 v 1.967 L 45 51.815 z"
+                      style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
+                      transform=" matrix(1 0 0 1 0 0) "
+                      stroke-linecap="round"
+                    />
+                    <path
+                      d="M 47.405 60.019 c -0.712 0.536 -1.559 0.804 -2.405 0.804 s -1.693 -0.268 -2.405 -0.804 L 0 27.958 v 46.064 c 0 2.03 1.646 3.676 3.676 3.676 h 82.648 c 2.03 0 3.676 -1.646 3.676 -3.676 V 27.958 L 47.405 60.019 z"
+                      style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
+                      transform=" matrix(1 0 0 1 0 0) "
+                      stroke-linecap="round"
+                    />
+                  </g>
+                </svg>
+              </p>
             </li>
-            
+            <li class="right">
+              <p class="nav-point">
+                52 {{ $t("pointsMsg") }}
+                <svg
+                  width="18"
+                  height="17"
+                  viewBox="0 0 18 17"
+                  fill="none"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path
+                    d="M16.7365 5.89649L11.7775 5.17579L9.56073 0.681648C9.50019 0.558601 9.40058 0.458992 9.27753 0.398445C8.96894 0.246101 8.59394 0.373054 8.43964 0.681648L6.22284 5.17579L1.26386 5.89649C1.12714 5.91602 1.00214 5.98048 0.906439 6.07813C0.790739 6.19705 0.726984 6.35704 0.729181 6.52294C0.731378 6.68884 0.799349 6.84708 0.918158 6.9629L4.50605 10.4609L3.65839 15.4004C3.63851 15.5153 3.65123 15.6335 3.6951 15.7415C3.73896 15.8496 3.81222 15.9432 3.90657 16.0117C4.00092 16.0802 4.11259 16.1209 4.2289 16.1292C4.34521 16.1375 4.46152 16.113 4.56464 16.0586L9.00019 13.7266L13.4357 16.0586C13.5568 16.1231 13.6975 16.1445 13.8322 16.1211C14.1721 16.0625 14.4006 15.7402 14.342 15.4004L13.4943 10.4609L17.0822 6.9629C17.1799 6.86719 17.2443 6.74219 17.2639 6.60548C17.3166 6.26368 17.0783 5.94727 16.7365 5.89649Z"
+                    fill="white"
+                  />
+                </svg>
+              </p>
+            </li>
           </ul>
         </nav>
       </div>
@@ -242,8 +279,9 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
-.mainTopBar{
-  
+.mainTopBar h1{
+  margin-block-start: 0em;
+    margin-block-end: 0em;
 }
 #topbar,
 #comptacagatin,
@@ -257,10 +295,10 @@ export default {
 
 #topbar ul li {
   float: left;
-  transition: 0.7s;
-  moz-transition: 0.7s;
-  o-transition: 0.7s;
-  webkit-transition: 0.7s;
+  // transition: 0.7s;
+  // moz-transition: 0.7s;
+  // o-transition: 0.7s;
+  // webkit-transition: 0.7s;
 }
 
 #topbar ul .right {
@@ -287,7 +325,6 @@ export default {
 header {
   width: 100%;
   background: $dark_blue;
-  min-height: 2em;
   justify-content: center;
   padding-top: 20px;
   padding-bottom: 60px;
@@ -300,17 +337,26 @@ header {
   color: #ffffff;
 }
 #topbar ul li .nav-name {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 15px;
   color: #ffffff;
+  padding: 0em;
+  padding-right: 52px;
 }
+
+#topbar ul li .nav-name p {
+    margin-block-start: 0em;
+    margin-block-end: 0.1em;
+}
+
 #topbar ul li .nav-point {
   font-style: normal;
   color: #ffffff;
   // padding-left: 30px;
+}
+#topbar ul li .nav-point svg {
+ margin-left: 12px;
+}
+#topbar ul li .emailCard svg{
+  margin-left: 50px;
 }
 .icon-notificationTopBar {
   display: inline;
@@ -341,13 +387,23 @@ header {
 .number {
   height: 7px;
   width: 7px;
-  background-color:$red;
+  background-color: $red;
   border-radius: 20px;
-  color: black;
+  color: white;
   text-align: center;
   position: absolute;
-  top: 5px;
-  left: 75px;
+  top: 12px;
+  left: 65px;
+}
+.userFoto{
+  height: 48px;
+  width: 48px;
+  background-color: $gray_3;
+  border-radius: 25px;
+  border: 2px solid $bright_violet;
+  color: $gray_3;
+  margin-right: 1em;
+  margin-left: 7em;
 }
 
 .number:empty {
