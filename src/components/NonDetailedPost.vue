@@ -43,6 +43,7 @@ import FilledLike from "@/assets/filled_like.svg";
 import Comment from "@/assets/comment.svg";
 export default {
   name: "NonDetailedPost",
+  components: { EmptyLike, FilledLike, Comment },
   computed: {
     userId() {
       if (this.$store.getters.decodedToken != null) {
