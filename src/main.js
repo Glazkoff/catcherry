@@ -8,7 +8,7 @@ import { ApolloClient } from "apollo-client";
 import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
-import { i18n } from "./plugins/i18n";
+import { i18n } from "./i18n/i18n";
 import FlagIcon from "vue-flag-icon";
 
 import { directive as onClickaway } from "vue-clickaway";

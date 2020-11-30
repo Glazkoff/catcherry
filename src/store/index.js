@@ -68,8 +68,8 @@ const store = new Vuex.Store({
                 resp.data.updateTokens.error
               ) {
                 state.authError = resp.data.updateTokens.error;
-                if (store.$app.$route.path !== "/login") {
-                  store.$app.$router.replace({ name: "LogIn" });
+                if ("" + store.$app.$route.name != "LogIn") {
+                  store.$app.$router.push({ name: "LogIn" }).catch(() => {});
                 }
                 state.authLoading = false;
                 reject(resp.data.updateTokens.error);
@@ -82,8 +82,8 @@ const store = new Vuex.Store({
                   resp.data.updateTokens.accessToken
                 );
 
-                if (store.$app.$route.path !== "/") {
-                  store.$app.$router.replace({ name: "FeedOfPosts" });
+                if ("" + store.$app.$route.name != "FeedOfPosts") {
+                  store.$app.$router.push({ name: "FeedOfPosts" });
                 }
 
                 // Никаких ошибок, загрузка завершена

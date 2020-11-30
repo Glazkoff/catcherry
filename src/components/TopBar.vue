@@ -10,12 +10,12 @@
               id="gepleasurprised"
               style="display: none;"
             />
-            <li class="nav-logo"><h1>Личный кабинет</h1></li>
+            <li class="nav-logo"><h1>{{ $t("topbarnameMsg") }}</h1></li>
             <li class="right ">
               <a class="userFoto"></a>
               <a class="nav-name"
-                ><p>{{ $t("hellouserMsg") }}</p>
-                <small>{{ $t("nameuserMsg") }}</small></a
+                ><p>{{ $t("nameuserMsg") }}</p>
+                <small>{{ $t("roleuserMsg") }}</small></a
               >
             </li>
             <li class="right icon-notificationTopBar">
@@ -527,11 +527,11 @@ header {
 
 .new {
   border-style: none none solid none;
-  border-color: #8c030e;
+  border-color: $dark_blue;
 }
 
 .sec:hover {
-  background-color: #bfbfbf;
+  background-color: $gray_3;
 }
 @media screen and (max-width: 1090px) {
   nav ul li:not(:nth-child(1)) {

@@ -2,7 +2,10 @@
   <div>
     <div class="side-bar__nav-list">
       <router-link
-        :to="{ name: 'Account' }"
+        :to="{
+          name: 'Account',
+          params: { id: $store.getters.decodedToken.id }
+        }"
         :exact="true"
         active-class="nav-checked"
       >
@@ -23,7 +26,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Профиль
+            {{ $t("sideBar.profile") }}
           </div>
         </div>
       </router-link>
@@ -56,7 +59,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Организация
+            {{ $t("sideBar.organization") }}
           </div>
         </div>
       </router-link>
@@ -87,7 +90,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Лента новостей
+            {{ $t("sideBar.newsFeed") }}
           </div>
         </div>
       </router-link>
@@ -130,7 +133,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Личная статитика
+            {{ $t("sideBar.personalStatistics") }}
           </div>
         </div>
       </router-link>
@@ -158,7 +161,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Баллы
+            {{ $t("sideBar.points") }}
           </div>
         </div>
       </router-link>
@@ -204,7 +207,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Задания
+            {{ $t("sideBar.tasks") }}
           </div>
         </div>
       </router-link>
@@ -230,7 +233,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Панель менеджера
+            {{ $t("sideBar.managersPanel") }}
           </div>
         </div>
       </router-link>
@@ -252,7 +255,7 @@
             </svg>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Админпанель
+            {{ $t("sideBar.adminPanel") }}
           </div>
         </div>
       </router-link>
@@ -263,11 +266,7 @@
 <script>
 export default {
   name: "SideBarDefault",
-  methods: {
-    setLocale(locale) {
-      this.$i18n.locale = locale;
-    }
-  }
+  methods: {}
 };
 </script>
 
