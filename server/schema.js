@@ -136,11 +136,13 @@ type Post {
 }
 
 type LikeOfPost {
-  id: ID!
   userId: ID!
   postId: ID!
-  createdAt: String!
-  updatedAt: String!
+}
+
+type LikeOfComment {
+  userId: ID!
+  commentId: ID!
 }
 
 type Task {
@@ -212,12 +214,9 @@ type Query {
   
   posts: [Post]!
   post(id: ID!): Post
-
-  likesOfPost (postId:ID!): Int! 
-  likesOfComment (commentId:ID!): Int! 
   
-  likesOfPostFromUser (userId:ID!, postId:ID!): Int! 
-  likesOfCommentFromUser (userId:ID!, commentId:ID!): Int! 
+  likesOfPostFromUser (userId:ID!): [LikeOfPost]! 
+  likesOfCommentFromUser (userId:ID!): [LikeOfComment]!  
 
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
@@ -252,10 +251,10 @@ type Mutation {
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
  
-  addLikeOfPost(userId: ID!, postId: ID!): Int!
+  addLikeOfPost(userId: ID!, postId: ID!): LikeOfPost!
   deleteLikeOfPost(userId: ID!, postId: ID!): Int!
 
-  addLikeOfComment(userId: ID!, commentId: ID!): Int!
+  addLikeOfComment(userId: ID!, commentId: ID!): LikeOfComment!
   deleteLikeOfComment(userId: ID!, commentId: ID!): Int!
 
   createComment(body: CommentBody!, authorId: Int!, postId: Int!, dateAdd: String!): Comment!

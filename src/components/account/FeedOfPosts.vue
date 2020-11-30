@@ -129,7 +129,6 @@ export default {
   display: flex;
   padding: 3rem;
   flex-direction: column;
-  
 }
 .doubleColumn {
   display: flex;

@@ -99,9 +99,9 @@ a {
   color: $white;
   background: $violet_2;
   border-radius: 10px;
-  padding: 2%;
+  padding: 1.5rem 2.4rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  &_footer {
+  & .footer small{
     display: flex;
     color: $gray_3;
   }

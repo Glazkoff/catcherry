@@ -1,7 +1,7 @@
 <template>
   <div class="container">
     <h1 v-if="this.$apollo.queries.post.loading">Это лоадер</h1>
-      
+
     <div v-else class="post">
       <div class="imageContainer">
         <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
@@ -73,7 +73,12 @@
 
 <script>
 import Comments from "../components/Comments.vue";
-import { ONE_POST_QUERY } from "@/graphql/queries";
+import {
+  ONE_POST_QUERY,
+  // POSTS_QUERY,
+  DELETE_LIKE_OF_POST,
+  CREATE_LIKE_OF_POST
+} from "@/graphql/queries";
 export default {
   name: "DetailedPost",
   computed: {
@@ -107,8 +112,78 @@ export default {
     return {};
   },
   methods: {
-    onLike() {
-      console.log("Нажата кнопка лайка c id " + this.post.id);
+    onLike(id) {
+      // console.log(id);
+      // console.log(this.isLikedByUser);
+      if (this.isLikedByUser) {
+        this.$apollo
+          .mutate({
+            mutation: DELETE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: id
+            },
+            update: cache => {
+              let data = cache.readQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                }
+              });
+              let indexLikePostByUser = data.post.likesOfPost.findIndex(
+                el => el.userId === this.userId
+              );
+              data.post.likesOfPost.splice(indexLikePostByUser, 1);
+              cache.writeQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                },
+                data
+              });
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      } else {
+        this.$apollo
+          .mutate({
+            mutation: CREATE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: id
+            },
+            update: cache => {
+              let data = cache.readQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                }
+              });
+              data.post.likesOfPost.push({
+                userId: this.userId,
+                __typename: "LikeOfPost"
+              });
+              cache.writeQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                },
+                data
+              });
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
     },
     onComment() {
       console.log("Нажата кнопка комментария");

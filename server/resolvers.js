@@ -224,31 +224,17 @@ module.exports = {
       });
     },
 
-    // Получаем число лайков конкретного поста
-    likesOfPost: (parent, args, { db }) => {
-      return db.LikesOfPosts.count({
-        where: { postId: args.postId }
-      });
-    },
-
-    // Получаем информацию о лайке конкретного поста конкртеным пользовтелем, 0 - нет, 1 - да
+    // Получаем информацию о всех лайках постов пользователя
     likesOfPostFromUser: (parent, args, { db }) => {
-      return db.LikesOfPosts.count({
-        where: { userId: args.userId, postId: args.postId }
+      return db.LikesOfPosts.findAll({
+        where: { userId: args.userId }
       });
     },
 
-    // Получаем число лайков конкретного комментария
-    likesOfComment: (parent, args, { db }) => {
-      return db.LikesOfComments.count({
-        where: { commentId: args.commentId }
-      });
-    },
-
-    // Получаем информацию о лайке конкретного коммента конкртеным пользовтелем, 0 - нет, 1 - да
+    // Получаем информацию о всех лайках комментариев пользователя
     likesOfCommentFromUser: (parent, args, { db }) => {
-      return db.LikesOfComments.count({
-        where: { userId: args.userId, commentId: args.commentId }
+      return db.LikesOfComments.findAll({
+        where: { userId: args.userId }
       });
     },
 
@@ -744,48 +730,31 @@ module.exports = {
     /*
       [Ниже] Мутации работы с лайками постов (LikesOfPosts)     
     */
-    addLikeOfPost: async (parent, { userId, postId }, { db }, info) => {
-      await db.LikesOfPosts.create({
+    addLikeOfPost: (parent, { userId, postId }, { db }, info) =>
+      db.LikesOfPosts.create({
         userId: userId,
         postId: postId
-      });
-      let count = db.LikesOfPosts.count({ where: { postId } });
-      return count;
-    },
+      }),
 
-    deleteLikeOfPost: async (parent, { userId, postId }, { db }, info) => {
-      await db.LikesOfPosts.destroy({
+    deleteLikeOfPost: (parent, { userId, postId }, { db }, info) =>
+      db.LikesOfPosts.destroy({
         where: { userId, postId }
-      });
-      let count = db.LikesOfPosts.count({ where: { postId } });
-      return count;
-    },
+      }),
 
     /*
    [Ниже] Мутации работы с лайками комментариев (LikesOfComments)     
  */
 
-    addLikeOfComment: async (parent, { userId, commentId }, { db }, info) => {
-      await db.LikesOfComments.create({
+    addLikeOfComment: (parent, { userId, commentId }, { db }, info) =>
+      db.LikesOfComments.create({
         userId: userId,
         commentId: commentId
-      });
-      let count = db.LikesOfComments.count({ where: { commentId } });
-      return count;
-    },
+      }),
 
-    deleteLikeOfComment: async (
-      parent,
-      { userId, commentId },
-      { db },
-      info
-    ) => {
-      await db.LikesOfComments.destroy({
+    deleteLikeOfComment: (parent, { userId, commentId }, { db }, info) =>
+      db.LikesOfComments.destroy({
         where: { userId, commentId }
-      });
-      let count = db.LikesOfComments.count({ where: { commentId } });
-      return count;
-    },
+      }),
 
     // ----- //
     createUserInTeam: (
