@@ -98,5 +98,6 @@
     "accountQuestion": "Уже есть аккаунт?",
     "logInLink": "Войти!"
   },
-  "markRequiredField": "* - обязательное поле"
+  "markRequiredField": "* - обязательное поле",
+  "startMsg": "Привет, Поливеб!"
 }
