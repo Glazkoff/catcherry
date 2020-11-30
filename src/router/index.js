@@ -32,6 +32,7 @@ import TeamSettings from "@/components/manager/TeamSettings.vue";
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
+import UserStatistic from "@/components/account/UserStatistic.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
 import SideBarManager from "@/components/sidebar/SideBarManager.vue";
@@ -193,6 +194,14 @@ const routes = [
         name: "PointsUser",
         components: {
           main: PointsUser,
+          sidebar: SideBarDefault
+        }
+      },
+            {
+        path: "/statistic",
+        name: "UserStatistic",
+        components: {
+          main: UserStatistic,
           sidebar: SideBarDefault
         }
       }

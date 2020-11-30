@@ -96,7 +96,7 @@
       </router-link>
       <router-link
         :to="{
-          name: 'PointsUser',
+          name: 'UserStatistic',
           params: { id: $store.getters.decodedToken.id }
         }"
         :exact="true"
