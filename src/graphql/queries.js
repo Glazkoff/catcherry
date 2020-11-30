@@ -541,6 +541,20 @@ export const RAITING_IN_TEAMS_QUERY = gql`
     }
   }
 `;
+
+export const PERSONAL_USER_STATISTIC_QUERY = gql`
+  query($userId: Int!) {
+    personalUserStatistics(userId: $userId) {
+      id
+      pointQuantity
+      pointsOperation {
+        delta
+        operationDescription
+        createdAt
+          }
+        }
+      }
+`;
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TASKS
 export const TASKS_QUERY = gql`
   query($teamId: ID!) {

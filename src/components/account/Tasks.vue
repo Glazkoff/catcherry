@@ -1,48 +1,62 @@
 <template>
-  <div class="account-view">
-    <h3>Бэклог заданий</h3>
-    <hr />
-    <div v-for="taskNoneUser in backlog" :key="taskNoneUser.id">
-      <div v-if="!taskNoneUser.tasksUser" class="backlogTask">
-        <b>{{ taskNoneUser.body.header }}</b>
-        <span>{{ taskNoneUser.body.text }}</span>
-        <span>+{{ taskNoneUser.body.points }} баллов</span>
-        <button class="btn btn-secondary" @click="toAddTask(taskNoneUser.id)">
-          Взять задание
-        </button>
+  <div>
+    <h2>Задания</h2>
+    <div class="tasks">
+      <div>
+        <h3>Бэклог заданий</h3>
+        <div v-for="taskNoneUser in backlog" :key="taskNoneUser.id">
+          <div v-if="!taskNoneUser.tasksUser" class="backlogTask">
+            <b>{{ taskNoneUser.body.header }}</b>
+            <span>{{ taskNoneUser.body.text }}</span>
+            <span>+{{ taskNoneUser.body.points }} баллов</span>
+            <button
+              class="btn btn-secondary"
+              @click="toAddTask(taskNoneUser.id)"
+            >
+              Взять задание
+            </button>
+          </div>
+        </div>
       </div>
-    </div>
-    <h3>Задания</h3>
-    <hr />
-    <div v-for="task in tasks" :key="task.id">
-      <div v-if="task.tasksUser" class="oneUser">
-        <h4>{{ task.body.header }}</h4>
-        <p>{{ task.body.text }}</p>
-        Ответственный:
+      <div>
+        <h3>Ваши задания</h3>
+        <div v-for="task in tasks" :key="task.id">
+          <div v-if="task.tasksUser" class="oneUser">
+            <h2>{{ task.body.header }}</h2>
+            <p>{{ task.body.text }}</p>
+            <!-- Ответственный:
         <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
-        {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
-        <select
-          class="form-control small"
-          v-model="task.status"
-          @change="
-            toEditTask(
-              task.id,
-              task.status,
-              task.tasksUser.userPoints.id,
-              task.body.points
-            )
-          "
-        >
-          <option>Запланировано</option>
-          <option>В работе</option>
-          <option>Готово</option></select
-        >
-        <p>+{{ task.body.points }} баллов</p>
-        <minialert v-if="isShowAlertPoints"
-          ><p slot="title">
-            Вам начислено {{ task.body.points }} баллов
-          </p></minialert
-        >
+        {{ task.tasksUser.name }} {{ task.tasksUser.surname }} -->
+            <div class="oneUser__points">
+              <div><h3>Награда:<br>+{{ task.body.points }} баллов</h3>
+              </div>
+              <div>
+                <select
+                  class="form-control small"
+                  v-model="task.status"
+                  @change="
+                    toEditTask(
+                      task.id,
+                      task.status,
+                      task.tasksUser.userPoints.id,
+                      task.body.points
+                    )
+                  "
+                >
+                  <option>Запланировано</option>
+                  <option>В работе</option>
+                  <option>Готово</option></select
+                >
+              </div>
+              
+              <minialert v-if="isShowAlertPoints"
+                ><p slot="title">
+                  Вам начислено {{ task.body.points }} баллов
+                </p></minialert
+              >
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -170,20 +184,51 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_classes.scss";
 .backlogTask {
   display: grid;
   grid-template-columns: 1fr 2fr 0.5fr 0.5fr;
-  margin: 10px;
-  padding: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px gray;
-}
-.oneUser {
-  margin: 15px;
   padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px gray;
+  background: $violet;
+  border-radius: 10px;
+}
+.tasks {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  grid-auto-rows: 2em;
+  grid-gap: 0.5em;
+}
+
+.oneUser {
+  padding: 15px;
+  background: $violet;
+  border-radius: 10px;
+  margin-right: 2*$scrollBarVerticalWidth;
+}
+.oneUser__points {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+}
+.oneUser h2 {
+  color: $white;
+}
+.oneUser p {
+  color: $gray_3;
+}
+.form-control{
+  margin-top: 20px;
+  background: $violet;
+  border-radius: 10px;
+  color: $bright_violet;
+  border: 1px solid $bright_violet;
+  font-family: Roboto;
+font-style: normal;
+font-weight: 500;
+font-size: 16px;
+line-height: 18px
 }
 .smallAvatar {
   height: 24px;
