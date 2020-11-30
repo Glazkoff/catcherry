@@ -34,7 +34,7 @@
         $t("required")
       }}</span>
       <span class="form-text danger" v-else-if="!$v.login.email">{{
-        $t("email")
+        $t("reuiredEmail")
       }}</span>
     </div>
     <br />

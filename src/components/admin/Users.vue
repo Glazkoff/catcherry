@@ -164,7 +164,7 @@
           >: {{ user.name }}
         </p>
         <p>
-          <i18n path="patricity">{{ $t("patriciry") }}</i18n
+          <i18n path="patricity">{{ $t("patricity") }}</i18n
           >: {{ user.patricity }}
         </p>
         <p>

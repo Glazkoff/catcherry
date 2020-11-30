@@ -2,14 +2,14 @@
   <div id="main-view">
     <div id="side-bar">
       <div class="logo-block">
-        <img src="../assets/full_logo.svg" alt="Catcherry's logo" />
+        <FullLogo class="logo-img"></FullLogo>
       </div>
       <router-view name="sidebar" class="side-bar__inner"></router-view>
       <div class="bottom-panel-list">
         <div class="side-bar__locales">
           <div class="locales">
-            <a @click="setLocale('en')"><flag iso="us"></flag></a>
-            <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
+            <a @click="setLocale('en')">eng<flag iso="us"></flag></a>
+            <a @click="setLocale('ru')">rus<flag iso="ru"></flag></a>
           </div>
         </div>
         <div class="side-bar__nav-list">
@@ -49,42 +49,24 @@
     <div id="main-content">
       <div id="top-bar"><top-bar></top-bar></div>
       <router-view name="main" id="main-router-view"></router-view>
-      <!--
-      <div v-if="!isAppLoading" v-cloak>
-        <div class="locales">
-          <a @click="setLocale('en')"><flag iso="us"></flag></a>
-          <a @click="setLocale('ru')"><flag iso="ru"></flag></a>
-        </div>
-        <h1>{{ $t("welcomeMsg") }}</h1>
-        <nav> -->
-      <!-- FIXME: сделать id пользователя динамическим -->
-      <!-- <router-link to="/user/1">Профиль</router-link> |
-          <router-link to="/admin">Админпанель</router-link>
-        </nav>
-        <hr />
-        <router-view></router-view>
-      </div>
-      <div v-else>Загрузка... Здесь будет спиннер!</div> -->
     </div>
   </div>
 </template>
 
 <script>
 import TopBar from "@/components/TopBar.vue";
+import FullLogo from "@/assets/full_logo.svg";
+import { setI18nLanguage } from "@/i18n/i18n";
+
 export default {
   name: "Main",
-  components: { TopBar },
+  components: { TopBar, FullLogo },
   methods: {
     logOut() {
       this.$store.dispatch("LOG_OUT");
     },
     setLocale(locale) {
-      this.$i18n.locale = locale;
-    }
-  },
-  computed: {
-    isAppLoading() {
-      return this.$store.getters.isAppLoading;
+      setI18nLanguage(locale);
     }
   }
 };
@@ -114,7 +96,7 @@ export default {
     background-color: $violet;
 
     .logo-block {
-      & img {
+      & .logo-img {
         padding-left: 1rem;
         padding-top: 1rem;
         padding-bottom: 1rem;

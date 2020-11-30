@@ -75,7 +75,6 @@
 import Comments from "../components/Comments.vue";
 import {
   ONE_POST_QUERY,
-  // POSTS_QUERY,
   DELETE_LIKE_OF_POST,
   CREATE_LIKE_OF_POST
 } from "@/graphql/queries";
