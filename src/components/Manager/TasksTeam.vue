@@ -228,10 +228,10 @@ export default {
 
 <style>
 .oneUser {
-  margin: 15px;
+  /* margin: 15px; */
   padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px gray;
+  /* border-radius: 8px;
+  box-shadow: 0 2px 5px gray; */
 }
 .smallAvatar {
   height: 24px;

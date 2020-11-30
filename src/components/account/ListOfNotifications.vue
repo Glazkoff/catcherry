@@ -57,26 +57,30 @@ export default {
   },
   methods: {
     onDelete(object) {
-      // console.log(object);
-      // console.log(object.id);
       let index = this.notifications.findIndex(el => el.id === object.id);
-      // console.log(index);
       this.notifications.splice(index, 1);
     }
   }
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
 .list {
   height: 100%;
-  width: 18rem;
+  width: 24rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   float: right;
-  background: #f7f7f7;
-  overflow-x: hidden;
-  padding-top: 30px;
+  background: $violet;
+  // overflow-x: hidden;
+  // overflow-y: scroll;
+  padding-top: 1.4rem;
+  padding-bottom: 1.4rem;
+  padding-right: 1.6rem;
+  padding-left: 1.6rem;
+  box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.1);
 }
 </style>

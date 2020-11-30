@@ -9,15 +9,21 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       LikesOfPosts.belongsTo(models.Users, {
-        foreignKey: "id",
+        foreignKey: "userId",
         as: "userLikePosts"
       });
     }
   }
   LikesOfPosts.init(
     {
-      userId: DataTypes.INTEGER,
-      postId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      postId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
     },
     {
       sequelize,

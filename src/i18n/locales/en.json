@@ -1,5 +1,9 @@
 {
   "projectTitle": "CATCHERRY",
+  "nameuserMsg": "Darya",
+  "roleuserMsg": "Administrator",
+  "pointsMsg": "points",
+  "topbarnameMsg": "Personal account",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
   "listUser": "List of users",
