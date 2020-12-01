@@ -15,9 +15,9 @@
       <span class="form-text danger" v-if="!$v.fullName.required">{{
         $t("required")
       }}</span>
-      <span class="form-text danger" v-else-if="!$v.fullName.alpha"
-        >$t("requiredLetters")</span
-      >
+      <span class="form-text danger" v-else-if="!$v.fullName.alpha">{{
+        $t("requiredLetters")
+      }}</span>
     </div>
     <br />
     <label>{{ $t("signUp.login") }}</label
@@ -52,7 +52,9 @@
         $t("required")
       }}</span>
       <span class="form-text danger" v-else-if="!$v.password.minLength"
-        >$t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
+        >{{
+          $t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
+        }}
       </span>
     </div>
     <br />

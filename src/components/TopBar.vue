@@ -10,7 +10,9 @@
               id="gepleasurprised"
               style="display: none;"
             />
-            <li class="nav-logo"><h1>{{ $t("topbarnameMsg") }}</h1></li>
+            <li class="nav-logo">
+              <h1>{{ $t("topbarnameMsg") }}</h1>
+            </li>
             <li class="right ">
               <a class="userFoto"></a>
               <a class="nav-name"
@@ -279,9 +281,9 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
-.mainTopBar h1{
+.mainTopBar h1 {
   margin-block-start: 0em;
-    margin-block-end: 0em;
+  margin-block-end: 0em;
 }
 #topbar,
 #comptacagatin,
@@ -343,8 +345,8 @@ header {
 }
 
 #topbar ul li .nav-name p {
-    margin-block-start: 0em;
-    margin-block-end: 0.1em;
+  margin-block-start: 0em;
+  margin-block-end: 0.1em;
 }
 
 #topbar ul li .nav-point {
@@ -353,9 +355,9 @@ header {
   // padding-left: 30px;
 }
 #topbar ul li .nav-point svg {
- margin-left: 12px;
+  margin-left: 12px;
 }
-#topbar ul li .emailCard svg{
+#topbar ul li .emailCard svg {
   margin-left: 50px;
 }
 .icon-notificationTopBar {
@@ -395,7 +397,7 @@ header {
   top: 12px;
   left: 65px;
 }
-.userFoto{
+.userFoto {
   height: 48px;
   width: 48px;
   background-color: $gray_3;

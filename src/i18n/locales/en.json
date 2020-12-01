@@ -98,5 +98,6 @@
     "accountQuestion": "Already have an account?",
     "logInLink": "Log in!"
   },
-  "markRequiredField": "* - required field"
+  "markRequiredField": "* - required field",
+  "startMsg": "Hello, Polyweb!"
 }
