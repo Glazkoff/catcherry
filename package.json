@@ -40,7 +40,6 @@
     "vue-apollo": "^3.0.4",
     "vue-chartjs": "^3.5.1",
     "vue-clickaway": "^2.2.2",
-    "vue-flag-icon": "^1.0.6",
     "vue-i18n": "^8.20.0",
     "vue-router": "^3.2.0",
     "vuelidate": "^0.7.5",
