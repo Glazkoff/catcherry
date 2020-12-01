@@ -127,6 +127,7 @@ export default {
 
 .flexbox {
   display: flex;
+  width: 100%;
   padding: 3rem;
   flex-direction: column;
 }

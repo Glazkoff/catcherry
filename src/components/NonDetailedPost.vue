@@ -83,7 +83,8 @@ export default {
 .container {
   background: $violet;
   border-radius: 0.625rem;
-  width: 44rem;
+  width: 100%;
+  min-width: 35rem;
   min-height: 19rem;
   margin-bottom: 1rem;
   display: grid;
