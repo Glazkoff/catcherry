@@ -99,5 +99,9 @@
     "logInLink": "Log in!"
   },
   "markRequiredField": "* - required field",
-  "startMsg": "Hello, Polyweb!"
+  "startMsg": "Hello, Polyweb!",
+  "router": {
+    "feed": "News",
+    "main": "Main"
+  }
 }
