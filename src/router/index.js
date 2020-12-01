@@ -32,8 +32,10 @@ import TeamSettings from "@/components/manager/TeamSettings.vue";
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
+import UserStatistic from "@/components/account/UserStatistic.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
+import SideBarManager from "@/components/sidebar/SideBarManager.vue";
 
 import store from "@/store/index";
 
@@ -76,7 +78,7 @@ const routes = [
         name: "TeamSettings",
         components: {
           main: TeamSettings,
-          sidebar: SideBarDefault
+          sidebar: SideBarManager
         },
         props: true,
         children: [
@@ -133,22 +135,11 @@ const routes = [
             path: "tasks",
             name: "Tasks",
             component: Tasks
-          },
-          {
-            path: "points",
-            name: "PointsUser",
-            component: PointsUser
-          },
-          {
-            path: "/posts/:id",
-            name: "Posts",
-            component: DetailedPost
           }
         ]
       },
       {
         path: "/admin",
-        name: "AdminPanel",
         components: {
           main: AdminPanel,
           sidebar: SideBarDefault
@@ -205,14 +196,21 @@ const routes = [
           main: PointsUser,
           sidebar: SideBarDefault
         }
+      },
+      {
+        path: "/statistic",
+        name: "UserStatistic",
+        components: {
+          main: UserStatistic,
+          sidebar: SideBarDefault
+        }
       }
     ]
   },
   {
     path: "/login",
     components: {
-      default: Auth,
-      form: LogIn
+      default: Auth
     },
     children: [
       {
@@ -229,11 +227,18 @@ const routes = [
   },
   {
     path: "/signup",
-    name: "SignUp",
     components: {
-      default: Auth,
-      form: SignUp
+      default: Auth
     },
+    children: [
+      {
+        path: "",
+        name: "SignUp",
+        components: {
+          form: SignUp
+        }
+      }
+    ],
     meta: {
       guest: true
     }
@@ -256,6 +261,11 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  let lang = localStorage.getItem("lang");
+  if (!lang) {
+    lang = process.env.VUE_APP_I18N_LOCALE;
+    localStorage.setItem("lang", lang);
+  }
   // Если авторизация обязательна
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // Если присутствует токен, пропускаем
@@ -265,7 +275,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если отсутствует токен, редирект на страницу авторизации
     else {
-      next("/auth");
+      next("/login");
       return;
     }
   }
@@ -278,7 +288,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если есть токен, редирект на главную
     else {
-      next("/");
+      next("/feed");
       return;
     }
   }

@@ -1,53 +1,54 @@
 <template>
   <form class="form-auth" @submit.prevent="logIn">
-    <h1>Вход в Catcherry</h1>
-    <p>* - обязательное поле</p>
+    <h1>{{ $t("logIn.title") }}</h1>
+    <p>{{ $t("markRequiredField") }}</p>
     <div v-if="loginPasswordError" class="error">
-      <span>Ошибка ввода логина или пароля!</span>
+      <span>{{ $t("logIn.loginPasswordError") }}</span>
     </div>
-    <label>Логин *</label><br />
+    <label>{{ $t("logIn.login") }} *</label><br />
     <input
       :disabled="authLoading"
       type="text"
       v-model.trim="$v.login.$model"
-      placeholder="Введите логин"
+      :placeholder="$t('logIn.loginInputPlaceholder')"
       class="form-control block"
       @input="hideErrors()"
     />
     <div v-if="$v.login.$error" class="error">
-      <span v-if="!$v.login.required" class="form-text danger"
-        >Login is required</span
-      >
+      <span v-if="!$v.login.required" class="form-text danger">{{
+        $t("required")
+      }}</span>
     </div>
     <br />
-    <label>Пароль *</label><br />
+    <label>{{ $t("logIn.password") }} *</label><br />
     <input
       :disabled="authLoading"
       type="password"
       v-model.trim="$v.password.$model"
-      placeholder="Введите пароль"
+      :placeholder="$t('logIn.passwordInputPlaceholder')"
       class="form-control block"
       @input="hideErrors()"
     />
     <div v-if="$v.password.$error" class="error">
-      <span v-if="!$v.password.required" class="form-text danger"
-        >Password is required</span
-      >
-      <span v-else-if="!$v.password.minLength" class="form-text danger"
-        >Password must have at least
-        {{ $v.password.$params.minLength.min }} letters.</span
-      >
+      <span v-if="!$v.password.required" class="form-text danger">{{
+        $t("required")
+      }}</span>
+      <span v-else-if="!$v.password.minLength" class="form-text danger">{{
+        $t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
+      }}</span>
     </div>
     <br />
     <input
       class="btn btn-primary block"
       :disabled="authLoading"
       type="submit"
-      value="Войти"
+      :value="$t('logIn.buttonSubmit')"
     /><br />
     <p>
-      Нет аккаунта?
-      <router-link tag="a" to="/signup">Зарегистрироваться!</router-link>
+      {{ $t("logIn.noAccountQuestion") }}
+      <router-link tag="a" :to="{ name: 'SignUp' }">{{
+        $t("logIn.signUpLink")
+      }}</router-link>
     </p>
   </form>
 </template>
@@ -113,7 +114,7 @@ export default {
                   "SET_ACCESS_TOKEN",
                   resp.data.logIn.accessToken
                 );
-                this.$router.push("/");
+                this.$router.push({ name: "FeedOfPosts" });
               } else {
                 this.loginPasswordError = true;
               }

@@ -1,7 +1,8 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="!isAppLoading" v-cloak>
     <router-view></router-view>
   </div>
+  <div v-else>Загрузка... Здесь будет спиннер!</div>
 </template>
 
 <script>
@@ -20,6 +21,11 @@ export default {
         console.warn(err);
       }
     );
+  },
+  computed: {
+    isAppLoading() {
+      return this.$store.getters.isAppLoading;
+    }
   }
 };
 </script>
@@ -34,37 +40,7 @@ export default {
 }
 
 [v-cloak] {
-  display: block;
-  padding: 50px 0;
-
-  @keyframes spinner {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  &:before {
-    content: "";
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-top: -10px;
-    margin-left: -10px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    border-top-color: #333;
-    animation: spinner 0.6s linear infinite;
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  & > div {
-    display: none;
-  }
+  display: none;
 }
 .locales {
   display: flex;

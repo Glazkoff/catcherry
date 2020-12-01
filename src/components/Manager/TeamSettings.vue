@@ -1,19 +1,15 @@
 <template>
-  <div>
+  <div class="main_team">
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == id">
         <h1>Команда {{ t.name }}</h1>
-        <div class="every">
-          <NavBar class="navig" />
-          <router-view class="cont" />
-        </div>
+        <router-view />
       </div>
     </div>
   </div>
 </template>
 
 <script>
-import NavBar from "@/components/manager/NavBar";
 import { TEAM_IN_ORG_QUERY } from "@/graphql/queries";
 export default {
   apollo: {
@@ -27,9 +23,6 @@ export default {
       }
     }
   },
-  components: {
-    NavBar
-  },
   data() {
     return {
       id: this.$route.params.id // id команды
@@ -38,6 +31,7 @@ export default {
 };
 </script>
 
+<<<<<<< HEAD
 <style lang="scss">
 .every {
   display: flex;
@@ -49,5 +43,12 @@ export default {
 
 .cont {
   width: 50%;
+=======
+<style lang="scss" scoped>
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+.main_team {
+  padding: 0 50px;
+>>>>>>> origin/dev
 }
 </style>
