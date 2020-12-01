@@ -8,7 +8,7 @@
         tag="h2"
         :to="{ name: 'Posts', params: { id: post.id } }"
         class="heading"
-        >{{ post.body.header }}</router-link
+        >{{post.body.header}}</router-link
       >
       <small class="infoBody">
         {{ post.body.text }}
@@ -17,17 +17,20 @@
       <small class="infoDate">
         {{ $d(post.createdAt, "number") }}
       </small>
+
+      <div class="spaceForLikes"></div>
+
       <div class="iconContainer">
-        <div class="iconAndNumber">
-          <div class="icon" v-on:click="onLike(post.id)">
+        <div class="iconAndNumber" v-on:click="onLike(post.id)">
+          <div class="icon">
             <EmptyLike v-if="!isLikedByUser"></EmptyLike>
             <FilledLike v-else></FilledLike>
           </div>
           <p class="numOfIcon">{{ post.likesOfPost.length }}</p>
         </div>
 
-        <div class="iconAndNumber">
-          <div class="icon" v-on:click="onLink(post.id)">
+        <div class="iconAndNumber" v-on:click="onLink(post.id)">
+          <div class="icon">
             <Comment></Comment>
           </div>
           <p class="numOfIcon">3</p>
@@ -81,7 +84,7 @@ export default {
   background: $violet;
   border-radius: 0.625rem;
   width: 44rem;
-  height: 19rem;
+  min-height: 19rem;
   margin-bottom: 1rem;
   display: grid;
   grid-template-rows: 1fr;
@@ -109,31 +112,44 @@ export default {
   color: $white;
   margin-top: 0;
   margin-bottom: 2rem;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 2;
 }
 
 .infoDate {
   color: $gray_3;
+  display: inline-block;
+  margin-bottom: 1rem;
 }
 
 .infoBody {
   width: 100%;
+  margin-bottom: 1rem;
   color: $gray_3;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;
   -webkit-box-orient: vertical;
-  -webkit-line-clamp: 4;
+  -webkit-line-clamp: 5;
   max-height: 4.25rem;
 }
 
+.spaceForLikes {
+  height: 20px;
+}
 .iconContainer {
   display: flex;
   position: absolute;
-  bottom: 36px;
+  bottom: 2.25rem;
+  height: 20px;
 }
 
 .iconAndNumber {
   display: flex;
+  cursor: pointer;
   align-items: center;
 }
 
@@ -149,7 +165,6 @@ export default {
 .icon {
   width: 1.25rem;
   height: 1.25rem;
-  cursor: pointer;
   margin-left: 0;
   margin-right: 0.3rem;
 }
