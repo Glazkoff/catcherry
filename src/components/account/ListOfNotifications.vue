@@ -1,11 +1,14 @@
 <template>
-  <div class="list">
-    <notification
-      @delete="onDelete"
-      v-for="notification in notifications"
-      :key="notification.id"
-      :notification="notification"
-    ></notification>
+  <div>
+    <div class="spaceForNotifications"></div>
+    <div class="list">
+      <notification
+        @delete="onDelete"
+        v-for="notification in notifications"
+        :key="notification.id"
+        :notification="notification"
+      ></notification>
+    </div>
   </div>
 </template>
 
@@ -66,21 +69,45 @@ export default {
 
 <style lang="scss">
 @import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
 @import "@/styles/_classes.scss";
+.spaceForNotifications {
+  width: 24rem;
+}
 .list {
-  height: 100%;
+  transform: scaleX(-1);
+  height: calc(100% - #{$topBarHeight});
   width: 24rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  float: right;
+  top: $topBarHeight;
+  bottom: -$topBarHeight;
   background: $violet;
-  // overflow-x: hidden;
-  // overflow-y: scroll;
+  position: fixed;
+  overflow-x: hidden;
+  overflow-y: scroll;
+  right: 17px;
   padding-top: 1.4rem;
   padding-bottom: 1.4rem;
   padding-right: 1.6rem;
   padding-left: 1.6rem;
   box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.1);
+
+  &::-webkit-scrollbar-track {
+    background-color: $white;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: $white;
+    border-radius: 5px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background-color: $violet_3;
+    border-radius: 5px;
+  }
 }
 </style>

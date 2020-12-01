@@ -134,5 +134,9 @@ export default {
 .doubleColumn {
   display: flex;
   justify-content: space-between;
+  & .flexbox h2 {
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+  }
 }
 </style>

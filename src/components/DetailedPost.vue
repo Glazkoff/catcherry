@@ -18,7 +18,7 @@
         </p>
         <div class="iconContainer">
           <div class="iconAndNumber" v-on:click="onLike(post.id)">
-            <div class="icon" >
+            <div class="icon">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -45,7 +45,7 @@
           </div>
 
           <div class="iconAndNumber" v-on:click="onComment(post.id)">
-            <div class="icon" >
+            <div class="icon">
               <svg
                 aria-hidden="true"
                 focusable="false"

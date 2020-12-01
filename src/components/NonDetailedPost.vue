@@ -8,7 +8,7 @@
         tag="h2"
         :to="{ name: 'Posts', params: { id: post.id } }"
         class="heading"
-        >{{post.body.header}}</router-link
+        >{{ post.body.header }}</router-link
       >
       <small class="infoBody">
         {{ post.body.text }}
