@@ -31,24 +31,10 @@ export default {
 };
 </script>
 
-<<<<<<< HEAD
-<style lang="scss">
-.every {
-  display: flex;
-}
-
-.navig {
-  width: 25%;
-}
-
-.cont {
-  width: 50%;
-=======
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
 .main_team {
   padding: 0 50px;
->>>>>>> origin/dev
 }
 </style>
