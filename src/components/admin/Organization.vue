@@ -288,23 +288,25 @@
           v-model="findString"
           type="text"
           :placeholder="$t('placeholderSearchByOrgs')"
-          class="form-control"
+          class="form-control block"
         />
         <div
           class="card"
           v-for="organization in filterOrganization"
           :key="organization.id"
         >
-          <div class="card_img">ФОТО</div>
+          <div class="card_img">
+            <img src="@/assets/avatar.jpg" />
+          </div>
           <div class="card_body">
-            <h3>{{ organization.name }}</h3>
+            <p>{{ organization.name }}</p>
             <p>№ {{ organization.id }}</p>
           </div>
           <div
             @click="showFullInformation(organization.id)"
             class="card_action"
           >
-            >
+            <ArrowRight></ArrowRight>
           </div>
         </div>
       </div>
@@ -328,6 +330,7 @@
 </template>
 
 <script>
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import { required, numeric } from "vuelidate/lib/validators";
@@ -341,7 +344,7 @@ import {
   TEAMS_IN_ONE_ORG_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup },
+  components: { minialert, popup, ArrowRight },
   apollo: {
     // Список всех организаций с краткой информацией
     organizations: {
@@ -656,27 +659,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button {
-  width: 100%;
-  margin: 0 5%;
-}
-.oneOrganization {
-  display: flex;
-  border: 2px solid black;
-  justify-content: space-between;
-}
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
 .teams-list {
   border: 1px solid black;
   padding: 5px;
-}
-textarea {
-  display: block;
-  width: 80%;
-  height: 100px;
 }
 </style>

@@ -131,7 +131,10 @@
       >
         <h3>{{ $t("loading") }}...</h3>
         <h4 v-if="queryError">{{ queryError }}</h4>
-        <button @click="cancelFullInformation()" class="btn btn-alternate">
+        <button
+          @click="cancelFullInformation()"
+          class="btn btn-alternate block"
+        >
           {{ $t("cancel") }}
         </button>
       </div>
@@ -162,7 +165,7 @@
         <p>{{ $t("login") }}: {{ user.login }}</p>
         <div v-if="!isEditPoints && getPointsUser !== null">
           <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
-          <button @click="editPoints()" class="btn btn-primary">
+          <button @click="editPoints()" class="btn btn-primary block">
             {{ $t("editNumberOfPoints") }}
           </button>
         </div>
@@ -202,14 +205,14 @@
             <button
               v-if="team.status === 'Принято'"
               @click="changeStatusInTeam(team, 'Не принято')"
-              class="btn btn-primary"
+              class="btn btn-primary block"
             >
               {{ $t("deleteUserFromTeam") }}
             </button>
             <button
               v-if="team.status !== 'Принято'"
               @click="changeStatusInTeam(team, 'Принято')"
-              class="btn btn-primary"
+              class="btn btn-primary block"
             >
               {{ $t("addUserToTeam") }}
             </button>
@@ -243,15 +246,20 @@
           v-model.trim="findString"
           type="text"
           :placeholder="$t('placeholderSearchByUsers')"
-          class="form-control"
+          class="form-control block"
         />
-        <div class="oneUser" v-for="user in filterUser" :key="user.id">
-          <p>{{ user.id }}.</p>
-          <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
-          <p>{{ user.login }}</p>
-          <button @click="showFullInformation(user.id)" class="btn btn-primary">
-            {{ $t("more") }}
-          </button>
+        <div class="card" v-for="user in filterUser" :key="user.id">
+          <div class="card_img">
+            <img src="@/assets/avatar.jpg" />
+          </div>
+          <div class="card_body">
+            <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
+            <p>{{ user.login }}</p>
+            <p>№ {{ user.id }}</p>
+          </div>
+          <div @click="showFullInformation(user.id)" class="card_action">
+            <ArrowRight></ArrowRight>
+          </div>
         </div>
       </div>
     </div>
@@ -275,6 +283,7 @@
 
 <script>
 import popup from "@/components/Popup.vue";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
 import minialert from "@/components/MiniAlert.vue";
 import { required } from "vuelidate/lib/validators";
 import {
@@ -289,7 +298,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert, popup },
+  components: { minialert, popup, ArrowRight },
   apollo: {
     // Получить список всех пользователей
     users: {
@@ -655,30 +664,11 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-button {
-  width: 100%;
-  margin: 0 2%;
-}
-.oneUser {
-  display: grid;
-  grid-template-columns: 5% 25% 10% 15% 15% 15% 15%;
-  grid-template-rows: 1fr;
-}
 .oneTeam {
   border: 1px solid black;
   padding: 10px;
   p {
     display: block;
   }
-}
-
-input,
-select {
-  display: block;
 }
 </style>
