@@ -31,7 +31,10 @@
         </div>
       </router-link>
       <router-link
-        :to="{ name: 'UserInOrganization', params: { id: 1 } }"
+        :to="{
+          name: 'UserInOrganization',
+          params: { id: $store.getters.decodedToken.id }
+        }"
         :exact="true"
         active-class="nav-checked"
       >
@@ -212,7 +215,10 @@
         </div>
       </router-link>
       <router-link
-        :to="{ name: 'TeamList' }"
+        :to="{
+          name: 'TeamList',
+          params: { id: $store.getters.decodedToken.id }
+        }"
         :exact="true"
         active-class="nav-checked"
       >

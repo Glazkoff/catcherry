@@ -110,7 +110,7 @@ const routes = [
         ]
       },
       {
-        path: "/user/:id",
+        path: "/user",
         components: {
           main: User,
           sidebar: SideBarDefault
