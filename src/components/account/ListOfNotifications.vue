@@ -75,7 +75,6 @@ export default {
   width: 24rem;
 }
 .list {
-  transform: scaleX(-1);
   height: calc(100% - #{$topBarHeight});
   width: 24rem;
   display: flex;
@@ -87,7 +86,7 @@ export default {
   position: fixed;
   overflow-x: hidden;
   overflow-y: scroll;
-  right: 17px;
+  right: 0;
   padding-top: 1.4rem;
   padding-bottom: 1.4rem;
   padding-right: 1.6rem;

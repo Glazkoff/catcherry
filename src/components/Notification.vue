@@ -61,7 +61,6 @@ export default {
 
 .notification {
   width: 20rem;
-  transform: scaleX(-1);
   margin-bottom: 1rem;
 }
 
