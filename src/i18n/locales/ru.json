@@ -2,7 +2,7 @@
   "projectTitle": "Кэтчерри",
   "nameuserMsg": "Дарья",
   "roleuserMsg": "Администратор",
-  "pointsMsg": "балла",
+  "pointsMsg": "нет баллов | {n} балл | {n} балла | {n} баллов",
   "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",

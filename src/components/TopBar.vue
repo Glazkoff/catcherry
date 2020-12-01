@@ -228,7 +228,7 @@
             </li>
             <li class="right">
               <p class="nav-point">
-                52 {{ $t("pointsMsg") }}
+               {{ $tc('pointsMsg', 0)  }}
                 <svg
                   width="18"
                   height="17"
