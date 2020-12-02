@@ -41,9 +41,9 @@
 </template>
 
 <script>
-import EmptyLike from "@/assets/empty_like.svg";
-import FilledLike from "@/assets/filled_like.svg";
-import Comment from "@/assets/comment.svg";
+import EmptyLike from "@/assets/empty_like.svg?inline";
+import FilledLike from "@/assets/filled_like.svg?inline";
+import Comment from "@/assets/comment.svg?inline";
 export default {
   name: "NonDetailedPost",
   components: { EmptyLike, FilledLike, Comment },

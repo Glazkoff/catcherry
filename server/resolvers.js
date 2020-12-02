@@ -365,7 +365,7 @@ module.exports = {
     /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
-      { name, login, password, fingerprint },
+      { name, birthday, login, password, fingerprint },
       { res, db }
     ) => {
       let hashPassword = bcrypt.hashSync(password, salt);
@@ -374,6 +374,7 @@ module.exports = {
       let user = await db.Users.create({
         login,
         name,
+        birthday,
         password: hashPassword
       });
 
