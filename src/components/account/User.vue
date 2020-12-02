@@ -1,27 +1,5 @@
 <template>
   <div>
-    <!--  <div class="main-account">
-      боковое меню для пользователя без команды 
-      <div class="sidebar">
-        <router-link tag="a" :to="'/user/' + $route.params.id"
-          >Профиль</router-link
-        >
-        <router-link tag="a" :to="'/user/' + $route.params.id + '/user_org'"
-          >Организации</router-link
-        >
-        <router-link tag="a" :to="'/user/' + $route.params.id + '/feed'"
-          >Лента новостей</router-link
-        >
-        <router-link tag="a" :to="'/user/' + $route.params.id + '/list_req'"
-          >Заявки</router-link
-        >
-        <router-link tag="a" :to="'/user/' + 1 + '/points'">Баллы</router-link>
-        <router-link tag="a" :to="'/user/' + $route.params.id + '/tasks'"
-          >Задания</router-link
-        >
-      </div>
-      <div>
-      -->
     <router-view></router-view>
   </div>
 </template>

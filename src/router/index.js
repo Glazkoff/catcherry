@@ -74,24 +74,23 @@ const routes = [
         }
       },
       {
-        path: "/manager/teams",
+        path: "/manager",
         name: "TeamList",
         components: {
           main: TeamList,
           sidebar: SideBarDefault
         },
         meta: {
-          breadCrumb: "Teams!"
+          breadCrumb: "manager"
         }
       },
       {
-        path: "/manager/teams/:id",
+        path: "teams",
         name: "TeamSettings",
         components: {
           main: TeamSettings,
           sidebar: SideBarManager
         },
-        props: true,
         children: [
           {
             path: "team_members",
@@ -121,7 +120,7 @@ const routes = [
         ]
       },
       {
-        path: "/user/:id",
+        path: "/user",
         meta: {
           breadCrumb: i18n.t("router.user")
         },
