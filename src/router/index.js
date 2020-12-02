@@ -78,17 +78,20 @@ const routes = [
         name: "TeamList",
         components: {
           main: TeamList,
-          sidebar: SideBarManager
+          sidebar: SideBarDefault
         },
         meta: {
-          breadCrumb: "Teams!"
+          breadCrumb: "manager"
+        }
+      },
+      {
+        path: "teams",
+        name: "TeamSettings",
+        components: {
+          main: TeamSettings,
+          sidebar: SideBarManager
         },
         children: [
-          {
-            path: "teams",
-            name: "TeamSettings",
-            component: TeamSettings
-          },
           {
             path: "team_members",
             name: "TeamMembers",

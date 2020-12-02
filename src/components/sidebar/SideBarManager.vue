@@ -4,7 +4,7 @@
       <router-link
         :to="{
           name: 'RaitingList',
-          params: { id: $store.getters.decodedToken.id }
+          params: { id: $route.params.id }
         }"
         :exact="true"
         active-class="nav-checked"
@@ -45,7 +45,7 @@
         </div>
       </router-link>
       <router-link
-        :to="{ name: 'TeamMembers', params: { id: 1 } }"
+        :to="{ name: 'TeamMembers', params: { id: $route.params.id } }"
         :exact="true"
         active-class="nav-checked"
       >
@@ -71,7 +71,7 @@
         </div>
       </router-link>
       <router-link
-        :to="{ name: 'RequestsList', params: { id: 1 } }"
+        :to="{ name: 'RequestsList', params: { id: $route.params.id } }"
         :exact="true"
         active-class="nav-checked"
       >
@@ -108,7 +108,7 @@
       <router-link
         :to="{
           name: 'EditTeam',
-          params: { id: $store.getters.decodedToken.id }
+          params: { id: $route.params.id }
         }"
         :exact="true"
         active-class="nav-checked"
@@ -137,9 +137,7 @@
       <router-link
         :to="{
           name: 'TasksTeam',
-          params: {
-            id: $store.getters.decodedToken.id
-          }
+          params: { id: $route.params.id }
         }"
         :exact="true"
         active-class="nav-checked"
@@ -180,7 +178,10 @@
           </div>
         </div>
       </router-link>
-      <router-link :to="{ name: 'Dashboard' }" active-class="nav-checked">
+      <router-link
+        :to="{ name: 'TasksTeam', params: { id: $route.params.id } }"
+        active-class="nav-checked"
+      >
         <div class="side-bar__nav-list__nav-element">
           <div class="side-bar__nav-list__nav-element__icon">
             <svg
