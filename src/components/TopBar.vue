@@ -97,9 +97,9 @@
 
 <script>
 // import { directive as onClickaway } from "vue-clickaway";
-import MailIcon from "@/assets/svg/topbar/mail_top-bar.svg";
-import StarIcon from "@/assets/svg/topbar/star_top-bar.svg";
-import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg";
+import MailIcon from "@/assets/svg/topbar/mail_top-bar.svg?inline";
+import StarIcon from "@/assets/svg/topbar/star_top-bar.svg?inline";
+import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg?inline";
 import {
   GET_POINTS_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
