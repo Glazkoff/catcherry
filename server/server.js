@@ -64,7 +64,7 @@ app.use(cookieParser());
 // .env NODE_ENV = development
 // либо запустить сервер командой
 // NODE_ENV=development node server/server.js
-if (process.env.NODE_ENV !== 'development'){
+if (process.env.NODE_ENV !== "development") {
   app.use(helmet());
 }
 
