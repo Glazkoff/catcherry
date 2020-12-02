@@ -17,11 +17,13 @@
               <a class="userFoto"></a>
               <a class="nav-name"
                 ><p>{{ this.$store.getters.decodedToken.name }}</p>
-                <small></small>
-                <small v-if="oneUserInTeams.role.name == null">-</small>
+                <small>
+                  -
+                </small>
+                <!-- <small v-if="oneUserInTeams.role.name == null">-</small>
                 <small v-if="oneUserInTeams.role.name != null">{{
                   oneUserInTeams.role.name
-                }}</small>
+                }}</small> -->
               </a>
             </li>
             <li class="right icon-notificationTopBar">
@@ -63,7 +65,7 @@
                                   <p>{{ notification.body.text }}</p>
                                 </div>
                                 <div class="txt sub">
-                                  {{ notification.createdAt }}
+                                  {{ $d(notification.createdAt, "number") }}
                                 </div>
                               </a>
                             </div>
