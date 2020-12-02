@@ -16,9 +16,15 @@
             <li class="right ">
               <a class="userFoto"></a>
               <a class="nav-name"
-                ><p>{{ $t("nameuserMsg") }}</p>
-                <small>{{ $t("roleuserMsg") }}</small></a
-              >
+                ><p>{{ this.$store.getters.decodedToken.name }}</p>
+                <small>
+                  -
+                </small>
+                <!-- <small v-if="oneUserInTeams.role.name == null">-</small>
+                <small v-if="oneUserInTeams.role.name != null">{{
+                  oneUserInTeams.role.name
+                }}</small> -->
+              </a>
             </li>
             <li class="right icon-notificationTopBar">
               <div class="notificationTopBar">
@@ -26,28 +32,7 @@
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
                     <div class="number">.</div>
-                    <svg
-                      class="fas"
-                      height="15pt"
-                      viewBox="-43 0 512 512"
-                      width="15pt"
-                      xmlns="http://www.w3.org/2000/svg"
-                    >
-                      <path
-                        d="m413.417969 360.8125c-32.253907-27.265625-50.75-67.117188-50.75-109.335938v-59.476562c0-75.070312-55.765625-137.214844-128-147.625v-23.042969c0-11.796875-9.558594-21.332031-21.335938-21.332031-11.773437 0-21.332031 9.535156-21.332031 21.332031v23.042969c-72.257812 10.410156-128 72.554688-128 147.625v59.476562c0 42.21875-18.496094 82.070313-50.945312 109.503907-8.296876 7.105469-13.054688 17.429687-13.054688 28.351562 0 20.589844 16.746094 37.335938 37.332031 37.335938h352c20.589844 0 37.335938-16.746094 37.335938-37.335938 0-10.921875-4.757813-21.246093-13.25-28.519531zm0 0"
-                        fill="#ffffff"
-                        data-original="#000000"
-                        style=""
-                        class=""
-                      />
-                      <path
-                        d="m213.332031 512c38.636719 0 70.957031-27.542969 78.378907-64h-156.757813c7.425781 36.457031 39.746094 64 78.378906 64zm0 0"
-                        fill="#ffffff"
-                        data-original="#000000"
-                        style=""
-                        class=""
-                      />
-                    </svg>
+                    <NotificationIcon></NotificationIcon>
                     <div class="box">
                       <div class="display">
                         <div class="nothing">
@@ -55,139 +40,35 @@
                         </div>
                         <div class="cont">
                           <!-- Fold this div and try deleting evrything inbetween -->
-                          <div class="sec new">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
-                                />
-                              </div>
-                              <div class="txt">
-                                James liked your post: "Pure css notification
-                                box"
-                              </div>
-                              <div class="txt sub">11/7 - 2:30 pm</div>
-                            </a>
-                          </div>
-                          <div class="sec new">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="https://obamawhitehouse.archives.gov/sites/obamawhitehouse.archives.gov/files/styles/person_medium_photo/public/person-photo/amanda_lucidon22.jpg?itok=JFPi8OFJ"
-                                />
-                              </div>
-                              <div class="txt">
-                                Annita liked your post: "Pure css notification
-                                box"
-                              </div>
-                              <div class="txt sub">11/7 - 2:13 pm</div>
-                            </a>
-                          </div>
-                          <div class="sec">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR3O45RK9qyCrZJivYsY6PmeVEJH07l7bkoolJmscBsNjzump27"
-                                />
-                              </div>
-                              <div class="txt">
-                                Brie liked your post: "Pure css notification
-                                box"
-                              </div>
-                              <div class="txt sub">11/6 - 9:35 pm</div>
-                            </a>
-                          </div>
-                          <div class="sec">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="https://c1.staticflickr.com/4/3725/10214643804_75c0b6eeab_b.jpg"
-                                />
-                              </div>
-                              <div class="txt">
-                                Madison liked your post: "Pure css notification
-                                box"
-                              </div>
-                              <div class="txt sub">11/6 - 4:04 pm</div>
-                            </a>
-                          </div>
-                          <div class="sec">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="https://upload.wikimedia.org/wikipedia/commons/5/52/NG_headshot_white_shirt_square_Jan18.jpg"
-                                />
-                              </div>
-                              <div class="txt">
-                                Ted liked your post: "Pure css notification box"
-                              </div>
-                              <div class="txt sub">11/6 - 10:37 am</div>
-                            </a>
-                          </div>
-                          <div class="sec">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="https://upload.wikimedia.org/wikipedia/commons/d/dd/Pat-headshot-square.jpg"
-                                />
-                              </div>
-                              <div class="txt">
-                                Tommas liked your post: "Pure css notification
-                                box"
-                              </div>
-                              <div class="txt sub">11/5 - 7:30 pm</div>
-                            </a>
-                          </div>
-                          <div class="sec">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="https://c1.staticflickr.com/8/7407/13785133614_6254abb8c4.jpg"
-                                />
-                              </div>
-                              <div class="txt">
-                                Claire liked your post: "Pure css notification
-                                box"
-                              </div>
-                              <div class="txt sub">11/5 - 2:30 pm</div>
-                            </a>
-                          </div>
-                          <div class="sec">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="//c1.staticflickr.com/1/185/440890151_54c5b920b0_b.jpg"
-                                />
-                              </div>
-                              <div class="txt">
-                                Jerimaiah liked your post: "Pure css
-                                notification box"
-                              </div>
-                              <div class="txt sub">11/5 - 1:34 pm</div>
-                            </a>
-                          </div>
-                          <div class="sec">
-                            <a href="#">
-                              <div class="profCont">
-                                <img
-                                  class="profile"
-                                  src="//c2.staticflickr.com/4/3397/3585544855_28442029a5_z.jpg?zz=1"
-                                />
-                              </div>
-                              <div class="txt">
-                                Debra liked your post: "Pure css notification
-                                box"
-                              </div>
-                              <div class="txt sub">11/5 - 10:20 am</div>
-                            </a>
+
+                          <div
+                            class="sec new"
+                            v-for="notification in notifications"
+                            :key="notification.id"
+                          >
+                            <div
+                              v-if="
+                                notification.forAllUsers ==
+                                  oneUserInTeams.userId ||
+                                  notification.forAllUsers == null
+                              "
+                            >
+                              <a href="#">
+                                <div class="profCont">
+                                  <img
+                                    class="profile"
+                                    src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
+                                  />
+                                </div>
+                                <div class="txt">
+                                  <h3>{{ notification.body.header }}</h3>
+                                  <p>{{ notification.body.text }}</p>
+                                </div>
+                                <div class="txt sub">
+                                  {{ $d(notification.createdAt, "number") }}
+                                </div>
+                              </a>
+                            </div>
                           </div>
                         </div>
                       </div>
@@ -198,51 +79,13 @@
             </li>
             <li class="right">
               <p class="emailCard">
-                <svg
-                  xmlns="http://www.w3.org/2000/svg"
-                  xmlns:xlink="http://www.w3.org/1999/xlink"
-                  version="1.1"
-                  width="20"
-                  height="18"
-                  viewBox="0 0 350 350"
-                  xml:space="preserve"
-                >
-                  <g
-                    id="icon"
-                    style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: none; fill-rule: nonzero; opacity: 1;"
-                    transform="translate(-1.9444444444444287 -1.9444444444444287) scale(3.89 3.89)"
-                  >
-                    <path
-                      d="M 45 51.815 l 45 -33.87 v -1.967 c 0 -2.03 -1.646 -3.676 -3.676 -3.676 H 3.676 C 1.646 12.302 0 13.948 0 15.978 v 1.967 L 45 51.815 z"
-                      style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
-                      transform=" matrix(1 0 0 1 0 0) "
-                      stroke-linecap="round"
-                    />
-                    <path
-                      d="M 47.405 60.019 c -0.712 0.536 -1.559 0.804 -2.405 0.804 s -1.693 -0.268 -2.405 -0.804 L 0 27.958 v 46.064 c 0 2.03 1.646 3.676 3.676 3.676 h 82.648 c 2.03 0 3.676 -1.646 3.676 -3.676 V 27.958 L 47.405 60.019 z"
-                      style="stroke: none; stroke-width: 1; stroke-dasharray: none; stroke-linecap: butt; stroke-linejoin: miter; stroke-miterlimit: 10; fill: rgb(255,255,255); fill-rule: nonzero; opacity: 1;"
-                      transform=" matrix(1 0 0 1 0 0) "
-                      stroke-linecap="round"
-                    />
-                  </g>
-                </svg>
+                <MailIcon></MailIcon>
               </p>
             </li>
             <li class="right">
               <p class="nav-point">
-                52 {{ $t("pointsMsg") }}
-                <svg
-                  width="18"
-                  height="17"
-                  viewBox="0 0 18 17"
-                  fill="none"
-                  xmlns="http://www.w3.org/2000/svg"
-                >
-                  <path
-                    d="M16.7365 5.89649L11.7775 5.17579L9.56073 0.681648C9.50019 0.558601 9.40058 0.458992 9.27753 0.398445C8.96894 0.246101 8.59394 0.373054 8.43964 0.681648L6.22284 5.17579L1.26386 5.89649C1.12714 5.91602 1.00214 5.98048 0.906439 6.07813C0.790739 6.19705 0.726984 6.35704 0.729181 6.52294C0.731378 6.68884 0.799349 6.84708 0.918158 6.9629L4.50605 10.4609L3.65839 15.4004C3.63851 15.5153 3.65123 15.6335 3.6951 15.7415C3.73896 15.8496 3.81222 15.9432 3.90657 16.0117C4.00092 16.0802 4.11259 16.1209 4.2289 16.1292C4.34521 16.1375 4.46152 16.113 4.56464 16.0586L9.00019 13.7266L13.4357 16.0586C13.5568 16.1231 13.6975 16.1445 13.8322 16.1211C14.1721 16.0625 14.4006 15.7402 14.342 15.4004L13.4943 10.4609L17.0822 6.9629C17.1799 6.86719 17.2443 6.74219 17.2639 6.60548C17.3166 6.26368 17.0783 5.94727 16.7365 5.89649Z"
-                    fill="white"
-                  />
-                </svg>
+                {{ $tc("pointsMsg", pointQuantity) }}
+                <StarIcon></StarIcon>
               </p>
             </li>
           </ul>
@@ -254,15 +97,48 @@
 
 <script>
 // import { directive as onClickaway } from "vue-clickaway";
-
+import MailIcon from "@/assets/svg/topbar/mail_top-bar.svg";
+import StarIcon from "@/assets/svg/topbar/star_top-bar.svg";
+import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg";
+import {
+  GET_POINTS_QUERY,
+  ONE_USER_IN_TEAMS_QUERY,
+  NOTIFICATIONS_USER_QUERY
+} from "@/graphql/queries";
 export default {
   name: "top-bar",
+  components: {
+    MailIcon,
+    StarIcon,
+    NotificationIcon
+  },
   directives: {
     // onClickaway: onClickaway
   },
   // data: {
   //   open: false
   // },
+  apollo: {
+    getPointsUser: {
+      query: GET_POINTS_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
+    },
+    oneUserInTeams: {
+      query: ONE_USER_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
+    },
+    notifications: {
+      query: NOTIFICATIONS_USER_QUERY
+    }
+  },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
@@ -279,6 +155,13 @@ export default {
       let matchedLength =
         this.$route.matched.length != 0 ? this.$route.matched.length : 0;
       return this.$route.matched[matchedLength - 1].meta.breadCrumb;
+    },
+    pointQuantity() {
+      if (this.getPointsUser == undefined) {
+        return "-";
+      } else {
+        return this.getPointsUser.pointQuantity;
+      }
     }
   }
 };
@@ -296,6 +179,7 @@ export default {
 #comptacagatin,
 #luepgoposion {
   width: 100%;
+  height: $topBarHeight;
 }
 
 #topbar ul {
@@ -333,11 +217,12 @@ export default {
 
 header {
   width: 100%;
+  height: $topBarHeight;
   background: $dark_blue;
   justify-content: center;
-  padding-top: 20px;
+  padding-top: 10px;
   padding-bottom: 60px;
-  border-bottom: 5px solid $violet;
+  border-bottom: 2px solid $violet_3;
 }
 
 .nav-logo {
@@ -363,6 +248,9 @@ header {
 }
 #topbar ul li .nav-point svg {
   margin-left: 12px;
+}
+.emailCard {
+  visibility: hidden;
 }
 #topbar ul li .emailCard svg {
   margin-left: 50px;
