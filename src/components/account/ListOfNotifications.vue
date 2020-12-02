@@ -75,7 +75,7 @@ export default {
   width: 24rem;
 }
 
-.wrapOfList{
+.wrapOfList {
   margin-top: -20px;
 }
 
