@@ -18,14 +18,14 @@ export default {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: this.$route.params.id
+          organizationId: +this.$route.params.id
         };
       }
     }
   },
   data() {
     return {
-      id: this.$route.params.id // id команды
+      id: +this.$route.params.id // id команды
     };
   }
 };
