@@ -96,7 +96,8 @@
     "passwordPlaceholder": "Введите пароль",
     "buttonSubmit": "Зарегистрироваться",
     "accountQuestion": "Уже есть аккаунт?",
-    "logInLink": "Войти!"
+    "logInLink": "Войти!",
+    "birthday": "День рождения"
   },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",
