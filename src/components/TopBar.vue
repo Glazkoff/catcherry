@@ -17,13 +17,11 @@
               <a class="userFoto"></a>
               <a class="nav-name"
                 ><p>{{ this.$store.getters.decodedToken.name }}</p>
-                <small>
+                <!-- <small>
                   -
-                </small>
-                <!-- <small v-if="oneUserInTeams.role.name == null">-</small>
-                <small v-if="oneUserInTeams.role.name != null">{{
-                  oneUserInTeams.role.name
-                }}</small> -->
+                </small> -->
+                <small v-if="roleUser == null">-</small>
+                <small v-if="roleUser != null">{{ roleUser }}</small>
               </a>
             </li>
             <li class="right icon-notificationTopBar">
@@ -31,7 +29,7 @@
                 <a href="#" class="nav-notificationTopBar">
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
-                    <div class="number">.</div>
+                    <div class="number" v-if="notifications.length > 0">.</div>
                     <NotificationIcon></NotificationIcon>
                     <div class="box">
                       <div class="display">
@@ -48,8 +46,7 @@
                           >
                             <div
                               v-if="
-                                notification.forAllUsers ==
-                                  oneUserInTeams.userId ||
+                                notification.forAllUsers == UserID ||
                                   notification.forAllUsers == null
                               "
                             >
@@ -161,6 +158,20 @@ export default {
         return "-";
       } else {
         return this.getPointsUser.pointQuantity;
+      }
+    },
+    roleUser() {
+      if (this.role == undefined) {
+        return "-";
+      } else {
+        return this.oneUserInTeams.role.name;
+      }
+    },
+    UserID() {
+      if (this.userId == undefined) {
+        return "-";
+      } else {
+        return this.$store.getters.decodedToken.id;
       }
     }
   }
