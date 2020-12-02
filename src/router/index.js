@@ -36,6 +36,7 @@ import UserStatistic from "@/components/account/UserStatistic.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
 import SideBarManager from "@/components/sidebar/SideBarManager.vue";
+import SideBarAdmin from "@/components/sidebar/SideBarAdmin.vue";
 
 import store from "@/store/index";
 import { i18n } from "@/i18n/i18n.js";
@@ -168,7 +169,7 @@ const routes = [
         path: "/admin",
         components: {
           main: AdminPanel,
-          sidebar: SideBarDefault
+          sidebar: SideBarAdmin
         },
         meta: {
           requiresAuth: true,

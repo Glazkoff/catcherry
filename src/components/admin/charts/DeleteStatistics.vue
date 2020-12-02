@@ -5,6 +5,7 @@ export default {
   name: "deleteStatistics",
   extends: Bar,
   props: ["users", "orgs"],
+  defaultFontFamily: "Lato",
   data() {
     return {
       chartdata: {
@@ -26,9 +27,14 @@ export default {
         legend: {
           display: false
         },
+        labels: {
+          fontColor: "white"
+        },
         title: {
           display: true,
-          text: "Количество удаленных за последнюю неделю"
+          text: "Количество удаленных за последнюю неделю",
+          fontSize: "16",
+          fontColor: "white"
         },
         tooltips: {
           displayColors: false
@@ -36,10 +42,29 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
+          xAxes: [
+            {
+              ticks: {
+                display: true,
+                fontColor: "white"
+              },
+              gridLines: {
+                color: "rgba(255,255,255,0.2)",
+                lineWidth: 1,
+                borderDash: [2, 5]
+              }
+            }
+          ],
           yAxes: [
             {
               ticks: {
-                min: 0
+                beginAtZero: true,
+                fontColor: "white"
+              },
+              gridLines: {
+                color: "rgba(255,255,255,0.2)",
+                lineWidth: 1,
+                borderDash: [2, 5]
               }
             }
           ]
@@ -52,3 +77,12 @@ export default {
   }
 };
 </script>
+
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+* {
+  color: $white;
+}
+</style>

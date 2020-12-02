@@ -60,8 +60,13 @@ app.use(compression());
 app.use(cookieParser());
 
 // Безопасность заголовков
-// FIXME: не работает путь /graphiql при использовании
-// app.use(helmet());
+// Для доступа к /graphiql прописать в файле
+// .env NODE_ENV = development
+// либо запустить сервер командой
+// NODE_ENV=development node server/server.js
+if (process.env.NODE_ENV !== "development") {
+  app.use(helmet());
+}
 
 // Точка входа GraphQL
 app.use(
