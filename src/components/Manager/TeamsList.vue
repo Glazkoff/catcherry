@@ -5,7 +5,7 @@
     <div v-for="t in team" :key="t.id" class="card">
       <h3>{{ t.name }}</h3>
       <router-link
-        :to="{ name: 'TeamSettings', params: { id: t.id } }"
+        :to="{ name: 'TeamMembers', params: { id: t.id } }"
         class="btn btn-alternate"
         >Перейти в управление</router-link
       >

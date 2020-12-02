@@ -26,7 +26,7 @@ import RaitingList from "@/components/manager/RaitingList.vue";
 import EditTeam from "@/components/manager/EditTeam.vue";
 import RequestsList from "@/components/manager/RequestsList.vue";
 import TasksTeam from "@/components/manager/TasksTeam.vue";
-import TeamList from "@/components/manager/TeamList.vue";
+import TeamsList from "@/components/manager/TeamsList.vue";
 import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
@@ -36,6 +36,8 @@ import UserStatistic from "@/components/account/UserStatistic.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
 import SideBarManager from "@/components/sidebar/SideBarManager.vue";
+
+import Manager from "@/views/Manager.vue";
 
 import store from "@/store/index";
 import { i18n } from "@/i18n/i18n.js";
@@ -74,30 +76,43 @@ const routes = [
         }
       },
       {
-        path: "/manager",
-        name: "TeamList",
+        path: "/teamslist",
+        name: "TeamsList",
         components: {
-          main: TeamList,
+          main: TeamsList,
           sidebar: SideBarDefault
         },
         meta: {
-          breadCrumb: "manager"
+          // TODO: проверка менеджер ли
+          // TODO: хлебные крошки
+          breadCrumb: "TeamsList"
         }
       },
       {
-        path: "teams",
-        name: "TeamSettings",
+        path: "/manager",
+        name: "Manager",
         components: {
-          main: TeamSettings,
+          main: Manager,
           sidebar: SideBarManager
         },
+        meta: {
+          // TODO: проверка менеджер ли
+          // TODO: хлебные крошки
+          breadCrumb: "manager"
+        },
         children: [
+          {
+            path: "teams",
+            name: "TeamSettings",
+            component: TeamSettings
+          },
           {
             path: "team_members",
             name: "TeamMembers",
             component: TeamMembers
           },
           {
+            // TODO: rating
             path: "raiting",
             name: "RaitingList",
             component: RaitingList

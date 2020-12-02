@@ -99,7 +99,7 @@
       </router-link>
       <router-link
         :to="{
-          name: 'TeamList',
+          name: 'TeamsList',
           params: { id: $store.getters.decodedToken.id }
         }"
         :exact="true"
