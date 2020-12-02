@@ -9,7 +9,6 @@ import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { i18n } from "./i18n/i18n";
-import FlagIcon from "vue-flag-icon";
 
 import { directive as onClickaway } from "vue-clickaway";
 Vue.directive("on-clickaway", onClickaway);
@@ -18,7 +17,6 @@ import FingerprintJS from "@fingerprintjs/fingerprintjs";
 Vue.prototype.$fingerprint = FingerprintJS;
 
 Vue.use(Vuelidate);
-Vue.use(FlagIcon);
 Vue.config.productionTip = process.env.NODE_ENV === "development";
 
 // Добавление контекста заголовков (access токен)

@@ -1,10 +1,15 @@
 {
   "projectTitle": "CATCHERRY",
+  "nameuserMsg": "Darya",
+  "roleuserMsg": "Administrator",
+  "pointsMsg": "points",
+  "topbarnameMsg": "Personal account",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
   "listUser": "List of users",
   "listOrganization": "List of organization",
   "profileUser": "Profile",
+  "systemStatisticsBr": "System statistics",
   "systemStatistics": "System statistics",
   "surname": "Surname",
   "name": "Name",
@@ -21,6 +26,7 @@
   "deleteQuestion": "Are you sure you want to delete user",
   "deleteOrgQuestion": "Are you sure you want to delete organization",
   "placeholderSearchByUsers": "Search by users",
+  "placeholderSearchByOrgs": "Search by organizations",
   "user": "User",
   "organization": "Organization",
   "loading": "Loading",
@@ -94,5 +100,6 @@
     "accountQuestion": "Already have an account?",
     "logInLink": "Log in!"
   },
-  "markRequiredField": "* - required field"
+  "markRequiredField": "* - required field",
+  "startMsg": "Hello, Polyweb!"
 }

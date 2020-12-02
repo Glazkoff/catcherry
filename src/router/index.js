@@ -32,8 +32,11 @@ import TeamSettings from "@/components/manager/TeamSettings.vue";
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
+import UserStatistic from "@/components/account/UserStatistic.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
+import SideBarManager from "@/components/sidebar/SideBarManager.vue";
+import SideBarAdmin from "@/components/sidebar/SideBarAdmin.vue";
 
 import store from "@/store/index";
 
@@ -76,7 +79,7 @@ const routes = [
         name: "TeamSettings",
         components: {
           main: TeamSettings,
-          sidebar: SideBarDefault
+          sidebar: SideBarManager
         },
         props: true,
         children: [
@@ -140,7 +143,7 @@ const routes = [
         path: "/admin",
         components: {
           main: AdminPanel,
-          sidebar: SideBarDefault
+          sidebar: SideBarAdmin
         },
         meta: {
           requiresAuth: true
@@ -192,6 +195,14 @@ const routes = [
         name: "PointsUser",
         components: {
           main: PointsUser,
+          sidebar: SideBarDefault
+        }
+      },
+      {
+        path: "/statistic",
+        name: "UserStatistic",
+        components: {
+          main: UserStatistic,
           sidebar: SideBarDefault
         }
       }

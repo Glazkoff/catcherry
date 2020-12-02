@@ -60,8 +60,13 @@ app.use(compression());
 app.use(cookieParser());
 
 // Безопасность заголовков
-// FIXME: не работает путь /graphiql при использовании
-// app.use(helmet());
+// Для доступа к /graphiql прописать в файле
+// .env NODE_ENV = development
+// либо запустить сервер командой
+// NODE_ENV=development node server/server.js
+if (process.env.NODE_ENV !== "development") {
+  app.use(helmet());
+}
 
 // Точка входа GraphQL
 app.use(
@@ -215,13 +220,10 @@ async function addAllTables(destroyTable) {
       organizationId: organization.dataValues.id,
       forAllTeam: faker.random.boolean()
     });
-    console.log("Posts: ", post.dataValues);
     let likesOfPost = await db.LikesOfPosts.create({
       userId: user.dataValues.id,
       postId: post.dataValues.id
     });
-    console.log("Likes: ", likesOfPost.dataValues);
-
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
     });

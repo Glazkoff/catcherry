@@ -1,10 +1,15 @@
 {
   "projectTitle": "Кэтчерри",
+  "nameuserMsg": "Дарья",
+  "roleuserMsg": "Администратор",
+  "pointsMsg": "балла",
+  "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",
   "listUser": "Список пользователей",
   "profileUser": "Профиль",
   "listOrganization": "Список организаций",
+  "systemStatisticsBr": "Статистика<br>системы",
   "systemStatistics": "Статистика системы",
   "surname": "Фамилия",
   "name": "Имя",
@@ -21,6 +26,7 @@
   "deleteQuestion": "Вы действительно хотите удалить пользователя",
   "deleteOrgQuestion": "Вы действительно хотите удалить организацию",
   "placeholderSearchByUsers": "Поиск по пользователям",
+  "placeholderSearchByOrgs": "Поиск по пользователям",
   "user": "Пользователь",
   "loading": "Загрузка",
   "createdAt": "Дата создания",
@@ -94,5 +100,6 @@
     "accountQuestion": "Уже есть аккаунт?",
     "logInLink": "Войти!"
   },
-  "markRequiredField": "* - обязательное поле"
+  "markRequiredField": "* - обязательное поле",
+  "startMsg": "Привет, Поливеб!"
 }

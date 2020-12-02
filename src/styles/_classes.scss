@@ -4,7 +4,6 @@
 
 // Типографика
 h1 {
-  font-weight: 500;
   font-size: 38px;
   line-height: 45.6px;
   font-family: Lato;
@@ -12,7 +11,6 @@ h1 {
 }
 
 h2 {
-  font-weight: 500;
   font-size: 28px;
   line-height: 34px;
   font-family: Lato;
@@ -97,13 +95,19 @@ a {
   }
 }
 
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
 .notification {
   color: $white;
   background: $violet_2;
   border-radius: 10px;
-  padding: 2%;
+  padding: 1.5rem 2.4rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  &_footer {
+  & .footer small{
     display: flex;
     color: $gray_3;
   }
@@ -113,23 +117,43 @@ a {
   background: $violet;
   border-radius: 10px;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  padding: 1.5%;
+  padding: 1%;
   display: flex;
-  margin-bottom: 1%;
+  margin: 1% 0%;
   align-items: center;
   &_img {
+    width: 5%;
     border-radius: 100%;
-    width: 100%;
-    width: 15%;
+    margin-right: 3%;
+    img {
+      width: 100%;
+      border-radius: 100%;
+    }
   }
   &_body {
     color: $white;
-    width: 75%;
+    width: 85%;
+    p {
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      font-size: 18px;
+      font-weight: 400;
+    }
+    p:first-child {
+      font-size: 28px;
+      font-weight: 500;
+    }
+    p:last-child {
+      color: $gray_4;
+      font-weight: 400;
+      font-size: 15px;
+      margin-top: 10px;
+    }
   }
   &_action {
-    color: $bright_violet;
-    width: 10%;
-    font-size: 30px;
+    width: 5%;
+    cursor: pointer;
   }
 }
 

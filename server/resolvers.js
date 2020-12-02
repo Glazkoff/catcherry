@@ -114,18 +114,20 @@ module.exports = {
       return db.Users.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
-        }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
+        paranoid: false
       });
     },
     statisticsNewOrgs: (parent, args, { db }) => {
       return db.Organizations.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
-        }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
+        paranoid: false
       });
     },
     statisticsDeleteUsers: (parent, args, { db }) => {
@@ -207,15 +209,37 @@ module.exports = {
       db.Notifications.findAll({ order: [["id", "DESC"]] }),
     notification: (parent, args, { db }, info) =>
       db.Notifications.findOne({ where: { id: args.id } }),
+
+    // Получаем все посты
     posts: async (parent, args, { db }) => {
       let resultOfPosts = db.Posts.findAll({
-        order: [["id", "ASC"]]
-        // include: [{ model: db.LikesOfPosts, as: "likesOfPost" }],
+        order: [["id", "DESC"]],
+        include: [{ model: db.LikesOfPosts, as: "likesOfPost" }]
       });
       return resultOfPosts;
     },
-    post: (parent, args, { db }) =>
-      db.Posts.findOne({ where: { id: args.id } }),
+    // Получаем информацию о посте по id
+    post: (parent, args, { db }) => {
+      return db.Posts.findOne({
+        where: { id: args.id },
+        include: [{ model: db.LikesOfPosts, as: "likesOfPost" }]
+      });
+    },
+
+    // Получаем информацию о всех лайках постов пользователя
+    likesOfPostFromUser: (parent, args, { db }) => {
+      return db.LikesOfPosts.findAll({
+        where: { userId: args.userId }
+      });
+    },
+
+    // Получаем информацию о всех лайках комментариев пользователя
+    likesOfCommentFromUser: (parent, args, { db }) => {
+      return db.LikesOfComments.findAll({
+        where: { userId: args.userId }
+      });
+    },
+
     getPointsUser: (parent, args, { db }, info) =>
       db.Points.findOne({ where: { userId: args.userId } }),
     comments: (parent, args, { db }, info) =>
@@ -713,6 +737,35 @@ module.exports = {
         where: {
           id: args.id
         }
+      }),
+
+    /*
+      [Ниже] Мутации работы с лайками постов (LikesOfPosts)     
+    */
+    addLikeOfPost: (parent, { userId, postId }, { db }, info) =>
+      db.LikesOfPosts.create({
+        userId: userId,
+        postId: postId
+      }),
+
+    deleteLikeOfPost: (parent, { userId, postId }, { db }, info) =>
+      db.LikesOfPosts.destroy({
+        where: { userId, postId }
+      }),
+
+    /*
+   [Ниже] Мутации работы с лайками комментариев (LikesOfComments)     
+ */
+
+    addLikeOfComment: (parent, { userId, commentId }, { db }, info) =>
+      db.LikesOfComments.create({
+        userId: userId,
+        commentId: commentId
+      }),
+
+    deleteLikeOfComment: (parent, { userId, commentId }, { db }, info) =>
+      db.LikesOfComments.destroy({
+        where: { userId, commentId }
       }),
 
     // ----- //

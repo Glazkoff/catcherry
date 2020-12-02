@@ -1,11 +1,12 @@
 <template>
-  <div>
+  <div class="main_team">
     <h1>Организация "Название"</h1>
     <h3>Команды</h3>
-    <hr />
-    <div v-for="t in team" :key="t.id" class="team">
-      <p>{{ t.name }}</p>
-      <router-link :to="{ name: 'TeamSettings', params: { id: t.id } }"
+    <div v-for="t in team" :key="t.id" class="card">
+      <h3>{{ t.name }}</h3>
+      <router-link
+        :to="{ name: 'TeamSettings', params: { id: t.id } }"
+        class="btn btn-alternate"
         >Перейти в управление</router-link
       >
     </div>
@@ -31,12 +32,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.team {
-  border: 1px solid black;
-  padding: 1rem;
-  margin: 1rem;
-  display: flex;
-  align-items: center;
-  justify-content: space-around;
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+
+.card {
+  padding-right: 20px;
+  .btn-alternate {
+    margin-left: auto;
+    margin-right: 60px;
+  }
+}
+
+.main_team {
+  padding: 0 50px;
 }
 </style>

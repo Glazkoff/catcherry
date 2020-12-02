@@ -16,8 +16,14 @@ module.exports = (sequelize, DataTypes) => {
   }
   LikesOfPosts.init(
     {
-      userId: DataTypes.INTEGER,
-      postId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      postId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
     },
     {
       sequelize,

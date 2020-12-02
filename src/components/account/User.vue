@@ -1,7 +1,7 @@
 <template>
   <div>
-    <div class="main-account">
-      <!-- боковое меню для пользователя без команды -->
+    <!--  <div class="main-account">
+      боковое меню для пользователя без команды 
       <div class="sidebar">
         <router-link tag="a" :to="'/user/' + $route.params.id"
           >Профиль</router-link
@@ -21,9 +21,8 @@
         >
       </div>
       <div>
-        <router-view></router-view>
-      </div>
-    </div>
+      -->
+    <router-view></router-view>
   </div>
 </template>
 

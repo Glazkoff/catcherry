@@ -1,17 +1,14 @@
 <template>
   <div
     v-if="
-      (notification.forAllUsers == $route.params.id &&
-        notification.checkNotification == false) ||
-        (notification.forAllUsers == null &&
-          notification.checkNotification == false)
+      notification.forAllUsers == $route.params.id ||
+        notification.forAllUsers == null
     "
     class="notification"
-    
   >
     <div class="header">
-      <span>{{ notification.body.header }}</span>
-      <div class="icon" @click="onCheckNotification(notification.id)">
+      <h2>{{ notification.body.header }}</h2>
+      <div class="icon" @click="onDelete(notification.id)">
         <svg
           aria-hidden="true"
           focusable="false"
@@ -31,152 +28,58 @@
     </div>
     <div class="main">
       <p>{{ notification.body.text }}</p>
-      <span>{{ $d(notification.createdAt, "long") }}</span>
       <div v-if="notification.body.button" class="blockForButton">
         <a v-bind:href="notification.body.buttonLink" target="_blank">{{
           notification.body.button
         }}</a>
       </div>
     </div>
+    <div class="footer">
+      <small>{{ $d(notification.createdAt, "number") }}</small>
+    </div>
   </div>
 </template>
 
 <script>
-import {
-  NOTIFICATIONS_USER_QUERY,
-  // UPDATE_NOTIFICATION_QUERY
-} from "@/graphql/queries";
 export default {
   name: "Notification",
-  apollo: {
-    notification: {
-      query: NOTIFICATIONS_USER_QUERY
-    }
-  },
+  props: ["notification"],
   data() {
-    return {
-      // newNotification: "",
-      // editNotification: {
-      //   isEdit: false,
-      //   name: "",
-      //   id: -1
-      // }
-    };
+    return {};
   },
   methods: {
-    // onCheckNotification(id) {
-    //   let editNotification = this.notifications.find(el => el.id === id);
-    //   this.editNotification.body = {
-    //     header: editNotification.body.header,
-    //     text: editNotification.body.text
-    //   };
-    //   this.editNotification.teamId = editNotification.teamId;
-    //   this.editNotification.id = editNotification.id;
-    //   this.editNotification.checkNotification = true;
-    //   this.editNotification.isEdit = true;
-    //   this.$apollo
-    //     .mutate({
-    //       mutation: UPDATE_NOTIFICATION_QUERY,
-    //       variables: {
-    //         body: {
-    //           header: this.editNotification.body.header,
-    //           text: this.editNotification.body.text
-    //         },
-    //         teamId: this.editNotification.teamId,
-    //         checkNotification: this.editNotification.checkNotification,
-    //         id: this.notification.id
-    //       },
-    //       update: (cache, { data: { updateNotification } }) => {
-    //         let data = cache.readQuery({ query: NOTIFICATIONS_QUERY });
-    //         console.log(data);
-    //         data.notifications.find(el => el.id === this.editNotification.id);
-    //         this.editNotification.body = {
-    //           header: editNotification.body.header,
-    //           text: editNotification.body.text
-    //         };
-    //         this.editNotification.teamId = editNotification.teamId;
-    //         this.editNotification.id = editNotification.id;
-    //         this.editNotification.checkNotification = true;
-    //         cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
-    //         console.log(updateNotification);
-    //       },
-    //       optimisticResponse: {
-    //         __typename: "Mutation"
-    //       }
-    //     })
-    //     .then(data => {
-    //       console.log(data);
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // }
-    // toEditNotification(id) {
-    //   let editNotification = this.notifications.find(el => el.id === id);
-    //   this.editNotification.name = editNotification.name;
-    //   this.editNotification.id = editNotification.id;
-    //   this.editNotification.isEdit = true;
-    // }
+    onDelete(id) {
+      this.$emit("delete", { id: id });
+    }
   }
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
 .notification {
-  width: 15rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-radius: 0.5rem;
-  background-color: #fff;
-  box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
-    0px 20px 32px rgba(96, 97, 112, 0.24);
+  width: 20rem;
+  margin-bottom: 1rem;
 }
-
 .header {
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  min-height: 2rem;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  background: #d2bbea;
-  padding-right: 1rem;
-  padding-left: 1rem;
-}
-
-.header span {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 1.15rem;
-  /* line-height: 1.8rem; */
-  color: #ffffff;
-}
-
-.icon {
-  margin-left: 0.5rem;
-  margin-right: -0.6rem;
-  cursor: pointer;
-  width: 1.7rem;
-  height: 1.7rem;
-}
-
-.main {
-  width: 100%;
-  padding-right: 1rem;
-  padding-left: 1rem;
+  position: relative;
+  & h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+  & .icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    width: 1.7rem;
+    height: 1.7rem;
+  }
 }
 .main p {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 0.8rem;
-  line-height: 0.95rem;
+  margin-top: 0.5rem;
 }
-
 .blockForButton {
   text-align: center;
 }
@@ -202,7 +105,6 @@ export default {
 .blockForButton a:hover {
   background: #fff;
 }
-
 span {
   color: #878787;
   font-size: 12px;

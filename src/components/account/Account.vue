@@ -117,7 +117,7 @@
         slot="header"
         v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
       >
-        Каротчка пользователя
+        Карточка пользователя
       </h3>
       <div
         slot="body"
@@ -161,7 +161,7 @@
 
     <h2>
       <i18n path="profileUser"
-        ><span place="title">{{ $t("profileUser") }}</span></i18n
+        ><h2 place="title">{{ $t("profileUser") }}</h2></i18n
       >
     </h2>
     <h3 v-if="$apollo.loading">

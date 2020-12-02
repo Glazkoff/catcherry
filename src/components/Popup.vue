@@ -12,9 +12,7 @@
           <div class="modal-body">
             <slot name="body"></slot>
           </div>
-          <div class="modal-footer">
-            <slot name="footer"></slot>
-          </div>
+          <slot name="footer" class="modal-footer"></slot>
         </div>
       </div>
     </div>
@@ -26,6 +24,10 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+
 .modal-mask {
   position: fixed;
   z-index: 15000;
@@ -48,6 +50,7 @@ export default {};
   margin: 0px auto;
   padding: 2%;
   background-color: #fff;
+  color: #000;
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
@@ -59,6 +62,8 @@ export default {};
 .modal-header {
   margin-top: 0;
   text-align: center;
+  font-size: 36px;
+  font-weight: 700;
 }
 
 .modal-exit {
@@ -66,10 +71,12 @@ export default {};
   right: 2%;
   top: 2%;
   cursor: pointer;
-}
-
-.modal-exit:hover {
+  font-size: 30px;
+  color: $black;
   font-weight: 900;
+  &:hover {
+    color: $gray_3;
+  }
 }
 
 .modal-body {

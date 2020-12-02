@@ -69,9 +69,9 @@ type UserInTeam {
   userId: ID!
   teamId: ID!
   status: String!
-  roleId: ID!
   user: User!
   team: Team!
+  roleId: ID!
   role: Role
   createdAt: String!
   updatedAt: String!
@@ -131,16 +131,19 @@ type Post {
   authorId: Int!
   organizationId: Int!
   forAllTeam: Boolean
+  likesOfPost: [LikeOfPost]
   createdAt: String!
   updatedAt: String!
 }
 
 type LikeOfPost {
-  id: ID!
   userId: ID!
   postId: ID!
-  createdAt: String!
-  updatedAt: String!
+}
+
+type LikeOfComment {
+  userId: ID!
+  commentId: ID!
 }
 
 type Task {
@@ -206,13 +209,16 @@ type Query {
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  requests(teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  getPointsUser(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  getOperationPointsUser(userId: Int!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  requests:[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(userId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   posts: [Post]!
   post(id: ID!): Post
   
+  likesOfPostFromUser (userId:ID!): [LikeOfPost]! 
+  likesOfCommentFromUser (userId:ID!): [LikeOfComment]!  
+
   usersInTeams (teamId:ID!):[UserInTeam]!
   oneUserInTeams(userId: ID!): [UserInTeam!]
   raitingInTeams (teamId:ID!): [UserInTeam]!
@@ -226,6 +232,7 @@ type Query {
   statisticsNewOrgs: Int
   statisticsDeleteUsers: Int
   statisticsDeleteOrgs: Int
+
 }
 
 type Mutation {
@@ -246,6 +253,12 @@ type Mutation {
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
  
+  addLikeOfPost(userId: ID!, postId: ID!): LikeOfPost!
+  deleteLikeOfPost(userId: ID!, postId: ID!): Int!
+
+  addLikeOfComment(userId: ID!, commentId: ID!): LikeOfComment!
+  deleteLikeOfComment(userId: ID!, commentId: ID!): Int!
+
   createComment(body: CommentBody!, authorId: Int!, postId: Int!, dateAdd: String!): Comment!
   deleteComment(id: ID!): Int!
   updateComment(body: CommentBody!, id: ID!): [Int]!

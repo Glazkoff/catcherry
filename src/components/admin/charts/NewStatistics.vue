@@ -26,9 +26,14 @@ export default {
         legend: {
           display: false
         },
+        labels: {
+          fontColor: "white"
+        },
         title: {
           display: true,
-          text: "Количество новых за последнюю неделю"
+          text: "Количество новых за последнюю неделю",
+          fontSize: "16",
+          fontColor: "white"
         },
         tooltips: {
           displayColors: false
@@ -36,10 +41,29 @@ export default {
         responsive: true,
         maintainAspectRatio: false,
         scales: {
+          xAxes: [
+            {
+              ticks: {
+                display: true,
+                fontColor: "white"
+              },
+              gridLines: {
+                color: "rgba(255,255,255,0.2)",
+                lineWidth: 1,
+                borderDash: [2, 5]
+              }
+            }
+          ],
           yAxes: [
             {
               ticks: {
-                min: 0
+                beginAtZero: true,
+                fontColor: "white"
+              },
+              gridLines: {
+                color: "rgba(255,255,255,0.2)",
+                lineWidth: 1,
+                borderDash: [2, 5]
               }
             }
           ]

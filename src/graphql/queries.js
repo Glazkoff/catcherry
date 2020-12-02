@@ -391,23 +391,10 @@ export const ONE_POST_QUERY = gql`
         header
         text
       }
+      likesOfPost {
+        userId
+      }
       createdAt
-    }
-  }
-`;
-
-export const REVOKE_REQUEST_QUERY = gql`
-  mutation($id: ID!) {
-    revokeRequst(id: $id)
-  }
-`;
-
-export const GET_POINTS_QUERY = gql`
-  query($userId: ID!) {
-    getPointsUser(userId: $userId) {
-      id
-      userId
-      pointQuantity
     }
   }
 `;
@@ -419,6 +406,9 @@ export const POSTS_QUERY = gql`
       body {
         header
         text
+      }
+      likesOfPost {
+        userId
       }
       createdAt
     }
@@ -441,6 +431,79 @@ export const CREATE_POST = gql`
 export const DELETE_POST = gql`
   mutation($id: ID!) {
     deletePost(id: $id)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfPosts
+
+// Получаем информацию о всех лайках постов пользователя
+export const LIKES_OF_POST_FROM_USER = gql`
+  query($userId: ID!) {
+    likesOfPostFromUser(userId: $userId) {
+      postId
+    }
+  }
+`;
+
+// Лайкнуть данный пост данным пользователем
+export const CREATE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    addLikeOfPost(userId: $userId, postId: $postId) {
+      userId
+      postId
+    }
+  }
+`;
+
+// Удалить лайк с данного поста данным пользователем
+export const DELETE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    deleteLikeOfPost(userId: $userId, postId: $postId)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfComments
+
+// Получаем информацию о всех лайках комментариев пользователя
+export const LIKES_OF_COMMENT_FROM_USER = gql`
+  query($userId: ID!) {
+    likesOfCommentFromUser(userId: $userId) {
+      commentId
+    }
+  }
+`;
+
+// Лайкнуть данный комментарий данным пользователем
+export const CREATE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    addLikeOfComment(userId: $userId, commentId: $commentId) {
+      userId
+      commentId
+    }
+  }
+`;
+// Удалить лайк с данного комментария данным пользователем
+export const DELETE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    deleteLikeOfComment(userId: $userId, commentId: $commentId)
+  }
+`;
+
+// -- //
+
+export const REVOKE_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    revokeRequst(id: $id)
+  }
+`;
+
+export const GET_POINTS_QUERY = gql`
+  query($userId: ID!) {
+    getPointsUser(userId: $userId) {
+      id
+      userId
+      pointQuantity
+    }
   }
 `;
 
@@ -473,6 +536,20 @@ export const RAITING_IN_TEAMS_QUERY = gql`
             createdAt
           }
         }
+      }
+    }
+  }
+`;
+
+export const PERSONAL_USER_STATISTIC_QUERY = gql`
+  query($userId: Int!) {
+    personalUserStatistics(userId: $userId) {
+      id
+      pointQuantity
+      pointsOperation {
+        delta
+        operationDescription
+        createdAt
       }
     }
   }
