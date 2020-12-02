@@ -119,5 +119,9 @@
     "user": "User",
     "userInOrg": "User in organization",
     "users": "Users"
+  },
+  "userAgreement": {
+    "bySignUp": "By creating an account, I accept",
+    "termsOfPrivacy": " the terms of the privacy policy and user agreement"
   }
 }
