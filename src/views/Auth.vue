@@ -16,7 +16,7 @@
 
 <script>
 import TestGraphql from "@/components/TestGraphql.vue";
-import FullLogo from "@/assets/full_logo.svg";
+import FullLogo from "@/assets/full_logo.svg?inline";
 export default {
   name: "Auth",
   components: { TestGraphql, FullLogo }
