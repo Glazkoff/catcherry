@@ -96,8 +96,28 @@
     "passwordPlaceholder": "Enter password",
     "buttonSubmit": "Sign up",
     "accountQuestion": "Already have an account?",
-    "logInLink": "Log in!"
+    "logInLink": "Log in!",
+    "birthday": "Birthday"
   },
   "markRequiredField": "* - required field",
-  "startMsg": "Hello, Polyweb!"
+  "startMsg": "Hello, Polyweb!",
+  "router": {
+    "feed": "News",
+    "main": "Main",
+    "account": "Account",
+    "adminpanel": "Admin panel",
+    "createpost": "Create Post",
+    "dashboard": "Dashboard",
+    "home": "Home",
+    "listRequest": "List of request",
+    "notification": "Notification",
+    "organizations": "Organizations",
+    "points": "Points",
+    "post": "Post",
+    "statistic": "Statistic",
+    "tasks": "Tasks",
+    "user": "User",
+    "userInOrg": "User in organization",
+    "users": "Users"
+  }
 }

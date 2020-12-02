@@ -20,6 +20,15 @@
       }}</span>
     </div>
     <br />
+    <label>{{ $t("signUp.birthday") }}</label
+    ><br />
+    <input
+      :disabled="signUpLoading"
+      type="date"
+      v-model="$v.birthday.$model"
+      class="form-control block"
+    />
+    <br />
     <label>{{ $t("signUp.login") }}</label
     ><br />
     <input
@@ -105,13 +114,11 @@ export default {
       required,
       alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
     },
-    // TODO: добавить обработку поля даты рождения
-    // birthday: {
-    //   required,
-    // },
+    birthday: {
+      required
+    },
     login: {
       required
-      // TODO: добавить обработку поля даты рождения
       // email,
     },
     password: {
@@ -126,16 +133,17 @@ export default {
       } else {
         let userData = {
           name: this.$v.fullName.$model,
+          birthday: this.$v.birthday.$model,
           login: this.$v.login.$model,
           password: this.$v.password.$model
         };
-        // TODO: Отправлять данные
         this.signUpLoading = true;
         this.$apollo
           .mutate({
             mutation: SIGN_UP,
             variables: {
               name: userData.name,
+              birthday: userData.birthday,
               login: userData.login,
               password: userData.password,
               fingerprint: this.fingerprint
