@@ -5,6 +5,7 @@ import getBrowserLocale from "@/i18n/get-browser-locale.js";
 import { supportedLocalesInclude } from "@/i18n/supported-locales.js";
 
 import pluralizationRulesRu from "@/i18n/pluralizationrules/ru";
+import pluralizationRulesEn from "@/i18n/pluralizationrules/en";
 
 Vue.use(VueI18n);
 
@@ -63,7 +64,8 @@ export const i18n = new VueI18n({
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || "en",
   dateTimeFormats: loadLocaleDateTimeFormats(),
   pluralizationRules: {
-    ru: pluralizationRulesRu()
+    ru: pluralizationRulesRu(),
+    en: pluralizationRulesEn()
   },
   messages: loadLocaleMessages()
 });

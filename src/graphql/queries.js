@@ -498,7 +498,7 @@ export const REVOKE_REQUEST_QUERY = gql`
 `;
 
 export const GET_POINTS_QUERY = gql`
-  query($userId: ID!) {
+  query($userId: Int!) {
     getPointsUser(userId: $userId) {
       id
       userId

@@ -3,6 +3,7 @@
   "nameuserMsg": "Дарья",
   "roleuserMsg": "Администратор",
   "pointsMsg": "нет баллов | {n} балл | {n} балла | {n} баллов",
+  "pointdefaultMsg": "баллов",
   "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",
