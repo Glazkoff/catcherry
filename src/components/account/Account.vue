@@ -61,97 +61,117 @@
     </div>
 
     <!-- Редактирование пользователя -->
-    <div v-else class="double">
-      <div class="flexCont">
-        <h2>{{ $t("profileUser") }}</h2>
-        <img src="@/assets/avatar.jpg" alt="user" class="card_img" />
-        <p @click="deleteUser()" class="danger">
-          {{ $t("delete") }}
-        </p>
-      </div>
-      <div class="flexCont">
-        <h3>
-          {{ $t("editUser") }}
-        </h3>
-        <div>
-          <form @submit.prevent="saveUserOnPopup()">
-            <label for="surname">Фамилия</label>
-            <input
-              class="form-control form-text"
-              name="surname"
-              v-model.trim="$v.user.surname.$model"
-              @blur="$v.user.surname.$touch()"
-              placeholder="Фамилия"
-            />
-            <div v-if="$v.user.surname.$error" class="error">
-              <span v-if="!$v.user.surname.required"
-                >Данное поле обязательно</span
-              >
-              <span v-else-if="!$v.user.surname.alpha"
-                >Поле должно содержать только буквы</span
-              >
+    <div v-else>
+      <h2 class="padLeftTop">{{ $t("profileUser") }}</h2>
+      <div class="flexBlock">
+        <div class="flexCont smallBlock">
+          <img src="@/assets/avatar.jpg" alt="user" class="card_img" />
+          <p @click="showModalDelete" class="danger btnDelete">
+            {{ $t("delete") }}
+          </p>
+        </div>
+        <div class="flexCont">
+          <form @submit.prevent="saveUserOnPopup">
+            <div class="form-group">
+              <label for="surname" class="form-name ">{{
+                $t("surname")
+              }}</label>
+              <input
+                class="form-control"
+                name="surname"
+                v-model.trim="$v.user.surname.$model"
+                @blur="$v.user.surname.$touch()"
+                placeholder="Фамилия"
+              />
+              <div v-if="$v.user.surname.$error">
+                <span v-if="!$v.user.surname.required" class="danger">{{
+                  $t("required")
+                }}</span>
+                <span v-else-if="!$v.user.surname.alpha" class="danger">{{
+                  $t("requiredLetters")
+                }}</span>
+              </div>
             </div>
-            <label for="name">Имя</label>
-            <input
-              class="form-control form-text"
-              name="name"
-              v-model.trim="$v.user.name.$model"
-              placeholder="Имя"
-              required
-            />
-            <label for="patricity">Отчество (при наличии)</label>
-            <input
-              class="form-control form-text"
-              name="patricity"
-              v-model.trim="$v.user.patricity.$model"
-              placeholder="Отчество"
-              required
-            />
-            <label for="gender">Пол</label>
-            <select
-              class="form-control"
-              name="gender"
-              v-model.trim="$v.user.gender.$model"
-              required
-            >
-              <option>Мужской</option>
-              <option>Женский</option>
-            </select>
-            <label for="login">Логин</label>
-            <input
-              class="form-control form-text"
-              name="login"
-              v-model.trim="$v.user.login.$model"
-              placeholder="Логин"
-              required
-            />
-            <label for="password">Пароль</label>
-            <input
-              class="form-control form-text"
-              name="password"
-              v-model.trim="$v.user.password.$model"
-              placeholder="Пароль"
-              required
-            />
+            <div class="form-group">
+              <label for="name" class="form-name ">{{ $t("name") }}</label>
+              <input
+                class="form-control"
+                name="name"
+                v-model.trim="$v.user.name.$model"
+                placeholder="Имя"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="patricity" class="form-name ">{{
+                $t("patricity")
+              }}</label>
+              <input
+                class="form-control"
+                name="patricity"
+                v-model.trim="$v.user.patricity.$model"
+                placeholder="Отчество"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="gender" class="form-name ">{{ $t("gender") }}</label>
+              <select
+                name="gender"
+                class="form-control"
+                v-model.trim="$v.user.gender.$model"
+                required
+              >
+                <option>{{ $t("male") }}</option>
+                <option>{{ $t("female") }}</option>
+              </select>
+            </div>
+            <div class="form-group">
+              <label for="login" class="form-name ">{{ $t("login") }}</label>
+              <input
+                class="form-control"
+                name="login"
+                v-model.trim="$v.user.login.$model"
+                placeholder="Логин"
+                required
+              />
+            </div>
+            <div class="form-group">
+              <label for="password" class="form-name ">{{
+                $t("password")
+              }}</label>
+              <input
+                class="form-control"
+                name="password"
+                v-model.trim="$v.user.password.$model"
+                placeholder="Пароль"
+                required
+              />
+            </div>
+            <div class="double">
+              <button type="submit" class="btn btn-alternate">
+                {{ $t("save") }}
+              </button>
+            </div>
           </form>
         </div>
-        <div>
-          <button @click="saveUserOnPopup()">
-            {{ $t("save") }}
-          </button>
-        </div>
       </div>
+    </div>
 
-      <h3 v-if="isShowModalDelete">
+    <popup v-if="isShowModalDelete">
+      <h3 slot="header">
         {{ $t("deleteQuestion") }}
         {{ fullName }}?
       </h3>
-      <div v-if="isShowModalDelete">
-        <button @click="cancelModal()">
+      <div slot="footer" class="double">
+        <button @click="deleteUser" class="btn  btn-alternate danger">
+          {{ $t("delete") }}
+        </button>
+        <button @click="isShowModalDelete = false" class="btn btn-alternate">
           {{ $t("cancel") }}
         </button>
       </div>
-    </div>
+    </popup>
     <minialert v-if="isShowAlertEdit"
       ><p slot="title">{{ $t("minialertEditUser") }}</p></minialert
     >
@@ -162,8 +182,9 @@
 </template>
 
 <script>
+import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
-import Edit from "@/assets/account_edit.svg";
+import Edit from "@/assets/account_edit.svg?inline";
 import Points from "@/components/account/PointsUser.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import {
@@ -173,7 +194,7 @@ import {
   ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, Edit, Points },
+  components: { minialert, popup, Edit, Points },
   apollo: {
     users: {
       query: USERS_QUERY
@@ -196,7 +217,6 @@ export default {
       fullName: "",
       isShowAlertDelete: false,
       isShowAlertEdit: false,
-      isShowModalEdit: false,
       isShowModalDelete: false,
       findString: ""
     };
@@ -232,13 +252,6 @@ export default {
       this.userId = id;
       this.isEdit = true;
     },
-    cancelFullInformation() {
-      this.isShowFullInformation = false;
-    },
-    cancelModal() {
-      this.isShowModalEdit = false;
-      this.isShowModalDelete = false;
-    },
     showModalDelete() {
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
       this.isShowModalDelete = true;
@@ -270,13 +283,8 @@ export default {
         this.isShowAlertDelete = false;
       }, 3000);
     },
-    showModalEdit() {
-      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
-      this.isShowModalEdit = true;
-    },
     saveUserOnPopup() {
       console.log(this.user);
-      this.isShowModalEdit = false;
       this.$apollo
         .mutate({
           mutation: UPDATE_USER_QUERY,
@@ -325,6 +333,7 @@ export default {
         .catch(error => {
           console.error(error);
         });
+      this.isEdit = false;
       this.isShowAlertEdit = true;
       setTimeout(() => {
         this.isShowAlertEdit = false;
@@ -381,9 +390,6 @@ export default {
 .pad {
   padding: 2.5rem;
 }
-.boxLine {
-  display: inline-block;
-}
 .btnEdit {
   display: flex;
   align-self: flex-start;
@@ -393,5 +399,34 @@ export default {
 .card {
   margin-bottom: 3rem;
   justify-content: center;
+  &_img {
+    width: 50%;
+  }
+}
+.form-name {
+  color: $white;
+}
+.flexBlock {
+  display: flex;
+}
+.smallBlock {
+  width: 30%;
+  justify-content: space-between;
+}
+.padLeftTop {
+  padding-left: 2.5rem;
+  padding-top: 2.5rem;
+}
+.form-group {
+  margin-bottom: 2.5rem;
+}
+.form-control {
+  background: $violet;
+  border: 1px solid $violet_2;
+  color: $gray_3;
+}
+.btnDelete:hover {
+  text-decoration: underline;
+  cursor: pointer;
 }
 </style>
