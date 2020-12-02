@@ -419,6 +419,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
 
 .flexCont {
   display: flex;
@@ -439,5 +440,10 @@ export default {
   display: flex;
   align-self: flex-start;
   margin: 2rem;
+  cursor: pointer;
+}
+.card {
+  margin-bottom: 3rem;
+  justify-content: center;
 }
 </style>
