@@ -84,8 +84,7 @@
             </li>
             <li class="right">
               <p class="nav-point">
-                <!-- {{ $tc('pointsMsg', 1) }} -->
-                {{ getPointsUser.pointQuantity }} {{ $t("pointdefaultMsg") }}
+                {{ $tc("pointsMsg", pointQuantity) }}
                 <StarIcon></StarIcon>
               </p>
             </li>
@@ -156,6 +155,13 @@ export default {
       let matchedLength =
         this.$route.matched.length != 0 ? this.$route.matched.length : 0;
       return this.$route.matched[matchedLength - 1].meta.breadCrumb;
+    },
+    pointQuantity() {
+      if (this.getPointsUser == undefined) {
+        return "-";
+      } else {
+        return this.getPointsUser.pointQuantity;
+      }
     }
   }
 };

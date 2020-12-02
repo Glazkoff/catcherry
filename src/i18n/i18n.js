@@ -64,8 +64,12 @@ export const i18n = new VueI18n({
   fallbackLocale: process.env.VUE_APP_I18N_FALLBACK_LOCALE || "en",
   dateTimeFormats: loadLocaleDateTimeFormats(),
   pluralizationRules: {
-    ru: pluralizationRulesRu(),
-    en: pluralizationRulesEn()
+    ru: function(choice, choicesLength) {
+      return pluralizationRulesRu(choice, choicesLength);
+    },
+    en: function(choice, choicesLength) {
+      return pluralizationRulesEn(choice, choicesLength);
+    }
   },
   messages: loadLocaleMessages()
 });
