@@ -500,7 +500,7 @@ export const REVOKE_REQUEST_QUERY = gql`
 `;
 
 export const GET_POINTS_QUERY = gql`
-  query($userId: Int!) {
+  query($userId: ID!) {
     getPointsUser(userId: $userId) {
       id
       userId
