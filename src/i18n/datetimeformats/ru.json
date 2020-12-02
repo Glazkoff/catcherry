@@ -11,5 +11,10 @@
     "hour": "numeric",
     "minute": "numeric",
     "second": "numeric"
+  },
+  "number": {
+    "year": "numeric",
+    "month": "numeric",
+    "day": "numeric"
   }
 }

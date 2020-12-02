@@ -127,11 +127,16 @@ export default {
 
 .flexbox {
   display: flex;
+  width: 100%;
   padding: 3rem;
   flex-direction: column;
 }
 .doubleColumn {
   display: flex;
   justify-content: space-between;
+  & .flexbox h2 {
+    margin-top: 0;
+    margin-bottom: 2.5rem;
+  }
 }
 </style>

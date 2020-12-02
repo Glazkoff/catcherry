@@ -24,6 +24,10 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+
 .modal-mask {
   position: fixed;
   z-index: 15000;
@@ -67,10 +71,12 @@ export default {};
   right: 2%;
   top: 2%;
   cursor: pointer;
-}
-
-.modal-exit:hover {
+  font-size: 30px;
+  color: $black;
   font-weight: 900;
+  &:hover {
+    color: $gray_3;
+  }
 }
 
 .modal-body {
