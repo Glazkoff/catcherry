@@ -11,5 +11,10 @@
     "weekday": "short",
     "hour": "numeric",
     "minute": "numeric"
+  },
+  "number": {
+    "year": "numeric",
+    "month": "numeric",
+    "day": "numeric"
   }
 }

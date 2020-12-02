@@ -17,8 +17,8 @@
           {{ post.body.text }}
         </p>
         <div class="iconContainer">
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onLike(post.id)">
+          <div class="iconAndNumber" v-on:click="onLike(post.id)">
+            <div class="icon">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -44,8 +44,8 @@
             <span class="numOfIcon">{{ post.likesOfPost.length }}</span>
           </div>
 
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onComment(post.id)">
+          <div class="iconAndNumber" v-on:click="onComment(post.id)">
+            <div class="icon">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -251,8 +251,12 @@ export default {
 
 .iconAndNumber {
   display: flex;
-  margin-right: 2rem;
+  cursor: pointer;
   align-items: center;
+}
+
+.iconAndNumber:first-child {
+  margin-right: 2.8rem;
 }
 
 .numOfIcon {
@@ -264,7 +268,6 @@ export default {
 .icon {
   width: 1.8rem;
   height: 1.8rem;
-  cursor: pointer;
   margin-right: 0.7rem;
 }
 </style>

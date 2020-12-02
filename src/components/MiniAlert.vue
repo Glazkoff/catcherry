@@ -13,9 +13,10 @@ export default {};
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_colors.scss";
 .alert {
   width: 15vw;
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
+  box-shadow: 0 2px 8px rgba(255, 255, 255, 0.33);
   border-radius: 10px;
   padding: 1%;
   text-align: center;
@@ -24,6 +25,8 @@ export default {};
   right: 1%;
   transition: all 0.3s ease;
   z-index: 10000;
+  background: $white;
+  color: $violet;
 }
 
 .alert-enter .alert,
