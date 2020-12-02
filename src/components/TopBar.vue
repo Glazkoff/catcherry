@@ -11,7 +11,7 @@
               style="display: none;"
             />
             <li class="nav-logo">
-              <h1>{{ $t("topbarnameMsg") }}</h1>
+              <h1>{{ routeTitle }}</h1>
             </li>
             <li class="right ">
               <a class="userFoto"></a>
@@ -148,6 +148,13 @@ export default {
     // away: function() {
     //   this.open = !this.open;
     // },
+  },
+  computed: {
+    routeTitle() {
+      let matchedLength =
+        this.$route.matched.length != 0 ? this.$route.matched.length : 0;
+      return this.$route.matched[matchedLength - 1].meta.breadCrumb;
+    }
   }
 };
 </script>

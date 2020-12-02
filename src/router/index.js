@@ -38,6 +38,7 @@ import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
 import SideBarManager from "@/components/sidebar/SideBarManager.vue";
 
 import store from "@/store/index";
+import { i18n } from "@/i18n/i18n.js";
 
 Vue.use(VueRouter);
 
@@ -46,7 +47,8 @@ const routes = [
     path: "/",
     component: Main,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      breadCrumb: i18n.t("router.main")
     },
     children: [
       {
@@ -55,6 +57,9 @@ const routes = [
         components: {
           main: Home,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.home")
         }
       },
       {
@@ -63,6 +68,9 @@ const routes = [
         components: {
           main: FeedOfPosts,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.feed")
         }
       },
       {
@@ -71,6 +79,9 @@ const routes = [
         components: {
           main: TeamList,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: "Teams!"
         }
       },
       {
@@ -111,6 +122,9 @@ const routes = [
       },
       {
         path: "/user/:id",
+        meta: {
+          breadCrumb: i18n.t("router.user")
+        },
         components: {
           main: User,
           sidebar: SideBarDefault
@@ -119,22 +133,34 @@ const routes = [
           {
             path: "",
             name: "Account",
-            component: Account
+            component: Account,
+            meta: {
+              breadCrumb: i18n.t("router.account")
+            }
           },
           {
             path: "user_org",
             name: "UserInOrganization",
-            component: UserInOrganization
+            component: UserInOrganization,
+            meta: {
+              breadCrumb: i18n.t("router.userInOrg")
+            }
           },
           {
             path: "list_req",
             name: "ListReguest",
-            component: ListRequest
+            component: ListRequest,
+            meta: {
+              breadCrumb: i18n.t("router.listRequest")
+            }
           },
           {
             path: "tasks",
             name: "Tasks",
-            component: Tasks
+            component: Tasks,
+            meta: {
+              breadCrumb: i18n.t("router.tasks")
+            }
           }
         ]
       },
@@ -145,23 +171,33 @@ const routes = [
           sidebar: SideBarDefault
         },
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          breadCrumb: i18n.t("router.adminpanel")
         },
         children: [
           {
             path: "",
             name: "Dashboard",
-            component: Dashboard
+            component: Dashboard,
+            meta: {
+              breadCrumb: i18n.t("router.dashboard")
+            }
           },
           {
             path: "users",
             name: "Users",
-            component: Users
+            component: Users,
+            meta: {
+              breadCrumb: i18n.t("router.users")
+            }
           },
           {
             path: "organizations",
             name: "Organization",
-            component: Organization
+            component: Organization,
+            meta: {
+              breadCrumb: i18n.t("router.organizations")
+            }
           }
         ]
       },
@@ -171,6 +207,9 @@ const routes = [
         components: {
           main: CreatePost,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.createpost")
         }
       },
       {
@@ -179,6 +218,9 @@ const routes = [
         components: {
           main: ListOfNotifications,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.notification")
         }
       },
       {
@@ -186,7 +228,10 @@ const routes = [
         name: "Posts",
         components: {
           main: DetailedPost,
-          sidebar: SideBarDefault
+          sidebar: SideBarDefault,
+          meta: {
+            breadCrumb: i18n.t("router.post")
+          }
         }
       },
       {
@@ -195,6 +240,9 @@ const routes = [
         components: {
           main: PointsUser,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.points")
         }
       },
       {
@@ -203,6 +251,9 @@ const routes = [
         components: {
           main: UserStatistic,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.statistic")
         }
       }
     ]

@@ -4,12 +4,14 @@ import gql from "graphql-tag";
 export const SIGN_UP = gql`
   mutation(
     $name: String!
+    $birthday: String!
     $login: String!
     $password: String!
     $fingerprint: String!
   ) {
     signUp(
       name: $name
+      birthday: $birthday
       login: $login
       password: $password
       fingerprint: $fingerprint
