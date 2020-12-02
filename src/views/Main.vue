@@ -42,8 +42,8 @@
 <script>
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import TopBar from "@/components/TopBar.vue";
-import FullLogo from "@/assets/full_logo.svg";
-import SettingsIcon from "@/assets/svg/sidebar/settings_icon.svg";
+import FullLogo from "@/assets/full_logo.svg?inline";
+import SettingsIcon from "@/assets/svg/sidebar/settings_icon.svg?inline";
 import { setI18nLanguage } from "@/i18n/i18n";
 
 export default {
