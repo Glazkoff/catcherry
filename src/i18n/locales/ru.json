@@ -96,8 +96,28 @@
     "passwordPlaceholder": "Введите пароль",
     "buttonSubmit": "Зарегистрироваться",
     "accountQuestion": "Уже есть аккаунт?",
-    "logInLink": "Войти!"
+    "logInLink": "Войти!",
+    "birthday": "День рождения"
   },
   "markRequiredField": "* - обязательное поле",
-  "startMsg": "Привет, Поливеб!"
+  "startMsg": "Привет, Поливеб!",
+  "router": {
+    "main": "Главная",
+    "home": "Домашняя",
+    "feed": "Новости",
+    "adminpanel": "Админпанель",
+    "dashboard": "Дашборд",
+    "users": "Пользователи",
+    "organizations": "Организации",
+    "statistic": "Статистика",
+    "points": "Баллы",
+    "post": "Пост",
+    "notification": "Оповещения",
+    "createpost": "Создать пост",
+    "user": "Личный кабинет",
+    "account": "Аккаунт",
+    "userInOrg": "Пользователь в организации",
+    "listRequest": "Список заявок",
+    "tasks": "Задания"
+  }
 }

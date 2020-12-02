@@ -1,0 +1,28 @@
+            <svg
+              width="20"
+              height="14"
+              viewBox="0 0 20 14"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M13.1991 0H0V2.22913H13.1991V0Z"
+                fill="white"
+                class="fill"
+              />
+              <path
+                d="M13.1991 4.45801H0V6.68714H13.1991V4.45801Z"
+                fill="white"
+                class="fill"
+              />
+              <path
+                d="M0 8.9165H8.79943V11.1456H0V8.9165Z"
+                fill="white"
+                class="fill"
+              />
+              <path
+                d="M9.88757 10.0589L11.444 8.48289L13.7769 10.8469L18.4439 6.1189L19.9992 7.69489L13.7769 14L9.88867 10.0589H9.88757Z"
+                fill="white"
+                class="fill"
+              />
+            </svg>
