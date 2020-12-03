@@ -21,16 +21,16 @@ export default {
   data() {
     return {};
   },
-  methods: {},
+  methods: {}
 };
 </script>
 
-<style lang="scss" scoped>
-div {
-  width: 80%;
-  margin: 0 auto;
-}
-textarea {
-  width: 100%;
-}
+<style lang="scss">
+// div {
+//   width: 80%;
+//   margin: 0 auto;
+// }
+// textarea {
+//   width: 100%;
+// }
 </style>

@@ -2,9 +2,11 @@ import Vue from "vue";
 import VueRouter from "vue-router";
 
 import Home from "@/views/Home.vue";
+import Main from "@/views/Main.vue";
 
-import Authentication from "@/views/Authentication.vue";
-import Registration from "@/views/Registration.vue";
+import Auth from "@/views/Auth.vue";
+import SignUp from "@/components/auth/SignUp.vue";
+import LogIn from "@/components/auth/LogIn.vue";
 
 import AdminPanel from "@/views/AdminPanel.vue";
 import Dashboard from "@/components/admin/Dashboard.vue";
@@ -18,199 +20,294 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
-import ListOfNotifications from "@/components/ListOfNotifications.vue";
+import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import TeamMembers from "@/components/manager/TeamMembers.vue";
 import RaitingList from "@/components/manager/RaitingList.vue";
 import EditTeam from "@/components/manager/EditTeam.vue";
 import RequestsList from "@/components/manager/RequestsList.vue";
 import TasksTeam from "@/components/manager/TasksTeam.vue";
-import TeamList from "@/components/manager/TeamList.vue";
+import TeamsList from "@/components/manager/TeamsList.vue";
 import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
-import FeedOfPosts from "@/components/FeedOfPosts.vue";
+import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
+import UserStatistic from "@/components/account/UserStatistic.vue";
+
+import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
+import SideBarManager from "@/components/sidebar/SideBarManager.vue";
+import SideBarAdmin from "@/components/sidebar/SideBarAdmin.vue";
+
+import Manager from "@/views/Manager.vue";
 
 import store from "@/store/index";
+import { i18n } from "@/i18n/i18n.js";
 
 Vue.use(VueRouter);
-
-// import { ifAuthenticated, ifNotAuthenticated } from "@/router/guards.js";
 
 const routes = [
   {
     path: "/",
-    name: "Home",
-    component: Home,
+    component: Main,
     meta: {
-      requiresAuth: true
-    }
-    // beforeEnter: ifAuthenticated
-  },
-  // FIXME: [Фёдор]
-  /*
-    * Возможно, стоит рассмотреть следующий вариант:
-    path: "/users",
-    name: "User",
-    component: User,
-    children: [
-      {
-        path: "/:id",
-        name: "Account",
-        component: Account,
-      },
-  */
-  {
-    path: "/user/:id",
-    name: "User",
-    component: User,
-    children: [
-      {
-        path: "",
-        name: "Account",
-        component: Account
-      },
-      {
-        path: "user_org",
-        name: "UserInOrganization",
-        component: UserInOrganization
-      },
-      {
-        path: "list_req",
-        name: "ListReguest",
-        component: ListRequest
-      },
-      {
-        path: "tasks",
-        name: "Tasks",
-        component: Tasks
-      },
-      {
-        path: "points",
-        name: "PointsUser",
-        component: PointsUser
-      }
-    ]
-  },
-  {
-    path: "/admin",
-    name: "Admin",
-    component: AdminPanel,
-    meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      breadCrumb: i18n.t("router.main")
     },
-    // TODO: добавить защиту для администратора
     children: [
       {
         path: "",
-        component: Dashboard
+        name: "Home",
+        components: {
+          main: Home,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.home")
+        }
       },
       {
-        path: "users",
-        component: Users
+        path: "/feed",
+        name: "FeedOfPosts",
+        components: {
+          main: FeedOfPosts,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.feed")
+        }
       },
       {
-        path: "organizations",
-        component: Organization
+        path: "/teamslist",
+        name: "TeamsList",
+        components: {
+          main: TeamsList,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          // TODO: проверка менеджер ли
+          // TODO: хлебные крошки
+          breadCrumb: "TeamsList"
+        }
+      },
+      {
+        path: "/manager",
+        name: "Manager",
+        components: {
+          main: Manager,
+          sidebar: SideBarManager
+        },
+        meta: {
+          // TODO: проверка менеджер ли
+          // TODO: хлебные крошки
+          breadCrumb: "manager"
+        },
+        children: [
+          {
+            path: "teams",
+            name: "TeamSettings",
+            component: TeamSettings
+          },
+          {
+            path: "team_members",
+            name: "TeamMembers",
+            component: TeamMembers
+          },
+          {
+            // TODO: rating
+            path: "raiting",
+            name: "RaitingList",
+            component: RaitingList
+          },
+          {
+            path: "team_edit",
+            name: "EditTeam",
+            component: EditTeam
+          },
+          {
+            path: "requests",
+            name: "RequestsList",
+            component: RequestsList
+          },
+          {
+            path: "tasks",
+            name: "TasksTeam",
+            component: TasksTeam
+          }
+        ]
+      },
+      {
+        path: "/user",
+        meta: {
+          breadCrumb: i18n.t("router.user")
+        },
+        components: {
+          main: User,
+          sidebar: SideBarDefault
+        },
+        children: [
+          {
+            path: "",
+            name: "Account",
+            component: Account,
+            meta: {
+              breadCrumb: i18n.t("router.account")
+            }
+          },
+          {
+            path: "user_org",
+            name: "UserInOrganization",
+            component: UserInOrganization,
+            meta: {
+              breadCrumb: i18n.t("router.userInOrg")
+            }
+          },
+          {
+            path: "list_req",
+            name: "ListReguest",
+            component: ListRequest,
+            meta: {
+              breadCrumb: i18n.t("router.listRequest")
+            }
+          },
+          {
+            path: "tasks",
+            name: "Tasks",
+            component: Tasks,
+            meta: {
+              breadCrumb: i18n.t("router.tasks")
+            }
+          }
+        ]
+      },
+      {
+        path: "/admin",
+        components: {
+          main: AdminPanel,
+          sidebar: SideBarAdmin
+        },
+        meta: {
+          requiresAuth: true,
+          breadCrumb: i18n.t("router.adminpanel")
+        },
+        children: [
+          {
+            path: "",
+            name: "Dashboard",
+            component: Dashboard,
+            meta: {
+              breadCrumb: i18n.t("router.dashboard")
+            }
+          },
+          {
+            path: "users",
+            name: "Users",
+            component: Users,
+            meta: {
+              breadCrumb: i18n.t("router.users")
+            }
+          },
+          {
+            path: "organizations",
+            name: "Organization",
+            component: Organization,
+            meta: {
+              breadCrumb: i18n.t("router.organizations")
+            }
+          }
+        ]
+      },
+      {
+        path: "/createpost",
+        name: "CreatePost",
+        components: {
+          main: CreatePost,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.createpost")
+        }
+      },
+      {
+        path: "/notification",
+        name: "ListOfNotifications",
+        components: {
+          main: ListOfNotifications,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.notification")
+        }
+      },
+      {
+        path: "/posts/:id",
+        name: "Posts",
+        components: {
+          main: DetailedPost,
+          sidebar: SideBarDefault,
+          meta: {
+            breadCrumb: i18n.t("router.post")
+          }
+        }
+      },
+      {
+        path: "/points",
+        name: "PointsUser",
+        components: {
+          main: PointsUser,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.points")
+        }
+      },
+      {
+        path: "/statistic",
+        name: "UserStatistic",
+        components: {
+          main: UserStatistic,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.statistic")
+        }
       }
     ]
   },
   {
-    path: "/account",
-    name: "Account",
-    component: Account
-  },
-  {
-    path: "/user_org",
-    name: "UserInOrganization",
-    component: UserInOrganization
-  },
-  {
-    path: "/list_req",
-    name: "ListReguest",
-    component: ListRequest
-  },
-  {
-    path: "/auth",
-    name: "Authentication",
-    component: Authentication,
-    meta: {
-      guest: true
-    }
-    // beforeEnter: ifNotAuthenticated
-  },
-  {
-    path: "/registration",
-    name: "Registration",
-    component: Registration,
-    meta: {
-      guest: true
-    }
-    // beforeEnter: ifNotAuthenticated
-  },
-
-  {
-    path: "/createpost",
-    name: "CreatePost",
-    component: CreatePost
-  },
-  {
-    path: "/notification",
-    name: "ListOfNotifications",
-    component: ListOfNotifications
-  },
-  {
-    path: "/manager/teams",
-    name: "TeamList",
-    component: TeamList
-  },
-  {
-    path: "/manager/teams/:id",
-    name: "TeamSettings",
-    component: TeamSettings,
-    props: true,
+    path: "/login",
+    components: {
+      default: Auth
+    },
     children: [
       {
-        path: "team_members",
-        name: "TeamMembers",
-        component: TeamMembers
-      },
-      {
-        path: "raiting",
-        name: "RaitingList",
-        component: RaitingList
-      },
-      {
-        path: "team_edit",
-        name: "EditTeam",
-        component: EditTeam
-      },
-      {
-        path: "requests",
-        name: "RequestsList",
-        component: RequestsList
-      },
-      {
-        path: "tasks",
-        name: "TasksTeam",
-        component: TasksTeam
+        path: "",
+        name: "LogIn",
+        components: {
+          form: LogIn
+        }
       }
-    ]
+    ],
+    meta: {
+      guest: true
+    }
   },
   {
-    path: "/posts/:id",
-    name: "Posts",
-    component: DetailedPost
-  },
-  {
-    path: "/feed",
-    name: "FeedOfPosts",
-    component: FeedOfPosts
-  },
-  {
-    path: "/points",
-    name: "PointsUser",
-    component: PointsUser
+    path: "/signup",
+    components: {
+      default: Auth
+    },
+    children: [
+      {
+        path: "",
+        name: "SignUp",
+        components: {
+          form: SignUp
+        }
+      }
+    ],
+    meta: {
+      guest: true
+    }
   }
   // {
   //   path: "/about",
@@ -230,6 +327,11 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  let lang = localStorage.getItem("lang");
+  if (!lang) {
+    lang = process.env.VUE_APP_I18N_LOCALE;
+    localStorage.setItem("lang", lang);
+  }
   // Если авторизация обязательна
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // Если присутствует токен, пропускаем
@@ -239,7 +341,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если отсутствует токен, редирект на страницу авторизации
     else {
-      next("/auth");
+      next("/login");
       return;
     }
   }
@@ -252,7 +354,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если есть токен, редирект на главную
     else {
-      next("/");
+      next("/feed");
       return;
     }
   }

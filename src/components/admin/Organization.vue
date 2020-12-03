@@ -11,12 +11,9 @@
             isShowFullInformation
         "
       >
-        <h3>
-          <i18n path="loading">{{ $t("loading") }}</i18n
-          >...
-        </h3>
-        <button @click="cancelFullInformation()">
-          <i18n path="cancel">{{ $t("cancel") }}</i18n>
+        <h3>{{ $t("loading") }}...</h3>
+        <button @click="cancelFullInformation()" class="btn btn-primary">
+          {{ $t("cancel") }}
         </button>
       </div>
 
@@ -30,10 +27,20 @@
         "
         slot="header"
       >
-        <i18n path="organization">{{ $t("organization") }}</i18n> "{{
-          organization.name
-        }}"
+        {{ $t("organization") }} "{{ organization.name }}"
       </h3>
+      <div
+        slot="exit"
+        @click="cancelFullInformation()"
+        v-if="
+          !isShowModalDelete &&
+            !isShowModalEdit &&
+            !isShowModalEditTeam &&
+            !$apollo.loading
+        "
+      >
+        ×
+      </div>
       <div
         slot="body"
         v-if="
@@ -43,56 +50,46 @@
             !$apollo.loading
         "
       >
+        <p>{{ $t("typeOfOrg") }}: {{ organization.organizationType.name }}</p>
         <p>
-          <i18n path="typeOfOrg">{{ $t("typeOfOrg") }}</i18n
-          >: {{ organization.organizationType.name }}
-        </p>
-        <p>
-          <i18n path="maxNumberOfTeams">{{ $t("maxNumberOfTeams") }}</i18n
-          >:
+          {{ $t("maxNumberOfTeams") }}:
           {{ organization.maxTeamsLimit }}
         </p>
-        <p>
-          <i18n path="createdAt">{{ $t("createdAt") }}</i18n
-          >: {{ $d(organization.createdAt, "long") }}
-        </p>
+        <p>{{ $t("createdAt") }}: {{ $d(organization.createdAt, "long") }}</p>
         <p v-if="organization.owner !== null">
-          <i18n path="organizationOwner">{{ $t("organizationOwner") }}</i18n
-          >: {{ organization.owner.surname }} {{ organization.owner.name }}
+          {{ $t("organizationOwner") }}: {{ organization.owner.surname }}
+          {{ organization.owner.name }}
           {{ organization.owner.patricity }}
         </p>
         <div>
           <p v-if="teamsInOneOrganization.length === 0">
-            <i18n path="noTeamOrg">{{ $t("noTeamOrg") }}</i18n>
+            {{ $t("noTeamOrg") }}
           </p>
           <div v-if="teamsInOneOrganization.length !== 0">
-            <p>
-              <i18n path="teamsInOrg">{{ $t("teamsInOrg") }}</i18n
-              >:
-            </p>
+            <p>{{ $t("teamsInOrg") }}:</p>
             <div
               v-for="team in teamsInOneOrganization"
               :key="team.id"
               class="teams-list"
             >
               <div>
-                <p>
-                  <i18n path="nameInanimate">{{ $t("nameInanimate") }}</i18n
-                  >: {{ team.name }}
-                </p>
+                <p>{{ $t("nameInanimate") }}: {{ team.name }}</p>
                 <p>{{ team.description }}</p>
                 <p>
-                  <i18n path="numberOfParticipants">{{
-                    $t("numberOfParticipants")
-                  }}</i18n
-                  >: {{ team.maxUsersLimit }}
+                  {{ $t("numberOfParticipants") }}: {{ team.maxUsersLimit }}
                 </p>
                 <div class="btn-group">
-                  <button @click="deleteTeamFromOrganization(team.id)">
-                    <i18n path="delete">{{ $t("delete") }}</i18n>
+                  <button
+                    @click="deleteTeamFromOrganization(team.id)"
+                    class="btn btn-primary"
+                  >
+                    {{ $t("delete") }}
                   </button>
-                  <button @click="showModalEditTeam(team)">
-                    <i18n path="edit">{{ $t("edit") }}</i18n>
+                  <button
+                    @click="showModalEditTeam(team)"
+                    class="btn btn-alternate"
+                  >
+                    {{ $t("edit") }}
                   </button>
                 </div>
               </div>
@@ -100,89 +97,93 @@
           </div>
         </div>
         <div class="btn-group">
-          <button @click="showModalEdit()">
-            <i18n path="edit">{{ $t("edit") }}</i18n>
+          <button @click="showModalEdit()" class="btn btn-primary">
+            {{ $t("edit") }}
           </button>
-          <button @click="showModalDelete()">
-            <i18n path="delete">{{ $t("delete") }}</i18n>
+          <button @click="showModalDelete()" class="btn btn-primary">
+            {{ $t("delete") }}
           </button>
-          <button @click="cancelFullInformation()">
-            <i18n path="cancel">{{ $t("cancel") }}</i18n>
+          <button @click="cancelFullInformation()" class="btn btn-alternate">
+            {{ $t("cancel") }}
           </button>
         </div>
       </div>
 
       <!-- Удаление организации -->
       <h3 v-if="isShowModalDelete" slot="header">
-        <i18n path="deleteOrgQuestion">{{ $t("deleteOrgQuestion") }}</i18n> "{{
-          organization.name
-        }}"?
+        {{ $t("deleteOrgQuestion") }} "{{ organization.name }}"?
       </h3>
+      <div slot="exit" @click="cancelModal()" v-if="isShowModalDelete">×</div>
       <div slot="body" v-if="isShowModalDelete" class="btn-group">
-        <button
-          @click="deleteOrganization()"
-          slot="action"
-          class="modal-default-button"
-        >
-          <i18n path="delete">{{ $t("delete") }}</i18n>
+        <button @click="deleteOrganization()" class="btn btn-primary">
+          {{ $t("delete") }}
         </button>
-        <button @click="cancelModal()">
-          <i18n path="cancel">{{ $t("cancel") }}</i18n>
+        <button @click="cancelModal()" class="btn btn-alternate">
+          {{ $t("cancel") }}
         </button>
       </div>
 
       <!-- Редактирование организации -->
       <h3 v-if="isShowModalEdit" slot="header">
-        <i18n path="editOrg">{{ $t("editOrg") }}</i18n> "{{
-          nameOfOrganization
-        }}"?
+        {{ $t("editOrg") }} "{{ nameOfOrganization }}"?
       </h3>
+      <div slot="exit" @click="cancelModal()" v-if="isShowModalEdit">×</div>
       <div slot="body" v-if="isShowModalEdit">
         <form @submit.prevent="editOrganization()">
-          <label for="name"
-            ><i18n path="nameInanimate">{{ $t("nameInanimate") }}</i18n></label
-          >
-          <input
-            name="name"
-            placeholder="Название"
-            v-model.trim="$v.oneOrganization.name.$model"
-            @blur="$v.oneOrganization.name.$touch()"
-          />
-          <div v-if="$v.oneOrganization.name.$error" class="error">
-            <span v-if="!$v.oneOrganization.name.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
+          <div class="form-group">
+            <label for="name" class="form-name">{{
+              $t("nameInanimate")
+            }}</label>
+            <input
+              name="name"
+              :placeholder="$t('nameInanimate')"
+              v-model.trim="$v.oneOrganization.name.$model"
+              @blur="$v.oneOrganization.name.$touch()"
+              class="form-control"
+            />
+            <div v-if="$v.oneOrganization.name.$error" class="error">
+              <span
+                v-if="!$v.oneOrganization.name.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
           </div>
-          <label for="name"
-            ><i18n path="maxNumberOfTeams">{{
+          <div class="form-group">
+            <label for="maxTeamsLimit" class="form-name">{{
               $t("maxNumberOfTeams")
-            }}</i18n></label
-          >
-          <input
-            name="maxTeamsLimit"
-            placeholder="0"
-            v-model.trim="$v.oneOrganization.maxTeamsLimit.$model"
-            @blur="$v.oneOrganization.maxTeamsLimit.$touch()"
-          />
-          <div v-if="$v.oneOrganization.maxTeamsLimit.$error" class="error">
-            <span v-if="!$v.oneOrganization.maxTeamsLimit.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
-            <span v-if="!$v.oneOrganization.maxTeamsLimit.numeric"
-              ><i18n path="requiredNumber">{{
-                $t("requiredNumber")
-              }}</i18n></span
-            >
+            }}</label>
+            <input
+              name="maxTeamsLimit"
+              :placeholder="$t('maxNumberOfTeams')"
+              v-model.trim="$v.oneOrganization.maxTeamsLimit.$model"
+              @blur="$v.oneOrganization.maxTeamsLimit.$touch()"
+              class="form-control"
+            />
+            <div v-if="$v.oneOrganization.maxTeamsLimit.$error" class="error">
+              <span
+                v-if="!$v.oneOrganization.maxTeamsLimit.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+              <span
+                v-if="!$v.oneOrganization.maxTeamsLimit.numeric"
+                class="form-text danger"
+                >{{ $t("requiredNumber") }}</span
+              >
+            </div>
           </div>
+
           <div class="btn-group">
             <button
               @click="editOrganization()"
               :disabled="$v.oneOrganization.$invalid"
+              class="btn btn-primary"
             >
-              <i18n path="save">{{ $t("save") }}</i18n>
+              {{ $t("save") }}
             </button>
-            <button @click="cancelModal()">
-              <i18n path="cancel">{{ $t("cancel") }}</i18n>
+            <button @click="cancelModal()" class="btn btn-alternate">
+              {{ $t("cancel") }}
             </button>
           </div>
         </form>
@@ -190,66 +191,82 @@
 
       <!-- Редактирование команды организации -->
       <h3 v-if="isShowModalEditTeam" slot="header">
-        <i18n path="editTeam">{{ $t("editTeam") }}</i18n> "{{ nameOfTeam }}"?
+        {{ $t("editTeam") }} "{{ nameOfTeam }}"?
       </h3>
+      <div slot="exit" @click="cancelModal()" v-if="isShowModalEditTeam">×</div>
       <div slot="body" v-if="isShowModalEditTeam">
         <form @submit.prevent="editTeam()">
-          <label for="name"
-            ><i18n path="nameInanimate">{{ $t("nameInanimate") }}</i18n></label
-          >
-          <input
-            name="name"
-            placeholder="Название"
-            v-model.trim="$v.oneTeam.name.$model"
-            @blur="$v.oneTeam.name.$touch()"
-          />
-          <div v-if="$v.oneTeam.name.$error" class="error">
-            <span v-if="!$v.oneTeam.name.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
+          <div class="form-group">
+            <label for="name" class="form-name">{{
+              $t("nameInanimate")
+            }}</label>
+            <input
+              name="name"
+              :placeholder="$t('nameInanimate')"
+              v-model.trim="$v.oneTeam.name.$model"
+              @blur="$v.oneTeam.name.$touch()"
+              class="form-control"
+            />
+            <div v-if="$v.oneTeam.name.$error" class="error">
+              <span v-if="!$v.oneTeam.name.required" class="form-text danger">{{
+                $t("required")
+              }}</span>
+            </div>
           </div>
-          <label for="description"
-            ><i18n path="description">{{ $t("description") }}</i18n></label
-          >
-          <textarea
-            name="description"
-            placeholder="Описание"
-            v-model.trim="$v.oneTeam.description.$model"
-            @blur="$v.oneTeam.description.$touch()"
-          />
-          <div v-if="$v.oneTeam.description.$error" class="error">
-            <span v-if="!$v.oneTeam.description.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
+          <div class="form-group">
+            <label for="description" class="form-name">{{
+              $t("description")
+            }}</label>
+            <textarea
+              name="description"
+              :placeholder="$t('description')"
+              v-model.trim="$v.oneTeam.description.$model"
+              @blur="$v.oneTeam.description.$touch()"
+              class="form-control"
+            />
+            <div v-if="$v.oneTeam.description.$error" class="error">
+              <span
+                v-if="!$v.oneTeam.description.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
           </div>
-          <label for="name"
-            ><i18n path="numberOfParticipants">{{
+          <div class="form-group">
+            <label for="name" class="form-name">{{
               $t("numberOfParticipants")
-            }}</i18n></label
-          >
-          <input
-            name="maxUsersLimit"
-            placeholder="0"
-            type="number"
-            v-model.trim="$v.oneTeam.maxUsersLimit.$model"
-            @blur="$v.oneTeam.maxUsersLimit.$touch()"
-          />
-          <div v-if="$v.oneTeam.maxUsersLimit.$error" class="error">
-            <span v-if="!$v.oneTeam.maxUsersLimit.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
-            <span v-if="!$v.oneTeam.maxUsersLimit.numeric"
-              ><i18n path="requiredNumber">{{
-                $t("requiredNumber")
-              }}</i18n></span
-            >
+            }}</label>
+            <input
+              name="maxUsersLimit"
+              :placeholder="$t('numberOfParticipants')"
+              type="number"
+              v-model.trim="$v.oneTeam.maxUsersLimit.$model"
+              @blur="$v.oneTeam.maxUsersLimit.$touch()"
+              class="form-control"
+            />
+            <div v-if="$v.oneTeam.maxUsersLimit.$error" class="error">
+              <span
+                v-if="!$v.oneTeam.maxUsersLimit.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+              <span
+                v-if="!$v.oneTeam.maxUsersLimit.numeric"
+                class="form-text danger"
+                >{{ $t("requiredNumber") }}</span
+              >
+            </div>
           </div>
           <div class="btn-group">
-            <button @click="editTeam()" :disabled="$v.oneTeam.$invalid">
-              <i18n path="save">{{ $t("save") }}</i18n>
+            <button
+              @click="editTeam()"
+              :disabled="$v.oneTeam.$invalid"
+              class="btn btn-primary"
+            >
+              {{ $t("save") }}
             </button>
-            <button @click="cancelModal()">
-              <i18n path="cancel">{{ $t("cancel") }}</i18n>
+            <button @click="cancelModal()" class="btn btn-alternate">
+              {{ $t("cancel") }}
             </button>
           </div>
         </form>
@@ -257,58 +274,65 @@
     </popup>
 
     <h2>
-      <i18n path="listOrganization">{{ $t("listOrganization") }}</i18n>
+      {{ $t("listOrganization") }}
     </h2>
     <h3 v-if="$apollo.queries.organizations.loading">
-      <i18n path="loading">{{ $t("listOrganization") }}</i18n
-      >...
+      {{ $t("listOrganization") }}...
     </h3>
     <div v-if="!$apollo.queries.organizations.loading">
-      <h6 v-if="organizations.length == 0">
-        <i18n path="noOrg">{{ $t("noOrg") }}</i18n>
-      </h6>
+      <h4 v-if="organizations.length == 0">
+        {{ $t("noOrg") }}
+      </h4>
       <div v-if="organizations.length > 0">
         <input
           v-model="findString"
           type="text"
-          placeholder="Поиск по организациям"
+          :placeholder="$t('placeholderSearchByOrgs')"
+          class="form-control block"
         />
         <div
-          class="oneOrganization"
+          class="card"
           v-for="organization in filterOrganization"
           :key="organization.id"
         >
-          <div>
+          <div class="card_img">
+            <img src="@/assets/avatar.jpg" />
+          </div>
+          <div class="card_body">
             <p>{{ organization.name }}</p>
             <p>№ {{ organization.id }}</p>
           </div>
-          <a @click="showFullInformation(organization.id)"
-            ><i18n path="more">{{ $t("more") }}</i18n></a
+          <div
+            @click="showFullInformation(organization.id)"
+            class="card_action"
           >
+            <ArrowRight></ArrowRight>
+          </div>
         </div>
       </div>
     </div>
     <minialert v-if="isShowAlertEdit"
       ><p slot="title">
-        <i18n path="minialertEditOrg">{{ $t("minialertEditOrg") }}</i18n>
+        {{ $t("minialertEditOrg") }}
       </p></minialert
     >
     <minialert v-if="isShowAlertDelete"
       ><p slot="title">
-        <i18n path="minialertDeleteOrg">{{ $t("minialertDeleteOrg") }}</i18n>
+        {{ $t("minialertDeleteOrg") }}
       </p></minialert
     >
     <minialert v-if="isError"
       ><p slot="title">
-        <i18n path="minialertError">{{ $t("minialertError") }}</i18n>
+        {{ $t("minialertError") }}
       </p></minialert
     >
   </div>
 </template>
 
 <script>
-import popup from "@/components/admin/Popup.vue";
-import minialert from "@/components/admin/MiniAlert.vue";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
+import popup from "@/components/Popup.vue";
+import minialert from "@/components/MiniAlert.vue";
 import { required, numeric } from "vuelidate/lib/validators";
 import {
   ORGS_QUERY,
@@ -320,7 +344,7 @@ import {
   TEAMS_IN_ONE_ORG_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup },
+  components: { minialert, popup, ArrowRight },
   apollo: {
     // Список всех организаций с краткой информацией
     organizations: {
@@ -635,27 +659,8 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-button {
-  width: 100%;
-  margin: 0 5%;
-}
-.oneOrganization {
-  display: flex;
-  border: 2px solid black;
-  justify-content: space-between;
-}
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
 .teams-list {
   border: 1px solid black;
   padding: 5px;
-}
-textarea {
-  display: block;
-  width: 80%;
-  height: 100px;
 }
 </style>

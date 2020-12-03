@@ -16,12 +16,18 @@ module.exports = (sequelize, DataTypes) => {
   }
   LikesOfComments.init(
     {
-      userId: DataTypes.INTEGER,
-      commentId: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      },
+      commentId: {
+        type: DataTypes.INTEGER,
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "LikesOfComments",
+      modelName: "LikesOfComments"
     }
   );
   return LikesOfComments;

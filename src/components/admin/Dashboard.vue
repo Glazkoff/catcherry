@@ -1,16 +1,8 @@
 <template>
   <div>
-    <h1>
-      <i18n path="adminPanel">{{ $t("adminPanel") }}</i18n>
-    </h1>
-    <h2>
-      <i18n path="systemStatistics">{{ $t("systemStatistics") }}</i18n>
-    </h2>
+    <h2>{{ $t("systemStatistics") }}</h2>
     <div v-if="$apollo.loading">
-      <h3>
-        <i18n path="loading">{{ $t("loading") }}</i18n
-        >...
-      </h3>
+      <h3>{{ $t("loading") }}...</h3>
     </div>
     <div class="graphs" v-if="!$apollo.loading">
       <NewStatistics
@@ -28,8 +20,8 @@
 </template>
 
 <script>
-import NewStatistics from "@/components/admin/NewStatistics.vue";
-import DeleteStatistics from "@/components/admin/DeleteStatistics.vue";
+import NewStatistics from "@/components/admin/charts/NewStatistics.vue";
+import DeleteStatistics from "@/components/admin/charts/DeleteStatistics.vue";
 import {
   STATISTICS_NEW_QUERY,
   STATISTICS_DELETE_QUERY
@@ -55,6 +47,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
 .graphs {
   display: grid;
   grid-template-columns: 1fr 1fr;

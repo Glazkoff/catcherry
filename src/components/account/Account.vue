@@ -2,9 +2,7 @@
   <div class="main">
     <popup v-if="isShowFullInformation">
       <h3 slot="header" v-if="isShowModalEdit">
-        <i18n path="editUser"
-          ><span place="title">{{ $t("editUser") }}</span></i18n
-        >
+        {{ $t("editUser") }}
       </h3>
       <div slot="body" v-if="isShowModalEdit">
         <form @submit.prevent="saveUserOnPopup()">
@@ -68,42 +66,32 @@
           />
         </form>
       </div>
-      <div slot="action" class="btn-group"  v-if="isShowModalEdit">
+      <div slot="footer" class="btn-group" v-if="isShowModalEdit">
         <button
           class="modal-default-button btn btn-primary"
           @click="saveUserOnPopup()"
         >
-          <i18n path="save"
-            ><span>{{ $t("save") }}</span></i18n
-          >
+          {{ $t("save") }}
         </button>
         <button class="btn btn-secondary" @click="cancelModal()">
-          <i18n path="cancel"
-            ><span place="title">{{ $t("cancel") }}</span></i18n
-          >
+          {{ $t("cancel") }}
         </button>
       </div>
 
       <h3 slot="header" v-if="isShowModalDelete">
-        <i18n path="deleteQuestion"
-          ><span place="title">{{ $t("deleteQuestion") }}</span></i18n
-        >
+        {{ $t("deleteQuestion") }}
         {{ fullName }}?
       </h3>
       <div slot="body" v-if="isShowModalDelete" class="btn-group">
         <button
           @click="deleteUser()"
-          slot="action"
+          slot="footer"
           class="modal-default-button"
         >
-          <i18n path="delete"
-            ><span place="title">{{ $t("delete") }}</span></i18n
-          >
+          {{ $t("delete") }}
         </button>
         <button @click="cancelModal()">
-          <i18n path="cancel"
-            ><span place="title">{{ $t("cancel") }}</span></i18n
-          >
+          {{ $t("cancel") }}
         </button>
       </div>
 
@@ -117,7 +105,7 @@
         slot="header"
         v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
       >
-        Каротчка пользователя
+        Карточка пользователя
       </h3>
       <div
         slot="body"
@@ -140,7 +128,11 @@
         <p>Логин: {{ user.login }}</p>
         <p>Пароль: {{ user.password }}</p>
       </div>
-      <div slot="action" class="btn-group" v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading">
+      <div
+        slot="footer"
+        class="btn-group"
+        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+      >
         <button class="btn btn-primary" @click="showModalEdit()">
           Редактировать
         </button>
@@ -148,53 +140,67 @@
           Удалить
         </button>
         <button class="btn btn-secondary" @click="cancelFullInformation()">
-          <i18n path="close"
-            ><span place="title">{{ $t("close") }}</span></i18n
-          >
+          {{ $t("close") }}
         </button>
       </div>
     </popup>
 
-    <h2>
-      <i18n path="profileUser"
-        ><span place="title">{{ $t("profileUser") }}</span></i18n
-      >
-    </h2>
-    <h3 v-if="$apollo.loading">
-      Загрузка...
-    </h3>
-    <div v-if="!$apollo.loading">
-      <h6 v-if="users.length == 0">К сожалению, такого пользователя нет!</h6>
-      <div>
-        <div class="oneUser">
-          <p>
-            <i18n path="surname"
-              ><span place="title">{{ $t("surname") }}</span></i18n
-            >: {{ user.surname }}
-          </p>
-          <p>
-            <i18n path="name"
-              ><span place="title">{{ $t("name") }}</span></i18n
-            >: {{ user.name }}
-          </p>
+    <div class="double">
+      <div class="flexCont">
+        <h2>{{ $t("profileUser") }}</h2>
+        <h3 v-if="$apollo.loading">
+          Загрузка...
+        </h3>
+        <div v-if="!$apollo.loading">
+          <h6 v-if="users.length == 0">
+            К сожалению, такого пользователя нет!
+          </h6>
+          <div class="card">
+            <div class="pad">
+              <div class="double">
+                <img src="@/assets/avatar.jpg" alt="user" class="card_img" />
 
-          <p>
-            <i18n path="patricity"
-              ><span place="title">{{ $t("patricity") }}</span></i18n
-            >: {{ user.patricity }}
-          </p>
-          <p>
-            <i18n path="login"
-              ><span place="title">{{ $t("login") }}</span></i18n
-            >: {{ user.login }}
-          </p>
-          <button
-            class="btn btn-secondary"
-            @click="showFullInformation(user.id)"
-          >
-            Подробнее
-          </button>
+                <div>
+                  <p>{{ user.surname }}</p>
+                  <p>{{ user.name }}</p>
+
+                  <p>{{ user.patricity }}</p>
+                </div>
+              </div>
+              <div class="double">
+                <div>
+                  <p>{{ $t("gender") }}: {{ user.gender }}</p>
+                  <p>
+                    {{ $t("birthday") }}:
+                    {{
+                      new Date(user.birthday).toLocaleString("ru", {
+                        day: "numeric",
+                        month: "long",
+                        year: "numeric"
+                      })
+                    }}
+                  </p>
+                  <p>{{ $t("login") }}: {{ user.login }}</p>
+                </div>
+                <div></div>
+              </div>
+            </div>
+            <div class="btnEdit">
+              <Edit @click="showFullInformation(user.id)" />
+            </div>
+          </div>
+
+          <div class="card pad">
+            <Points />
+          </div>
         </div>
+      </div>
+      <div class="card">
+        <p>
+          Lorem ipsum dolor sit amet consectetur adipisicing elit. Repudiandae,
+          quia natus. Dignissimos reprehenderit consectetur quo commodi
+          perspiciatis hic, aut nostrum,
+        </p>
       </div>
     </div>
     <minialert v-if="isShowAlertEdit"
@@ -207,8 +213,10 @@
 </template>
 
 <script>
-import popup from "@/components/account/Popup.vue";
-import minialert from "@/components/account/MiniAlert.vue";
+import popup from "@/components/Popup.vue";
+import minialert from "@/components/MiniAlert.vue";
+import Edit from "@/assets/account_edit.svg";
+import Points from "@/components/account/PointsUser.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
@@ -217,7 +225,7 @@ import {
   ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup },
+  components: { minialert, popup, Edit, Points },
   apollo: {
     users: {
       query: USERS_QUERY
@@ -410,17 +418,32 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main {
-  float: right;
-  width: 80%;
-}
-.btn-group {
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+
+.flexCont {
   display: flex;
-  justify-content: space-between;
-  width: 100%;
+  padding: 3rem;
+  flex-direction: column;
 }
-input,
-select {
-  display: block;
+.double {
+  display: flex;
+  justify-content: space-around;
+}
+.pad {
+  padding: 2.5rem;
+}
+.boxLine {
+  display: inline-block;
+}
+.btnEdit {
+  display: flex;
+  align-self: flex-start;
+  margin: 2rem;
+  cursor: pointer;
+}
+.card {
+  margin-bottom: 3rem;
+  justify-content: center;
 }
 </style>

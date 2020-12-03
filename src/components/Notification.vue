@@ -1,7 +1,13 @@
 <template>
-  <div class="notification">
+  <div
+    v-if="
+      notification.forAllUsers == $route.params.id ||
+        notification.forAllUsers == null
+    "
+    class="notification"
+  >
     <div class="header">
-      <span>{{ notification.body.header }}</span>
+      <h2>{{ notification.body.header }}</h2>
       <div class="icon" @click="onDelete(notification.id)">
         <svg
           aria-hidden="true"
@@ -28,6 +34,9 @@
         }}</a>
       </div>
     </div>
+    <div class="footer">
+      <small>{{ $d(notification.createdAt, "number") }}</small>
+    </div>
   </div>
 </template>
 
@@ -46,60 +55,39 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+
 .notification {
-  width: 15rem;
-  margin-bottom: 2rem;
-  padding-bottom: 1rem;
-  border-radius: 0.5rem;
-  background-color: #fff;
-  box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
-    0px 20px 32px rgba(96, 97, 112, 0.24);
+  width: 20rem;
+  margin-bottom: 1rem;
 }
 
 .header {
-  padding-top: 0.3rem;
-  padding-bottom: 0.3rem;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  width: 100%;
-  min-height: 2rem;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  background: #d2bbea;
-  padding-right: 1rem;
-  padding-left: 1rem;
+  position: relative;
+  padding-right: 1.7rem;
+  & h2 {
+    margin-top: 0;
+    margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
+  }
+  & .icon {
+    position: absolute;
+    top: 0;
+    right: 0;
+    cursor: pointer;
+    width: 1.7rem;
+    height: 1.7rem;
+  }
 }
 
-.header span {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 1.15rem;
-  /* line-height: 1.8rem; */
-  color: #ffffff;
-}
-
-.icon {
-  margin-left: 0.5rem;
-  margin-right: -0.6rem;
-  cursor: pointer;
-  width: 1.7rem;
-  height: 1.7rem;
-}
-
-.main {
-  width: 100%;
-  padding-right: 1rem;
-  padding-left: 1rem;
-}
 .main p {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 0.8rem;
-  line-height: 0.95rem;
+  margin-top: 0.5rem;
 }
 
 .blockForButton {
@@ -126,5 +114,10 @@ export default {
 }
 .blockForButton a:hover {
   background: #fff;
+}
+
+span {
+  color: #878787;
+  font-size: 12px;
 }
 </style>

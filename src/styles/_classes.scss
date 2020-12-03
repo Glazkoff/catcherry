@@ -1,0 +1,245 @@
+@import "@/styles/_colors.scss";
+@import "@/assets/fonts/Lato/stylesheet.scss";
+@import "@/assets/fonts/Roboto/stylesheet.scss";
+
+// Типографика
+h1 {
+  font-size: 38px;
+  line-height: 45.6px;
+  font-family: Lato;
+  font-weight: 500;
+}
+
+h2 {
+  font-size: 28px;
+  line-height: 34px;
+  font-family: Lato;
+  font-weight: 500;
+}
+
+h3 {
+  font-weight: 500;
+  font-size: 21px;
+  line-height: 25px;
+  font-family: Lato;
+}
+
+p {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+small {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 12px;
+  line-height: 14px;
+}
+
+a {
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 19px;
+  text-decoration: underline;
+  color: $black;
+}
+
+.block {
+  width: 100%;
+}
+
+// Кнопки
+.btn {
+  display: block;
+  line-height: 18px;
+  border-radius: 8px;
+  cursor: pointer;
+  padding: 1rem 4rem;
+  font-family: Roboto;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  text-align: center;
+}
+
+.btn-primary {
+  color: $white;
+  background: $violet_2;
+  border: 1px solid $violet_2;
+  &:hover {
+    background: $violet_3;
+  }
+  &:disabled {
+    background: $violet;
+    color: $gray_3;
+  }
+}
+
+.btn-alternate {
+  color: $violet_2;
+  background: transparent;
+  border: 1px solid $violet_2;
+  &:hover {
+    color: $violet_3;
+    border: 1px solid $violet_3;
+  }
+  &:disabled {
+    color: $violet;
+    border: 1px solid $violet;
+  }
+}
+
+.btn-group {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.notification {
+  color: $white;
+  background: $violet_2;
+  border-radius: 10px;
+  padding: 1.5rem 2.4rem;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  & .footer small{
+    display: flex;
+    color: $gray_3;
+  }
+}
+
+.card {
+  background: $violet;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  padding: 1%;
+  display: flex;
+  margin: 1% 0%;
+  align-items: center;
+  &_img {
+    width: 5%;
+    border-radius: 100%;
+    margin-right: 3%;
+    img {
+      width: 100%;
+      border-radius: 100%;
+    }
+  }
+  &_body {
+    color: $white;
+    width: 85%;
+    p {
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      font-size: 18px;
+      font-weight: 400;
+    }
+    p:first-child {
+      font-size: 28px;
+      font-weight: 500;
+    }
+    p:last-child {
+      color: $gray_4;
+      font-weight: 400;
+      font-size: 15px;
+      margin-top: 10px;
+    }
+  }
+  &_action {
+    width: 5%;
+    cursor: pointer;
+  }
+}
+
+// Формы
+.form-group {
+  margin-bottom: 1rem;
+}
+
+.form-name {
+  color: $black;
+  margin-bottom: 1rem;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+}
+
+.form-control {
+  display: block;
+  position: relative;
+  border: 1px solid $gray_3;
+  background: $white;
+  padding: 0.5rem 1rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 21px;
+  line-height: 25px;
+  &:focus {
+    border: 1px solid $bright_violet !important;
+    color: $bright_violet !important;
+    outline: none;
+  }
+}
+
+.form-control-touch {
+  border: 1px solid $bright_violet;
+  color: $bright_violet;
+}
+
+.form-control-danger {
+  border: 1px solid $red;
+}
+
+.form-text {
+  font-size: 0.8rem;
+  color: $bright_violet;
+}
+
+.box-label {
+  display: inline-block;
+  margin: 5px;
+  cursor: pointer;
+  input[type="checkbox"] {
+    display: none;
+  }
+  .box::before {
+    content: url("~@/assets/square.svg");
+    line-height: 1rem;
+    margin-right: 5px;
+    width: 1rem;
+    display: inline-block;
+  }
+  #checkbox:checked+.box::before {
+    content: url("~@/assets/check-square.svg");
+    animation: checkanimate 200ms;
+  }
+}
+
+@keyframes checkanimate {
+  0% {
+    transform: scale(0);
+  }
+
+  90% {
+    transform: scale(1.4);
+  }
+
+  100% {
+    transform: scale(1);
+  }
+}
+
+.danger {
+  color: $red;
+}

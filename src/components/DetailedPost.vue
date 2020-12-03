@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div v-if="!this.$apollo.queries.post.loading" class="container">
     <div class="post">
       <div class="imageContainer">
         <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
@@ -8,13 +8,15 @@
         <h1 class="heading">
           {{ post.body.header }}
         </h1>
-        <p class="infoDate">{{ post.createdAt }}</p>
+        <p class="infoDate">
+          {{ $d(post.createdAt, "number") }}
+        </p>
         <p class="infoBody">
           {{ post.body.text }}
         </p>
         <div class="iconContainer">
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onLike(post.id)">
+          <div class="iconAndNumber" v-on:click="onLike(post.id)">
+            <div class="icon">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -26,16 +28,22 @@
                 class="svg-inline--fa fa-heart fa-w-16 fa-3x"
               >
                 <path
+                  v-if="!isLikedByUser"
                   fill="#C4C4C4"
+                  d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
+                ></path>
+                <path
+                  v-else
+                  fill="#ED4C67"
                   d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
                 ></path>
               </svg>
             </div>
-            <span class="numOfIcon">21</span>
+            <span class="numOfIcon">{{ post.likesOfPost.length }}</span>
           </div>
 
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onComment(post.id)">
+          <div class="iconAndNumber" v-on:click="onComment(post.id)">
+            <div class="icon">
               <svg
                 aria-hidden="true"
                 focusable="false"
@@ -54,38 +62,38 @@
             </div>
             <span class="numOfIcon">3</span>
           </div>
-
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onShare(post.id)">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-prefix="fas"
-                data-icon="share"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                class="svg-inline--fa fa-share fa-w-16 fa-3x"
-              >
-                <path
-                  fill="#C4C4C4"
-                  d="M503.691 189.836L327.687 37.851C312.281 24.546 288 35.347 288 56.015v80.053C127.371 137.907 0 170.1 0 322.326c0 61.441 39.581 122.309 83.333 154.132 13.653 9.931 33.111-2.533 28.077-18.631C66.066 312.814 132.917 274.316 288 272.085V360c0 20.7 24.3 31.453 39.687 18.164l176.004-152c11.071-9.562 11.086-26.753 0-36.328z"
-                ></path>
-              </svg>
-            </div>
-          </div>
         </div>
         <comments></comments>
       </div>
     </div>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
 import Comments from "../components/Comments.vue";
-import { ONE_POST_QUERY } from "@/graphql/queries";
+import {
+  ONE_POST_QUERY,
+  DELETE_LIKE_OF_POST,
+  CREATE_LIKE_OF_POST
+} from "@/graphql/queries";
 export default {
   name: "DetailedPost",
+  computed: {
+    userId() {
+      if (this.$store.getters.decodedToken != null) {
+        return this.$store.getters.decodedToken.id;
+      } else return null;
+    },
+    isLikedByUser() {
+      let likeIndex = this.post.likesOfPost.findIndex(el => {
+        return +el.userId === +this.userId;
+      });
+
+      return likeIndex !== -1;
+    }
+  },
   apollo: {
     post: {
       query: ONE_POST_QUERY,
@@ -97,42 +105,95 @@ export default {
     }
   },
   components: {
-    Comments
+    Comments,
+    Loader
   },
   data() {
-    return {
-      message: null,
-      comments: [
-        {
-          id: 1,
-          author: "Олег Дубенский",
-          body:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?"
-        },
-        {
-          id: 2,
-          author: "Олег Недубенский",
-          body:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?"
-        }
-      ]
-    };
+    return {};
   },
   methods: {
-    onLike() {
-      console.log("Нажата кнопка лайка");
+    onLike(id) {
+      if (this.isLikedByUser) {
+        this.$apollo
+          .mutate({
+            mutation: DELETE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: id
+            },
+            update: cache => {
+              let data = cache.readQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                }
+              });
+              let indexLikePostByUser = data.post.likesOfPost.findIndex(
+                el => el.userId === this.userId
+              );
+              data.post.likesOfPost.splice(indexLikePostByUser, 1);
+              cache.writeQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                },
+                data
+              });
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      } else {
+        this.$apollo
+          .mutate({
+            mutation: CREATE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: id
+            },
+            update: cache => {
+              let data = cache.readQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                }
+              });
+              data.post.likesOfPost.push({
+                userId: this.userId,
+                __typename: "LikeOfPost"
+              });
+              cache.writeQuery({
+                query: ONE_POST_QUERY,
+                variables: {
+                  id: this.$route.params.id
+                },
+                data
+              });
+            }
+          })
+          .then(data => {
+            console.log(data);
+          })
+          .catch(error => {
+            console.error(error);
+          });
+      }
     },
     onComment() {
       console.log("Нажата кнопка комментария");
-    },
-    onShare() {
-      console.log("Нажата кнопка репоста");
     }
   }
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+
 .container {
   display: flex;
   justify-content: center;
@@ -190,8 +251,12 @@ export default {
 
 .iconAndNumber {
   display: flex;
-  margin-right: 2rem;
+  cursor: pointer;
   align-items: center;
+}
+
+.iconAndNumber:first-child {
+  margin-right: 2.8rem;
 }
 
 .numOfIcon {
@@ -203,7 +268,6 @@ export default {
 .icon {
   width: 1.8rem;
   height: 1.8rem;
-  cursor: pointer;
   margin-right: 0.7rem;
 }
 </style>

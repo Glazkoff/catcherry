@@ -4,12 +4,14 @@ import gql from "graphql-tag";
 export const SIGN_UP = gql`
   mutation(
     $name: String!
+    $birthday: String!
     $login: String!
     $password: String!
     $fingerprint: String!
   ) {
     signUp(
       name: $name
+      birthday: $birthday
       login: $login
       password: $password
       fingerprint: $fingerprint
@@ -72,8 +74,8 @@ export const DELETE_IN_TEAMS_QUERY = gql`
 `;
 
 export const REQUESTS_QUERY = gql`
-  query {
-    requests {
+  query($teamId: ID!) {
+    requests(teamId: $teamId) {
       id
       userId
       teamId
@@ -109,6 +111,7 @@ export const ONE_USER_QUERY = gql`
       id
       surname
       name
+      surname
       patricity
       gender
       birthday
@@ -320,11 +323,7 @@ export const USERS_IN_TEAMS_QUERY = gql`
       user {
         id
         name
-      }
-      owner {
         surname
-        name
-        patricity
       }
     }
   }
@@ -378,6 +377,12 @@ export const ADD_IN_TEAM_QUERY = gql`
   }
 `;
 
+export const REJECT_REQUEST = gql`
+  mutation($id: ID!) {
+    rejectRequst(id: $id)
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
 
 export const ONE_POST_QUERY = gql`
@@ -387,6 +392,9 @@ export const ONE_POST_QUERY = gql`
       body {
         header
         text
+      }
+      likesOfPost {
+        userId
       }
       createdAt
     }
@@ -417,6 +425,9 @@ export const POSTS_QUERY = gql`
         header
         text
       }
+      likesOfPost {
+        userId
+      }
       createdAt
     }
   }
@@ -440,6 +451,63 @@ export const DELETE_POST = gql`
     deletePost(id: $id)
   }
 `;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfPosts
+
+// Получаем информацию о всех лайках постов пользователя
+export const LIKES_OF_POST_FROM_USER = gql`
+  query($userId: ID!) {
+    likesOfPostFromUser(userId: $userId) {
+      postId
+    }
+  }
+`;
+
+// Лайкнуть данный пост данным пользователем
+export const CREATE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    addLikeOfPost(userId: $userId, postId: $postId) {
+      userId
+      postId
+    }
+  }
+`;
+
+// Удалить лайк с данного поста данным пользователем
+export const DELETE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    deleteLikeOfPost(userId: $userId, postId: $postId)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfComments
+
+// Получаем информацию о всех лайках комментариев пользователя
+export const LIKES_OF_COMMENT_FROM_USER = gql`
+  query($userId: ID!) {
+    likesOfCommentFromUser(userId: $userId) {
+      commentId
+    }
+  }
+`;
+
+// Лайкнуть данный комментарий данным пользователем
+export const CREATE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    addLikeOfComment(userId: $userId, commentId: $commentId) {
+      userId
+      commentId
+    }
+  }
+`;
+// Удалить лайк с данного комментария данным пользователем
+export const DELETE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    deleteLikeOfComment(userId: $userId, commentId: $commentId)
+  }
+`;
+
+// -- //
 
 export const CARGE_POINTS_QUERY = gql`
   mutation(
@@ -470,6 +538,20 @@ export const RAITING_IN_TEAMS_QUERY = gql`
             createdAt
           }
         }
+      }
+    }
+  }
+`;
+
+export const PERSONAL_USER_STATISTIC_QUERY = gql`
+  query($userId: Int!) {
+    personalUserStatistics(userId: $userId) {
+      id
+      pointQuantity
+      pointsOperation {
+        delta
+        operationDescription
+        createdAt
       }
     }
   }
@@ -579,7 +661,30 @@ export const NOTIFICATIONS_USER_QUERY = gql`
       body {
         header
         text
+        buttonLink
       }
+      authorId
+      teamId
+      forAllUsers
+      createdAt
+    }
+  }
+`;
+
+export const ADD_NOTIFICATION_QUERY = gql`
+  mutation(
+    $body: NotificationBody!
+    $authorId: Int!
+    $teamId: Int!
+    $forAllUsers: Int
+  ) {
+    createNotification(
+      body: $body
+      authorId: $authorId
+      teamId: $teamId
+      forAllUsers: $forAllUsers
+    ) {
+      id
     }
   }
 `;
@@ -604,5 +709,10 @@ export const USER_OPERATION_POINTS_QUERY = gql`
       operationDescription
       createdAt
     }
+  }
+`;
+export const LOG_OUT = gql`
+  mutation($fingerprint: String!) {
+    logOut(fingerprint: $fingerprint)
   }
 `;

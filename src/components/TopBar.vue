@@ -1,45 +1,92 @@
 <template>
-  <div>
+  <div class="mainTopBar">
     <header>
       <div id="topbar">
         <nav class="navtopbar">
+          <a class="icon right">☰</a>
           <ul>
-            <label for="gepleasurprised">
-              <li class="icon right">
-                <!-- <a v-on-clickaway="away">☰</a> -->
-              </li>
-            </label>
-
             <input
               type="checkbox"
               id="gepleasurprised"
               style="display: none;"
             />
-            <li class="nav-logo">CATCHERRY</li>
-            <li>
-              <router-link to="/user/156">{{ $t("accountMsg") }}</router-link>
-            </li>
-            <li>
-              <router-link to="/admin">admin</router-link>
-            </li>
-            <li>
-              <router-link to="/user/156/user_org">{{
-                $t("orgMsg")
-              }}</router-link>
-            </li>
-            <li>
-              <router-link to="/user/156/list_req">{{
-                $t("applicationMsg")
-              }}</router-link>
-            </li>
-            <li class="right">
-              <button class="nav-exit">{{ $t("endMsg") }}</button>
+            <li class="nav-logo">
+              <h1>{{ routeTitle }}</h1>
             </li>
             <li class="right ">
+              <a class="userFoto"></a>
               <a class="nav-name"
-                >{{ $t("hellouserMsg") }},<br />
-                {{ $t("nameuserMsg") }}!</a
-              >
+                ><p>{{ this.$store.getters.decodedToken.name }}</p>
+                <small>
+                  -
+                </small>
+                <!-- <small v-if="oneUserInTeams.role.name == null">-</small>
+                <small v-if="oneUserInTeams.role.name != null">{{
+                  oneUserInTeams.role.name
+                }}</small> -->
+              </a>
+            </li>
+            <li class="right icon-notificationTopBar">
+              <div class="notificationTopBar">
+                <a href="#" class="nav-notificationTopBar">
+                  <div class="notBtnNotification" href="#">
+                    <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
+                    <div class="number">.</div>
+                    <NotificationIcon></NotificationIcon>
+                    <div class="box">
+                      <div class="display">
+                        <div class="nothing">
+                          <div class="cent">Looks Like your all caught up!</div>
+                        </div>
+                        <div class="cont">
+                          <!-- Fold this div and try deleting evrything inbetween -->
+
+                          <div
+                            class="sec new"
+                            v-for="notification in notifications"
+                            :key="notification.id"
+                          >
+                            <div
+                              v-if="
+                                notification.forAllUsers ==
+                                  oneUserInTeams.userId ||
+                                  notification.forAllUsers == null
+                              "
+                            >
+                              <a href="#">
+                                <div class="profCont">
+                                  <img
+                                    class="profile"
+                                    src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
+                                  />
+                                </div>
+                                <div class="txt">
+                                  <h3>{{ notification.body.header }}</h3>
+                                  <p>{{ notification.body.text }}</p>
+                                </div>
+                                <div class="txt sub">
+                                  {{ $d(notification.createdAt, "number") }}
+                                </div>
+                              </a>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                </a>
+              </div>
+            </li>
+            <li class="right">
+              <p class="emailCard">
+                <MailIcon></MailIcon>
+              </p>
+            </li>
+            <li class="right">
+              <p class="nav-point">
+                {{ $tc("pointsMsg", pointQuantity) }}
+                <StarIcon></StarIcon>
+              </p>
             </li>
           </ul>
         </nav>
@@ -50,28 +97,89 @@
 
 <script>
 // import { directive as onClickaway } from "vue-clickaway";
-
+import MailIcon from "@/assets/svg/topbar/mail_top-bar.svg?inline";
+import StarIcon from "@/assets/svg/topbar/star_top-bar.svg?inline";
+import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg?inline";
+import {
+  GET_POINTS_QUERY,
+  ONE_USER_IN_TEAMS_QUERY,
+  NOTIFICATIONS_USER_QUERY
+} from "@/graphql/queries";
 export default {
   name: "top-bar",
-  // directives: {
-  //   onClickaway: onClickaway
+  components: {
+    MailIcon,
+    StarIcon,
+    NotificationIcon
+  },
+  directives: {
+    // onClickaway: onClickaway
+  },
+  // data: {
+  //   open: false
   // },
+  apollo: {
+    getPointsUser: {
+      query: GET_POINTS_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
+    },
+    oneUserInTeams: {
+      query: ONE_USER_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
+    },
+    notifications: {
+      query: NOTIFICATIONS_USER_QUERY
+    }
+  },
   methods: {
     setLocale(locale) {
       this.$i18n.locale = locale;
     }
+    // openMenu: function() {
+    //   this.open = !this.open;
+    // },
     // away: function() {
-    //   console.log("clicked away");
-    // }
+    //   this.open = !this.open;
+    // },
+  },
+  computed: {
+    routeTitle() {
+      let matchedLength =
+        this.$route.matched.length != 0 ? this.$route.matched.length : 0;
+      return this.$route.matched[matchedLength - 1].meta.breadCrumb;
+    },
+    pointQuantity() {
+      if (this.getPointsUser == undefined) {
+        return "-";
+      } else {
+        return this.getPointsUser.pointQuantity;
+      }
+    }
   }
 };
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+.mainTopBar h1 {
+  margin-block-start: 0em;
+  margin-block-end: 0em;
+}
 #topbar,
 #comptacagatin,
 #luepgoposion {
   width: 100%;
+  height: $topBarHeight;
 }
 
 #topbar ul {
@@ -80,10 +188,10 @@ export default {
 
 #topbar ul li {
   float: left;
-  transition: 0.7s;
-  moz-transition: 0.7s;
-  o-transition: 0.7s;
-  webkit-transition: 0.7s;
+  // transition: 0.7s;
+  // moz-transition: 0.7s;
+  // o-transition: 0.7s;
+  // webkit-transition: 0.7s;
 }
 
 #topbar ul .right {
@@ -94,7 +202,6 @@ export default {
   display: inline-block;
   padding: 0.8em;
   text-decoration: none;
-  font-family: Montserrat;
   font-style: normal;
   font-weight: 600;
   font-size: 16px;
@@ -110,44 +217,218 @@ export default {
 
 header {
   width: 100%;
-  background: #8c030e;
-  min-height: 2em;
+  height: $topBarHeight;
+  background: $dark_blue;
   justify-content: center;
-  padding-top: 20px;
+  padding-top: 10px;
   padding-bottom: 60px;
+  border-bottom: 2px solid $violet_3;
 }
 
-.nav-exit {
-  border: none;
-  outline: none;
-  background: white;
-  color: #8c030e;
-  font-weight: bold;
-  margin-left: 2rem;
-  margin-right: 2rem;
-  padding: 0.5rem 2rem;
-  border-radius: 4px;
-  font-size: 16px;
-  display: block;
-  cursor: pointer;
-}
 .nav-logo {
   text-align: left;
-  font-family: Montserrat;
   font-style: normal;
-  font-weight: bold;
-  font-size: 36px;
-  line-height: 44px;
   color: #ffffff;
-  padding-right: 30px;
 }
 #topbar ul li .nav-name {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 12px;
-  line-height: 15px;
   color: #ffffff;
+  padding: 0em;
+  padding-right: 52px;
+}
+
+#topbar ul li .nav-name p {
+  margin-block-start: 0em;
+  margin-block-end: 0.1em;
+}
+
+#topbar ul li .nav-point {
+  font-style: normal;
+  color: #ffffff;
+  // padding-left: 30px;
+}
+#topbar ul li .nav-point svg {
+  margin-left: 12px;
+}
+.emailCard {
+  visibility: hidden;
+}
+#topbar ul li .emailCard svg {
+  margin-left: 50px;
+}
+.icon-notificationTopBar {
+  display: inline;
+  float: right;
+}
+.box::-webkit-scrollbar-track {
+  -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.box::-webkit-scrollbar {
+  width: 10px;
+  background-color: #f5f5f5;
+  border-radius: 5px;
+}
+
+.box::-webkit-scrollbar-thumb {
+  background-color: black;
+  border: 2px solid black;
+  border-radius: 5px;
+}
+.notificationTopBar {
+  position: relative;
+  display: inline-block;
+}
+
+.number {
+  height: 7px;
+  width: 7px;
+  background-color: $red;
+  border-radius: 20px;
+  color: white;
+  text-align: center;
+  position: absolute;
+  top: 12px;
+  left: 65px;
+}
+.userFoto {
+  height: 48px;
+  width: 48px;
+  background-color: $gray_3;
+  border-radius: 25px;
+  border: 2px solid $bright_violet;
+  color: $gray_3;
+  margin-right: 1em;
+  margin-left: 7em;
+}
+
+.number:empty {
+  display: none;
+}
+
+.notBtnNotification {
+  transition: 0.5s;
+  cursor: pointer;
+}
+
+.fas {
+  font-size: 25pt;
+  color: white;
+  margin-right: 40px;
+  margin-left: 40px;
+}
+
+.box {
+  width: 400px;
+  height: 0px;
+  border-radius: 10px;
+  transition: 0.5s;
+  position: absolute;
+  overflow-y: scroll;
+  padding: 0px;
+  left: -300px;
+  margin-top: 5px;
+  background-color: #f4f4f4;
+  -webkit-box-shadow: 10px 10px 23px 0px rgba(0, 0, 0, 0.2);
+  -moz-box-shadow: 10px 10px 23px 0px rgba(0, 0, 0, 0.1);
+  box-shadow: 10px 10px 23px 0px rgba(0, 0, 0, 0.1);
+  cursor: context-menu;
+}
+
+.fas:hover {
+  color: #f4f4f4;
+}
+
+.notBtnNotification:hover > .box {
+  height: 60vh;
+}
+
+.content {
+  padding: 20px;
+  color: black;
+  vertical-align: middle;
+  text-align: left;
+}
+
+.gry {
+  background-color: #f4f4f4;
+}
+
+.top {
+  color: black;
+  padding: 10px;
+}
+
+.display {
+  position: relative;
+}
+
+.cont {
+  position: absolute;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background-color: #f4f4f4;
+}
+
+.cont:empty {
+  display: none;
+}
+
+.stick {
+  text-align: center;
+  display: block;
+  font-size: 50pt;
+  padding-top: 70px;
+  padding-left: 80px;
+}
+
+.stick:hover {
+  color: black;
+}
+
+.cent {
+  text-align: center;
+  display: block;
+}
+
+.sec {
+  padding: 25px 10px;
+  background-color: #f4f4f4;
+  transition: 0.5s;
+}
+
+.profCont {
+  padding-left: 15px;
+}
+
+.profile {
+  -webkit-clip-path: circle(50% at 50% 50%);
+  clip-path: circle(50% at 50% 50%);
+  width: 75px;
+  float: left;
+}
+
+.txt {
+  color: black;
+  vertical-align: top;
+  font-size: 1.25rem;
+  padding: 5px 10px 0px 115px;
+}
+
+.sub {
+  font-size: 1rem;
+  color: grey;
+}
+
+.new {
+  border-style: none none solid none;
+  border-color: $dark_blue;
+}
+
+.sec:hover {
+  background-color: $gray_3;
 }
 @media screen and (max-width: 1090px) {
   nav ul li:not(:nth-child(1)) {
@@ -172,10 +453,37 @@ header {
   #gepleasurprised:checked ~ li a.nav-name {
     display: none;
   }
+  .fas {
+    margin: 0px;
+  }
+  .number {
+    left: 20px;
+  }
+  .box {
+    left: 50px;
+  }
 }
 @media screen and (max-width: 350px) {
   .nav-logo {
     font-size: 24px;
+  }
+}
+@media screen and (max-width: 660px) {
+  .box {
+    width: 200px;
+    height: 0px;
+    padding: 0px;
+    left: 50px;
+    margin-top: 5px;
+  }
+  .profCont {
+    display: none;
+  }
+  .txt {
+    color: black;
+    vertical-align: top;
+    font-size: 0.75rem;
+    padding: 5px 10px 0px 15px;
   }
 }
 </style>

@@ -25,4 +25,12 @@
 - [[ENG] START WITH A GRAPHQL API, APOLLO, SEQUELIZE, POSTGRESQL, NODE.JS AND EXPRESS.JS](https://markomatic.me/blog/node-express-sequelize-pg-graphql/)
 - [[ENG] How To Set Up a GraphQL Server in Node.js with Apollo Server and Sequelize](https://www.digitalocean.com/community/tutorials/how-to-set-up-a-graphql-server-in-node-js-with-apollo-server-and-sequelize)
 
+## Особенности роутинга
+- [[RUS] Именованные представления](https://router.vuejs.org/ru/guide/essentials/named-views.html#%D0%B2n%D0%BE%D0%B6%D0%B5%D0%BD%D0%BD%D1%8B%D0%B5-%D0%B8%D0%BC%D0%B5%D0%BD%D0%BE%D0%B2%D0%B0%D0%BD%D0%BD%D1%8B%D0%B5-%D0%BF%D1%80%D0%B5%D0%B4%D1%81%D1%82%D0%B0%D0%B2n%D0%B5%D0%BD%D0%B8%D1%8F)
+
+## Интернационализация
+- [[ENG] The Ultimate Guide to Vue Localization with Vue I18n](https://phrase.com/blog/posts/ultimate-guide-to-vue-localization-with-vue-i18n/#srclocalesenjson)
+
+## Решения интерфейса
+- [[ENG] Dynamic breadcrumbs with Vue Router nested routes and Vuetify Breadcrumb component](https://kinoshita.eti.br/2019/11/09/dynamic-breadcrumbs-with-vue-router-nested-routes-and-vuetify-breadcrumb-component.html)
 ---
