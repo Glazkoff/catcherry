@@ -114,8 +114,8 @@ module.exports = {
       return db.Users.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-          },
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
         },
         paranoid: false
       });
@@ -124,8 +124,8 @@ module.exports = {
       return db.Organizations.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-          },
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
         },
         paranoid: false
       });
@@ -365,7 +365,7 @@ module.exports = {
     /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
-      { name, login, password, fingerprint },
+      { name, birthday, login, password, fingerprint },
       { res, db }
     ) => {
       let hashPassword = bcrypt.hashSync(password, salt);
@@ -374,6 +374,7 @@ module.exports = {
       let user = await db.Users.create({
         login,
         name,
+        birthday,
         password: hashPassword
       });
 

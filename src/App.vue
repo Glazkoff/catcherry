@@ -2,11 +2,15 @@
   <div id="app" v-if="!isAppLoading" v-cloak>
     <router-view></router-view>
   </div>
-  <div v-else>Загрузка... Здесь будет спиннер!</div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
 export default {
+  components: {
+    Loader
+  },
   async mounted() {
     // Для глобального лоадера
     this.$store.commit("SET_AUTH_LOADING", true);
@@ -97,6 +101,17 @@ export default {
   }
 }
 
+.wrapOfLoader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  padding-top: calc(50vh - 100px);
+}
 // .btn {
 //   display: block;
 //   font-weight: 400;

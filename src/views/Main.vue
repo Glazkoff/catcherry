@@ -2,7 +2,9 @@
   <div id="main-view">
     <div id="side-bar">
       <div class="logo-block">
-        <FullLogo class="logo-img"></FullLogo>
+        <router-link :to="{ name: 'FeedOfPosts' }">
+          <FullLogo class="logo-img"></FullLogo>
+        </router-link>
       </div>
       <router-view name="sidebar" class="side-bar__inner"></router-view>
       <div class="bottom-panel-list">
@@ -38,13 +40,17 @@
 
 <script>
 import TopBar from "@/components/TopBar.vue";
-import FullLogo from "@/assets/full_logo.svg";
-import SettingsIcon from "@/assets/svg/sidebar/settings_icon.svg";
+import FullLogo from "@/assets/full_logo.svg?inline";
+import SettingsIcon from "@/assets/svg/sidebar/settings_icon.svg?inline";
 import { setI18nLanguage } from "@/i18n/i18n";
 
 export default {
   name: "Main",
-  components: { TopBar, FullLogo, SettingsIcon },
+  components: {
+    TopBar,
+    FullLogo,
+    SettingsIcon
+  },
   methods: {
     logOut() {
       this.$store.dispatch("LOG_OUT");
@@ -92,13 +98,14 @@ export default {
   #main-content {
     grid-area: 1/2/3/3;
     width: calc(100vw - #{$sideBarWidth});
+    max-width: calc(100vw - #{$sideBarWidth});
     overflow-x: auto;
-    padding-top: $topBarHeight;
     background: $dark_blue;
     color: $white;
+    position: relative;
     #top-bar {
-      position: fixed;
-      width: calc(100vw - #{$sideBarWidth} - #{$scrollBarVerticalWidth});
+      position: sticky;
+      width: 100%;
       top: 0;
       z-index: 10000;
       box-sizing: border-box;

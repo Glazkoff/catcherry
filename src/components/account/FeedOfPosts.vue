@@ -1,9 +1,7 @@
 <template>
-  <div class="doubleColumn">
+  <div v-if="!this.$apollo.queries.posts.loading" class="doubleColumn">
     <div class="flexbox">
-      <h2>Лента новостей</h2>
-      <h1 v-if="this.$apollo.queries.posts.loading">Это лоадер</h1>
-      <div v-else>
+      <div>
         <div v-if="!this.isEmpty">
           <non-detailed-post
             @like="onLike"
@@ -17,11 +15,13 @@
     </div>
     <list-of-notifications></list-of-notifications>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import NonDetailedPost from "@/components/NonDetailedPost.vue";
 import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
+import Loader from "@/components/Loader.vue";
 import {
   POSTS_QUERY,
   CREATE_LIKE_OF_POST,
@@ -49,7 +49,8 @@ export default {
   },
   components: {
     NonDetailedPost,
-    ListOfNotifications
+    ListOfNotifications,
+    Loader
   },
   data() {
     return {};
