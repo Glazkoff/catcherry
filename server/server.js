@@ -33,6 +33,7 @@ const resolvers = require("./resolvers");
 
 // База данных
 const db = require("./models/index");
+const { log } = require("debug");
 
 // Rate Limit
 const rateLimitDirective = createRateLimitDirective({
@@ -64,7 +65,11 @@ app.use(cookieParser());
 // .env NODE_ENV = development
 // либо запустить сервер командой
 // NODE_ENV=development node server/server.js
-if (process.env.NODE_ENV !== "development") {
+if (
+  process.env.NODE_ENV !== "development" &&
+  process.env.NODE_ENV !== undefined
+) {
+  console.log("process.env.NODE_ENV", process.env.NODE_ENV);
   app.use(helmet());
 }
 
