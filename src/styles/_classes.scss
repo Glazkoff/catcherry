@@ -214,14 +214,14 @@ a {
     display: none;
   }
   .box::before {
-    content: url("~@/assets/check-square.svg");
+    content: url("~@/assets/square.svg");
     line-height: 1rem;
     margin-right: 5px;
     width: 1rem;
     display: inline-block;
   }
   #checkbox:checked+.box::before {
-    content: url("~@/assets/square.svg");
+    content: url("~@/assets/check-square.svg");
     animation: checkanimate 200ms;
   }
 }
