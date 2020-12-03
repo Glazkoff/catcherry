@@ -1,14 +1,16 @@
 <template>
   <div
     v-if="
-      notification.forAllUsers == $route.params.id ||
-        notification.forAllUsers == null
+      (notification.forAllUsers == $store.getters.decodedToken.id &&
+        notification.checkNotification == false) ||
+        (notification.forAllUsers == null &&
+          notification.checkNotification == false)
     "
     class="notification"
   >
     <div class="header">
       <h2>{{ notification.body.header }}</h2>
-      <div class="icon" @click="onDelete(notification.id)">
+      <div class="icon" @click="onCheckNotification(notification.id)">
         <svg
           aria-hidden="true"
           focusable="false"
@@ -41,6 +43,10 @@
 </template>
 
 <script>
+import {
+  UPDATE_NOTIFICATION_QUERY,
+  NOTIFICATIONS_USER_QUERY
+} from "@/graphql/queries";
 export default {
   name: "Notification",
   props: ["notification"],
@@ -48,8 +54,35 @@ export default {
     return {};
   },
   methods: {
-    onDelete(id) {
-      this.$emit("delete", { id: id });
+    onCheckNotification(id) {
+      // this.$emit("delete", { id: id });
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_NOTIFICATION_QUERY,
+          variables: {
+            id: id,
+            body: {
+              header: this.notification.header,
+              text: this.notification.text
+            },
+            teamId: this.notification.teamId,
+            checkNotification: true
+          },
+          update: cache => {
+            let data = cache.readQuery({ query: NOTIFICATIONS_USER_QUERY });
+            console.log(data);
+            data.notifications.find(
+              el => el.id === id
+            ).checkNotification = true;
+            cache.writeQuery({ query: NOTIFICATIONS_USER_QUERY, data });
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 };
