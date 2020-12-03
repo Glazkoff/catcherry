@@ -193,17 +193,17 @@ type Comment {
 type Query { 
   users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  deletedUsers: [User!]
+  deletedUsers: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  teams: [Team!]
-  team(organizationId: Int): [Team]
+  teams: [Team!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  team(organizationId: Int): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
-  comments: [Comment]!
-  comment(id: ID!): Comment
+  comments: [Comment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  comment(id: ID!): Comment @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   organizations: [Organization!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   organization(id: ID!): Organization @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  organizationTypes: [OrganizationType!]
+  organizationTypes: [OrganizationType!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -212,25 +212,25 @@ type Query {
   getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getOperationPointsUser(userId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
-  posts: [Post]!
-  post(id: ID!): Post
+  posts: [Post]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  post(id: ID!): Post @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
-  likesOfPostFromUser (userId:ID!): [LikeOfPost]! 
-  likesOfCommentFromUser (userId:ID!): [LikeOfComment]!  
+  likesOfPostFromUser (userId:ID!): [LikeOfPost]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  likesOfCommentFromUser (userId:ID!): [LikeOfComment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  usersInTeams (teamId:ID!):[UserInTeam]!
-  oneUserInTeams(userId: ID!): [UserInTeam!]
-  raitingInTeams (teamId:ID!): [UserInTeam]!
-  personalUserStatistics(userId: Int!): PointsUser
-  teamsInOneOrganization(organizationId: ID!): [Team]
+  usersInTeams (teamId:ID!):[UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  oneUserInTeams(userId: ID!): [UserInTeam!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  raitingInTeams (teamId:ID!): [UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  personalUserStatistics(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  teamsInOneOrganization(organizationId: ID!): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  tasks (teamId:ID!): [Task]!
-  backlog (teamId:ID!): [Task]!
+  tasks (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  backlog (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  statisticsNewUsers: Int
-  statisticsNewOrgs: Int
-  statisticsDeleteUsers: Int
-  statisticsDeleteOrgs: Int
+  statisticsNewUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  statisticsNewOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  statisticsDeleteUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  statisticsDeleteOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
 }
 
