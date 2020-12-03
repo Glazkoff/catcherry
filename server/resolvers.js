@@ -114,18 +114,20 @@ module.exports = {
       return db.Users.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
-        }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
+        paranoid: false
       });
     },
     statisticsNewOrgs: (parent, args, { db }) => {
       return db.Organizations.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
-          }
-        }
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+          },
+        },
+        paranoid: false
       });
     },
     statisticsDeleteUsers: (parent, args, { db }) => {

@@ -28,7 +28,7 @@
 export default {};
 </script>
 
-<style lang="scss" scoped>
+<style lang="scss">
 nav {
   margin: 1rem;
   margin-right: 5rem;

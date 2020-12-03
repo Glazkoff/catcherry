@@ -14,12 +14,8 @@ export default {
   name: "BreadCrumbs",
   computed: {
     crumbs() {
-      console.log("ROUTE MATCHED", this.$route.matched);
       let pathArray = this.$route.path.split("/");
-      console.log("pathArray", pathArray);
-      // pathArray.shift();
       let breadcrumbs = pathArray.reduce((breadcrumbArray, path, idx) => {
-        console.log(idx);
         breadcrumbArray.push({
           path: path,
           to:

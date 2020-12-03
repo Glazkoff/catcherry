@@ -2,8 +2,7 @@
   <form class="form-auth" @submit.prevent="submit">
     <h1>{{ $t("signUp.title") }}</h1>
     <p>{{ $t("markRequiredField") }}</p>
-    <label>{{ $t("signUp.fullName") }}</label
-    ><br />
+    <label>{{ $t("signUp.fullName") }} *</label><br />
     <input
       :disabled="signUpLoading"
       type="text"
@@ -29,8 +28,7 @@
       class="form-control block"
     />
     <br />
-    <label>{{ $t("signUp.login") }}</label
-    ><br />
+    <label>{{ $t("signUp.login") }} *</label><br />
     <input
       :disabled="signUpLoading"
       type="text"
@@ -47,8 +45,7 @@
       }}</span>
     </div>
     <br />
-    <label>{{ $t("signUp.password") }}</label
-    ><br />
+    <label>{{ $t("signUp.password") }} *</label><br />
     <input
       type="password"
       :disabled="signUpLoading"
@@ -66,9 +63,23 @@
         }}
       </span>
     </div>
+    <div>
+      <label class="box-label">
+        <input
+          type="checkbox"
+          id="checkbox"
+          v-model="privacyPolicyIsChecked"
+          checked=""
+        />
+        <small class="">
+          {{ $t("userAgreement.bySignUp") }}
+          <a>{{ $t("userAgreement.termsOfPrivacy") }}</a></small
+        >
+      </label>
+    </div>
     <br />
     <input
-      :disabled="signUpLoading"
+      :disabled="signUpLoading || !privacyPolicyIsChecked"
       type="submit"
       class="btn btn-primary block"
       :value="$t('signUp.buttonSubmit')"
@@ -100,7 +111,8 @@ export default {
       login: "",
       password: "",
       signUpLoading: false,
-      fingerprint: ""
+      fingerprint: "",
+      privacyPolicyIsChecked: false
     };
   },
   async created() {

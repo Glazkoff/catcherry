@@ -33,6 +33,7 @@ const resolvers = require("./resolvers");
 
 // База данных
 const db = require("./models/index");
+const { log } = require("debug");
 
 // Rate Limit
 const rateLimitDirective = createRateLimitDirective({
@@ -60,8 +61,16 @@ app.use(compression());
 app.use(cookieParser());
 
 // Безопасность заголовков
-// FIXME: не работает путь /graphiql при использовании
-// app.use(helmet());
+// Для доступа к /graphiql прописать в файле
+// .env NODE_ENV = development
+// либо запустить сервер командой
+// NODE_ENV=development node server/server.js
+if (
+  process.env.NODE_ENV !== "development" &&
+  process.env.NODE_ENV !== undefined
+) {
+  app.use(helmet());
+}
 
 // Точка входа GraphQL
 app.use(
