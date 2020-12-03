@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapOfList">
     <div class="spaceForNotifications"></div>
     <div class="list">
       <notification
@@ -73,8 +73,13 @@ export default {
 .spaceForNotifications {
   width: 24rem;
 }
+
+.wrapOfList {
+  margin-top: -20px;
+}
+
 .list {
-  height: calc(100% - #{$topBarHeight});
+  height: calc(100vh - #{$topBarHeight});
   width: 24rem;
   display: flex;
   flex-direction: column;
@@ -82,7 +87,7 @@ export default {
   top: $topBarHeight;
   bottom: -$topBarHeight;
   background: $violet;
-  position: fixed;
+  position: sticky;
   overflow-x: hidden;
   overflow-y: scroll;
   right: 0;
