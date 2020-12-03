@@ -30,4 +30,7 @@
 
 ## Интернационализация
 - [[ENG] The Ultimate Guide to Vue Localization with Vue I18n](https://phrase.com/blog/posts/ultimate-guide-to-vue-localization-with-vue-i18n/#srclocalesenjson)
+
+## Решения интерфейса
+- [[ENG] Dynamic breadcrumbs with Vue Router nested routes and Vuetify Breadcrumb component](https://kinoshita.eti.br/2019/11/09/dynamic-breadcrumbs-with-vue-router-nested-routes-and-vuetify-breadcrumb-component.html)
 ---

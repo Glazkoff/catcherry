@@ -26,7 +26,7 @@ import RaitingList from "@/components/manager/RaitingList.vue";
 import EditTeam from "@/components/manager/EditTeam.vue";
 import RequestsList from "@/components/manager/RequestsList.vue";
 import TasksTeam from "@/components/manager/TasksTeam.vue";
-import TeamList from "@/components/manager/TeamList.vue";
+import TeamsList from "@/components/manager/TeamsList.vue";
 import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
@@ -38,7 +38,10 @@ import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
 import SideBarManager from "@/components/sidebar/SideBarManager.vue";
 import SideBarAdmin from "@/components/sidebar/SideBarAdmin.vue";
 
+import Manager from "@/views/Manager.vue";
+
 import store from "@/store/index";
+import { i18n } from "@/i18n/i18n.js";
 
 Vue.use(VueRouter);
 
@@ -47,7 +50,8 @@ const routes = [
     path: "/",
     component: Main,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      breadCrumb: i18n.t("router.main")
     },
     children: [
       {
@@ -56,6 +60,9 @@ const routes = [
         components: {
           main: Home,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.home")
         }
       },
       {
@@ -64,31 +71,49 @@ const routes = [
         components: {
           main: FeedOfPosts,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.feed")
         }
       },
       {
-        path: "/manager/teams",
-        name: "TeamList",
+        path: "/teamslist",
+        name: "TeamsList",
         components: {
-          main: TeamList,
+          main: TeamsList,
           sidebar: SideBarDefault
+        },
+        meta: {
+          // TODO: проверка менеджер ли
+          // TODO: хлебные крошки
+          breadCrumb: "TeamsList"
         }
       },
       {
-        path: "/manager/teams/:id",
-        name: "TeamSettings",
+        path: "/manager",
+        name: "Manager",
         components: {
-          main: TeamSettings,
+          main: Manager,
           sidebar: SideBarManager
         },
-        props: true,
+        meta: {
+          // TODO: проверка менеджер ли
+          // TODO: хлебные крошки
+          breadCrumb: "manager"
+        },
         children: [
+          {
+            path: "teams",
+            name: "TeamSettings",
+            component: TeamSettings
+          },
           {
             path: "team_members",
             name: "TeamMembers",
             component: TeamMembers
           },
           {
+            // TODO: rating
             path: "raiting",
             name: "RaitingList",
             component: RaitingList
@@ -111,7 +136,10 @@ const routes = [
         ]
       },
       {
-        path: "/user/:id",
+        path: "/user",
+        meta: {
+          breadCrumb: i18n.t("router.user")
+        },
         components: {
           main: User,
           sidebar: SideBarDefault
@@ -120,22 +148,34 @@ const routes = [
           {
             path: "",
             name: "Account",
-            component: Account
+            component: Account,
+            meta: {
+              breadCrumb: i18n.t("router.account")
+            }
           },
           {
             path: "user_org",
             name: "UserInOrganization",
-            component: UserInOrganization
+            component: UserInOrganization,
+            meta: {
+              breadCrumb: i18n.t("router.userInOrg")
+            }
           },
           {
             path: "list_req",
             name: "ListReguest",
-            component: ListRequest
+            component: ListRequest,
+            meta: {
+              breadCrumb: i18n.t("router.listRequest")
+            }
           },
           {
             path: "tasks",
             name: "Tasks",
-            component: Tasks
+            component: Tasks,
+            meta: {
+              breadCrumb: i18n.t("router.tasks")
+            }
           }
         ]
       },
@@ -146,23 +186,33 @@ const routes = [
           sidebar: SideBarAdmin
         },
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          breadCrumb: i18n.t("router.adminpanel")
         },
         children: [
           {
             path: "",
             name: "Dashboard",
-            component: Dashboard
+            component: Dashboard,
+            meta: {
+              breadCrumb: i18n.t("router.dashboard")
+            }
           },
           {
             path: "users",
             name: "Users",
-            component: Users
+            component: Users,
+            meta: {
+              breadCrumb: i18n.t("router.users")
+            }
           },
           {
             path: "organizations",
             name: "Organization",
-            component: Organization
+            component: Organization,
+            meta: {
+              breadCrumb: i18n.t("router.organizations")
+            }
           }
         ]
       },
@@ -172,6 +222,9 @@ const routes = [
         components: {
           main: CreatePost,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.createpost")
         }
       },
       {
@@ -180,6 +233,9 @@ const routes = [
         components: {
           main: ListOfNotifications,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.notification")
         }
       },
       {
@@ -187,7 +243,10 @@ const routes = [
         name: "Posts",
         components: {
           main: DetailedPost,
-          sidebar: SideBarDefault
+          sidebar: SideBarDefault,
+          meta: {
+            breadCrumb: i18n.t("router.post")
+          }
         }
       },
       {
@@ -196,6 +255,9 @@ const routes = [
         components: {
           main: PointsUser,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.points")
         }
       },
       {
@@ -204,6 +266,9 @@ const routes = [
         components: {
           main: UserStatistic,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.statistic")
         }
       }
     ]
