@@ -45,7 +45,7 @@
 <script>
 import {
   UPDATE_NOTIFICATION_QUERY,
-  NOTIFICATIONS_USER_QUERY
+  NOTIFICATIONS_QUERY
 } from "@/graphql/queries";
 export default {
   name: "Notification",
@@ -62,19 +62,19 @@ export default {
           variables: {
             id: id,
             body: {
-              header: this.notification.header,
-              text: this.notification.text
+              header: "this.notification.header",
+              text: "this.notification.text"
             },
             teamId: this.notification.teamId,
             checkNotification: true
           },
           update: cache => {
-            let data = cache.readQuery({ query: NOTIFICATIONS_USER_QUERY });
+            let data = cache.readQuery({ query:NOTIFICATIONS_QUERY });
             console.log(data);
             data.notifications.find(
               el => el.id === id
             ).checkNotification = true;
-            cache.writeQuery({ query: NOTIFICATIONS_USER_QUERY, data });
+            cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
           }
         })
         .then(data => {
