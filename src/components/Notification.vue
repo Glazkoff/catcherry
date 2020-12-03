@@ -62,8 +62,8 @@ export default {
           variables: {
             id: id,
             body: {
-              header: "this.notification.header",
-              text: "this.notification.text"
+              header: this.notification.body.header,
+              text: this.notification.body.text
             },
             teamId: this.notification.teamId,
             checkNotification: true
