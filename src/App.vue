@@ -100,7 +100,11 @@ export default {
     color: $bright_violet;
   }
 }
+
 .wrapOfLoader {
+  position: absolute;
+  top: 0;
+  left: 0;
   overflow: hidden;
   background: $dark_blue;
   z-index: 99999;

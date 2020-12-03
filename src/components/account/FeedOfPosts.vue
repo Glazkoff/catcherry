@@ -125,17 +125,6 @@ export default {
 <style lang="scss">
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
-.wrapOfLoader {
-  position: absolute;
-  top: 0;
-  left: 0;
-  overflow: hidden;
-  background: $dark_blue;
-  z-index: 99999;
-  width: 100vw;
-  height: 100vh;
-  padding-top: calc(50vh - 100px);
-}
 
 .flexbox {
   display: flex;
