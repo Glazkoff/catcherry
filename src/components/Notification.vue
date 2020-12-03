@@ -66,9 +66,15 @@ export default {
 
 .header {
   position: relative;
+  padding-right: 1.7rem;
   & h2 {
     margin-top: 0;
     margin-bottom: 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 1;
   }
   & .icon {
     position: absolute;
