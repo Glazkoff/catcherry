@@ -209,7 +209,12 @@ export default {
         }
       }
       summ = summCurrent - summComparsion; //текущая сумма минус предыдущая сумма
-      let percent = ((summCurrent * 100) / summComparsion - 100).toFixed(2); //текущая сумма *100 поделена на предыдущую сумму с вычетом 100
+      let percent;
+      if (summComparsion != 0) {
+        percent = ((summCurrent * 100) / summComparsion - 100).toFixed(2); //текущая сумма *100 поделена на предыдущую сумму с вычетом 100
+      } else {
+        percent = 0;
+      }
       return { summ, percent };
     },
     // отображение тайм-штампа в фотмате для input date
@@ -228,6 +233,10 @@ export default {
 </script>
 
 <style>
+.form-control {
+  display: inline-block;
+}
+
 .oneUser {
   /* margin: 15px; */
   padding: 15px;
