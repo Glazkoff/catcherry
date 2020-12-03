@@ -33,7 +33,8 @@ module.exports = {
       .use("file-loader")
       .loader("file-loader")
       .options({
-        name: (resourcePath, resourceQuery) => {
+        name: () => {
+          // (resourcePath, resourceQuery)
           // `resourcePath` - `/absolute/path/to/file.js`
           // `resourceQuery` - `?foo=bar`
           if (process.env.NODE_ENV === "development") {
