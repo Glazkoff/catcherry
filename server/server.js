@@ -27,6 +27,7 @@ const helmet = require("helmet");
 const { createRateLimitDirective } = require("graphql-rate-limit");
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
+const timeout = require("connect-timeout");
 
 // Резолверы
 const resolvers = require("./resolvers");
@@ -59,6 +60,14 @@ app.use(compression());
 
 // Настройка парсинга Cookie
 app.use(cookieParser());
+
+// Настройка Timeout
+app.use(timeout('2s'));
+
+// Действие после таймаута
+function haltOnTimedout(req, res, next){
+  if (!req.timedout) next();
+}
 
 // Безопасность заголовков
 // Для доступа к /graphiql прописать в файле
@@ -94,6 +103,8 @@ app.use(express.static(path.join(__dirname, "../dist")));
 
 // Работа со статическими файлами
 app.use("/public", express.static(path.join(__dirname, "/public")));
+
+app.use(haltOnTimedout);
 
 db.sequelize
   // .sync({ force: true })
