@@ -99,7 +99,7 @@
       </router-link>
       <router-link
         :to="{
-          name: 'TeamList',
+          name: 'TeamsList',
           params: { id: $store.getters.decodedToken.id }
         }"
         :exact="true"
@@ -129,12 +129,12 @@
 </template>
 
 <script>
-import ProfileIcon from "@/assets/svg/sidebar/profile_icon.svg";
-import OrganizationIcon from "@/assets/svg/sidebar/organization_icon.svg";
-import FeedIcon from "@/assets/svg/sidebar/feed_icon.svg";
-import PersonalStatisticsIcon from "@/assets/svg/sidebar/personal_statistics_icon.svg";
-import TasksIcon from "@/assets/svg/sidebar/tasks_icon.svg";
-import PointsIcon from "@/assets/svg/sidebar/points_icon.svg";
+import ProfileIcon from "@/assets/svg/sidebar/profile_icon.svg?inline";
+import OrganizationIcon from "@/assets/svg/sidebar/organization_icon.svg?inline";
+import FeedIcon from "@/assets/svg/sidebar/feed_icon.svg?inline";
+import PersonalStatisticsIcon from "@/assets/svg/sidebar/personal_statistics_icon.svg?inline";
+import TasksIcon from "@/assets/svg/sidebar/tasks_icon.svg?inline";
+import PointsIcon from "@/assets/svg/sidebar/points_icon.svg?inline";
 
 export default {
   name: "SideBarDefault",

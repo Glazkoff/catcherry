@@ -2,13 +2,15 @@
   "projectTitle": "Кэтчерри",
   "nameuserMsg": "Дарья",
   "roleuserMsg": "Администратор",
-  "pointsMsg": "балла",
+  "pointsMsg": "нет баллов | {n} балл | {n} балла | {n} баллов",
+  "pointdefaultMsg": "баллов",
   "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",
   "listUser": "Список пользователей",
   "profileUser": "Профиль",
   "listOrganization": "Список организаций",
+  "systemStatisticsBr": "Статистика<br>системы",
   "systemStatistics": "Статистика системы",
   "surname": "Фамилия",
   "name": "Имя",
@@ -25,6 +27,7 @@
   "deleteQuestion": "Вы действительно хотите удалить пользователя",
   "deleteOrgQuestion": "Вы действительно хотите удалить организацию",
   "placeholderSearchByUsers": "Поиск по пользователям",
+  "placeholderSearchByOrgs": "Поиск по пользователям",
   "user": "Пользователь",
   "loading": "Загрузка",
   "createdAt": "Дата создания",
@@ -119,5 +122,9 @@
     "userInOrg": "Пользователь в организации",
     "listRequest": "Список заявок",
     "tasks": "Задания"
+  },
+  "userAgreement": {
+    "bySignUp": "Создавая аккаунт, принимаю",
+    "termsOfPrivacy": " условия политики конфиденциальности и пользовательского соглашения"
   }
 }
