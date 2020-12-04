@@ -1,10 +1,11 @@
 <template>
   <div class="main_users_in_teams">
-    <h3>Участники</h3>
-    <hr />
-    <div v-for="userInTeam in usersInTeams" :key="userInTeam.id" class="member">
+    <h3>Список участников</h3>
+
+    <div v-for="userInTeam in usersInTeams" :key="userInTeam.id">
       <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
     </div>
+
     <Minialert v-if="isShowAlert">
       <p slot="title">{{ message }}</p>
     </Minialert>
@@ -86,4 +87,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+</style>

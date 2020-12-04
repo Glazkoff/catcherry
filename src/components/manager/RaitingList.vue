@@ -1,7 +1,57 @@
 <template>
-  <div>
-    <h3>Рейтинг участников</h3>
-    <hr />
+  <div class="aa">
+    <h2>Рейтинг участников</h2>
+    <div v-for="oneUser in usersInTeams" :key="oneUser.id">
+      <div
+        class="card"
+        :class="{
+          bigCard: isShowFullInformation && oneUser.user.id === userId
+        }"
+      >
+        <div class="card_img">
+          <img src="~@/assets/avatar.jpg" />
+        </div>
+        <div class="card_body">
+          <p>
+            {{ oneUser.user.surname }} {{ oneUser.user.name }}
+            {{ oneUser.user.patricity }}
+          </p>
+          <p>Пользователь</p>
+        </div>
+        <div
+          @click="showFullInformation(oneUser)"
+          class="card_action"
+          v-if="!isShowFullInformation"
+        >
+          <ArrowRight></ArrowRight>
+        </div>
+        <div
+          @click="closeFullInformation()"
+          class="card_action"
+          v-if="isShowFullInformation"
+        >
+          <ArrowRight class="rotate"></ArrowRight>
+        </div>
+      </div>
+      <div
+        class="card_more"
+        v-if="isShowFullInformation && oneUser.user.id === userId"
+      >
+        <h3>История</h3>
+        <p
+          v-for="pointsOperation in getOperationPointsUser"
+          :key="pointsOperation.id"
+        >
+          +{{ pointsOperation.delta }} балла(ов)
+          {{ pointsOperation.operationDescription }}
+        </p>
+        <h3>Статистика</h3>
+        <p>За текущую неделю:</p>
+        <p>{{ getPointsUser.pointQuantity }} баллов</p>
+        <p>На прошлой недле:</p>
+        <p>{{ pointsLastWeek }} баллов</p>
+      </div>
+    </div>
     <!-- инпуты для смены периода отображения рейтинга  -->
     В период с
     <input type="date" v-model="weekAgo" class="form-control mini" /> по
@@ -52,16 +102,58 @@
 </template>
 
 <script>
-import { RAITING_IN_TEAMS_QUERY } from "@/graphql/queries";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
+import {
+  RAITING_IN_TEAMS_QUERY,
+  USERS_IN_TEAMS_QUERY,
+  GET_POINTS_OPERATION_QUERY,
+  GET_POINTS_QUERY,
+  GET_POINTS_LAST_WEEK_QUERY
+} from "@/graphql/queries";
 export default {
+  components: { ArrowRight },
   data() {
     return {
       today: this.stampToDate(new Date()),
       weekAgo: this.stampToDate(new Date().setDate(new Date().getDate() - 7)),
-      comparsionPeriod: 1
+      comparsionPeriod: 1,
+      isShowFullInformation: false,
+      userId: 0
     };
   },
   apollo: {
+    usersInTeams: {
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.$route.params.id
+        };
+      }
+    },
+    pointsLastWeek: {
+      query: GET_POINTS_LAST_WEEK_QUERY,
+      variables() {
+        return {
+          id: this.userId
+        };
+      }
+    },
+    getOperationPointsUser: {
+      query: GET_POINTS_OPERATION_QUERY,
+      variables() {
+        return {
+          pointAccountId: this.userId
+        };
+      }
+    },
+    getPointsUser: {
+      query: GET_POINTS_QUERY,
+      variables() {
+        return {
+          userId: this.userId
+        };
+      }
+    },
     // массив пользователей команды с рейтиногм по баллам
     raitingInTeams: {
       query: RAITING_IN_TEAMS_QUERY,
@@ -73,6 +165,14 @@ export default {
     }
   },
   methods: {
+    showFullInformation(user) {
+      this.userId = user.user.id;
+      this.isShowFullInformation = true;
+    },
+    closeFullInformation() {
+      this.isShowFullInformation = true;
+      this.userId = 0;
+    },
     // сортировка по общему количеству баллов
     sortList() {
       this.raitingInTeams.sort(
@@ -232,7 +332,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
 .form-control {
   display: inline-block;
 }
@@ -261,5 +363,14 @@ export default {
 
 .btn-link {
   display: inline-block;
+}
+
+.aa {
+  padding: 2%;
+}
+
+.rotate {
+  transform: rotate(0.25turn);
+  transition: 0.25s;
 }
 </style>

@@ -62,9 +62,9 @@
 </template>
 
 <script>
-import ProfileIcon from "@/assets/svg/sidebar/profile_icon.svg";
-import PersonalStatisticsIcon from "@/assets/svg/sidebar/personal_statistics_icon.svg";
-import OrganizationIcon from "@/assets/svg/sidebar/organization_icon.svg";
+import ProfileIcon from "@/assets/svg/sidebar/profile_icon.svg?inline";
+import PersonalStatisticsIcon from "@/assets/svg/sidebar/personal_statistics_icon.svg?inline";
+import OrganizationIcon from "@/assets/svg/sidebar/organization_icon.svg?inline";
 export default {
   name: "SideBarAdmin",
   components: {

@@ -1,11 +1,12 @@
 <template>
   <div class="aaa">
-    <div v-if="$apollo.loading">
-      {{ $t("loading") }}
-      <h4 v-if="queryError">{{ queryError }}</h4>
-    </div>
+    <div class="wrapOfLoader" v-if="$apollo.loading"><loader></loader></div>
+    <minialert v-if="queryError">
+      <p slot="title">{{ queryError }}</p>
+    </minialert>
     <div v-if="!$apollo.loading">
       <h2>Бэклог заданий</h2>
+      <p v-if="backlog.length === 0">Нет задач в бэклоге</p>
       <div v-for="task in backlog" :key="task.id" class="task">
         <h3>{{ task.body.header }}</h3>
         <p>{{ task.id }}</p>
@@ -25,6 +26,7 @@
         </div>
       </div>
       <h2>Готовые задания на проверку</h2>
+      <p v-if="toCheck.length === 0">Нет готовых задач на проверку</p>
       <div v-for="task in toCheck" :key="task.id" class="task">
         <h3>{{ task.body.header }}</h3>
         <div class="task_body">
@@ -43,46 +45,36 @@
             <button class="btn btn-alternate" @click="creditPoints(task)">
               Зачесть баллы
             </button>
+            <button class="btn btn-alternate" @click="sendForRevision(task)">
+              Отправить на доработку
+            </button>
           </div>
         </div>
       </div>
-      <!-- вывод массива задач с назначенными ответственными 
-    <div v-for="task in tasks" :key="task.id">
-      <div v-if="task.body.points > 0" class="oneUser">
-        <h4>{{ task.body.header }}</h4>
-        <p>{{ task.body.text }}</p>
-        Ответственный:
-        <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
-        {{ task.tasksUser.surname }}
-        <label>Статус:</label>
-        селект для смены статуса  
-        <select
-          class="form-control small"
-          v-model="task.status"
-          @change="
-            toEditTask(
-              task.id,
-              task.status,
-              task.tasksUser.userPoints.id,
-              task.body.points
-            )
-          "
-        >
-          <option>Запланировано</option>
-          <option>В работе</option>
-          <option>Готово</option></select
-        >
-        <p>+{{ task.body.points }} баллов</p>
-         окошко о начислении баллов ответственному за задачу 
-        <minialert v-if="isShowAlertPoints"
-          ><p slot="title">
-            Пользователю 
-            {{ task.tasksUser.surname }} начислено {{ task.body.points }} баллов
-          </p></minialert
-        >
+      <h2>Завершенные задачи</h2>
+      <p v-if="done.length === 0">Нет завершенных задач</p>
+      <div v-for="task in done" :key="task.id" class="task">
+        <h3>{{ task.body.header }}</h3>
+        <div class="task_body">
+          <p>{{ task.body.text }}</p>
+          <div>
+            <div class="task_body_user">
+              <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
+              <div>
+                <p>Награда: +{{ task.body.points }} баллов</p>
+                <p v-if="task.tasksUser !== null">
+                  Ответственный: {{ task.tasksUser.name }}
+                  {{ task.tasksUser.surname }}
+                </p>
+              </div>
+            </div>
+            <button class="btn btn-alternate" @click="deleteTask(task)">
+              Удалить задачу
+            </button>
+          </div>
+        </div>
       </div>
     </div>
-    --></div>
     <minialert v-if="isShowAlert">
       <p slot="title">
         Вы успешно зачислили баллы пользователю
@@ -93,19 +85,32 @@
         {{ $t("minialertError") }}
       </p>
     </minialert>
+    <minialert v-if="isShowAlertDelete">
+      <p slot="title">
+        Вы успешно удалили задачу
+      </p>
+    </minialert>
+    <minialert v-if="isShowAlertSendForRevision">
+      <p slot="title">
+        Вы успешно вернули задачу на доработку
+      </p>
+    </minialert>
   </div>
 </template>
 
 <script>
 import minialert from "@/components/MiniAlert.vue";
+import Loader from "@/components/Loader.vue";
 import {
   ALL_TASKS_QUERY,
   EDIT_TASK_QUERY,
-  CARGE_POINTS_QUERY
+  CARGE_POINTS_QUERY,
+  DELETE_TASK_QUERY,
+  ADD_NOTIFICATION_QUERY
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert },
+  components: { minialert, Loader },
   apollo: {
     // массив задач с назначенными ответственными
     allTasks: {
@@ -131,7 +136,9 @@ export default {
       text: "",
       status: "",
       points: 10,
-      isShowAlertPoints: false
+      isShowAlertPoints: false,
+      isShowAlertDelete: false,
+      isShowAlertSendForRevision: false
     };
   },
   methods: {
@@ -160,9 +167,7 @@ export default {
                   query: ALL_TASKS_QUERY,
                   variables: { teamId: this.$route.params.id }
                 });
-                let index = data.allTasks.findIndex(el => el.id == task.id);
-                console.log("Удаляем задачу", index);
-                data.allTasks.splice(index, 1);
+                data.allTasks.find(el => el.id === task.id).status = "Готово";
                 cache.writeQuery({
                   query: ALL_TASKS_QUERY,
                   variables: { teamId: this.$route.params.id },
@@ -172,10 +177,39 @@ export default {
             })
             .then(data => {
               console.log(data);
-              this.isShowAlert = true;
-              setTimeout(() => {
-                this.isShowAlert = false;
-              }, 3000);
+              let notification = {
+                body: {
+                  header: "Начисление баллов",
+                  text: `Вам было начислено ${task.body.points} балла(ов) за выполнение задания ${task.body.header}`
+                },
+                authorId: this.$store.getters.decodedToken.id,
+                teamId: this.$route.params.id,
+                forAllUsers: task.tasksUser.id
+              };
+              this.$apollo
+                .mutate({
+                  mutation: ADD_NOTIFICATION_QUERY,
+                  variables: {
+                    body: notification.body,
+                    authorId: notification.authorId,
+                    teamId: +notification.teamId,
+                    forAllUsers: +notification.forAllUsers
+                  }
+                })
+                .then(data => {
+                  console.log(data);
+                  this.isShowAlert = true;
+                  setTimeout(() => {
+                    this.isShowAlert = false;
+                  }, 3000);
+                })
+                .catch(error => {
+                  console.error(error);
+                  this.isShowAlertError = true;
+                  setTimeout(() => {
+                    this.isShowAlertError = false;
+                  }, 3000);
+                });
             })
             .catch(error => {
               console.error(error);
@@ -187,46 +221,84 @@ export default {
         })
         .catch(error => {
           console.error(error);
+          this.isShowAlertError = true;
+          setTimeout(() => {
+            this.isShowAlertError = false;
+          }, 3000);
         });
     },
-    toEditTask(id, status, pointAccountId, points) {
+    sendForRevision(task) {
       this.$apollo
         .mutate({
           mutation: EDIT_TASK_QUERY,
           variables: {
-            id: id,
-            status: status
+            id: task.id,
+            status: "Запланировано"
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: ALL_TASKS_QUERY,
+              variables: { teamId: this.$route.params.id }
+            });
+            data.allTasks.find(el => el.id === task.id).status =
+              "Запланировано";
+            cache.writeQuery({
+              query: ALL_TASKS_QUERY,
+              variables: { teamId: this.$route.params.id },
+              data
+            });
           }
         })
         .then(data => {
           console.log(data);
+          this.isShowAlertSendForRevision = true;
+          setTimeout(() => {
+            this.isShowAlertSendForRevision = false;
+          }, 3000);
         })
         .catch(error => {
           console.error(error);
+          this.isShowAlertError = true;
+          setTimeout(() => {
+            this.isShowAlertError = false;
+          }, 3000);
         });
-      // если статус задачи изменен на "готово", ответстенному за задачу начисляются баллы
-      if (status === "Готово") {
-        this.$apollo
-          .mutate({
-            mutation: CARGE_POINTS_QUERY,
-            variables: {
-              pointAccountId: parseInt(pointAccountId),
-              delta: parseInt(points),
-              operationDescription: "За выполненное задание"
-            }
-          })
-          .then(data => {
-            console.log(data);
-          })
-          .catch(error => {
-            console.error(error);
-          });
-        // появляется окошко сообщения о начислении баллов
-        this.isShowAlertPoints = true;
-        setTimeout(() => {
-          this.isShowAlertPoints = false;
-        }, 3000);
-      }
+    },
+    deleteTask(task) {
+      this.$apollo
+        .mutate({
+          mutation: DELETE_TASK_QUERY,
+          variables: {
+            id: task.id
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: ALL_TASKS_QUERY,
+              variables: { teamId: this.$route.params.id }
+            });
+            let index = data.allTasks.findIndex(el => el.id == task.id);
+            data.allTasks.splice(index, 1);
+            cache.writeQuery({
+              query: ALL_TASKS_QUERY,
+              variables: { teamId: this.$route.params.id },
+              data
+            });
+          }
+        })
+        .then(data => {
+          console.log(data);
+          this.isShowAlertDelete = true;
+          setTimeout(() => {
+            this.isShowAlertDelete = false;
+          }, 3000);
+        })
+        .catch(error => {
+          console.error(error);
+          this.isShowAlertError = true;
+          setTimeout(() => {
+            this.isShowAlertError = false;
+          }, 3000);
+        });
     }
   },
   computed: {
@@ -238,6 +310,11 @@ export default {
     toCheck() {
       return this.allTasks.filter(el => {
         return el.status === "На проверке";
+      });
+    },
+    done() {
+      return this.allTasks.filter(el => {
+        return el.status === "Готово";
       });
     }
   }
@@ -282,5 +359,14 @@ export default {
       }
     }
   }
+}
+.wrapOfLoader {
+  position: relative;
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
 }
 </style>
