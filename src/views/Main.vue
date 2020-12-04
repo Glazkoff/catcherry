@@ -33,14 +33,12 @@
     </div>
     <div id="main-content">
       <div id="top-bar"><top-bar></top-bar></div>
-      <BreadCrumbs></BreadCrumbs>
       <router-view name="main" id="main-router-view"></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import TopBar from "@/components/TopBar.vue";
 import FullLogo from "@/assets/full_logo.svg?inline";
 import SettingsIcon from "@/assets/svg/sidebar/settings_icon.svg?inline";
@@ -51,8 +49,7 @@ export default {
   components: {
     TopBar,
     FullLogo,
-    SettingsIcon,
-    BreadCrumbs
+    SettingsIcon
   },
   methods: {
     logOut() {
@@ -101,13 +98,14 @@ export default {
   #main-content {
     grid-area: 1/2/3/3;
     width: calc(100vw - #{$sideBarWidth});
+    max-width: calc(100vw - #{$sideBarWidth});
     overflow-x: auto;
-    padding-top: $topBarHeight;
     background: $dark_blue;
     color: $white;
+    position: relative;
     #top-bar {
-      position: fixed;
-      width: calc(100vw - #{$sideBarWidth} - #{$scrollBarVerticalWidth});
+      position: sticky;
+      width: 100%;
       top: 0;
       z-index: 10000;
       box-sizing: border-box;
