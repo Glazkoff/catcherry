@@ -1,6 +1,7 @@
 <template>
   <div v-if="!this.$apollo.queries.posts.loading" class="doubleColumn">
     <div class="flexbox">
+      <bread-crumbs class="bread-crumbs"></bread-crumbs>
       <div>
         <div v-if="!this.isEmpty">
           <non-detailed-post
@@ -22,6 +23,7 @@
 import NonDetailedPost from "@/components/NonDetailedPost.vue";
 import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import Loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import {
   POSTS_QUERY,
   CREATE_LIKE_OF_POST,
@@ -50,7 +52,8 @@ export default {
   components: {
     NonDetailedPost,
     ListOfNotifications,
-    Loader
+    Loader,
+    BreadCrumbs
   },
   data() {
     return {};
@@ -126,18 +129,21 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
 
-.flexbox {
-  display: flex;
-  width: 100%;
-  padding: 3rem;
-  flex-direction: column;
-}
 .doubleColumn {
   display: flex;
   justify-content: space-between;
-  & .flexbox h2 {
-    margin-top: 0;
-    margin-bottom: 2.5rem;
+
+  & .flexbox {
+    display: flex;
+    width: 100%;
+    padding: 3rem;
+    padding-top: 0.625rem;
+    flex-direction: column;
+
+    & .bread-crumbs {
+      padding-left: 0;
+      margin-bottom: 2.5rem;
+    }
   }
 }
 </style>

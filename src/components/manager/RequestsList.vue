@@ -65,7 +65,7 @@ export default {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: 1
+          organizationId: 23
         };
       }
     }

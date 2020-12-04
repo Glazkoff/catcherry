@@ -61,6 +61,7 @@
   "reuiredEmail": "This field must be an email",
   "male": "Male",
   "female": "Female",
+  "notIndicated": "Not indicated",
   "adminPanel": "Admin panel",
   "numberOfPoints": "Number of points",
   "editNumberOfPoints": "Edit number of points",

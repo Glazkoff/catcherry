@@ -61,6 +61,7 @@
   "reuiredEmail": "Данное поле должно содержать только email",
   "male": "Мужской",
   "female": "Женский",
+  "notIndicated": "Не указано",
   "adminPanel": "Административная панель",
   "numberOfPoints": "Количество баллов",
   "editNumberOfPoints": "Изменить количество баллов",
