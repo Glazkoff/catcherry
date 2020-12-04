@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="wrapOfList">
     <div class="spaceForNotifications"></div>
     <div class="list">
       <notification
@@ -74,6 +74,11 @@ export default {
 .spaceForNotifications {
   width: 24rem;
 }
+
+.wrapOfList {
+  margin-top: -20px;
+}
+
 .list {
   height: calc(100% - #{$topBarHeight});
   width: 24rem;

@@ -1,8 +1,6 @@
 <template>
-  <div class="container">
-    <h1 v-if="this.$apollo.queries.post.loading">Это лоадер</h1>
-
-    <div v-else class="post">
+  <div v-if="!this.$apollo.queries.post.loading" class="container">
+    <div class="post">
       <div class="imageContainer">
         <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
       </div>
@@ -69,9 +67,11 @@
       </div>
     </div>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
 import Comments from "../components/Comments.vue";
 import {
   ONE_POST_QUERY,
@@ -105,15 +105,14 @@ export default {
     }
   },
   components: {
-    Comments
+    Comments,
+    Loader
   },
   data() {
     return {};
   },
   methods: {
     onLike(id) {
-      // console.log(id);
-      // console.log(this.isLikedByUser);
       if (this.isLikedByUser) {
         this.$apollo
           .mutate({
@@ -194,6 +193,18 @@ export default {
 <style scoped lang="scss">
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
+.wrapOfLoader {
+  position: absolute;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  padding-top: calc(50vh - 100px);
+}
+
 .container {
   display: flex;
   justify-content: center;
