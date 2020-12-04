@@ -118,7 +118,6 @@ type PointsUser{
 
 type PointOperations{
   id: ID!
-  pointAccountId: Int!
   delta: Int!
   operationDescription: String
   createdAt: String
@@ -210,7 +209,7 @@ type Query {
 
   requests:[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  getOperationPointsUser(userId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(pointAccountId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   posts: [Post]!
   post(id: ID!): Post
@@ -226,6 +225,8 @@ type Query {
 
   tasks (teamId:ID!): [Task]!
   backlog (teamId:ID!): [Task]!
+
+  allTasks(teamId:ID!): [Task]!
 
   statisticsNewUsers: Int
   statisticsNewOrgs: Int
@@ -278,11 +279,11 @@ type Mutation {
   revokeRequst(id: ID!): [Int]!
   rejectRequst(id: ID!): [Int]!
 
-  createPointOperation(pointAccountId: Int!, delta: Int!, operationDescription: String!): PointsUser!	 
+  createPointOperation(pointAccountId: ID!, delta: Int!, operationDescription: String!): PointsUser!	 
   deletePointOperation(id: ID!): Int!	
   deletePoints(id: ID!): Int!
   updatePoints(id: ID!, pointQuantity: Int!): [Int]!
-  updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
+  updatePointOperation(id: ID!, pointAccountId: ID!, delta: Int!): [Int]!
 
   createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
   updateTask(id: ID!, status: String): Task!
