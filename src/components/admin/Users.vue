@@ -254,7 +254,9 @@
     <h2>
       {{ $t("listUser") }}
     </h2>
-    <h3 v-if="$apollo.queries.users.loading">{{ $t("loading") }}...</h3>
+    <div v-if="$apollo.queries.users.loading" class="wrapOfLoader">
+      <loader></loader>
+    </div>
     <div v-if="!$apollo.queries.users.loading">
       <h6 v-if="users.length == 0">
         {{ $t("noUser") }}
@@ -304,6 +306,7 @@ import popup from "@/components/Popup.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import minialert from "@/components/MiniAlert.vue";
+import Loader from "@/components/Loader.vue";
 import { required } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
@@ -317,7 +320,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert, popup, ArrowRight, BreadCrumbs },
+  components: { minialert, popup, ArrowRight, BreadCrumbs, Loader },
   apollo: {
     // Получить список всех пользователей
     users: {
@@ -713,5 +716,14 @@ export default {
   p {
     display: block;
   }
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>
