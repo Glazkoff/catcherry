@@ -1,20 +1,25 @@
 <template>
   <div class="main_stat">
     <h3>Личная статистика</h3>
-    <p>Заработанные баллы: {{ personalUserStatistics.pointQuantity }}</p>
-    <div
-      v-for="(statistic, index) in personalUserStatistics.pointsOperation"
-      :key="index"
-      class="card"
-    >
-      <div>
-        <p>Дата: {{ $d(statistic.createdAt, "long") }}</p>
-        <p>
-          Баллов:
-          {{ personalUserStatistics.pointQuantity - statistic.delta }} за "{{
-            statistic.operationDescription
-          }}"
-        </p>
+    <h3 v-if="$apollo.loading">
+      {{ $t("loading") }}
+    </h3>
+    <div v-else>
+      <p>Заработанные баллы: {{ personalUserStatistics.pointQuantity }}</p>
+      <div
+        v-for="(statistic, index) in personalUserStatistics.pointsOperation"
+        :key="index"
+        class="card"
+      >
+        <div>
+          <p>Дата: {{ $d(statistic.createdAt, "long") }}</p>
+          <p>
+            Баллов:
+            {{ personalUserStatistics.pointQuantity - statistic.delta }} за "{{
+              statistic.operationDescription
+            }}"
+          </p>
+        </div>
       </div>
     </div>
   </div>
