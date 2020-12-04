@@ -1,5 +1,6 @@
 <template>
   <div>
+    <BreadCrumbs></BreadCrumbs>
     <h2>{{ $t("systemStatistics") }}</h2>
     <div v-if="$apollo.loading">
       <h3>{{ $t("loading") }}...</h3>
@@ -20,6 +21,7 @@
 </template>
 
 <script>
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import NewStatistics from "@/components/admin/charts/NewStatistics.vue";
 import DeleteStatistics from "@/components/admin/charts/DeleteStatistics.vue";
 import {
@@ -28,7 +30,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { NewStatistics, DeleteStatistics },
+  components: { NewStatistics, DeleteStatistics, BreadCrumbs },
   apollo: {
     statisticsNew: {
       query: STATISTICS_NEW_QUERY,

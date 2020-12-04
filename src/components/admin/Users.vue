@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <BreadCrumbs></BreadCrumbs>
     <popup v-if="isShowFullInformation">
       <!-- Редактирование пользователя -->
       <h3 slot="header" v-if="isShowModalEdit">
@@ -89,6 +90,23 @@
               >
             </div>
           </div>
+          <div class="form-group">
+            <label for="birthday">{{ $t("birthday") }}</label>
+            <input
+              name="birthday"
+              type="date"
+              v-model.trim="$v.oneUser.birthday.$model"
+              :placeholder="$t('birthday')"
+              class="form-control"
+            />
+            <div v-if="$v.oneUser.birthday.$error" class="error">
+              <span
+                v-if="!$v.oneUser.birthday.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
+          </div>
           <div class="btn-group">
             <button
               class="btn btn-primary"
@@ -161,7 +179,7 @@
         <p>{{ $t("name") }}: {{ user.name }}</p>
         <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
         <p>{{ $t("gender") }}: {{ user.gender }}</p>
-        <p>{{ $t("birthday") }}: {{ $d(user.birthday, "long") }}</p>
+        <p>{{ $t("birthday") }}: {{ $d(user.birthday, "number") }}</p>
         <p>{{ $t("login") }}: {{ user.login }}</p>
         <div v-if="!isEditPoints && getPointsUser !== null">
           <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
@@ -250,7 +268,7 @@
         />
         <div class="card" v-for="user in filterUser" :key="user.id">
           <div class="card_img">
-            <img src="@/assets/avatar.jpg" />
+            <img src="~@/assets/avatar.jpg" />
           </div>
           <div class="card_body">
             <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
@@ -283,7 +301,8 @@
 
 <script>
 import popup from "@/components/Popup.vue";
-import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import minialert from "@/components/MiniAlert.vue";
 import { required } from "vuelidate/lib/validators";
 import {
@@ -298,7 +317,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert, popup, ArrowRight },
+  components: { minialert, popup, ArrowRight, BreadCrumbs },
   apollo: {
     // Получить список всех пользователей
     users: {
@@ -364,7 +383,8 @@ export default {
         name: "",
         patricity: "",
         gender: "",
-        login: ""
+        login: "",
+        birthday: new Date()
       }
     };
   },
@@ -386,6 +406,9 @@ export default {
         required
       },
       login: {
+        required
+      },
+      birthday: {
         required
       }
     }
@@ -459,12 +482,24 @@ export default {
     // Показать попап с редактированием
     showModalEdit() {
       this.oneUser = Object.assign({}, this.user); // Записываем данные о пользователе в другой объект, чтобы при редактировании данные в основном объекте не изменялись
+      this.oneUser.birthday = new Date(+this.oneUser.birthday);
+      this.oneUser.birthday =
+        this.oneUser.birthday.getFullYear() +
+        "-" +
+        (this.oneUser.birthday.getMonth() < 8
+          ? "0" + (this.oneUser.birthday.getMonth() + 1)
+          : this.oneUser.birthday.getMonth() + 1) +
+        "-" +
+        (this.oneUser.birthday.getDate() < 9
+          ? "0" + this.oneUser.birthday.getDate()
+          : this.oneUser.birthday.getDate());
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`; // Записываем полное имя
       this.isShowModalEdit = true;
     },
     // Редактировать информацию про пользователя
     editUser() {
       this.isShowModalEdit = false;
+      console.log(new Date(this.oneUser.birthday));
       this.$apollo
         .mutate({
           mutation: UPDATE_USER_QUERY, // Изменяем в БД
@@ -474,6 +509,7 @@ export default {
             name: this.oneUser.name,
             patricity: this.oneUser.patricity,
             gender: this.oneUser.gender,
+            birthday: new Date(this.oneUser.birthday),
             login: this.oneUser.login
           },
           // Обновляем кеш
@@ -494,6 +530,9 @@ export default {
             data.users.find(
               el => el.id === this.oneUser.id
             ).login = this.oneUser.login;
+            data.users.find(
+              el => el.id === this.oneUser.id
+            ).birthday = new Date(this.oneUser.birthday);
             cache.writeQuery({ query: USERS_QUERY, data });
             console.log(updateUser);
           },
@@ -506,6 +545,7 @@ export default {
               surname: this.oneUser.surname,
               name: this.oneUser.name,
               patricity: this.oneUser.patricity,
+              birthday: new Date(this.oneUser.birthday),
               gender: this.oneUser.gender,
               login: this.oneUser.login
             }
@@ -649,7 +689,10 @@ export default {
             (el.patricity
               .toLowerCase()
               .indexOf(this.findString.toLowerCase()) !== -1 &&
-              el.patricity !== "")
+              el.patricity !== "") ||
+            (el.login.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+              -1 &&
+              el.login !== "")
           );
         });
       } else {

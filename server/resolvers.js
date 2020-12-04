@@ -521,7 +521,7 @@ module.exports = {
     // Обновляем фамилию, имени, отчества, пола и логина пользователя
     updateUser: (
       parent,
-      { surname, name, patricity, gender, login, id },
+      { surname, name, patricity, gender, login, birthday, id },
       { db },
       info
     ) =>
@@ -531,7 +531,8 @@ module.exports = {
           surname: surname,
           patricity: patricity,
           gender: gender,
-          login: login
+          login: login,
+          birthday: birthday
         },
         {
           where: {

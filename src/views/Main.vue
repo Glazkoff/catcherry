@@ -33,14 +33,12 @@
     </div>
     <div id="main-content">
       <div id="top-bar"><top-bar></top-bar></div>
-      <BreadCrumbs></BreadCrumbs>
       <router-view name="main" id="main-router-view"></router-view>
     </div>
   </div>
 </template>
 
 <script>
-import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import TopBar from "@/components/TopBar.vue";
 import FullLogo from "@/assets/full_logo.svg?inline";
 import SettingsIcon from "@/assets/svg/sidebar/settings_icon.svg?inline";
@@ -52,7 +50,6 @@ export default {
     TopBar,
     FullLogo,
     SettingsIcon,
-    BreadCrumbs
   },
   methods: {
     logOut() {

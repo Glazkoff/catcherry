@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <BreadCrumbs></BreadCrumbs>
     <popup v-if="isShowFullInformation">
       <!-- Заголовок загрузки информации про одного пользователя -->
       <div
@@ -296,7 +297,7 @@
           :key="organization.id"
         >
           <div class="card_img">
-            <img src="@/assets/avatar.jpg" />
+            <img src="~@/assets/avatar.jpg" />
           </div>
           <div class="card_body">
             <p>{{ organization.name }}</p>
@@ -330,7 +331,8 @@
 </template>
 
 <script>
-import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import { required, numeric } from "vuelidate/lib/validators";
@@ -344,7 +346,7 @@ import {
   TEAMS_IN_ONE_ORG_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup, ArrowRight },
+  components: { minialert, popup, ArrowRight, BreadCrumbs },
   apollo: {
     // Список всех организаций с краткой информацией
     organizations: {

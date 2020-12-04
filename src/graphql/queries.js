@@ -181,6 +181,7 @@ export const UPDATE_USER_QUERY = gql`
     $patricity: String
     $gender: String
     $login: String
+    $birthday: String
     $id: ID!
   ) {
     updateUser(
@@ -189,6 +190,7 @@ export const UPDATE_USER_QUERY = gql`
       patricity: $patricity
       gender: $gender
       login: $login
+      birthday: $birthday
       id: $id
     )
   }
