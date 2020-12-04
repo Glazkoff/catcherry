@@ -65,7 +65,9 @@
       <h2 class="padLeftTop">{{ $t("profileUser") }}</h2>
       <div class="flexBlock">
         <div class="flexCont smallBlock">
-          <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
+          <div>
+            <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
+          </div>
           <button @click="showModalDelete" class="btn danger btnDelete">
             {{ $t("delete") }}
           </button>
