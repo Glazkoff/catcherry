@@ -179,7 +179,7 @@
         </div>
       </router-link>
       <router-link
-        :to="{ name: 'TasksTeam', params: { id: $route.params.id } }"
+        :to="{ name: 'NewTask', params: { id: $route.params.id } }"
         active-class="nav-checked"
       >
         <div class="side-bar__nav-list__nav-element">

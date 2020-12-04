@@ -114,8 +114,8 @@ module.exports = {
       return db.Users.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-          },
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
         },
         paranoid: false
       });
@@ -124,8 +124,8 @@ module.exports = {
       return db.Organizations.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-          },
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
         },
         paranoid: false
       });
@@ -240,8 +240,6 @@ module.exports = {
       });
     },
 
-    getPointsUser: (parent, args, { db }, info) =>
-      db.Points.findOne({ where: { userId: args.userId } }),
     comments: (parent, args, { db }, info) =>
       db.Comments.findAll({
         order: [["id", "ASC"]]
@@ -260,19 +258,6 @@ module.exports = {
         where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
-      }),
-    oneUserInTeams: (parent, args, { db }, info) =>
-      db.UsersInTeams.findAll({
-        where: { userId: args.userId },
-        order: [["id", "ASC"]],
-        include: [
-          { model: db.Users, as: "user" },
-          {
-            model: db.Teams,
-            as: "team",
-            include: [{ model: db.Organizations, as: "organization" }]
-          }
-        ]
       }),
     raitingInTeams: (parent, { teamId }, { db }, info) =>
       db.UsersInTeams.findAll({
@@ -317,6 +302,29 @@ module.exports = {
     tasks: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId, userId: { [Op.ne]: null } },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
+          }
+        ]
+      }),
+    allTasks: (parent, { teamId }, { db }) =>
+      db.Tasks.findAll({
+        where: { teamId: teamId },
         order: [["id", "DESC"]],
         include: [
           {

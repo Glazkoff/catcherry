@@ -36,7 +36,7 @@ export default {
     return {
       isShowAlert: false, // Для показа уведомления об удалении
       message: "", // Для текста сообщения в уведомлении
-      teamId: this.$route.params.id,
+      teamId: 23,
       name: ""
     };
   },

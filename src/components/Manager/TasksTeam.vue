@@ -1,65 +1,61 @@
 <template>
-  <div>
-    <h3>Бэклог заданий</h3>
-    <hr />
-    <!-- вывод массива задач без назначенных ответственных-->
-    <div v-for="taskNoneUser in backlog" :key="taskNoneUser.id">
-      <div v-if="!taskNoneUser.tasksUser" class="backlogTask">
-        <b>{{ taskNoneUser.body.header }}</b>
-        <span>{{ taskNoneUser.body.text }}</span>
-        <span>+{{ taskNoneUser.body.points }} баллов</span>
-        <select class="form-control" v-model="userId">
-          <option
-            v-for="users in usersInTeams"
-            :key="users.id"
-            :value="users.user.id"
-            >{{ users.user.name }} {{ users.user.surname }}</option
-          >
-        </select>
+  <div class="aaa">
+    <div v-if="$apollo.loading">
+      {{ $t("loading") }}
+      <h4 v-if="queryError">{{ queryError }}</h4>
+    </div>
+    <div v-if="!$apollo.loading">
+      <h2>Бэклог заданий</h2>
+      <div v-for="task in backlog" :key="task.id" class="task">
+        <h3>{{ task.body.header }}</h3>
+        <p>{{ task.id }}</p>
+        <div class="task_body">
+          <p>{{ task.body.text }}</p>
+          <div :class="{ task_body_user: task.tasksUser !== null }">
+            <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
+            <div>
+              <p>Награда: +{{ task.body.points }} баллов</p>
+              <p v-if="task.tasksUser === null">Ответственный: не назначен</p>
+              <p v-if="task.tasksUser !== null">
+                Ответственный: {{ task.tasksUser.name }}
+                {{ task.tasksUser.surname }}
+              </p>
+            </div>
+          </div>
+        </div>
       </div>
-    </div>
-    <h3>Распределенные задания</h3>
-    <hr />
-    <div v-if="!addTask">
-      <button @click="addTask = true" class="btn btn-primary">
-        Созадть задачу
-      </button>
-    </div>
-    <div v-else>
-      <!-- форма добавления новой задачи  -->
-      <form @submit.prevent="">
-        <label>Заголовок</label
-        ><input type="text" class="form-control" v-model="header" />
-        <label>Описание задачи</label
-        ><input type="text" class="form-control" v-model="text" />
-        <label>Ответственный</label>
-        <!-- селект для назначения ответственного из команды -->
-        <select class="form-control" v-model="userId">
-          <option :value="null">Назначается самостоятельно</option>
-          <option
-            v-for="users in usersInTeams"
-            :key="users.id"
-            :value="users.user.id"
-            >{{ users.user.name }} {{ users.user.surname }}</option
-          >
-        </select>
-        <label>Количество баллов за выполнение</label
-        ><input type="number" class="form-control" v-model="points" />
-        <br />
-        <button class="btn btn-primary" @click="toAddTask()">Добавить</button>
-      </form>
-      <hr />
-    </div>
-    <!-- вывод массива задач с назначенными ответственными -->
+      <h2>Готовые задания на проверку</h2>
+      <div v-for="task in toCheck" :key="task.id" class="task">
+        <h3>{{ task.body.header }}</h3>
+        <div class="task_body">
+          <p>{{ task.body.text }}</p>
+          <div>
+            <div class="task_body_user">
+              <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
+              <div>
+                <p>Награда: +{{ task.body.points }} баллов</p>
+                <p v-if="task.tasksUser !== null">
+                  Ответственный: {{ task.tasksUser.name }}
+                  {{ task.tasksUser.surname }}
+                </p>
+              </div>
+            </div>
+            <button class="btn btn-alternate" @click="creditPoints(task)">
+              Зачесть баллы
+            </button>
+          </div>
+        </div>
+      </div>
+      <!-- вывод массива задач с назначенными ответственными 
     <div v-for="task in tasks" :key="task.id">
       <div v-if="task.body.points > 0" class="oneUser">
         <h4>{{ task.body.header }}</h4>
         <p>{{ task.body.text }}</p>
         Ответственный:
         <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
-        {{ task.tasksUser.name }} {{ task.tasksUser.surname }}
+        {{ task.tasksUser.surname }}
         <label>Статус:</label>
-        <!-- селект для смены статуса  -->
+        селект для смены статуса  
         <select
           class="form-control small"
           v-model="task.status"
@@ -77,53 +73,46 @@
           <option>Готово</option></select
         >
         <p>+{{ task.body.points }} баллов</p>
-        <!-- окошко о начислении баллов ответственному за задачу -->
+         окошко о начислении баллов ответственному за задачу 
         <minialert v-if="isShowAlertPoints"
           ><p slot="title">
-            Пользователю {{ task.tasksUser.name }}
+            Пользователю 
             {{ task.tasksUser.surname }} начислено {{ task.body.points }} баллов
           </p></minialert
         >
       </div>
     </div>
+    --></div>
+    <minialert v-if="isShowAlert">
+      <p slot="title">
+        Вы успешно зачислили баллы пользователю
+      </p>
+    </minialert>
+    <minialert v-if="isShowAlertError">
+      <p slot="title">
+        {{ $t("minialertError") }}
+      </p>
+    </minialert>
   </div>
 </template>
 
 <script>
+import minialert from "@/components/MiniAlert.vue";
 import {
-  TASKS_QUERY,
-  BACKLOG_QUERY,
-  USERS_IN_TEAMS_QUERY,
-  ADD_TASK_QUERY,
+  ALL_TASKS_QUERY,
   EDIT_TASK_QUERY,
   CARGE_POINTS_QUERY
 } from "@/graphql/queries";
-import minialert from "@/components/MiniAlert.vue";
 
 export default {
   components: { minialert },
   apollo: {
     // массив задач с назначенными ответственными
-    tasks: {
-      query: TASKS_QUERY,
-      variables() {
-        return {
-          teamId: this.$route.params.id
-        };
-      }
-    },
-    // массив задач без ответственных
-    backlog: {
-      query: BACKLOG_QUERY,
-      variables() {
-        return {
-          teamId: this.$route.params.id
-        };
-      }
-    },
-    // массив участников команды для вывода в выпадающем списке
-    usersInTeams: {
-      query: USERS_IN_TEAMS_QUERY,
+    allTasks: {
+      query: ALL_TASKS_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
           teamId: this.$route.params.id
@@ -133,6 +122,9 @@ export default {
   },
   data() {
     return {
+      queryError: "",
+      isShowAlert: false,
+      isShowAlertError: false,
       addTask: false,
       userId: 1,
       header: "",
@@ -143,46 +135,60 @@ export default {
     };
   },
   methods: {
-    // метод добавления нового задания в общий список
-    toAddTask() {
+    // изменение статуса задания
+    creditPoints(task) {
       this.$apollo
         .mutate({
-          mutation: ADD_TASK_QUERY,
+          mutation: CARGE_POINTS_QUERY,
           variables: {
-            teamId: this.$route.params.id,
-            userId: this.userId,
-            header: this.header,
-            text: this.text,
-            points: this.points,
-            status: "Запланировано"
-          },
-          //FIXME: создать динамическое добавление нового задания в список
-          update: (cache, { data: { createTask } }) => {
-            let data = cache.readQuery({
-              query: TASKS_QUERY,
-              variables: {
-                teamId: this.$route.params.id
-              }
-            });
-            data.tasks.unshift(createTask);
-            cache.writeQuery({
-              query: TASKS_QUERY,
-              variables: {
-                teamId: this.$route.params.id
-              },
-              data
-            });
+            pointAccountId: +task.tasksUser.id,
+            delta: +task.body.points,
+            operationDescription: `За выполненное задание ${task.body.header}`
           }
         })
         .then(data => {
-          this.addTask = false;
           console.log(data);
+          this.$apollo
+            .mutate({
+              mutation: EDIT_TASK_QUERY,
+              variables: {
+                id: task.id,
+                status: "Готово"
+              },
+              update: cache => {
+                let data = cache.readQuery({
+                  query: ALL_TASKS_QUERY,
+                  variables: { teamId: this.$route.params.id }
+                });
+                let index = data.allTasks.findIndex(el => el.id == task.id);
+                console.log("Удаляем задачу", index);
+                data.allTasks.splice(index, 1);
+                cache.writeQuery({
+                  query: ALL_TASKS_QUERY,
+                  variables: { teamId: this.$route.params.id },
+                  data
+                });
+              }
+            })
+            .then(data => {
+              console.log(data);
+              this.isShowAlert = true;
+              setTimeout(() => {
+                this.isShowAlert = false;
+              }, 3000);
+            })
+            .catch(error => {
+              console.error(error);
+              this.isShowAlertError = true;
+              setTimeout(() => {
+                this.isShowAlertError = false;
+              }, 3000);
+            });
         })
         .catch(error => {
           console.error(error);
         });
     },
-    // изменение статуса заявки
     toEditTask(id, status, pointAccountId, points) {
       this.$apollo
         .mutate({
@@ -222,20 +228,59 @@ export default {
         }, 3000);
       }
     }
+  },
+  computed: {
+    backlog() {
+      return this.allTasks.filter(el => {
+        return el.status === "Запланировано";
+      });
+    },
+    toCheck() {
+      return this.allTasks.filter(el => {
+        return el.status === "На проверке";
+      });
+    }
   }
 };
 </script>
 
-<style>
-.oneUser {
-  /* margin: 15px; */
-  padding: 15px;
-  /* border-radius: 8px;
-  box-shadow: 0 2px 5px gray; */
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+.aaa {
+  padding: 3%;
 }
-.smallAvatar {
-  height: 24px;
-  border-radius: 12px;
-  margin: 0 10px;
+.task {
+  padding: 1%;
+  background: $violet;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  .btn {
+    margin-top: 5%;
+  }
+  &_body {
+    display: grid;
+    grid-template-columns: 60% 30%;
+    grid-column-gap: 10%;
+    div {
+      align-self: start;
+      p {
+        color: $gray_4;
+        font-size: 16px;
+        line-height: 18px;
+        padding: 0;
+        margin: 0;
+      }
+    }
+    &_user {
+      display: flex;
+      align-items: center;
+      img {
+        width: 15%;
+        border-radius: 100%;
+        margin-right: 5%;
+      }
+    }
+  }
 }
 </style>

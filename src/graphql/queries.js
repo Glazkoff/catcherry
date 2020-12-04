@@ -510,11 +510,7 @@ export const GET_POINTS_QUERY = gql`
 `;
 
 export const CARGE_POINTS_QUERY = gql`
-  mutation(
-    $pointAccountId: Int!
-    $delta: Int!
-    $operationDescription: String!
-  ) {
+  mutation($pointAccountId: ID!, $delta: Int!, $operationDescription: String!) {
     createPointOperation(
       pointAccountId: $pointAccountId
       delta: $delta
@@ -572,6 +568,30 @@ export const TASKS_QUERY = gql`
       tasksUser {
         name
         surname
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+export const ALL_TASKS_QUERY = gql`
+  query($teamId: ID!) {
+    allTasks(teamId: $teamId) {
+      id
+      userId
+      teamId
+      status
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksUser {
+        name
+        surname
+        id
         userPoints {
           id
         }
@@ -643,6 +663,29 @@ export const BACKLOG_QUERY = gql`
         points
       }
       status
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const BACKLOG_TASKS_QUERY = gql`
+  query($teamId: ID!) {
+    backlogTasks(teamId: $teamId) {
+      id
+      userId
+      teamId
+      status
+      body {
+        header
+        text
+        points
+      }
       tasksUser {
         name
         surname
