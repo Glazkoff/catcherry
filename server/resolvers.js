@@ -110,12 +110,21 @@ async function updateRefreshSession(
 
 module.exports = {
   Query: {
+    isLoginUsed: async (parent, { login }, { db }) => {
+      let usersCount = await db.Users.count({
+        where: {
+          login
+        },
+        paranoid: false
+      });
+      return usersCount != 0;
+    },
     statisticsNewUsers: (parent, args, { db }) => {
       return db.Users.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-          },
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
         },
         paranoid: false
       });
@@ -124,8 +133,8 @@ module.exports = {
       return db.Organizations.count({
         where: {
           createdAt: {
-            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-          },
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
         },
         paranoid: false
       });

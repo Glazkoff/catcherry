@@ -191,6 +191,8 @@ type Comment {
 }
 
 type Query { 
+  isLoginUsed(login: String!): Boolean!
+
   users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   deletedUsers: [User!]
