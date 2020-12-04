@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Notification from "@/components/Notification.vue";
+import Notification from "@/components/NotificationCard.vue";
 import { NOTIFICATIONS_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "ListOfNotifications",
