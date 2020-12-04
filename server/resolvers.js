@@ -110,6 +110,15 @@ async function updateRefreshSession(
 
 module.exports = {
   Query: {
+    isLoginUsed: async (parent, { login }, { db }) => {
+      let usersCount = await db.Users.count({
+        where: {
+          login
+        },
+        paranoid: false
+      });
+      return usersCount != 0;
+    },
     statisticsNewUsers: (parent, args, { db }) => {
       return db.Users.count({
         where: {

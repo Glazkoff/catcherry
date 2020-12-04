@@ -100,7 +100,8 @@
     "buttonSubmit": "Sign up",
     "accountQuestion": "Already have an account?",
     "logInLink": "Log in!",
-    "birthday": "Birthday"
+    "birthday": "Birthday",
+    "loginAlreadyTaken": "This login is already taken"
   },
   "markRequiredField": "* - required field",
   "startMsg": "Hello, Polyweb!",
