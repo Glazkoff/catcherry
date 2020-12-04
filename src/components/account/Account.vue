@@ -13,7 +13,7 @@
           <div class="card">
             <div class="pad">
               <div class="double">
-                <img src="@/assets/avatar.jpg" alt="user" class="card_img" />
+                <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
 
                 <div>
                   <p>{{ user.surname }}</p>
@@ -65,12 +65,12 @@
       <h2 class="padLeftTop">{{ $t("profileUser") }}</h2>
       <div class="flexBlock">
         <div class="flexCont smallBlock">
-          <img src="@/assets/avatar.jpg" alt="user" class="card_img" />
-          <p @click="showModalDelete" class="danger btnDelete">
+          <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
+          <button @click="showModalDelete" class="btn danger btnDelete">
             {{ $t("delete") }}
-          </p>
+          </button>
         </div>
-        <div class="flexCont">
+        <div class="flexCont bigBlock">
           <form @submit.prevent="saveUserOnPopup">
             <div class="form-group">
               <label for="surname" class="form-name ">{{
@@ -81,7 +81,7 @@
                 name="surname"
                 v-model.trim="$v.user.surname.$model"
                 @blur="$v.user.surname.$touch()"
-                placeholder="Фамилия"
+                :placeholder="$t('surname')"
               />
               <div v-if="$v.user.surname.$error">
                 <span v-if="!$v.user.surname.required" class="danger">{{
@@ -98,7 +98,7 @@
                 class="form-control"
                 name="name"
                 v-model.trim="$v.user.name.$model"
-                placeholder="Имя"
+                :placeholder="$t('name')"
                 required
               />
             </div>
@@ -110,21 +110,40 @@
                 class="form-control"
                 name="patricity"
                 v-model.trim="$v.user.patricity.$model"
-                placeholder="Отчество"
+                :placeholder="$t('patricity')"
                 required
               />
             </div>
             <div class="form-group">
               <label for="gender" class="form-name ">{{ $t("gender") }}</label>
-              <select
-                name="gender"
-                class="form-control"
-                v-model.trim="$v.user.gender.$model"
-                required
-              >
-                <option>{{ $t("male") }}</option>
-                <option>{{ $t("female") }}</option>
-              </select>
+              <div class="form_radio">
+                <input
+                  type="radio"
+                  name="male"
+                  :value="$t('male')"
+                  v-model.trim="$v.user.gender.$model"
+                />
+                <label for="male">{{ $t("male") }}</label>
+              </div>
+
+              <div class="form_radio">
+                <input
+                  type="radio"
+                  name="female"
+                  :value="$t('female')"
+                  v-model.trim="$v.user.gender.$model"
+                />
+                <label for="female">{{ $t("female") }}</label>
+              </div>
+              <div class="form_radio">
+                <input
+                  type="radio"
+                  name="nothing"
+                  :value="$t('notIndicated')"
+                  v-model.trim="$v.user.gender.$model"
+                />
+                <label for="nothing">{{ $t("notIndicated") }}</label>
+              </div>
             </div>
             <div class="form-group">
               <label for="login" class="form-name ">{{ $t("login") }}</label>
@@ -132,7 +151,7 @@
                 class="form-control"
                 name="login"
                 v-model.trim="$v.user.login.$model"
-                placeholder="Логин"
+                :placeholder="$t('login')"
                 required
               />
             </div>
@@ -144,7 +163,7 @@
                 class="form-control"
                 name="password"
                 v-model.trim="$v.user.password.$model"
-                placeholder="Пароль"
+                :placeholder="$t('password')"
                 required
               />
             </div>
@@ -399,9 +418,6 @@ export default {
 .card {
   margin-bottom: 3rem;
   justify-content: center;
-  &_img {
-    width: 50%;
-  }
 }
 .form-name {
   color: $white;
@@ -410,8 +426,11 @@ export default {
   display: flex;
 }
 .smallBlock {
-  width: 30%;
   justify-content: space-between;
+}
+.bigBlock {
+  margin-left: 6rem;
+  width: 40%;
 }
 .padLeftTop {
   padding-left: 2.5rem;
@@ -424,9 +443,18 @@ export default {
   background: $violet;
   border: 1px solid $violet_2;
   color: $gray_3;
+  width: -webkit-fill-available;
 }
-.btnDelete:hover {
-  text-decoration: underline;
-  cursor: pointer;
+.btnDelete {
+  border: solid $red;
+  background: transparent;
+  &:hover {
+    text-decoration: underline;
+  }
+}
+.bigAvatar {
+  height: 125px;
+  border-radius: 65px;
+  margin-right: 3rem;
 }
 </style>
