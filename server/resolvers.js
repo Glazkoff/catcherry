@@ -300,10 +300,7 @@ module.exports = {
         order: [["id", "ASC"]]
       }),
     pointsLastWeek: async (parent, args, { db }) => {
-      let points = await db.Points.findOne({
-        where: { userId: args.id }
-      });
-      let operation = await db.PointsOperations.findAll({
+      let operationLastWeek = await db.PointsOperations.findAll({
         where: {
           pointAccountId: args.id,
           createdAt: {
@@ -311,12 +308,24 @@ module.exports = {
           }
         }
       });
-      for (let i = 0; i < operation.length; i++) {
-        points.pointQuantity = points.pointQuantity - operation[i].delta;
+      let operation2LastWeek = await db.PointsOperations.findAll({
+        where: {
+          pointAccountId: args.id,
+          createdAt: {
+            [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+            [Op.lt]: new Date(new Date() - 14 * 60 * 60 * 1000)
+          }
+        }
+      });
+      let pointsLastWeek = 0;
+      for (let i = 0; i < operationLastWeek.length; i++) {
+        pointsLastWeek = pointsLastWeek + operationLastWeek[i].delta;
       }
-      if (points.pointQuantity < 0) {
-        return 0;
-      } else return points.pointQuantity;
+      let points2LastWeek = 0;
+      for (let i = 0; i < operation2LastWeek.length; i++) {
+        points2LastWeek = points2LastWeek + operation2LastWeek[i].delta;
+      }
+      return [pointsLastWeek, points2LastWeek];
     },
     tasks: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({

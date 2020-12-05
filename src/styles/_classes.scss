@@ -183,6 +183,14 @@ a {
   &_more {
     border: 2px solid $violet;
     padding: 1%;
+    display: grid;
+    grid-template-columns: 40% 60%;
+    grid-column-gap: 5%;
+    .history {
+      color: $gray_3;
+      margin: 0 0 5px 0;
+      padding: 0;
+    }
   }
 }
 

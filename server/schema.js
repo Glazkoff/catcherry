@@ -210,7 +210,7 @@ type Query {
   requests (teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getOperationPointsUser(pointAccountId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  pointsLastWeek(id: ID!): Int
+  pointsLastWeek(id: ID!): [Int]
   
   posts: [Post]!
   post(id: ID!): Post
