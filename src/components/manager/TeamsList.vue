@@ -74,8 +74,9 @@ export default {
   padding-top: 0.625rem;
 }
 .card {
+  padding-right: 2.4rem;
   padding-left: 2.4rem;
-  padding-left: 2.4rem;
+  margin-bottom: 1rem;
   position: relative;
   & .img {
     max-height: 3.5rem;
