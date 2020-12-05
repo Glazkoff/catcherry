@@ -750,3 +750,9 @@ export const LOG_OUT = gql`
     logOut(fingerprint: $fingerprint)
   }
 `;
+
+export const IS_LOGIN_USED = gql`
+  query($login: String!) {
+    isLoginUsed(login: $login)
+  }
+`;

@@ -100,7 +100,8 @@
     "buttonSubmit": "Зарегистрироваться",
     "accountQuestion": "Уже есть аккаунт?",
     "logInLink": "Войти!",
-    "birthday": "День рождения"
+    "birthday": "День рождения",
+    "loginAlreadyTaken": "Такой логин уже занят"
   },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",

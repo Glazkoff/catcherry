@@ -16,7 +16,7 @@ module.exports = (sequelize, DataTypes) => {
       // FIXME: раскомментирование вызывает ошибку
       Organizations.belongsTo(models.OrganizationsTypes, {
         foreignKey: "organizationTypeId",
-        as: "organizationType",
+        as: "organizationType"
       });
       Organizations.hasMany(models.Teams, {
         foreignKey: "organizationId",
