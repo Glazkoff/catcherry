@@ -38,6 +38,8 @@
   "description": "Description",
   "status": "Status",
   "more": "More",
+  "accept": "Accept",
+  "reject": "Reject",
   "addUserToTeam": "Add user to team",
   "deleteUserFromTeam": "Delete user from team",
   "minialertEditUser": "You have successfully changed user details",
