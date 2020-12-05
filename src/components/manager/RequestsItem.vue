@@ -2,10 +2,16 @@
   <div>
     <div class="card" v-if="request.user">
       <img src="@/assets/avatar.jpg" alt="photo" class="big_avatar" />
-      <h3>{{ request.user.name }}</h3>
+      <h3>{{ request.user.name }} {{ request.user.surname }} {{ request.user.patricity }}</h3>
       <button type="submit" @click="showModal = true" class="btn btn-alternate">
         {{ $t("more") }}
       </button>
+      <button
+          class="btn btn-alert"
+          @click="$emit('reject', request.id, request.user.id)"
+        >
+          Отклонить
+        </button>
     </div>
     <popup v-if="showModal">
       <div slot="header">

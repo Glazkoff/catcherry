@@ -237,18 +237,20 @@ textarea {
   height: 194px !important;
 }
 .form-control {
-  width: 431px;
-  height: 55px;
-  background: $violet !important;
-  border: 1px solid $violet_2 !important;
-  box-sizing: border-box;
-  border-radius: 10px;
-  font-family: Lato;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 16px;
-  line-height: 20px;
-  color: $gray_3;
+  margin-top: 8px;
+  margin-bottom: 16px;
+width: 431px;
+height: 55px;
+background: $violet !important;
+border: 1px solid $violet_2 !important;
+box-sizing: border-box;
+border-radius: 10px;
+font-family: Lato;
+font-style: normal;
+font-weight: normal;
+font-size: 16px;
+line-height: 20px;
+color: $gray_3;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
