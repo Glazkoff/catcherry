@@ -99,8 +99,6 @@
             {{ organization.name }}
           </h3>
           <p>Номер организации: {{ organization.id }}</p>
-          <!-- <p>Владелец: {{ organization.owner.name }}</p> -->
-          <p>{{ organization.organizationType.name }}</p>
           <button @click="showModalEdit(organization)" class="btn-link">
             Подробнее
           </button>
@@ -120,12 +118,17 @@
             <h4>Заявка на вступление в команду {{ item.name }}</h4>
             <span>Номер: {{ item.id }}</span
             ><br />
-            <span>Владелец: {{ item.owner.name }}</span
-            ><br />
             <button class="btn-link" @click="showModalEdit(item)">
               Подробнее
             </button>
           </div>
+        </div>
+        <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
+        <div v-if="searchOrgIndex == ''">
+          <h4>Организации не найдены</h4>
+          <button class="btn btn-primary" @click="isAddOrganization = true">
+            Создать
+          </button>
         </div>
       </div>
     </div>

@@ -232,12 +232,6 @@ export const ORGS_QUERY = gql`
       ownerId
       organizationTypeId
       maxTeamsLimit
-      owner {
-        name
-      }
-      organizationType {
-        name
-      }
     }
   }
 `;
