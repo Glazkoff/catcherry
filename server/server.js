@@ -101,7 +101,7 @@ db.sequelize
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
-      // addAllTables(true);
+      // addAllTables(false);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {

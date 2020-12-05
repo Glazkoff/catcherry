@@ -20,7 +20,6 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
-import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import TeamMembers from "@/components/manager/TeamMembers.vue";
 import RaitingList from "@/components/manager/RaitingList.vue";
 import EditTeam from "@/components/manager/EditTeam.vue";
@@ -31,6 +30,7 @@ import TeamSettings from "@/components/manager/TeamSettings.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
+import Notifications from "@/components/account/Notifications.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
 import UserStatistic from "@/components/account/UserStatistic.vue";
 
@@ -228,14 +228,14 @@ const routes = [
         }
       },
       {
-        path: "/notification",
-        name: "ListOfNotifications",
+        path: "/notifications",
+        name: "Notifications",
         components: {
-          main: ListOfNotifications,
+          main: Notifications,
           sidebar: SideBarDefault
         },
         meta: {
-          breadCrumb: i18n.t("router.notification")
+          breadCrumb: i18n.t("router.notifications")
         }
       },
       {

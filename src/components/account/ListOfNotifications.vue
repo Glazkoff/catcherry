@@ -47,7 +47,6 @@ export default {
     };
   },
   apollo: {
-    // массив пользователей команды с рейтиногм по баллам
     notifications: {
       query: NOTIFICATIONS_USER_QUERY,
       variables() {
