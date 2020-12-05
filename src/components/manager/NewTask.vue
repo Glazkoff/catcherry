@@ -237,6 +237,8 @@ textarea{
 height: 194px !important;
 }
 .form-control {
+  margin-top: 8px;
+  margin-bottom: 16px;
 width: 431px;
 height: 55px;
 background: $violet !important;
