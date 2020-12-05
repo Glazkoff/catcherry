@@ -125,7 +125,8 @@
     "tasks": "Tasks",
     "user": "User",
     "userInOrg": "User in organization",
-    "users": "Users"
+    "users": "Users",
+    "listTeams": "List of teams"
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",

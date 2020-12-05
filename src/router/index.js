@@ -86,8 +86,7 @@ const routes = [
         },
         meta: {
           // TODO: проверка менеджер ли
-          // TODO: хлебные крошки
-          breadCrumb: "TeamsList"
+          breadCrumb: i18n.t("router.listTeams")
         }
       },
       {
