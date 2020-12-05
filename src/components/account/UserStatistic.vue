@@ -15,9 +15,7 @@
           <p>Дата: {{ $d(statistic.createdAt, "long") }}</p>
           <p>
             Баллов:
-            {{ personalUserStatistics.pointQuantity - statistic.delta }} за "{{
-              statistic.operationDescription
-            }}"
+            {{ statistic.delta }} за "{{ statistic.operationDescription }}"
           </p>
         </div>
       </div>

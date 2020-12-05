@@ -210,6 +210,7 @@ type Query {
   requests (teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getOperationPointsUser(pointAccountId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  pointsLastWeek(id: ID!): Int
   
   posts: [Post]!
   post(id: ID!): Post
@@ -243,7 +244,7 @@ type Mutation {
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
+  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String, birthday: String): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
   createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!, forAllUsers: Int): Notification!

@@ -135,6 +135,8 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
       }
       team {
         id
@@ -181,6 +183,7 @@ export const UPDATE_USER_QUERY = gql`
     $patricity: String
     $gender: String
     $login: String
+    $birthday: String
     $id: ID!
   ) {
     updateUser(
@@ -189,6 +192,7 @@ export const UPDATE_USER_QUERY = gql`
       patricity: $patricity
       gender: $gender
       login: $login
+      birthday: $birthday
       id: $id
     )
   }
@@ -503,6 +507,22 @@ export const GET_POINTS_QUERY = gql`
   }
 `;
 
+export const GET_POINTS_OPERATION_QUERY = gql`
+  query($pointAccountId: ID!) {
+    getOperationPointsUser(pointAccountId: $pointAccountId) {
+      delta
+      operationDescription
+      createdAt
+    }
+  }
+`;
+
+export const GET_POINTS_LAST_WEEK_QUERY = gql`
+  query($id: ID!) {
+    pointsLastWeek(id: $id)
+  }
+`;
+
 export const CARGE_POINTS_QUERY = gql`
   mutation($pointAccountId: ID!, $delta: Int!, $operationDescription: String!) {
     createPointOperation(
@@ -593,6 +613,13 @@ export const ALL_TASKS_QUERY = gql`
     }
   }
 `;
+
+export const DELETE_TASK_QUERY = gql`
+  mutation($id: ID!) {
+    deleteTask(id: $id)
+  }
+`;
+
 export const ADD_TASK_QUERY = gql`
   mutation(
     $teamId: ID

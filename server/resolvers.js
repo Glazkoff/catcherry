@@ -299,6 +299,25 @@ module.exports = {
         where: { pointAccountId: args.pointAccountId },
         order: [["id", "ASC"]]
       }),
+    pointsLastWeek: async (parent, args, { db }) => {
+      let points = await db.Points.findOne({
+        where: { userId: args.id }
+      });
+      let operation = await db.PointsOperations.findAll({
+        where: {
+          pointAccountId: args.id,
+          createdAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      });
+      for (let i = 0; i < operation.length; i++) {
+        points.pointQuantity = points.pointQuantity - operation[i].delta;
+      }
+      if (points.pointQuantity < 0) {
+        return 0;
+      } else return points.pointQuantity;
+    },
     tasks: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId, userId: { [Op.ne]: null } },
@@ -529,7 +548,7 @@ module.exports = {
     // Обновляем фамилию, имени, отчества, пола и логина пользователя
     updateUser: (
       parent,
-      { surname, name, patricity, gender, login, id },
+      { surname, name, patricity, gender, login, birthday, id },
       { db },
       info
     ) =>
@@ -539,7 +558,8 @@ module.exports = {
           surname: surname,
           patricity: patricity,
           gender: gender,
-          login: login
+          login: login,
+          birthday: birthday
         },
         {
           where: {

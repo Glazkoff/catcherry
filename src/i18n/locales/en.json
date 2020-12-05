@@ -127,5 +127,9 @@
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",
     "termsOfPrivacy": " the terms of the privacy policy and user agreement"
+  },
+  "privacyPolicy": {
+    "acceptBtn": "I accept the terms",
+    "title": "Data processing policy"
   }
 }

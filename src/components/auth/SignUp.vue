@@ -63,6 +63,7 @@
         }}
       </span>
     </div>
+    <br />
     <div>
       <label class="box-label">
         <input
@@ -71,11 +72,12 @@
           v-model="privacyPolicyIsChecked"
           checked=""
         />
-        <small class="">
-          {{ $t("userAgreement.bySignUp") }}
-          <a>{{ $t("userAgreement.termsOfPrivacy") }}</a></small
-        >
-      </label>
+        <span class="box"></span>
+        {{ $t("userAgreement.bySignUp") }}
+        <br /><a @click.prevent="openPrivacyPolicy()">{{
+          $t("userAgreement.termsOfPrivacy")
+        }}</a></label
+      >
     </div>
     <br />
     <input
@@ -90,6 +92,11 @@
         $t("signUp.logInLink")
       }}</router-link>
     </p>
+    <PrivacyPolicyPopup
+      v-if="showPrivacyPolicy"
+      @close="closePrivacyPolicy()"
+      @accept="accept()"
+    ></PrivacyPolicyPopup>
   </form>
 </template>
 
@@ -100,10 +107,13 @@ import {
   minLength
 } from "vuelidate/lib/validators";
 import { SIGN_UP } from "@/graphql/queries.js";
-
+import PrivacyPolicyPopup from "@/components/auth/PrivacyPolicyPopup.vue";
 export default {
   // TODO: добавить защиту роутов
   name: "SignUp",
+  components: {
+    PrivacyPolicyPopup
+  },
   data() {
     return {
       fullName: "",
@@ -112,7 +122,8 @@ export default {
       password: "",
       signUpLoading: false,
       fingerprint: "",
-      privacyPolicyIsChecked: false
+      privacyPolicyIsChecked: false,
+      showPrivacyPolicy: false
     };
   },
   async created() {
@@ -179,12 +190,20 @@ export default {
             console.error(error);
           });
       }
+    },
+    openPrivacyPolicy() {
+      this.showPrivacyPolicy = true;
+    },
+    closePrivacyPolicy() {
+      this.showPrivacyPolicy = false;
+    },
+    accept() {
+      this.showPrivacyPolicy = false;
+      this.privacyPolicyIsChecked = true;
     }
   }
 };
 </script>
-<style>
-.error {
-  color: red;
-}
+<style lang="scss">
+@import "@/styles/_colors.scss";
 </style>

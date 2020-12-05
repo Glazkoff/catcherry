@@ -36,7 +36,7 @@ export default {
     return {
       isShowAlert: false, // Для показа уведомления об удалении
       message: "", // Для текста сообщения в уведомлении
-      teamId: 23,
+      teamId: this.$route.params.id,
       name: ""
     };
   },
@@ -65,7 +65,7 @@ export default {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: 1
+          organizationId: 23
         };
       }
     }
