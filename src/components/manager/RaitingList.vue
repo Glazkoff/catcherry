@@ -1,5 +1,5 @@
 <template>
-  <div class="aa">
+  <div class="main_rating">
     <h2>Рейтинг участников</h2>
     <div v-for="oneUser in usersInTeams" :key="oneUser.id">
       <div
@@ -357,7 +357,9 @@ export default {
 }
 
 .mini {
-  width: 150px;
+  width: 170px;
+  font-size: 14px;
+  height: 40px;
   display: inline-block;
 }
 
@@ -365,7 +367,7 @@ export default {
   display: inline-block;
 }
 
-.aa {
+.main_rating {
   padding: 2%;
 }
 

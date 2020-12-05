@@ -226,4 +226,8 @@ textarea {
 form button {
   padding: 0.5rem;
 }
+
+.main_request {
+  padding: 2%;
+}
 </style>

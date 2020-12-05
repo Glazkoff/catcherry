@@ -538,8 +538,8 @@ export const CARGE_POINTS_QUERY = gql`
 export const RAITING_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {
     raitingInTeams(teamId: $teamId) {
-      id
       user {
+        id
         name
         userPoints {
           pointQuantity

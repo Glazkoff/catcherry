@@ -359,7 +359,7 @@ export default {
           userId: this.$route.params.id,
           teamId: teamId,
           status: "Не принят",
-          roleId: "1" //FIXME: определить начальную роль при подаче заявки
+          roleId: this.$route.params.id //FIXME: определить начальную роль при подаче заявки
         },
         update: (cache, { data: { createUserInTeam } }) => {
           let data = cache.readQuery({

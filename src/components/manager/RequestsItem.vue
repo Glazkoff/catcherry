@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="card">
+    <div class="card" v-if="request.user">
       <img src="@/assets/avatar.jpg" alt="photo" class="big_avatar" />
       <h3>{{ request.user.name }}</h3>
       <button type="submit" @click="showModal = true" class="btn btn-alternate">

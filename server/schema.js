@@ -69,7 +69,7 @@ type UserInTeam {
   userId: ID!
   teamId: ID!
   status: String!
-  user: User!
+  user: User
   team: Team!
   roleId: ID!
   role: Role

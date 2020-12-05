@@ -91,4 +91,8 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
+
+.main_users_in_teams {
+  padding: 2%;
+}
 </style>
