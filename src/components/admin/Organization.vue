@@ -330,7 +330,7 @@
 </template>
 
 <script>
-import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import { required, numeric } from "vuelidate/lib/validators";

@@ -88,6 +88,18 @@
     <!-- вывод массива всех организаций  -->
     <div class="result_organization">
       <h2>Список организаций</h2>
+      <div class="card">
+  
+            <a class="orgFoto"></a>
+      
+          <div class="card_body">
+            <h3>Название организации</h3>
+            <small>№ 11111111111111</small>
+          </div>
+          <div class="card_action">
+            <ArrowRight></ArrowRight>
+          </div>
+        </div>
       <div v-if="tabFirst">
         <div
           class="oneOrganization"
@@ -105,8 +117,8 @@
           </button>
         </div>
         <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
-        <div v-if="filterOrganization == ''">
-          <h4>Организации не найдены</h4>
+        <div class="organizationNotSearch" v-if="filterOrganization == ''">
+          <h3>Организации не найдены</h3>
           <button class="btn btn-primary" @click="isAddOrganization = true">
             Создать
           </button>
@@ -215,6 +227,7 @@
 </template>
 
 <script>
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import SearchIcon from "@/assets/svg/organizations/search_organization.svg?inline";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
@@ -230,7 +243,7 @@ import { required } from "vuelidate/lib/validators";
 import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
-  components: { popup, minialert, SearchIcon },
+  components: { popup, minialert, SearchIcon, ArrowRight },
   data() {
     return {
       findString: "",
@@ -421,7 +434,23 @@ export default {
 .search_organization {
   margin-left: 52px;
 }
-
+.organizationNotSearch{
+  text-align: center;
+}
+.organizationNotSearch button{
+  text-align: center;
+  margin-left: auto;
+    margin-right: auto;
+}
+.orgFoto {
+  height: 48px;
+  width: 48px;
+  background-color: $gray_3;
+  border-radius: 25px;
+  border: 2px solid $bright_violet;
+  color: $gray_3;
+  margin-right: 1em;
+}
 .formSearch {
   background: $violet_2;
   border: 1px solid $violet_2;
@@ -430,7 +459,7 @@ export default {
   color: $gray_3;
   padding-top: 3px;
   padding-bottom: 3px;
-  width: 1070px;
+  width: 1025px;
   height: 57px;
 }
 .formSearchIcon {
@@ -474,6 +503,18 @@ export default {
 p{
   line-height: 2px !important;
 
+}
+h3{
+   margin-block-start: 0em;
+  margin-block-end: 0.1em;
+}
+small{
+  color: $gray_3;
+}
+.card{
+  width: 1070px !important;
+  height: 114px !important;
+  border-radius: 10px;
 }
 .tabs > label {
   display: inline-block;
