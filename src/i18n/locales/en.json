@@ -1,10 +1,6 @@
 {
   "projectTitle": "CATCHERRY",
-  "nameuserMsg": "Darya",
-  "roleuserMsg": "Administrator",
-  "topbarnameMsg": "Personal account",
   "pointsMsg": "point | points",
-  "pointdefaultMsg": "points",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
   "listUser": "List of users",
@@ -64,7 +60,6 @@
   "male": "Male",
   "female": "Female",
   "notIndicated": "Not indicated",
-  "adminPanel": "Admin panel",
   "numberOfPoints": "Number of points",
   "editNumberOfPoints": "Edit number of points",
   "saveNumberOfPoints": "Save number of points",

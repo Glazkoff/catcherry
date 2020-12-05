@@ -248,9 +248,6 @@ export default {
 .modal-avtive-button {
   float: left;
 }
-
-form {
-}
 label {
   margin-right: 10px;
 }

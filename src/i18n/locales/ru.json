@@ -1,10 +1,6 @@
 {
   "projectTitle": "Кэтчерри",
-  "nameuserMsg": "Дарья",
-  "roleuserMsg": "Администратор",
   "pointsMsg": "нет баллов | {n} балл | {n} балла | {n} баллов",
-  "pointdefaultMsg": "баллов",
-  "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",
   "listUser": "Список пользователей",
@@ -64,7 +60,6 @@
   "male": "Мужской",
   "female": "Женский",
   "notIndicated": "Не указано",
-  "adminPanel": "Административная панель",
   "numberOfPoints": "Количество баллов",
   "editNumberOfPoints": "Изменить количество баллов",
   "saveNumberOfPoints": "Сохранить количество баллов",
@@ -127,7 +122,6 @@
     "listRequest": "Список заявок",
     "listTeams": "Список команд",
     "tasks": "Задания"
-    
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",

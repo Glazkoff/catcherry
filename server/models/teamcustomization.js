@@ -9,7 +9,7 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       TeamCustomization.belongsTo(models.Teams, {
-        foreignKey: "teamId",
+        foreignKey: "teamId"
         // as: "teamCustomization"
       });
     }
