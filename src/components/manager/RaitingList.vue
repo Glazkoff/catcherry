@@ -1,100 +1,108 @@
 <template>
   <div class="main_rating">
+    <breadcrumbs></breadcrumbs>
     <h2>Рейтинг участников</h2>
-    <div v-for="oneUser in usersInTeams" :key="oneUser.id">
-      <div
-        class="card"
-        :class="{
-          bigCard: isShowFullInformation && oneUser.user.id === userId
-        }"
-      >
-        <div class="card_img">
-          <img src="~@/assets/avatar.jpg" />
-        </div>
-        <div class="card_body">
-          <p>
-            {{ oneUser.user.surname }} {{ oneUser.user.name }}
-            {{ oneUser.user.patricity }}
-          </p>
-          <p>Пользователь</p>
-        </div>
+    <div v-if="$apollo.queries.usersInTeams.loading" class="wrapOfLoader">
+      <loader></loader>
+    </div>
+    <div>
+      <div v-for="oneUser in usersInTeams" :key="oneUser.id">
         <div
-          @click="showFullInformation(oneUser)"
-          class="card_action"
-          v-if="oneUser.user.id !== userId"
+          class="card"
+          :class="{
+            bigCard: isShowFullInformation && oneUser.user.id === userId
+          }"
         >
-          <ArrowRight></ArrowRight>
-        </div>
-        <div
-          @click="closeFullInformation()"
-          class="card_action"
-          v-if="isShowFullInformation && oneUser.user.id === userId"
-        >
-          <ArrowRight class="rotate"></ArrowRight>
-        </div>
-      </div>
-      <div
-        class="card_more"
-        v-if="
-          $apollo.loading && isShowFullInformation && oneUser.user.id === userId
-        "
-      >
-        Загрузка...
-      </div>
-      <div
-        class="card_more"
-        v-if="
-          isShowFullInformation &&
-            oneUser.user.id === userId &&
-            !$apollo.loading
-        "
-      >
-        <div>
-          <h3>История</h3>
-          <p
-            v-for="pointsOperation in getOperationPointsUser"
-            :key="pointsOperation.id"
-            class="history"
+          <div class="card_img">
+            <img src="~@/assets/avatar.jpg" />
+          </div>
+          <div class="card_body">
+            <p>
+              {{ oneUser.user.surname }} {{ oneUser.user.name }}
+              {{ oneUser.user.patricity }}
+            </p>
+            <p>Пользователь</p>
+          </div>
+          <div
+            @click="showFullInformation(oneUser)"
+            class="card_action"
+            v-if="oneUser.user.id !== userId"
           >
-            <small v-if="pointsOperation.delta > 0">+</small
-            >{{ pointsOperation.delta }} балла(ов)
-            {{ pointsOperation.operationDescription }}
-          </p>
+            <ArrowRight></ArrowRight>
+          </div>
+          <div
+            @click="closeFullInformation()"
+            class="card_action"
+            v-if="isShowFullInformation && oneUser.user.id === userId"
+          >
+            <ArrowRight class="rotate"></ArrowRight>
+          </div>
         </div>
-        <div>
-          <h3>Статистика</h3>
-          <div class="statistics">
-            <div>
-              <p>За текущую неделю:</p>
-              <p
-                class="points_now"
-                :class="{
-                  more: pointsLastWeek[0] > pointsLastWeek[1],
-                  less: pointsLastWeek[0] < pointsLastWeek[1]
-                }"
-              >
-                <userStatisticsDown
-                  v-show="pointsLastWeek[0] < pointsLastWeek[1]"
-                ></userStatisticsDown>
-                <userStatisticsUp
-                  v-show="pointsLastWeek[0] > pointsLastWeek[1]"
-                ></userStatisticsUp>
-                {{ pointsLastWeek[0] }} баллов
-              </p>
-              <small v-if="pointsLastWeek[0] > pointsLastWeek[1]">
-                на {{ pointsLastWeek[0] - pointsLastWeek[1] }} баллов больше,
-                чем за предыдущую неделю
-              </small>
-              <small v-if="pointsLastWeek[0] < pointsLastWeek[1]">
-                на {{ pointsLastWeek[1] - pointsLastWeek[0] }} баллов меньше,
-                чем за предыдущую неделю
-              </small>
-            </div>
-            <div>
-              <p>На прошлой неделе:</p>
-              <p v-if="pointsLastWeek !== null" class="points_now">
-                {{ pointsLastWeek[1] }} баллов
-              </p>
+        <div
+          class="card_more"
+          v-if="
+            $apollo.loading &&
+              isShowFullInformation &&
+              oneUser.user.id === userId
+          "
+        >
+          Загрузка...
+        </div>
+        <div
+          class="card_more"
+          v-if="
+            isShowFullInformation &&
+              oneUser.user.id === userId &&
+              !$apollo.loading
+          "
+        >
+          <div>
+            <h3>История</h3>
+            <p
+              v-for="pointsOperation in getOperationPointsUser"
+              :key="pointsOperation.id"
+              class="history"
+            >
+              <small v-if="pointsOperation.delta > 0">+</small
+              >{{ pointsOperation.delta }} балла(ов)
+              {{ pointsOperation.operationDescription }}
+            </p>
+          </div>
+          <div>
+            <h3>Статистика</h3>
+            <div class="statistics">
+              <div>
+                <p>За текущую неделю:</p>
+                <p
+                  class="points_now"
+                  :class="{
+                    more: pointsLastWeek[0] > pointsLastWeek[1],
+                    less: pointsLastWeek[0] < pointsLastWeek[1]
+                  }"
+                >
+                  <userStatisticsDown
+                    v-show="pointsLastWeek[0] < pointsLastWeek[1]"
+                  ></userStatisticsDown>
+                  <userStatisticsUp
+                    v-show="pointsLastWeek[0] > pointsLastWeek[1]"
+                  ></userStatisticsUp>
+                  {{ pointsLastWeek[0] }} баллов
+                </p>
+                <small v-if="pointsLastWeek[0] > pointsLastWeek[1]">
+                  на {{ pointsLastWeek[0] - pointsLastWeek[1] }} баллов больше,
+                  чем за предыдущую неделю
+                </small>
+                <small v-if="pointsLastWeek[0] < pointsLastWeek[1]">
+                  на {{ pointsLastWeek[1] - pointsLastWeek[0] }} баллов меньше,
+                  чем за предыдущую неделю
+                </small>
+              </div>
+              <div>
+                <p>На прошлой неделе:</p>
+                <p v-if="pointsLastWeek !== null" class="points_now">
+                  {{ pointsLastWeek[1] }} баллов
+                </p>
+              </div>
             </div>
           </div>
         </div>
@@ -106,13 +114,21 @@
 import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import userStatisticsDown from "@/assets/svg/manager/userStatisticsDown.svg?inline";
 import userStatisticsUp from "@/assets/svg/manager/userStatisticsUp.svg?inline";
+import breadcrumbs from "@/components/BreadCrumbs.vue";
+import Loader from "@/components/Loader.vue";
 import {
   USERS_IN_TEAMS_QUERY,
   GET_POINTS_OPERATION_QUERY,
   GET_POINTS_LAST_WEEK_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { ArrowRight, userStatisticsDown, userStatisticsUp },
+  components: {
+    ArrowRight,
+    userStatisticsDown,
+    userStatisticsUp,
+    breadcrumbs,
+    Loader
+  },
   data() {
     return {
       isShowFullInformation: false,
@@ -227,5 +243,14 @@ export default {
   display: grid;
   grid-template-columns: 47% 47%;
   grid-column-gap: 6%;
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>
