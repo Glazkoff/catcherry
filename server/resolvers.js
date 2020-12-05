@@ -322,9 +322,60 @@ module.exports = {
         where: { pointAccountId: args.pointAccountId },
         order: [["id", "ASC"]]
       }),
+    pointsLastWeek: async (parent, args, { db }) => {
+      let operationLastWeek = await db.PointsOperations.findAll({
+        where: {
+          pointAccountId: args.id,
+          createdAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      });
+      let operation2LastWeek = await db.PointsOperations.findAll({
+        where: {
+          pointAccountId: args.id,
+          createdAt: {
+            [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+            [Op.lt]: new Date(new Date() - 14 * 60 * 60 * 1000)
+          }
+        }
+      });
+      let pointsLastWeek = 0;
+      for (let i = 0; i < operationLastWeek.length; i++) {
+        pointsLastWeek = pointsLastWeek + operationLastWeek[i].delta;
+      }
+      let points2LastWeek = 0;
+      for (let i = 0; i < operation2LastWeek.length; i++) {
+        points2LastWeek = points2LastWeek + operation2LastWeek[i].delta;
+      }
+      return [pointsLastWeek, points2LastWeek];
+    },
     tasks: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId, userId: { [Op.ne]: null } },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
+          }
+        ]
+      }),
+    allTasks: (parent, { teamId }, { db }) =>
+      db.Tasks.findAll({
+        where: { teamId: teamId },
         order: [["id", "DESC"]],
         include: [
           {
@@ -533,7 +584,8 @@ module.exports = {
           surname: surname,
           patricity: patricity,
           gender: gender,
-          login: login
+          login: login,
+          birthday: birthday
         },
         {
           where: {

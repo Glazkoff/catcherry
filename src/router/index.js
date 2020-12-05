@@ -28,6 +28,7 @@ import RequestsList from "@/components/manager/RequestsList.vue";
 import TasksTeam from "@/components/manager/TasksTeam.vue";
 import TeamsList from "@/components/manager/TeamsList.vue";
 import TeamSettings from "@/components/manager/TeamSettings.vue";
+import NewTask from "@/components/manager/NewTask.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
@@ -106,6 +107,11 @@ const routes = [
             path: "teams",
             name: "TeamSettings",
             component: TeamSettings
+          },
+          {
+            path: "new_task",
+            name: "NewTask",
+            component: NewTask
           },
           {
             path: "team_members",
