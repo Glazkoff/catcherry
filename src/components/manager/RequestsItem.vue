@@ -4,7 +4,7 @@
       <img src="@/assets/avatar.jpg" alt="photo" class="big_avatar" />
       <h3>{{ request.user.name }} {{ request.user.surname }} {{ request.user.patricity }}</h3>
       <button type="submit" @click="showModal = true" class="btn btn-alternate">
-        Подробнее
+        {{ $t("more") }}
       </button>
       <button
           class="btn btn-alert"
@@ -27,12 +27,15 @@
       <div slot="body" class="profile-popup-body">
         <img src="@/assets/avatar.jpg" alt="photo" class="big_popup_avatar" />
         <div>
-          <h2>{{ request.user.name }}</h2>
           <h2>{{ request.user.surname }}</h2>
+          <h2>{{ request.user.name }}</h2>
           <h2>{{ request.user.patricity }}</h2>
-          <div>
-            <p>Пол:</p>
-            <p>Дата рождения:</p>
+          <div class="profile-popup-body">
+            <p class="marginR">{{ $t("gender") }}: {{ request.user.gender }}</p>
+            <p>
+              {{ $t("birthday") }}:
+              {{ $d(request.user.birthday) }}
+            </p>
           </div>
         </div>
       </div>
@@ -41,13 +44,13 @@
           class="btn btn-primary"
           @click="$emit('accept', request.id, request.user.id)"
         >
-          Принять
+          {{ $t("accept") }}
         </button>
         <button
           class="btn btn-alternate"
           @click="$emit('reject', request.id, request.user.id)"
         >
-          Отклонить
+          {{ $t("reject") }}
         </button>
       </div>
     </popup>
@@ -111,5 +114,8 @@ h3 {
 .popup-footer {
   display: flex;
   justify-content: space-between;
+}
+.marginR {
+  margin-right: 6rem;
 }
 </style>

@@ -1,5 +1,6 @@
 <template>
   <div class="aaa">
+    <breadcrumbs></breadcrumbs>
     <div class="wrapOfLoader" v-if="$apollo.loading"><loader></loader></div>
     <minialert v-if="queryError">
       <p slot="title">{{ queryError }}</p>
@@ -101,6 +102,7 @@
 <script>
 import minialert from "@/components/MiniAlert.vue";
 import Loader from "@/components/Loader.vue";
+import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
   ALL_TASKS_QUERY,
   EDIT_TASK_QUERY,
@@ -110,7 +112,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert, Loader },
+  components: { minialert, Loader, breadcrumbs },
   apollo: {
     // массив задач с назначенными ответственными
     allTasks: {
@@ -180,7 +182,7 @@ export default {
               let notification = {
                 body: {
                   header: "Начисление баллов",
-                  text: `Вам было начислено ${task.body.points} балла(ов) за выполнение задания ${task.body.header}`
+                  text: `Вам было начислено ${task.body.points} балла(ов) за выполнение задания "${task.body.header}"`
                 },
                 authorId: this.$store.getters.decodedToken.id,
                 teamId: this.$route.params.id,

@@ -102,8 +102,7 @@ import {
   ALL_TASKS_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert,
-  breadcrumbs},
+  components: { minialert, breadcrumbs },
   apollo: {
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
@@ -206,35 +205,36 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
-.task_constructor{
+.task_constructor {
   margin-left: 51px;
 }
-label{
+label {
   font-weight: 500 !important;
   font-size: 21px !important;
   line-height: 25px !important;
   font-family: Lato !important;
   color: $white !important;
 }
-input,textarea{
+input,
+textarea {
   margin-top: 8px;
   margin-bottom: 16px;
   width: 431px;
-height: 55px;
-background: $violet !important;
-border: 1px solid $violet_2 !important;
-box-sizing: border-box !important;
-box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11) !important;
-border-radius: 10px !important;
-font-family: Lato !important;
-font-style: normal !important;
-font-weight: normal !important;
-font-size: 16px !important;
-line-height: 20px !important;
+  height: 55px;
+  background: $violet !important;
+  border: 1px solid $violet_2 !important;
+  box-sizing: border-box !important;
+  box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11) !important;
+  border-radius: 10px !important;
+  font-family: Lato !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-size: 16px !important;
+  line-height: 20px !important;
 }
-textarea{
+textarea {
   width: 707px !important;
-height: 194px !important;
+  height: 194px !important;
 }
 .form-control {
   margin-top: 8px;
@@ -254,17 +254,17 @@ color: $gray_3;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
-    /* display: none; <- Crashes Chrome on hover */
-    -webkit-appearance: none;
-    margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
 }
-.points_task input{
+.points_task input {
   width: 55px;
-height: 55px;
-background: $dark_blue !important;
-border: 0px solid $violet_2 !important;
-border-bottom: 1px solid $bright_violet !important;
-box-shadow: 0px 0px 0px 0px !important;
-border-radius: 0px !important;
+  height: 55px;
+  background: $dark_blue !important;
+  border: 0px solid $violet_2 !important;
+  border-bottom: 1px solid $bright_violet !important;
+  box-shadow: 0px 0px 0px 0px !important;
+  border-radius: 0px !important;
 }
 </style>
