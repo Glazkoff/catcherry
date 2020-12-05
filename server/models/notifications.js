@@ -47,6 +47,10 @@ module.exports = (sequelize, DataTypes) => {
       forAllTeam: {
         type: DataTypes.BOOLEAN,
         allowNull: true
+      },
+      checkNotification: {
+        type: DataTypes.BOOLEAN,
+        allowNull: true
       }
     },
     {

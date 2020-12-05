@@ -23,7 +23,7 @@ module.exports = (sequelize, DataTypes) => {
       authorId: DataTypes.INTEGER,
       postId: DataTypes.INTEGER,
       body: {
-        type: DataTypes.JSONB,
+        type: DataTypes.STRING,
         allowNull: false
       },
       dateAdd: DataTypes.STRING

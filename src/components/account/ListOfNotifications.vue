@@ -13,7 +13,7 @@
 </template>
 
 <script>
-import Notification from "@/components/Notification.vue";
+import Notification from "@/components/NotificationCard.vue";
 import { NOTIFICATIONS_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "ListOfNotifications",
@@ -34,7 +34,6 @@ export default {
               "https://us04web.zoom.us/j/8118194172?pwd=UmpJTnAzbFZQUjZLYUJZU2VwN0pPUT09"
           }
         },
-
         {
           id: 23,
           body: {
@@ -48,7 +47,6 @@ export default {
     };
   },
   apollo: {
-    // массив пользователей команды с рейтиногм по баллам
     notifications: {
       query: NOTIFICATIONS_USER_QUERY,
       variables() {
@@ -97,18 +95,15 @@ export default {
   padding-right: 1.6rem;
   padding-left: 1.6rem;
   box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.1);
-
   &::-webkit-scrollbar-track {
     background-color: $white;
     border-radius: 5px;
   }
-
   &::-webkit-scrollbar {
     width: 10px;
     background-color: $white;
     border-radius: 5px;
   }
-
   &::-webkit-scrollbar-thumb {
     background-color: $violet_3;
     border-radius: 5px;

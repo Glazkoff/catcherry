@@ -195,7 +195,8 @@ async function addAllTables(destroyTable) {
         text: faker.lorem.paragraph()
       },
       authorId: user.dataValues.id,
-      teamId: team.dataValues.id
+      teamId: team.dataValues.id,
+      checkNotification: faker.random.boolean()
     });
     let readnotification = await db.ReadNotification.create({
       notificationId: notification.dataValues.id,
@@ -249,20 +250,20 @@ async function addAllTables(destroyTable) {
       operationDescription: faker.random.word()
     });
     //Комментарии
-    let comment = await db.Comments.create({
-      authorId: user.dataValues.id,
-      postId: post.dataValues.id,
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph()
-      },
-      dateAdd: faker.random.number()
-    });
+    // let comment = await db.Comments.create({
+    //   authorId: user.dataValues.id,
+    //   postId: post.dataValues.id,
+    //   body: {
+    //     header: faker.random.word(),
+    //     text: faker.lorem.paragraph()
+    //   },
+    //   dateAdd: faker.random.number()
+    // });
     //Лайки для комментариев
-    let likesofcomments = await db.LikesOfComments.create({
-      userId: user.dataValues.id,
-      commentId: comment.dataValues.id
-    });
+    // let likesofcomments = await db.LikesOfComments.create({
+    //   userId: user.dataValues.id,
+    //   commentId: comment.dataValues.id
+    // });
     //Лайки для постов
     let likesofposts = await db.LikesOfPosts.create({
       userId: user.dataValues.id,

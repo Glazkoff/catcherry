@@ -1,29 +1,17 @@
 <template>
   <div
     v-if="
-      notification.forAllUsers == $route.params.id ||
-        notification.forAllUsers == null
+      (notification.forAllUsers == $store.getters.decodedToken.id &&
+        notification.checkNotification == false) ||
+        (notification.forAllUsers == null &&
+          notification.checkNotification == false)
     "
     class="notification"
   >
     <div class="header">
       <h2>{{ notification.body.header }}</h2>
-      <div class="icon" @click="onDelete(notification.id)">
-        <svg
-          aria-hidden="true"
-          focusable="false"
-          data-prefix="fal"
-          data-icon="times"
-          role="img"
-          xmlns="http://www.w3.org/2000/svg"
-          viewBox="0 0 512 512"
-          class="svg-inline--fa fa-times fa-w-10 fa-2x"
-        >
-          <path
-            fill="white"
-            d="M193.94 256L296.5 153.44l21.15-21.15c3.12-3.12 3.12-8.19 0-11.31l-22.63-22.63c-3.12-3.12-8.19-3.12-11.31 0L160 222.06 36.29 98.34c-3.12-3.12-8.19-3.12-11.31 0L2.34 120.97c-3.12 3.12-3.12 8.19 0 11.31L126.06 256 2.34 379.71c-3.12 3.12-3.12 8.19 0 11.31l22.63 22.63c3.12 3.12 8.19 3.12 11.31 0L160 289.94 262.56 392.5l21.15 21.15c3.12 3.12 8.19 3.12 11.31 0l22.63-22.63c3.12-3.12 3.12-8.19 0-11.31L193.94 256z"
-          ></path>
-        </svg>
+      <div class="icon" @click="onCheckNotification(notification.id)">
+        <Cross></Cross>
       </div>
     </div>
     <div class="main">
@@ -41,15 +29,50 @@
 </template>
 
 <script>
+import {
+  UPDATE_NOTIFICATION_QUERY,
+  NOTIFICATIONS_QUERY
+} from "@/graphql/queries";
+import Cross from "@/assets/cross.svg?inline";
 export default {
-  name: "Notification",
+  name: "NotificationCard",
   props: ["notification"],
+  components: {
+    Cross
+  },
   data() {
     return {};
   },
   methods: {
-    onDelete(id) {
-      this.$emit("delete", { id: id });
+    onCheckNotification(id) {
+      // this.$emit("delete", { id: id });
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_NOTIFICATION_QUERY,
+          variables: {
+            id: id,
+            body: {
+              header: this.notification.body.header,
+              text: this.notification.body.text
+            },
+            teamId: this.notification.teamId,
+            checkNotification: true
+          },
+          update: cache => {
+            let data = cache.readQuery({ query: NOTIFICATIONS_QUERY });
+            console.log(data);
+            data.notifications.find(
+              el => el.id === id
+            ).checkNotification = true;
+            cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 };
@@ -58,12 +81,10 @@ export default {
 <style lang="scss">
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
-
 .notification {
   width: 20rem;
   margin-bottom: 1rem;
 }
-
 .header {
   position: relative;
   padding-right: 1.7rem;
@@ -81,15 +102,11 @@ export default {
     top: 0;
     right: 0;
     cursor: pointer;
-    width: 1.7rem;
-    height: 1.7rem;
   }
 }
-
 .main p {
   margin-top: 0.5rem;
 }
-
 .blockForButton {
   text-align: center;
 }
@@ -115,7 +132,6 @@ export default {
 .blockForButton a:hover {
   background: #fff;
 }
-
 span {
   color: #878787;
   font-size: 12px;

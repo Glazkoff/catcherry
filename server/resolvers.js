@@ -249,8 +249,6 @@ module.exports = {
       });
     },
 
-    getPointsUser: (parent, args, { db }) =>
-      db.Points.findOne({ where: { userId: args.userId } }),
     comments: (parent, args, { db }) =>
       db.Comments.findAll({
         order: [["id", "ASC"]]
@@ -270,19 +268,7 @@ module.exports = {
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
-    oneUserInTeams: (parent, args, { db }) =>
-      db.UsersInTeams.findAll({
-        where: { userId: args.userId },
-        order: [["id", "ASC"]],
-        include: [
-          { model: db.Users, as: "user" },
-          {
-            model: db.Teams,
-            as: "team",
-            include: [{ model: db.Organizations, as: "organization" }]
-          }
-        ]
-      }),
+
     raitingInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
@@ -694,12 +680,21 @@ module.exports = {
         body: body,
         authorId: authorId,
         teamId: teamId,
-        forAllUsers: forAllUsers
+        forAllUsers: forAllUsers,
+        checkNotification: false
       }),
     //Изменить оповещение
     updateNotification: (
       parent,
-      { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
+      {
+        body,
+        teamId,
+        forAllUsers,
+        forAllOrganization,
+        forAllTeam,
+        checkNotification,
+        id
+      },
       { db }
     ) =>
       db.Notifications.update(
@@ -708,7 +703,8 @@ module.exports = {
           teamId: teamId,
           forAllUsers: forAllUsers,
           forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam
+          forAllTeam: forAllTeam,
+          checkNotification: checkNotification
         },
         {
           where: {

@@ -28,7 +28,11 @@
             </li>
             <li class="right icon-notificationTopBar">
               <div class="notificationTopBar">
-                <a href="#" class="nav-notificationTopBar">
+                <router-link
+                  to="/notifications"
+                  :exact="true"
+                  active-class="nav-checked"
+                >
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
                     <div class="number">.</div>
@@ -74,7 +78,7 @@
                       </div>
                     </div>
                   </div>
-                </a>
+                </router-link>
               </div>
             </li>
             <li class="right">

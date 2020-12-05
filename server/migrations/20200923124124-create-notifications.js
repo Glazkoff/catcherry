@@ -26,6 +26,9 @@ module.exports = {
       forAllTeam: {
         type: Sequelize.BOOLEAN
       },
+      checkNotification: {
+        type: Sequelize.BOOLEAN
+      },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE
