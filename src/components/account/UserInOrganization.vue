@@ -89,17 +89,16 @@
     <div class="result_organization">
       <h2>Список организаций</h2>
       <div class="card">
-  
-            <a class="orgFoto"></a>
-      
-          <div class="card_body">
-            <h3>Название организации</h3>
-            <small>№ 11111111111111</small>
-          </div>
-          <div class="card_action">
-            <ArrowRight></ArrowRight>
-          </div>
+        <a class="orgFoto"></a>
+
+        <div class="card_body">
+          <h3>Название организации</h3>
+          <small>№ 11111111111111</small>
         </div>
+        <div class="card_action">
+          <ArrowRight></ArrowRight>
+        </div>
+      </div>
       <div v-if="tabFirst">
         <div
           class="oneOrganization"
@@ -437,13 +436,13 @@ export default {
 .search_organization {
   margin-left: 52px;
 }
-.organizationNotSearch{
+.organizationNotSearch {
   text-align: center;
 }
-.organizationNotSearch button{
+.organizationNotSearch button {
   text-align: center;
   margin-left: auto;
-    margin-right: auto;
+  margin-right: auto;
 }
 .orgFoto {
   height: 48px;
@@ -503,18 +502,17 @@ export default {
 #tab-btn-3:checked ~ #content-3 {
   display: block;
 }
-p{
+p {
   line-height: 2px !important;
-
 }
-h3{
-   margin-block-start: 0em;
+h3 {
+  margin-block-start: 0em;
   margin-block-end: 0.1em;
 }
-small{
+small {
   color: $gray_3;
 }
-.card{
+.card {
   width: 1070px !important;
   height: 114px !important;
   border-radius: 10px;

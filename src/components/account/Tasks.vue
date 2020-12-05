@@ -8,11 +8,10 @@
           <div v-if="!taskNoneUser.tasksUser" class="oneUser ">
             <h2>{{ taskNoneUser.body.header }}</h2>
             <p>{{ taskNoneUser.body.text }}</p>
-            <div class="oneUser__points"><h3>Награда:<br />+{{ taskNoneUser.body.points }} баллов</h3></div>
-            <button
-              class="btn btn-primary"
-              @click="toAddTask(taskNoneUser.id)"
-            >
+            <div class="oneUser__points">
+              <h3>Награда:<br />+{{ taskNoneUser.body.points }} баллов</h3>
+            </div>
+            <button class="btn btn-primary" @click="toAddTask(taskNoneUser.id)">
               Взять задание
             </button>
           </div>
