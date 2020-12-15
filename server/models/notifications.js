@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "authorId",
         as: "author"
       });
-      Notifications.belongsTo(models.Organizations, {
-        foreignKey: "organizationId",
-        as: "notificationOrganization"
-      });
       Notifications.hasMany(models.ReadNotification, {
         foreignKey: "notificationId",
         as: "readNotification"
@@ -38,14 +34,6 @@ module.exports = (sequelize, DataTypes) => {
       },
       authorId: {
         type: DataTypes.INTEGER,
-        allowNull: false
-      },
-      organizationId: {
-        type: DataTypes.INTEGER,
-        allowNull: false
-      },
-      teamId: {
-        type: DataTypes.JSONB,
         allowNull: false
       },
       userId: {
