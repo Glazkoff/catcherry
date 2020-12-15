@@ -100,10 +100,8 @@ type Notification {
   body: BodyNotification!
   typeId: Int!
   authorId: Int!
-  organizationId: Int!
-   teamId: [Int]
-   userId: [Int]
-   ReadOrNot: [UserReadNotification]
+  userId: [Int]
+  ReadOrNot: [UserReadNotification]
   endTime: String!
   createdAt: String!
   updatedAt: String!

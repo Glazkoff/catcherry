@@ -201,9 +201,11 @@ async function addAllTables(destroyTable) {
       },
       typeId: typeOfNotification.dataValues.id,
       authorId: user.dataValues.id,
-      organizationId: organization.dataValues.id,
-      teamId: [1, 2, 3],
-      userId: [1, 2, 3],
+      userId: [
+        user.dataValues.id,
+        user.dataValues.id + 1,
+        user.dataValues.id + 2
+      ],
       endTime: faker.date.future()
     });
     let readnotification = await db.ReadNotification.create({
