@@ -214,8 +214,15 @@ module.exports = {
         where: { organizationId: args.organizationId }
       });
     },
-    notifications: (parent, args, { db }) =>
-      db.Notifications.findAll({ order: [["id", "DESC"]] }),
+    notifications: async (parent, args, { db }) => {
+      let result = await db.Notifications.findAll({
+        order: [["id", "DESC"]],
+        include: [{ model: db.ReadNotification, as: "ReadOrNot" }]
+      });
+      console.log("OH NO" + JSON.stringify(result[0]));
+      return result;
+    },
+
     notification: (parent, args, { db }) =>
       db.Notifications.findOne({ where: { id: args.id } }),
 

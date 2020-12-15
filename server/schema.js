@@ -98,14 +98,29 @@ type BodyNotification {
 type Notification {
   id: ID!
   body: BodyNotification!
+  typeId: Int!
   authorId: Int!
-  teamId: Int!
-  forAllUsers: Int
-  forAllOrganization: Boolean
-  forAllTeam: Boolean
-  checkNotification: Boolean
+  organizationId: Int!
+   teamId: [Int]
+   userId: [Int]
+   ReadOrNot: [UserReadNotification]
+  endTime: String!
   createdAt: String!
   updatedAt: String!
+}
+
+type UserReadNotification {
+  userId: ID!
+  notificationId: ID!
+  readOrNot: Boolean!
+}
+
+type TeamIdForNotification {
+  teamId: ID!
+}
+
+type UserIdForNotification {
+  userId: ID!
 }
 
 type PointsUser{
