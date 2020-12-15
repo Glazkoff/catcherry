@@ -11,23 +11,23 @@ module.exports = {
       body: {
         type: Sequelize.JSONB
       },
+      typeId: {
+        type: Sequelize.INTEGER
+      },
       authorId: {
         type: Sequelize.INTEGER
       },
+      organizationId: {
+        type: Sequelize.INTEGER
+      },
       teamId: {
-        type: Sequelize.INTEGER
+        type: Sequelize.JSONB
       },
-      forAllUsers: {
-        type: Sequelize.INTEGER
+      userId: {
+        type: Sequelize.JSONB
       },
-      forAllOrganization: {
-        type: Sequelize.BOOLEAN
-      },
-      forAllTeam: {
-        type: Sequelize.BOOLEAN
-      },
-      checkNotification: {
-        type: Sequelize.BOOLEAN
+      endTime: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
