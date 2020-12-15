@@ -17,12 +17,6 @@ module.exports = {
       authorId: {
         type: Sequelize.INTEGER
       },
-      organizationId: {
-        type: Sequelize.INTEGER
-      },
-      teamId: {
-        type: Sequelize.JSONB
-      },
       userId: {
         type: Sequelize.JSONB
       },
