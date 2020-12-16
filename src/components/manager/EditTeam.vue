@@ -1,6 +1,6 @@
 <template>
-  <div class="main_editform">
-    <h2>Редактирование</h2>
+  <div class="flexCont">
+    <h3>{{ $t("editTeam") }}</h3>
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == id">
         <EditForm :t="t" @update="toSaveEditTeam" />
@@ -74,7 +74,14 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.main_editform {
-  padding: 2%;
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+.flexCont {
+  display: flex;
+  padding: 3rem;
+  flex-direction: column;
+}
+h3 {
+  margin-bottom: 0.5rem;
 }
 </style>

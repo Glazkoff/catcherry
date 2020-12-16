@@ -84,6 +84,10 @@ export const REQUESTS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
+        gender
+        birthday
       }
     }
   }

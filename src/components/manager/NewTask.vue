@@ -1,8 +1,9 @@
 <template>
-  <div class="main_newtask">
+  <div class="task_constructor">
+    <breadcrumbs></breadcrumbs>
     <h2>Конструктор заданий</h2>
     <form @submit.prevent="createTask()">
-      <div class="form-group">
+      <div class="form-group name_task">
         <label for="header" class="form-name">
           Название задачи
         </label>
@@ -51,7 +52,7 @@
           >
         </select>
       </div>
-      <div class="form-group">
+      <div class="form-group points_task">
         <label for="header" class="form-name">
           Награда
         </label>
@@ -94,13 +95,14 @@
 <script>
 import { required, numeric } from "vuelidate/lib/validators";
 import minialert from "@/components/MiniAlert.vue";
+import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
   USERS_IN_TEAMS_QUERY,
   ADD_TASK_QUERY,
   ALL_TASKS_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert },
+  components: { minialert, breadcrumbs },
   apollo: {
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
@@ -201,7 +203,68 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
-.main_newtask {
-  padding: 2%;
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+.task_constructor {
+  margin-left: 51px;
+}
+label {
+  font-weight: 500 !important;
+  font-size: 21px !important;
+  line-height: 25px !important;
+  font-family: Lato !important;
+  color: $white !important;
+}
+input,
+textarea {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  width: 431px;
+  height: 55px;
+  background: $violet !important;
+  border: 1px solid $violet_2 !important;
+  box-sizing: border-box !important;
+  box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11) !important;
+  border-radius: 10px !important;
+  font-family: Lato !important;
+  font-style: normal !important;
+  font-weight: normal !important;
+  font-size: 16px !important;
+  line-height: 20px !important;
+}
+textarea {
+  width: 707px !important;
+  height: 194px !important;
+}
+.form-control {
+  margin-top: 8px;
+  margin-bottom: 16px;
+  width: 431px;
+  height: 55px;
+  background: $violet !important;
+  border: 1px solid $violet_2 !important;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  color: $gray_3;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+.points_task input {
+  width: 55px;
+  height: 55px;
+  background: $dark_blue !important;
+  border: 0px solid $violet_2 !important;
+  border-bottom: 1px solid $bright_violet !important;
+  box-shadow: 0px 0px 0px 0px !important;
+  border-radius: 0px !important;
 }
 </style>

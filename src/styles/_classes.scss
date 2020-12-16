@@ -80,6 +80,18 @@ a {
     color: $gray_3;
   }
 }
+.btn-alert {
+  color: $red;
+  background: $violet;
+  border: 1px solid $red;
+  &:hover {
+    background: $violet_2;
+  }
+  &:disabled {
+    background: $violet;
+    color: $gray_3;
+  }
+}
 
 .btn-alternate {
   color: $violet_2;
@@ -184,7 +196,7 @@ a {
     border: 2px solid $violet;
     padding: 1%;
     display: grid;
-    grid-template-columns: 40% 60%;
+    grid-template-columns: 40% 55%;
     grid-column-gap: 5%;
     .history {
       color: $gray_3;
