@@ -52,7 +52,7 @@ const schema = makeExecutableSchema({
 
 // Инициализация express-приложения
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Использование сжатия gzip
 app.use(compression());
