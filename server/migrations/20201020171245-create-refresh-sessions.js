@@ -6,40 +6,40 @@ module.exports = {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       userId: {
-        type: Sequelize.INTEGER,
+        type: Sequelize.INTEGER
       },
       refreshToken: {
-        type: Sequelize.UUID,
+        type: Sequelize.UUID
       },
       ua: {
-        type: Sequelize.STRING,
+        type: Sequelize.STRING
       },
       fingerprint: {
         type: Sequelize.STRING,
-        allowNull: false,
+        allowNull: false
       },
       ip: {
         type: Sequelize.STRING,
-        allowNull: true,
+        allowNull: true
       },
       expiresIn: {
         type: Sequelize.BIGINT,
-        allowNull: false,
+        allowNull: false
       },
       createdAt: {
         allowNull: false,
-        type: Sequelize.DATE,
+        type: Sequelize.DATE
       },
       updatedAt: {
         allowNull: false,
-        type: Sequelize.DATE,
-      },
+        type: Sequelize.DATE
+      }
     });
   },
   down: async (queryInterface, Sequelize) => {
     await queryInterface.dropTable("RefreshSessions");
-  },
+  }
 };

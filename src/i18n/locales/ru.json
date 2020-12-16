@@ -1,10 +1,6 @@
 {
   "projectTitle": "Кэтчерри",
-  "nameuserMsg": "Дарья",
-  "roleuserMsg": "Администратор",
   "pointsMsg": "нет баллов | {n} балл | {n} балла | {n} баллов",
-  "pointdefaultMsg": "баллов",
-  "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",
   "listUser": "Список пользователей",
@@ -38,6 +34,8 @@
   "organization": "Организация",
   "status": "Статус",
   "more": "Подробнее",
+  "accept": "Принять",
+  "reject": "Отклонить",
   "addUserToTeam": "Добавить пользователя в команду",
   "deleteUserFromTeam": "Исключить пользователя из команды",
   "minialertEditUser": "Вы успешно изменили данные пользователя",
@@ -61,7 +59,7 @@
   "reuiredEmail": "Данное поле должно содержать только email",
   "male": "Мужской",
   "female": "Женский",
-  "adminPanel": "Административная панель",
+  "notIndicated": "Не указано",
   "numberOfPoints": "Количество баллов",
   "editNumberOfPoints": "Изменить количество баллов",
   "saveNumberOfPoints": "Сохранить количество баллов",
@@ -100,7 +98,8 @@
     "buttonSubmit": "Зарегистрироваться",
     "accountQuestion": "Уже есть аккаунт?",
     "logInLink": "Войти!",
-    "birthday": "День рождения"
+    "birthday": "День рождения",
+    "loginAlreadyTaken": "Такой логин уже занят"
   },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",
@@ -115,16 +114,21 @@
     "statistic": "Статистика",
     "points": "Баллы",
     "post": "Пост",
-    "notification": "Оповещения",
+    "notifications": "Оповещения",
     "createpost": "Создать пост",
     "user": "Личный кабинет",
     "account": "Аккаунт",
     "userInOrg": "Пользователь в организации",
     "listRequest": "Список заявок",
+    "listTeams": "Список команд",
     "tasks": "Задания"
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",
     "termsOfPrivacy": " условия политики конфиденциальности и пользовательского соглашения"
+  },
+  "privacyPolicy": {
+    "acceptBtn": "Принимаю условия",
+    "title": "Политика в отношении обработки персональных данных"
   }
 }

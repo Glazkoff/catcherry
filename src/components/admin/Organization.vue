@@ -1,5 +1,6 @@
 <template>
   <div class="main">
+    <BreadCrumbs></BreadCrumbs>
     <popup v-if="isShowFullInformation">
       <!-- Заголовок загрузки информации про одного пользователя -->
       <div
@@ -276,9 +277,9 @@
     <h2>
       {{ $t("listOrganization") }}
     </h2>
-    <h3 v-if="$apollo.queries.organizations.loading">
-      {{ $t("listOrganization") }}...
-    </h3>
+    <div v-if="$apollo.queries.organizations.loading" class="wrapOfLoader">
+      <loader></loader>
+    </div>
     <div v-if="!$apollo.queries.organizations.loading">
       <h4 v-if="organizations.length == 0">
         {{ $t("noOrg") }}
@@ -296,7 +297,7 @@
           :key="organization.id"
         >
           <div class="card_img">
-            <img src="@/assets/avatar.jpg" />
+            <img src="~@/assets/avatar.jpg" />
           </div>
           <div class="card_body">
             <p>{{ organization.name }}</p>
@@ -330,8 +331,10 @@
 </template>
 
 <script>
-import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import popup from "@/components/Popup.vue";
+import Loader from "@/components/Loader.vue";
 import minialert from "@/components/MiniAlert.vue";
 import { required, numeric } from "vuelidate/lib/validators";
 import {
@@ -344,7 +347,7 @@ import {
   TEAMS_IN_ONE_ORG_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup, ArrowRight },
+  components: { minialert, popup, ArrowRight, BreadCrumbs, Loader },
   apollo: {
     // Список всех организаций с краткой информацией
     organizations: {
@@ -659,8 +662,18 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_colors.scss";
 .teams-list {
   border: 1px solid black;
   padding: 5px;
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>

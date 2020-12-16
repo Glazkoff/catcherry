@@ -1,7 +1,7 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable('Notifications', {
+    await queryInterface.createTable("Notifications", {
       id: {
         allowNull: false,
         autoIncrement: true,
@@ -11,20 +11,17 @@ module.exports = {
       body: {
         type: Sequelize.JSONB
       },
+      typeId: {
+        type: Sequelize.INTEGER
+      },
       authorId: {
         type: Sequelize.INTEGER
       },
-      teamId: {
-        type: Sequelize.INTEGER
+      userId: {
+        type: Sequelize.JSONB
       },
-      forAllUsers: {
-        type: Sequelize.INTEGER
-      },
-      forAllOrganization: {
-        type: Sequelize.BOOLEAN
-      },
-      forAllTeam: {
-        type: Sequelize.BOOLEAN
+      endTime: {
+        type: Sequelize.DATE
       },
       createdAt: {
         allowNull: false,
@@ -37,6 +34,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Notifications');
+    await queryInterface.dropTable("Notifications");
   }
 };

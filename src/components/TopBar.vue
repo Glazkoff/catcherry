@@ -26,7 +26,11 @@
             </li>
             <li class="right icon-notificationTopBar">
               <div class="notificationTopBar">
-                <a href="#" class="nav-notificationTopBar">
+                <router-link
+                  to="/notifications"
+                  :exact="true"
+                  active-class="nav-checked"
+                >
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
                     <div class="number" v-if="notifications.length > 0">.</div>
@@ -71,7 +75,7 @@
                       </div>
                     </div>
                   </div>
-                </a>
+                </router-link>
               </div>
             </li>
             <li class="right">
@@ -272,6 +276,7 @@ header {
 }
 .box::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #f5f5f5;
   border-radius: 5px;
 }

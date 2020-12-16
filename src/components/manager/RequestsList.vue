@@ -1,5 +1,6 @@
 <template>
   <div class="main_request">
+    <breadcrumbs></breadcrumbs>
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == teamId">
         <h3>Заявки на вхождение {{ (name = t.name) }}</h3>
@@ -21,7 +22,7 @@
 <script>
 import RequestsItem from "@/components/manager/RequestsItem";
 import Minialert from "@/components/MiniAlert.vue";
-
+import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
   REQUESTS_QUERY,
   ACCEPT_REQUEST_QUERY,
@@ -65,7 +66,7 @@ export default {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: 1
+          organizationId: 23
         };
       }
     }
@@ -73,7 +74,8 @@ export default {
 
   components: {
     RequestsItem,
-    Minialert
+    Minialert,
+    breadcrumbs
   },
 
   methods: {
@@ -225,5 +227,9 @@ textarea {
 
 form button {
   padding: 0.5rem;
+}
+
+.main_request {
+  padding: 2%;
 }
 </style>

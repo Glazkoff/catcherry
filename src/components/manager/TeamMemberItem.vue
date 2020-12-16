@@ -1,13 +1,26 @@
 <template>
-  <div class="user">
-    <img src="@/assets/avatar.jpg" alt="photo" class="bigAvatar" />
-    <div>
-      <p>{{ userInTeam.user.name }} {{ userInTeam.user.surname }}</p>
-      <p>{{ userInTeam.status }}</p>
+  <div>
+    <div class="card">
+      <div class="card_img">
+        <img src="~@/assets/avatar.jpg" alt="photo" />
+      </div>
+      <div class="card_body_max">
+        <p>
+          {{ userInTeam.user.surname }} {{ userInTeam.user.name }}
+          {{ userInTeam.user.patricity }}
+        </p>
+        <p>{{ userInTeam.status }}</p>
+      </div>
+      <div class="card_action_max">
+        <button
+          type="submit"
+          class="btn btn-alternate block"
+          @click="showModal = true"
+        >
+          Подробнее
+        </button>
+      </div>
     </div>
-    <button type="submit" class="btn btn-link" @click="showModal = true">
-      Подробнее
-    </button>
     <Popup
       v-if="showModal"
       @close="showModal = false"
@@ -61,6 +74,9 @@ export default {
 </script>
 
 <style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
 .user {
   margin: 15px;
   padding: 15px;

@@ -84,6 +84,10 @@ export const REQUESTS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
+        gender
+        birthday
       }
     }
   }
@@ -135,6 +139,8 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
       }
       team {
         id
@@ -181,6 +187,7 @@ export const UPDATE_USER_QUERY = gql`
     $patricity: String
     $gender: String
     $login: String
+    $birthday: String
     $id: ID!
   ) {
     updateUser(
@@ -189,6 +196,7 @@ export const UPDATE_USER_QUERY = gql`
       patricity: $patricity
       gender: $gender
       login: $login
+      birthday: $birthday
       id: $id
     )
   }
@@ -228,12 +236,6 @@ export const ORGS_QUERY = gql`
       ownerId
       organizationTypeId
       maxTeamsLimit
-      owner {
-        name
-      }
-      organizationType {
-        name
-      }
     }
   }
 `;
@@ -509,12 +511,24 @@ export const GET_POINTS_QUERY = gql`
   }
 `;
 
+export const GET_POINTS_OPERATION_QUERY = gql`
+  query($pointAccountId: ID!) {
+    getOperationPointsUser(pointAccountId: $pointAccountId) {
+      delta
+      operationDescription
+      createdAt
+    }
+  }
+`;
+
+export const GET_POINTS_LAST_WEEK_QUERY = gql`
+  query($id: ID!) {
+    pointsLastWeek(id: $id)
+  }
+`;
+
 export const CARGE_POINTS_QUERY = gql`
-  mutation(
-    $pointAccountId: Int!
-    $delta: Int!
-    $operationDescription: String!
-  ) {
+  mutation($pointAccountId: ID!, $delta: Int!, $operationDescription: String!) {
     createPointOperation(
       pointAccountId: $pointAccountId
       delta: $delta
@@ -528,8 +542,8 @@ export const CARGE_POINTS_QUERY = gql`
 export const RAITING_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {
     raitingInTeams(teamId: $teamId) {
-      id
       user {
+        id
         name
         userPoints {
           pointQuantity
@@ -579,6 +593,37 @@ export const TASKS_QUERY = gql`
     }
   }
 `;
+export const ALL_TASKS_QUERY = gql`
+  query($teamId: ID!) {
+    allTasks(teamId: $teamId) {
+      id
+      userId
+      teamId
+      status
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksUser {
+        name
+        surname
+        id
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_TASK_QUERY = gql`
+  mutation($id: ID!) {
+    deleteTask(id: $id)
+  }
+`;
+
 export const ADD_TASK_QUERY = gql`
   mutation(
     $teamId: ID
@@ -654,6 +699,29 @@ export const BACKLOG_QUERY = gql`
   }
 `;
 
+export const BACKLOG_TASKS_QUERY = gql`
+  query($teamId: ID!) {
+    backlogTasks(teamId: $teamId) {
+      id
+      userId
+      teamId
+      status
+      body {
+        header
+        text
+        points
+      }
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+
 export const NOTIFICATIONS_USER_QUERY = gql`
   query {
     notifications {
@@ -667,6 +735,9 @@ export const NOTIFICATIONS_USER_QUERY = gql`
       teamId
       forAllUsers
       createdAt
+      forAllOrganization
+      forAllTeam
+      checkNotification
     }
   }
 `;
@@ -701,9 +772,55 @@ export const STATISTICS_DELETE_QUERY = gql`
     statisticsDeleteOrgs
   }
 `;
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ NOTIFICATIONS
+export const NOTIFICATIONS_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      teamId
+      forAllUsers
+      forAllOrganization
+      forAllTeam
+      checkNotification
+    }
+  }
+`;
+
+export const UPDATE_NOTIFICATION_QUERY = gql`
+  mutation(
+    $body: NotificationBody!
+    $teamId: Int!
+    $forAllUsers: Boolean
+    $forAllOrganization: Boolean
+    $forAllTeam: Boolean
+    $checkNotification: Boolean
+    $id: ID!
+  ) {
+    updateNotification(
+      body: $body
+      teamId: $teamId
+      forAllUsers: $forAllUsers
+      forAllOrganization: $forAllOrganization
+      forAllTeam: $forAllTeam
+      checkNotification: $checkNotification
+      id: $id
+    )
+  }
+`;
 
 export const LOG_OUT = gql`
   mutation($fingerprint: String!) {
     logOut(fingerprint: $fingerprint)
+  }
+`;
+
+export const IS_LOGIN_USED = gql`
+  query($login: String!) {
+    isLoginUsed(login: $login)
   }
 `;

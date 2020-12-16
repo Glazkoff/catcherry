@@ -1,10 +1,6 @@
 {
   "projectTitle": "CATCHERRY",
-  "nameuserMsg": "Darya",
-  "roleuserMsg": "Administrator",
-  "topbarnameMsg": "Personal account",
   "pointsMsg": "point | points",
-  "pointdefaultMsg": "points",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
   "listUser": "List of users",
@@ -38,6 +34,8 @@
   "description": "Description",
   "status": "Status",
   "more": "More",
+  "accept": "Accept",
+  "reject": "Reject",
   "addUserToTeam": "Add user to team",
   "deleteUserFromTeam": "Delete user from team",
   "minialertEditUser": "You have successfully changed user details",
@@ -61,7 +59,7 @@
   "reuiredEmail": "This field must be an email",
   "male": "Male",
   "female": "Female",
-  "adminPanel": "Admin panel",
+  "notIndicated": "Not indicated",
   "numberOfPoints": "Number of points",
   "editNumberOfPoints": "Edit number of points",
   "saveNumberOfPoints": "Save number of points",
@@ -100,7 +98,8 @@
     "buttonSubmit": "Sign up",
     "accountQuestion": "Already have an account?",
     "logInLink": "Log in!",
-    "birthday": "Birthday"
+    "birthday": "Birthday",
+    "loginAlreadyTaken": "This login is already taken"
   },
   "markRequiredField": "* - required field",
   "startMsg": "Hello, Polyweb!",
@@ -113,7 +112,7 @@
     "dashboard": "Dashboard",
     "home": "Home",
     "listRequest": "List of request",
-    "notification": "Notification",
+    "notifications": "Notifications",
     "organizations": "Organizations",
     "points": "Points",
     "post": "Post",
@@ -121,10 +120,15 @@
     "tasks": "Tasks",
     "user": "User",
     "userInOrg": "User in organization",
-    "users": "Users"
+    "users": "Users",
+    "listTeams": "List of teams"
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",
     "termsOfPrivacy": " the terms of the privacy policy and user agreement"
+  },
+  "privacyPolicy": {
+    "acceptBtn": "I accept the terms",
+    "title": "Data processing policy"
   }
 }

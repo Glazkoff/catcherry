@@ -33,6 +33,7 @@ const resolvers = require("./resolvers");
 
 // База данных
 const db = require("./models/index");
+const { log } = require("debug");
 
 // Rate Limit
 const rateLimitDirective = createRateLimitDirective({
@@ -64,7 +65,10 @@ app.use(cookieParser());
 // .env NODE_ENV = development
 // либо запустить сервер командой
 // NODE_ENV=development node server/server.js
-if (process.env.NODE_ENV !== "development") {
+if (
+  process.env.NODE_ENV !== "development" &&
+  process.env.NODE_ENV !== undefined
+) {
   app.use(helmet());
 }
 
@@ -127,6 +131,7 @@ let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
     db.Administrators.destroy({ where: {} });
+    db.TypeNotification.destroy({ where: {} });
     db.Comments.destroy({ where: {} });
     db.LikesOfComments.destroy({ where: {} });
     db.LikesOfPosts.destroy({ where: {} });
@@ -150,6 +155,10 @@ async function addAllTables(destroyTable) {
     //Тип организации
     let type = await db.OrganizationsTypes.create({
       name: faker.name.findName()
+    });
+    //Тип оповещения
+    let typeOfNotification = await db.TypeNotification.create({
+      typeName: faker.name.findName()
     });
     //Пользователи
     const salt = bcrypt.genSaltSync(10);
@@ -190,8 +199,14 @@ async function addAllTables(destroyTable) {
         header: faker.random.word(),
         text: faker.lorem.paragraph()
       },
+      typeId: typeOfNotification.dataValues.id,
       authorId: user.dataValues.id,
-      teamId: team.dataValues.id
+      userId: [
+        user.dataValues.id,
+        user.dataValues.id + 1,
+        user.dataValues.id + 2
+      ],
+      endTime: faker.date.future()
     });
     let readnotification = await db.ReadNotification.create({
       notificationId: notification.dataValues.id,
@@ -245,20 +260,20 @@ async function addAllTables(destroyTable) {
       operationDescription: faker.random.word()
     });
     //Комментарии
-    let comment = await db.Comments.create({
-      authorId: user.dataValues.id,
-      postId: post.dataValues.id,
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph()
-      },
-      dateAdd: faker.random.number()
-    });
+    // let comment = await db.Comments.create({
+    //   authorId: user.dataValues.id,
+    //   postId: post.dataValues.id,
+    //   body: {
+    //     header: faker.random.word(),
+    //     text: faker.lorem.paragraph()
+    //   },
+    //   dateAdd: faker.random.number()
+    // });
     //Лайки для комментариев
-    let likesofcomments = await db.LikesOfComments.create({
-      userId: user.dataValues.id,
-      commentId: comment.dataValues.id
-    });
+    // let likesofcomments = await db.LikesOfComments.create({
+    //   userId: user.dataValues.id,
+    //   commentId: comment.dataValues.id
+    // });
     //Лайки для постов
     let likesofposts = await db.LikesOfPosts.create({
       userId: user.dataValues.id,

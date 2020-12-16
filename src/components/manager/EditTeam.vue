@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <h3>Редактирование</h3>
-    <hr />
+  <div class="flexCont">
+    <h3>{{ $t("editTeam") }}</h3>
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == id">
         <EditForm :t="t" @update="toSaveEditTeam" />
@@ -20,7 +19,7 @@ export default {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: 1
+          organizationId: 23
         };
       }
     }
@@ -74,4 +73,15 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+.flexCont {
+  display: flex;
+  padding: 3rem;
+  flex-direction: column;
+}
+h3 {
+  margin-bottom: 0.5rem;
+}
+</style>
