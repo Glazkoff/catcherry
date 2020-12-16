@@ -2,74 +2,78 @@
   <form class="form-auth" @submit.prevent="submit">
     <h1>{{ $t("signUp.title") }}</h1>
     <p>{{ $t("markRequiredField") }}</p>
-    <label>{{ $t("signUp.fullName") }} *</label><br />
-    <input
-      :disabled="signUpLoading"
-      type="text"
-      v-model.trim="$v.fullName.$model"
-      :placeholder="$t('signUp.fullNamePlaceholder')"
-      class="form-control block"
-    />
-    <div v-if="$v.fullName.$error" class="error">
-      <span class="form-text danger" v-if="!$v.fullName.required">{{
-        $t("required")
-      }}</span>
-      <span class="form-text danger" v-else-if="!$v.fullName.alpha">{{
-        $t("requiredLetters")
-      }}</span>
+    <div class="form-group">
+      <label class="form-name">{{ $t("signUp.fullName") }} *</label><br />
+      <input
+        :disabled="signUpLoading"
+        type="text"
+        v-model.trim="$v.fullName.$model"
+        :placeholder="$t('signUp.fullNamePlaceholder')"
+        class="form-control block"
+      />
+      <div v-if="$v.fullName.$error" class="error">
+        <span class="form-text danger" v-if="!$v.fullName.required">{{
+          $t("required")
+        }}</span>
+        <span class="form-text danger" v-else-if="!$v.fullName.alpha">{{
+          $t("requiredLetters")
+        }}</span>
+      </div>
     </div>
-    <br />
-    <label>{{ $t("signUp.birthday") }}</label
-    ><br />
-    <input
-      :disabled="signUpLoading"
-      type="date"
-      v-model="$v.birthday.$model"
-      class="form-control block"
-    />
-    <br />
-    <label>{{ $t("signUp.login") }} *</label><br />
-    <input
-      :disabled="signUpLoading"
-      type="text"
-      v-model.trim="$v.login.$model"
-      :placeholder="$t('signUp.loginPlaceholder')"
-      class="form-control block"
-      @input="checkLogin()"
-    />
-    <div v-if="$v.login.$error" class="error">
-      <span class="form-text danger" v-if="!$v.login.required">{{
-        $t("required")
-      }}</span>
-      <span class="form-text danger" v-else-if="!$v.login.email">{{
-        $t("reuiredEmail")
-      }}</span>
+    <div class="form-group">
+      <label class="form-name">{{ $t("signUp.birthday") }}</label
+      ><br />
+      <input
+        :disabled="signUpLoading"
+        type="date"
+        v-model="$v.birthday.$model"
+        class="form-control block"
+      />
     </div>
-    <div class="error">
-      <span class="form-text danger" v-if="isLoginUsed">{{
-        $t("signUp.loginAlreadyTaken")
-      }}</span>
+    <div class="form-group">
+      <label class="form-name">{{ $t("signUp.login") }} *</label><br />
+      <input
+        :disabled="signUpLoading"
+        type="text"
+        v-model.trim="$v.login.$model"
+        :placeholder="$t('signUp.loginPlaceholder')"
+        class="form-control block"
+        @input="checkLogin()"
+      />
+      <div v-if="$v.login.$error" class="error">
+        <span class="form-text danger" v-if="!$v.login.required">{{
+          $t("required")
+        }}</span>
+        <span class="form-text danger" v-else-if="!$v.login.email">{{
+          $t("reuiredEmail")
+        }}</span>
+      </div>
+      <div class="error">
+        <span class="form-text danger" v-if="isLoginUsed">{{
+          $t("signUp.loginAlreadyTaken")
+        }}</span>
+      </div>
     </div>
-    <br />
-    <label>{{ $t("signUp.password") }} *</label><br />
-    <input
-      type="password"
-      :disabled="signUpLoading"
-      v-model.trim="$v.password.$model"
-      :placeholder="$t('signUp.passwordPlaceholder')"
-      class="form-control block"
-    />
-    <div v-if="$v.password.$error" class="error">
-      <span class="form-text danger" v-if="!$v.password.required">{{
-        $t("required")
-      }}</span>
-      <span class="form-text danger" v-else-if="!$v.password.minLength"
-        >{{
-          $t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
-        }}
-      </span>
+    <div class="form-group">
+      <label class="form-name">{{ $t("signUp.password") }} *</label><br />
+      <input
+        type="password"
+        :disabled="signUpLoading"
+        v-model.trim="$v.password.$model"
+        :placeholder="$t('signUp.passwordPlaceholder')"
+        class="form-control block"
+      />
+      <div v-if="$v.password.$error" class="error">
+        <span class="form-text danger" v-if="!$v.password.required">{{
+          $t("required")
+        }}</span>
+        <span class="form-text danger" v-else-if="!$v.password.minLength"
+          >{{
+            $t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
+          }}
+        </span>
+      </div>
     </div>
-    <br />
     <div>
       <label class="box-label">
         <input
@@ -78,7 +82,7 @@
           v-model="privacyPolicyIsChecked"
           checked=""
         />
-        <span class="box"></span>
+        <span class="form-text box"></span>
         {{ $t("userAgreement.bySignUp") }}
         <br /><a @click.prevent="openPrivacyPolicy()">{{
           $t("userAgreement.termsOfPrivacy")

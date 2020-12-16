@@ -5,39 +5,41 @@
     <div v-if="loginPasswordError" class="error">
       <span>{{ $t("logIn.loginPasswordError") }}</span>
     </div>
-    <label>{{ $t("logIn.login") }} *</label><br />
-    <input
-      :disabled="authLoading"
-      type="text"
-      v-model.trim="$v.login.$model"
-      :placeholder="$t('logIn.loginInputPlaceholder')"
-      class="form-control block"
-      @input="hideErrors()"
-    />
-    <div v-if="$v.login.$error" class="error">
-      <span v-if="!$v.login.required" class="form-text danger">{{
-        $t("required")
-      }}</span>
+    <div class="form-group">
+      <label class="form-name">{{ $t("logIn.login") }} *</label><br />
+      <input
+        :disabled="authLoading"
+        type="text"
+        v-model.trim="$v.login.$model"
+        :placeholder="$t('logIn.loginInputPlaceholder')"
+        class="form-control block"
+        @input="hideErrors()"
+      />
+      <div v-if="$v.login.$error" class="error">
+        <span v-if="!$v.login.required" class="form-text danger">{{
+          $t("required")
+        }}</span>
+      </div>
     </div>
-    <br />
-    <label>{{ $t("logIn.password") }} *</label><br />
-    <input
-      :disabled="authLoading"
-      type="password"
-      v-model.trim="$v.password.$model"
-      :placeholder="$t('logIn.passwordInputPlaceholder')"
-      class="form-control block"
-      @input="hideErrors()"
-    />
-    <div v-if="$v.password.$error" class="error">
-      <span v-if="!$v.password.required" class="form-text danger">{{
-        $t("required")
-      }}</span>
-      <span v-else-if="!$v.password.minLength" class="form-text danger">{{
-        $t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
-      }}</span>
+    <div class="form-group">
+      <label class="form-name">{{ $t("logIn.password") }} *</label><br />
+      <input
+        :disabled="authLoading"
+        type="password"
+        v-model.trim="$v.password.$model"
+        :placeholder="$t('logIn.passwordInputPlaceholder')"
+        class="form-control block"
+        @input="hideErrors()"
+      />
+      <div v-if="$v.password.$error" class="error">
+        <span v-if="!$v.password.required" class="form-text danger">{{
+          $t("required")
+        }}</span>
+        <span v-else-if="!$v.password.minLength" class="form-text danger">{{
+          $t("requredSomeSymbols", { num: $v.password.$params.minLength.min })
+        }}</span>
+      </div>
     </div>
-    <br />
     <input
       class="btn btn-primary block"
       :disabled="authLoading"
