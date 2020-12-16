@@ -15,7 +15,7 @@ require("dotenv").config({ path: "../.env" });
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-const faker = require("faker/locale/en");
+const faker = require("faker");
 const bcrypt = require("bcrypt");
 const chalk = require("chalk");
 const cookieParser = require("cookie-parser");
