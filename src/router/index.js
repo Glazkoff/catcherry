@@ -85,9 +85,7 @@ const routes = [
           sidebar: SideBarDefault
         },
         meta: {
-          // TODO: проверка менеджер ли
-          // TODO: хлебные крошки
-          breadCrumb: "TeamsList"
+          breadCrumb: i18n.t("router.teamlist")
         }
       },
       {
@@ -98,46 +96,64 @@ const routes = [
           sidebar: SideBarManager
         },
         meta: {
-          // TODO: проверка менеджер ли
-          // TODO: хлебные крошки
-          breadCrumb: "manager"
+          breadCrumb: i18n.t("router.manager")
         },
         children: [
           {
             path: "teams",
             name: "TeamSettings",
-            component: TeamSettings
+            component: TeamSettings,
+            meta: {
+              breadCrumb: i18n.t("router.teamsettings")
+            }
           },
           {
             path: "new_task",
             name: "NewTask",
-            component: NewTask
+            component: NewTask,
+            meta: {
+              breadCrumb: i18n.t("router.newtask")
+            }
           },
           {
             path: "team_members",
             name: "TeamMembers",
-            component: TeamMembers
+            component: TeamMembers,
+            meta: {
+              breadCrumb: i18n.t("router.teammembers")
+            }
           },
           {
-            // TODO: rating
             path: "raiting",
             name: "RaitingList",
-            component: RaitingList
+            component: RaitingList,
+            meta: {
+              breadCrumb: i18n.t("router.rating")
+            }
           },
           {
             path: "team_edit",
             name: "EditTeam",
-            component: EditTeam
+            component: EditTeam,
+            meta: {
+              breadCrumb: i18n.t("router.editteam")
+            }
           },
           {
             path: "requests",
             name: "RequestsList",
-            component: RequestsList
+            component: RequestsList,
+            meta: {
+              breadCrumb: i18n.t("router.requestlist")
+            }
           },
           {
             path: "tasks",
             name: "TasksTeam",
-            component: TasksTeam
+            component: TasksTeam,
+            meta: {
+              breadCrumb: i18n.t("router.tasks")
+            }
           }
         ]
       },

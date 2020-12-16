@@ -154,7 +154,15 @@
     "account": "Аккаунт",
     "userInOrg": "Пользователь в организации",
     "listRequest": "Список заявок",
-    "tasks": "Задания"
+    "tasks": "Задания",
+    "teamlist": "Список команд",
+    "manager": "Менеджер",
+    "teamsettings": "Настройки команды",
+    "newtask": "Конструктор заданий",
+    "teammembers": "Участники",
+    "rating": "Рейтинг",
+    "editteam": "Редактирование",
+    "requestlist": "Заявки в команду"
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",

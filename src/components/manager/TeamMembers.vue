@@ -1,5 +1,6 @@
 <template>
   <div class="main_users_in_teams">
+    <breadcrumbs></breadcrumbs>
     <h2>Список участников</h2>
 
     <div v-for="userInTeam in usersInTeams" :key="userInTeam.id">
@@ -14,6 +15,7 @@
 
 <script>
 import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
+import breadcrumbs from "@/components/BreadCrumbs.vue";
 import Minialert from "@/components/MiniAlert.vue";
 
 import { USERS_IN_TEAMS_QUERY, DELETE_IN_TEAMS_QUERY } from "@/graphql/queries";
@@ -41,7 +43,8 @@ export default {
 
   components: {
     TeamMemberItem,
-    Minialert
+    Minialert,
+    breadcrumbs
   },
   methods: {
     // Для удаления участника команды

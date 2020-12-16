@@ -154,7 +154,15 @@
     "tasks": "Tasks",
     "user": "User",
     "userInOrg": "User in organization",
-    "users": "Users"
+    "users": "Users",
+    "teamlist": "Team list",
+    "manager": "Manager",
+    "teamsettings": "Settings",
+    "newtask": "Task constructor",
+    "teammembers": "Participants",
+    "rating": "Rating",
+    "editteam": "Edit team",
+    "requestlist": "Requests"
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",

@@ -1,5 +1,6 @@
 <template>
   <div class="flexCont">
+    <breadcrumbs></breadcrumbs>
     <h3>{{ $t("editTeam") }}</h3>
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == id">
@@ -11,6 +12,7 @@
 
 <script>
 import { TEAM_IN_ORG_QUERY, UPDATE_TEAMS_QUERY } from "@/graphql/queries";
+import breadcrumbs from "@/components/BreadCrumbs.vue";
 import EditForm from "@/components/manager/EditForm";
 export default {
   apollo: {
@@ -30,7 +32,8 @@ export default {
     };
   },
   components: {
-    EditForm
+    EditForm,
+    breadcrumbs
   },
   methods: {
     // Метод для редактирования команды; сохраняет внесенные пользователем изменения
