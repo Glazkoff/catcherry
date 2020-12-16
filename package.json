@@ -7,7 +7,9 @@
     "build": "vue-cli-service build",
     "test:unit": "vue-cli-service test:unit",
     "test:e2e": "vue-cli-service test:e2e",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "start": "node server/server.js",
+    "server": "node server/server.js"
   },
   "dependencies": {
     "@fingerprintjs/fingerprintjs": "^3.0.0",
