@@ -14,7 +14,7 @@ module.exports = (sequelize, DataTypes) => {
       });
       Notifications.hasMany(models.ReadNotification, {
         foreignKey: "notificationId",
-        as: "readNotification"
+        as: "ReadOrNot"
       });
       Notifications.hasOne(models.TypeNotification, {
         foreignKey: "typeId",
