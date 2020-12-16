@@ -33,7 +33,7 @@
                 >
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
-                    <div class="number" v-if="notifications.length > 0">.</div>
+                    <div class="number">.</div>
                     <NotificationIcon></NotificationIcon>
                     <div class="box">
                       <div class="display">
