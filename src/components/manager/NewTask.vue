@@ -1,16 +1,16 @@
 <template>
   <div class="task_constructor">
     <breadcrumbs></breadcrumbs>
-    <h2>Конструктор заданий</h2>
+    <h2>{{ $t("taskConstructor.taskConstructor") }}</h2>
     <form @submit.prevent="createTask()">
       <div class="form-group name_task">
         <label for="header" class="form-name">
-          Название задачи
+          {{ $t("taskConstructor.theNameOfTheTask") }}
         </label>
         <input
           type="text"
           class="form-control"
-          placeholder="Название задачи"
+          :placeholder="$t('taskConstructor.theNameOfTheTask')"
           v-model.trim="$v.newTask.header.$model"
           @blur="$v.newTask.header.$touch()"
         />
@@ -22,12 +22,12 @@
       </div>
       <div class="form-group">
         <label for="text" class="form-name">
-          Описание задачи
+          {{ $t("taskConstructor.taskDescription") }}
         </label>
         <textarea
           type="text"
           class="form-control"
-          placeholder="Описание задачи"
+          :placeholder="$t('taskConstructor.taskDescription')"
           v-model.trim="$v.newTask.text.$model"
           @blur="$v.newTask.text.$touch()"
         ></textarea>
@@ -39,10 +39,12 @@
       </div>
       <div class="form-group">
         <label for="text" class="form-name">
-          Ответственный
+          {{ $t("taskConstructor.responsible") }}
         </label>
         <select class="form-control" v-model="$v.newTask.userId.$model">
-          <option :value="null" selected>Назначается самостоятельно</option>
+          <option :value="null" selected>{{
+            $t("taskConstructor.isAssignedIndependently")
+          }}</option>
           <option
             v-for="users in usersInTeams"
             :key="users.id"
@@ -54,7 +56,7 @@
       </div>
       <div class="form-group points_task">
         <label for="header" class="form-name">
-          Награда
+          {{ $t("taskConstructor.reward") }}
         </label>
         <input
           type="number"
@@ -76,12 +78,12 @@
         class="btn btn-alternate"
         :disabled="$v.newTask.$invalid || loading"
       >
-        Создать задачу
+        {{ $t("taskConstructor.createATask") }}
       </button>
     </form>
     <minialert v-if="isShowAlert">
       <p slot="title">
-        Вы успешно создали новую задачу
+        {{ $t("taskConstructor.youHaveSuccessfullyCreatedNewTask") }}
       </p>
     </minialert>
     <minialert v-if="isShowAlertError">
@@ -239,18 +241,18 @@ textarea {
 .form-control {
   margin-top: 8px;
   margin-bottom: 16px;
-width: 431px;
-height: 55px;
-background: $violet !important;
-border: 1px solid $violet_2 !important;
-box-sizing: border-box;
-border-radius: 10px;
-font-family: Lato;
-font-style: normal;
-font-weight: normal;
-font-size: 16px;
-line-height: 20px;
-color: $gray_3;
+  width: 431px;
+  height: 55px;
+  background: $violet !important;
+  border: 1px solid $violet_2 !important;
+  box-sizing: border-box;
+  border-radius: 10px;
+  font-family: Lato;
+  font-style: normal;
+  font-weight: normal;
+  font-size: 16px;
+  line-height: 20px;
+  color: $gray_3;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
