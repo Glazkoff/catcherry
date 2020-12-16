@@ -1,27 +1,15 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Notifications", {
+    await queryInterface.createTable("TypeNotifications", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      body: {
-        type: Sequelize.JSONB
-      },
-      typeId: {
-        type: Sequelize.INTEGER
-      },
-      authorId: {
-        type: Sequelize.INTEGER
-      },
-      userId: {
-        type: Sequelize.JSONB
-      },
-      endTime: {
-        type: Sequelize.DATE
+      typeName: {
+        type: Sequelize.STRING
       },
       createdAt: {
         allowNull: false,
@@ -34,6 +22,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Notifications");
+    await queryInterface.dropTable("TypeNotifications");
   }
 };
