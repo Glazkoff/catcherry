@@ -81,6 +81,36 @@
     "settings": "Settings",
     "quit": "Quit"
   },
+  "task": {
+    "backlogTask": "Task backlog",
+    "noTasksInTheBacklog": "No tasks in the backlog",
+    "completedTasksForReview": "Completed tasks for review",
+    "thereAreNoReadyMadeTasksToCheck": "There are no ready-made tasks to check",
+    "completedTasks": "Completed tasks",
+    "noCompletedTasks": "No completed tasks",
+    "responsible": "Responsible",
+    "personNotAssigned": "person not assigned",
+    "reward": "Reward",
+    "toReadTheScores": "To read the scores",
+    "toSendBackForRevision": "To send back for revision",
+    "deleteTask": "Delete task",
+    "youHaveSuccessfullyCreditedPointsToTheUser": "You have successfully credited points to the user",
+    "youHaveSuccessfullyDeletedTheTask": "You have successfully deleted the task",
+    "youHaveSuccessfullyReturnedTheTaskForRevision": "You have successfully returned the task for revision"
+  },
+  "taskConstructor": {
+    "taskConstructor": "Task constructor",
+    "theNameOfTheTask": "The name of the task",
+    "taskDescription": "Task description",
+    "responsible": "Responsible",
+    "reward": "Reward",
+    "isAssignedIndependently": "Is assigned independently",
+    "createATask": "Create a task",
+    "youHaveSuccessfullyCreatedNewTask": "You have successfully created a new task"
+  },
+  "ratingOfTeamMembers": {
+    "ratingOfTeamMembers": "Rating of team members"
+  },
   "logIn": {
     "title": "Entering Catcherry",
     "loginPasswordError": "Login or password entered error!",

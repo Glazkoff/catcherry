@@ -5,6 +5,9 @@
     <div v-if="$apollo.queries.usersInTeams.loading" class="wrapOfLoader">
       <loader></loader>
     </div>
+    <div v-if="usersInTeams !== null">
+      <p>Нет пользователей в команде</p>
+    </div>
     <div>
       <div v-for="oneUser in usersInTeams" :key="oneUser.id">
         <div

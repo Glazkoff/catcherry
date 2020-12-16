@@ -81,6 +81,36 @@
     "settings": "Настройки",
     "quit": "Выход"
   },
+  "task": {
+    "backlogTask": "Бэклог задания",
+    "noTasksInTheBacklog": "Нет заданий в бэклоге",
+    "completedTasksForReview": "Готовые задания на проверку",
+    "thereAreNoReadyMadeTasksToCheck": "Нет готовых заданий на проверку",
+    "completedTasks": "Завершенные задачи",
+    "noCompletedTasks": "Нет завершенных задач",
+    "responsible": "Ответственный",
+    "personNotAssigned": "не назначен",
+    "reward": "Награда",
+    "toReadTheScores": "Зачесть баллы",
+    "toSendBackForRevision": "Отправить на доработку",
+    "deleteTask": "Удалить задачу",
+    "youHaveSuccessfullyCreditedPointsToTheUser": "Вы успешно зачислили баллы пользователю",
+    "youHaveSuccessfullyDeletedTheTask": "Вы успешно удалили задачу",
+    "youHaveSuccessfullyReturnedTheTaskForRevision": "Вы успешно вернули задачу на доработку"
+  },
+  "taskConstructor": {
+    "taskConstructor": "Конструктор заданий",
+    "theNameOfTheTask": "Название задачи",
+    "taskDescription": "Описание задачи",
+    "responsible": "Ответственный",
+    "reward": "Награда",
+    "isAssignedIndependently": "Назначается самостоятельно",
+    "createATask": "Создать задачу",
+    "youHaveSuccessfullyCreatedNewTask": "Вы успешно создали новую задачу"
+  },
+  "ratingOfTeamMembers": {
+    "ratingOfTeamMembers": "Рейтинг участников команды"
+  },
   "logIn": {
     "title": "Вход в Catcherry",
     "loginPasswordError": "Ошибка ввода логина или пароля!",
