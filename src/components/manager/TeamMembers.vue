@@ -1,6 +1,6 @@
 <template>
   <div class="main_users_in_teams">
-    <h3>Список участников</h3>
+    <h2>Список участников</h2>
 
     <div v-for="userInTeam in usersInTeams" :key="userInTeam.id">
       <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />

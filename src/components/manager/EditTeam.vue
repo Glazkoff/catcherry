@@ -1,7 +1,6 @@
 <template>
-  <div>
-    <h3>Редактирование</h3>
-    <hr />
+  <div class="main_editform">
+    <h2>Редактирование</h2>
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == id">
         <EditForm :t="t" @update="toSaveEditTeam" />
@@ -20,7 +19,7 @@ export default {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: 1
+          organizationId: +this.$route.params.id
         };
       }
     }
@@ -74,4 +73,8 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+.main_editform {
+  padding: 2%;
+}
+</style>

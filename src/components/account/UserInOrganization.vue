@@ -2,7 +2,7 @@
   <div class="search_organization account-view">
     <!-- попап для просмотра информации об организации -->
     <popup v-if="isShowInfoModal">
-      <h3 slot="header">Организация "{{ nameOfOrganization }}"</h3>
+      <h2 slot="header">Организация "{{ nameOfOrganization }}"</h2>
       <div slot="body">
         {{ oneOrganization.name }}
         <span

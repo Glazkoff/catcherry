@@ -1,5 +1,5 @@
 <template>
-  <div class="aaa">
+  <div class="main_tasks">
     <div class="wrapOfLoader" v-if="$apollo.loading"><loader></loader></div>
     <minialert v-if="queryError">
       <p slot="title">{{ queryError }}</p>
@@ -324,8 +324,8 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
-.aaa {
-  padding: 3%;
+.main_tasks {
+  padding: 2%;
 }
 .task {
   padding: 1%;

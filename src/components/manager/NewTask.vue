@@ -1,6 +1,6 @@
 <template>
-  <div>
-    <h1>Конструктор заданий</h1>
+  <div class="main_newtask">
+    <h2>Конструктор заданий</h2>
     <form @submit.prevent="createTask()">
       <div class="form-group">
         <label for="header" class="form-name">
@@ -201,4 +201,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
+.main_newtask {
+  padding: 2%;
+}
 </style>
