@@ -131,6 +131,7 @@ let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
     db.Administrators.destroy({ where: {} });
+    db.TypeNotification.destroy({ where: {} });
     db.Comments.destroy({ where: {} });
     db.LikesOfComments.destroy({ where: {} });
     db.LikesOfPosts.destroy({ where: {} });
@@ -154,6 +155,10 @@ async function addAllTables(destroyTable) {
     //Тип организации
     let type = await db.OrganizationsTypes.create({
       name: faker.name.findName()
+    });
+    //Тип оповещения
+    let typeOfNotification = await db.TypeNotification.create({
+      typeName: faker.name.findName()
     });
     //Пользователи
     const salt = bcrypt.genSaltSync(10);
@@ -194,9 +199,14 @@ async function addAllTables(destroyTable) {
         header: faker.random.word(),
         text: faker.lorem.paragraph()
       },
+      typeId: typeOfNotification.dataValues.id,
       authorId: user.dataValues.id,
-      teamId: team.dataValues.id,
-      checkNotification: faker.random.boolean()
+      userId: [
+        user.dataValues.id,
+        user.dataValues.id + 1,
+        user.dataValues.id + 2
+      ],
+      endTime: faker.date.future()
     });
     let readnotification = await db.ReadNotification.create({
       notificationId: notification.dataValues.id,
