@@ -782,6 +782,7 @@ export const NOTIFICATIONS_FOR_USER_QUERY = gql`
   }
 `;
 
+// Создание оповещений
 export const CREATE_NOTIFICATION = gql`
   mutation(
     $body: NotificationBody!
@@ -802,6 +803,7 @@ export const CREATE_NOTIFICATION = gql`
   }
 `;
 
+// Поменять статус оповещения на "Прочитано"
 export const UPDATE_NOTIFICATION = gql`
   mutation($notificationId: ID!, $userId: ID!, $checkNotification: Boolean) {
     updateNotification(
@@ -809,6 +811,13 @@ export const UPDATE_NOTIFICATION = gql`
       userId: $userId
       checkNotification: $checkNotification
     )
+  }
+`;
+
+//Удалить оповещение
+export const DELETE_NOTIFICATION = gql`
+  mutation($id: ID!) {
+    deleteNotification(id: $id)
   }
 `;
 

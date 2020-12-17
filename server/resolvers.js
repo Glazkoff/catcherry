@@ -739,12 +739,20 @@ module.exports = {
       ),
 
     //Удалить оповещение
-    deleteNotification: (parent, args, { db }) =>
-      db.Notifications.destroy({
+    deleteNotification: (parent, args, { db }) => {
+      let result = db.Notifications.destroy({
         where: {
           id: args.id
         }
-      }),
+      });
+      db.ReadNotification.destroy({
+        where: {
+          notificationId: args.id
+        }
+      });
+      return result;
+    },
+
     /*
       [Ниже] Мутации работы с комментариями (Comments)     
     */
