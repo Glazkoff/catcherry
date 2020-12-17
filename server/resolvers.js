@@ -214,14 +214,17 @@ module.exports = {
         where: { organizationId: args.organizationId }
       });
     },
+
+    // Получение всех оповещений
     notifications: async (parent, args, { db }) => {
       let result = await db.Notifications.findAll({
         order: [["id", "DESC"]],
         include: [{ model: db.ReadNotification, as: "ReadOrNot" }]
       });
-      console.log("!!!!!!!!!!!!!!!!!!!!!!!" + JSON.stringify(result));
       return result;
     },
+
+    // Получение непрочитанных оповещений для конкртеного пользователя
     notificationsForUser: async (parent, args, { db }) => {
       let result = await db.Notifications.findAll({
         order: [["id", "DESC"]],
@@ -240,9 +243,6 @@ module.exports = {
       });
       return result;
     },
-
-    // notification: (parent, args, { db }) =>
-    //   db.Notifications.findOne({ where: { id: args.id } }),
 
     // Получаем все посты
     posts: async (parent, args, { db }) => {
@@ -695,48 +695,49 @@ module.exports = {
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
+
     //Создать оповещение
-    createNotification: (
+    createNotification: async (
       parent,
-      { body, authorId, teamId, forAllUsers },
+      { body, typeId, authorId, userId, endTime },
       { db }
-    ) =>
-      db.Notifications.create({
+    ) => {
+      let result;
+      result = await db.Notifications.create({
         body: body,
+        typeId: typeId,
         authorId: authorId,
-        teamId: teamId,
-        forAllUsers: forAllUsers,
-        checkNotification: false
-      }),
-    //Изменить оповещение
+        userId: userId,
+        endTime: endTime
+      });
+      userId.forEach(element => {
+        db.ReadNotification.create({
+          notificationId: result.id,
+          userId: element,
+          readOrNot: false
+        });
+      });
+      return result;
+    },
+
+    // Поменять статус оповещения на "Прочитано"
     updateNotification: (
       parent,
-      {
-        body,
-        teamId,
-        forAllUsers,
-        forAllOrganization,
-        forAllTeam,
-        checkNotification,
-        id
-      },
+      { notificationId, userId, checkNotification },
       { db }
     ) =>
-      db.Notifications.update(
+      db.ReadNotification.update(
         {
-          body: body,
-          teamId: teamId,
-          forAllUsers: forAllUsers,
-          forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam,
-          checkNotification: checkNotification
+          readOrNot: checkNotification
         },
         {
           where: {
-            id: id
+            notificationId: notificationId,
+            userId: userId
           }
         }
       ),
+
     //Удалить оповещение
     deleteNotification: (parent, args, { db }) =>
       db.Notifications.destroy({

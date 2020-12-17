@@ -8,11 +8,11 @@
     </div>
     <div class="main">
       <p>{{ notification.body.text }}</p>
-      <div v-if="notification.body.button" class="blockForButton">
+      <!-- <div v-if="notification.body.button" class="blockForButton">
         <a v-bind:href="notification.body.buttonLink" target="_blank">{{
           notification.body.button
         }}</a>
-      </div>
+      </div> -->
     </div>
     <div class="footer">
       <small>{{ $d(notification.createdAt, "number") }}</small>
@@ -21,10 +21,6 @@
 </template>
 
 <script>
-import {
-  NOTIFICATIONS_FOR_USER_QUERY, 
-  UPDATE_NOTIFICATION_QUERY
-} from "@/graphql/queries";
 import Cross from "@/assets/cross.svg?inline";
 export default {
   name: "NotificationCard",
@@ -37,34 +33,7 @@ export default {
   },
   methods: {
     onCheckNotification(id) {
-      // this.$emit("delete", { id: id });
-      this.$apollo
-        .mutate({
-          mutation: UPDATE_NOTIFICATION_QUERY,
-          variables: {
-            id: id,
-            body: {
-              header: this.notification.body.header,
-              text: this.notification.body.text
-            },
-            teamId: this.notification.teamId,
-            checkNotification: true
-          },
-          update: cache => {
-            let data = cache.readQuery({ query: NOTIFICATIONS_FOR_USER_QUERY  });
-            console.log(data);
-            data.notifications.find(
-              el => el.id === id
-            ).checkNotification = true;
-            cache.writeQuery({ query: NOTIFICATIONS_FOR_USER_QUERY , data });
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
+      this.$emit("check", { id: id });
     }
   }
 };

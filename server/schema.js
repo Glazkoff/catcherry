@@ -86,6 +86,8 @@ type Role {
 input NotificationBody {
   header: String!
   text: String!
+  button: String
+  buttonLink: String
 }
 
 type BodyNotification {
@@ -263,9 +265,9 @@ type Mutation {
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String, birthday: String): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
-  createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!, forAllUsers: Int, checkNotification: Boolean ): Notification!
+  createNotification(body: NotificationBody!, typeId:Int!, authorId: Int!, userId: [Int], endTime: String! ): Notification!
   deleteNotification(id: ID!): Int!
-  updateNotification(body: NotificationBody!, id: ID!,checkNotification: Boolean, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
+  updateNotification(notificationId: ID!, userId: ID! checkNotification: Boolean): [Int]!
 
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!

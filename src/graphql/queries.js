@@ -722,43 +722,6 @@ export const BACKLOG_TASKS_QUERY = gql`
   }
 `;
 
-export const NOTIFICATIONS_USER_QUERY = gql`
-  query {
-    notifications {
-      id
-      body {
-        header
-        text
-        buttonLink
-      }
-      authorId
-      teamId
-      forAllUsers
-      createdAt
-      forAllOrganization
-      forAllTeam
-      checkNotification
-    }
-  }
-`;
-
-export const ADD_NOTIFICATION_QUERY = gql`
-  mutation(
-    $body: NotificationBody!
-    $authorId: Int!
-    $teamId: Int!
-    $forAllUsers: Int
-  ) {
-    createNotification(
-      body: $body
-      authorId: $authorId
-      teamId: $teamId
-      forAllUsers: $forAllUsers
-    ) {
-      id
-    }
-  }
-`;
 export const STATISTICS_NEW_QUERY = gql`
   query statisticsNew {
     statisticsNewUsers
@@ -772,7 +735,10 @@ export const STATISTICS_DELETE_QUERY = gql`
     statisticsDeleteOrgs
   }
 `;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ NOTIFICATIONS
+
+// Получение всех оповещений
 export const NOTIFICATIONS_QUERY = gql`
   query {
     notifications {
@@ -789,9 +755,12 @@ export const NOTIFICATIONS_QUERY = gql`
         readOrNot
       }
       endTime
+      createdAt
     }
   }
 `;
+
+// Получение всех непрочитанных оповещений для одного пользователя
 export const NOTIFICATIONS_FOR_USER_QUERY = gql`
   query($userId: ID!) {
     notificationsForUser(userId: $userId) {
@@ -808,32 +777,42 @@ export const NOTIFICATIONS_FOR_USER_QUERY = gql`
         readOrNot
       }
       endTime
+      createdAt
     }
   }
 `;
 
-export const UPDATE_NOTIFICATION_QUERY = gql`
+export const CREATE_NOTIFICATION = gql`
   mutation(
     $body: NotificationBody!
-    $teamId: Int!
-    $forAllUsers: Boolean
-    $forAllOrganization: Boolean
-    $forAllTeam: Boolean
-    $checkNotification: Boolean
-    $id: ID!
+    $typeId: Int!
+    $authorId: Int!
+    $userId: [Int]
+    $endTime: String!
   ) {
-    updateNotification(
+    createNotification(
       body: $body
-      teamId: $teamId
-      forAllUsers: $forAllUsers
-      forAllOrganization: $forAllOrganization
-      forAllTeam: $forAllTeam
+      typeId: $typeId
+      authorId: $authorId
+      userId: $userId
+      endTime: $endTime
+    ) {
+      id
+    }
+  }
+`;
+
+export const UPDATE_NOTIFICATION = gql`
+  mutation($notificationId: ID!, $userId: ID!, $checkNotification: Boolean) {
+    updateNotification(
+      notificationId: $notificationId
+      userId: $userId
       checkNotification: $checkNotification
-      id: $id
     )
   }
 `;
 
+// НЕКЛАССИФИЦИРОВАННЫЕ ЗАПРОСЫ
 export const LOG_OUT = gql`
   mutation($fingerprint: String!) {
     logOut(fingerprint: $fingerprint)
