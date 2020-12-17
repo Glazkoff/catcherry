@@ -17,13 +17,11 @@
               <a class="userFoto"></a>
               <a class="nav-name"
                 ><p>{{ this.$store.getters.decodedToken.name }}</p>
-                <small>
+                <!-- <small>
                   -
-                </small>
-                <!-- <small v-if="oneUserInTeams.role.name == null">-</small>
-                <small v-if="oneUserInTeams.role.name != null">{{
-                  oneUserInTeams.role.name
-                }}</small> -->
+                </small> -->
+                <small v-if="roleUser == null">-</small>
+                <small v-if="roleUser != null">{{ roleUser }}</small>
               </a>
             </li>
             <li class="right icon-notificationTopBar">
@@ -52,8 +50,7 @@
                           >
                             <div
                               v-if="
-                                notification.forAllUsers ==
-                                  oneUserInTeams.userId ||
+                                notification.forAllUsers == UserID ||
                                   notification.forAllUsers == null
                               "
                             >
@@ -165,6 +162,20 @@ export default {
         return "-";
       } else {
         return this.getPointsUser.pointQuantity;
+      }
+    },
+    roleUser() {
+      if (this.role == undefined) {
+        return "-";
+      } else {
+        return this.oneUserInTeams.role.name;
+      }
+    },
+    UserID() {
+      if (this.userId == undefined) {
+        return "-";
+      } else {
+        return this.$store.getters.decodedToken.id;
       }
     }
   }
