@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.$apollo.queries.notifications.loading">
+  <div v-if="!this.$apollo.queries.notificationsForUser.loading">
     <bread-crumbs class="bread-crumbs"></bread-crumbs>
     <div class="container">
       <div
@@ -13,7 +13,7 @@
             {{ notification.body.text }}
           </p>
           <div class="spaceForAuthor"></div>
-          <div class="icon" @click="onCheckNotification(notification)">
+          <div class="icon" @click="onCheckNotification(notification.id)">
             <Cross></Cross>
           </div>
           <small>Computer</small>
@@ -28,7 +28,7 @@
 <script>
 import {
   NOTIFICATIONS_FOR_USER_QUERY,
-  // UPDATE_NOTIFICATION_QUERY
+  UPDATE_NOTIFICATION
 } from "@/graphql/queries";
 import Loader from "@/components/Loader.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
@@ -42,41 +42,53 @@ export default {
   },
   apollo: {
     notificationsForUser: {
-      query: NOTIFICATIONS_FOR_USER_QUERY
+      query: NOTIFICATIONS_FOR_USER_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
     }
   },
   data() {
     return {};
   },
   methods: {
-    // onCheckNotification(notification) {
-    //   this.$apollo
-    //     .mutate({
-    //       mutation: UPDATE_NOTIFICATION_QUERY,
-    //       variables: {
-    //         id: notification.id,
-    //         body: {
-    //           header: notification.body.header,
-    //           text: notification.body.text
-    //         },
-    //         teamId: notification.teamId,
-    //         checkNotification: true
-    //       },
-    //       update: cache => {
-    //         let data = cache.readQuery({ query: NOTIFICATIONS_FOR_USER_QUERY });
-    //         data.notifications.find(
-    //           el => el.id === notification.id
-    //         ).checkNotification = true;
-    //         cache.writeQuery({ query: NOTIFICATIONS_FOR_USER_QUERY, data });
-    //       }
-    //     })
-    //     .then(data => {
-    //       console.log(data);
-    //     })
-    //     .catch(error => {
-    //       console.error(error);
-    //     });
-    // }
+    onCheckNotification(id) {
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_NOTIFICATION,
+          variables: {
+            notificationId: id,
+            userId: this.$store.getters.decodedToken.id,
+            checkNotification: true
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: NOTIFICATIONS_FOR_USER_QUERY,
+              variables: {
+                userId: this.$store.getters.decodedToken.id
+              }
+            });
+            console.log(data);
+            let index = data.notificationsForUser.findIndex(el => el.id === id);
+            data.notificationsForUser.splice(index, 1);
+            cache.writeQuery({
+              query: NOTIFICATIONS_FOR_USER_QUERY,
+              variables: {
+                userId: this.$store.getters.decodedToken.id
+              },
+              data
+            });
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
+    }
   }
 };
 </script>
@@ -91,6 +103,7 @@ export default {
   padding-top: 0.625rem;
 }
 .bread-crumbs {
+  margin-left: 3rem;
   margin-bottom: 2.5rem;
 }
 .cardOfNotification {
