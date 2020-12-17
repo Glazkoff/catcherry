@@ -208,11 +208,14 @@ async function addAllTables(destroyTable) {
       ],
       endTime: faker.date.future()
     });
-    let readnotification = await db.ReadNotification.create({
-      notificationId: notification.dataValues.id,
-      userId: user.dataValues.id,
-      readOrNot: faker.random.boolean()
-    });
+    for (let index = 0; index < quantity; index++) {
+      let readnotification = await db.ReadNotification.create({
+        notificationId: notification.dataValues.id,
+        userId: user.dataValues.id,
+        readOrNot: faker.random.boolean()
+      });
+    }
+
     //Задачи
     let tasks = await db.Tasks.create({
       teamId: team.dataValues.id,

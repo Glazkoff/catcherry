@@ -782,11 +782,32 @@ export const NOTIFICATIONS_QUERY = gql`
         text
       }
       authorId
-      teamId
-      forAllUsers
-      forAllOrganization
-      forAllTeam
-      checkNotification
+      userId
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
+    }
+  }
+`;
+export const NOTIFICATIONS_FOR_USER_QUERY = gql`
+  query($userId: ID!) {
+    notificationsForUser(userId: $userId) {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      userId
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
     }
   }
 `;

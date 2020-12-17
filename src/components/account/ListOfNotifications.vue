@@ -3,8 +3,7 @@
     <div class="spaceForNotifications"></div>
     <div class="list">
       <notification
-        @delete="onDelete"
-        v-for="notification in notifications"
+        v-for="notification in notificationsForUser"
         :key="notification.id"
         :notification="notification"
       ></notification>
@@ -14,7 +13,7 @@
 
 <script>
 import Notification from "@/components/NotificationCard.vue";
-import { NOTIFICATIONS_USER_QUERY } from "@/graphql/queries";
+import { NOTIFICATIONS_FOR_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "ListOfNotifications",
   components: {
@@ -22,45 +21,45 @@ export default {
   },
   data() {
     return {
-      notifications: [
-        {
-          id: 22,
-          body: {
-            header: "Закрытие спринта",
-            text:
-              "В зум-конференции планируется к проведению закрытие спринта, в состав данного мероприятия войдут следующие части: очищение обзора, просмотр задач в работе ...",
-            button: "Zoom-link",
-            buttonLink:
-              "https://us04web.zoom.us/j/8118194172?pwd=UmpJTnAzbFZQUjZLYUJZU2VwN0pPUT09"
-          }
-        },
-        {
-          id: 23,
-          body: {
-            header: "Внимание!",
-            text:
-              "Важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация...",
-            button: null
-          }
-        }
+      notificationsForUser: [
+        // {
+        //   id: 22,
+        //   body: {
+        //     header: "Закрытие спринта",
+        //     text:
+        //       "В зум-конференции планируется к проведению закрытие спринта, в состав данного мероприятия войдут следующие части: очищение обзора, просмотр задач в работе ...",
+        //     button: "Zoom-link",
+        //     buttonLink:
+        //       "https://us04web.zoom.us/j/8118194172?pwd=UmpJTnAzbFZQUjZLYUJZU2VwN0pPUT09"
+        //   }
+        // },
+        // {
+        //   id: 23,
+        //   body: {
+        //     header: "Внимание!",
+        //     text:
+        //       "Важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация...",
+        //     button: null
+        //   }
+        // }
       ]
     };
   },
   apollo: {
-    notifications: {
-      query: NOTIFICATIONS_USER_QUERY,
+    notificationsForUser: {
+      query: NOTIFICATIONS_FOR_USER_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          userId: this.$store.getters.decodedToken.id
         };
       }
     }
   },
   methods: {
-    onDelete(object) {
-      let index = this.notifications.findIndex(el => el.id === object.id);
-      this.notifications.splice(index, 1);
-    }
+    // onDelete(object) {
+    //   let index = this.notifications.findIndex(el => el.id === object.id);
+    //   this.notifications.splice(index, 1);
+    // }
   }
 };
 </script>

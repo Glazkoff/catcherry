@@ -219,12 +219,30 @@ module.exports = {
         order: [["id", "DESC"]],
         include: [{ model: db.ReadNotification, as: "ReadOrNot" }]
       });
-      console.log("OH NO" + JSON.stringify(result[0]));
+      console.log("!!!!!!!!!!!!!!!!!!!!!!!" + JSON.stringify(result));
+      return result;
+    },
+    notificationsForUser: async (parent, args, { db }) => {
+      let result = await db.Notifications.findAll({
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.ReadNotification,
+            as: "ReadOrNot",
+            where: { userId: args.userId, readOrNot: false }
+          }
+        ],
+        where: {
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        }
+      });
       return result;
     },
 
-    notification: (parent, args, { db }) =>
-      db.Notifications.findOne({ where: { id: args.id } }),
+    // notification: (parent, args, { db }) =>
+    //   db.Notifications.findOne({ where: { id: args.id } }),
 
     // Получаем все посты
     posts: async (parent, args, { db }) => {

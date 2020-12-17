@@ -1,13 +1,5 @@
 <template>
-  <div
-    v-if="
-      (notification.forAllUsers == $store.getters.decodedToken.id &&
-        notification.checkNotification == false) ||
-        (notification.forAllUsers == null &&
-          notification.checkNotification == false)
-    "
-    class="notification"
-  >
+  <div class="notification">
     <div class="header">
       <h2>{{ notification.body.header }}</h2>
       <div class="icon" @click="onCheckNotification(notification.id)">
@@ -30,8 +22,8 @@
 
 <script>
 import {
-  UPDATE_NOTIFICATION_QUERY,
-  NOTIFICATIONS_QUERY
+  NOTIFICATIONS_FOR_USER_QUERY, 
+  UPDATE_NOTIFICATION_QUERY
 } from "@/graphql/queries";
 import Cross from "@/assets/cross.svg?inline";
 export default {
@@ -59,12 +51,12 @@ export default {
             checkNotification: true
           },
           update: cache => {
-            let data = cache.readQuery({ query: NOTIFICATIONS_QUERY });
+            let data = cache.readQuery({ query: NOTIFICATIONS_FOR_USER_QUERY  });
             console.log(data);
             data.notifications.find(
               el => el.id === id
             ).checkNotification = true;
-            cache.writeQuery({ query: NOTIFICATIONS_QUERY, data });
+            cache.writeQuery({ query: NOTIFICATIONS_FOR_USER_QUERY , data });
           }
         })
         .then(data => {
