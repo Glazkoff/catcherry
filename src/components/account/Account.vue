@@ -1,12 +1,15 @@
 <template>
   <div>
-    <div class="double" v-if="!isEdit">
-      <div class="flexCont">
-        <h2>{{ $t("profileUser") }}</h2>
-        <h3 v-if="$apollo.loading">
-          {{ $t("loading") }}
-        </h3>
-        <div v-if="!$apollo.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+    </div>
+    <div class="container" v-if="!isEdit">
+      <div class="row">
+        <div class="col-4" v-if="!$apollo.loading">
           <h6 v-if="users.length == 0">
             К сожалению, такого пользователя нет!
           </h6>
@@ -49,160 +52,230 @@
             <Points />
           </div>
         </div>
+        <div class="col-5 card h-100">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
+            provident cupiditate, a culpa adipisci laudantium repudiandae
+            excepturi consequuntur architecto officiis ex, voluptatem est
+            obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
+          </p>
+        </div>
+        <div class="col-3 card h-100">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
+            provident cupiditate, a culpa adipisci laudantium repudiandae
+            excepturi consequuntur architecto officiis ex, voluptatem est
+            obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
+          </p>
+        </div>
       </div>
-      <div class="card">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
-          provident cupiditate, a culpa adipisci laudantium repudiandae
-          excepturi consequuntur architecto officiis ex, voluptatem est
-          obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
-        </p>
-      </div>
-    </div>
 
-    <!-- Редактирование пользователя -->
-    <div v-else>
-      <h2 class="padLeftTop">{{ $t("profileUser") }}</h2>
-      <div class="flexBlock">
-        <div class="flexCont smallBlock">
-          <div>
-            <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
+      <!-- <div class="double" v-if="!isEdit">
+        <div class="flexCont">
+          <h3 v-if="$apollo.loading">
+            {{ $t("loading") }}
+          </h3>
+          <div v-if="!$apollo.loading">
+            <h6 v-if="users.length == 0">
+              К сожалению, такого пользователя нет!
+            </h6>
+            <div class="card">
+              <div class="pad">
+                <div class="double">
+                  <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
+
+                  <div>
+                    <p>{{ user.surname }}</p>
+                    <p>{{ user.name }}</p>
+
+                    <p>{{ user.patricity }}</p>
+                  </div>
+                </div>
+                <div class="double">
+                  <div>
+                    <p>{{ $t("gender") }}: {{ user.gender }}</p>
+                    <p>
+                      {{ $t("birthday") }}:
+                      {{
+                        new Date(user.birthday).toLocaleString("ru", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric"
+                        })
+                      }}
+                    </p>
+                    <p>{{ $t("login") }}: {{ user.login }}</p>
+                  </div>
+                  <div></div>
+                </div>
+              </div>
+              <div class="btnEdit">
+                <Edit @click="showFullInformation(user.id)" />
+              </div>
+            </div>
+
+            <div class="card pad">
+              <Points />
+            </div>
           </div>
-          <button @click="showModalDelete" class="btn danger btnDelete">
+        </div>
+        <div class="card">
+          <p>
+            Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
+            provident cupiditate, a culpa adipisci laudantium repudiandae
+            excepturi consequuntur architecto officiis ex, voluptatem est
+            obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
+          </p>
+        </div>
+      </div> -->
+
+      <!-- Редактирование пользователя -->
+      <div v-if="isEdit">
+        <h2 class="padLeftTop">{{ $t("profileUser") }}</h2>
+        <div class="flexBlock">
+          <div class="flexCont smallBlock">
+            <div>
+              <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
+            </div>
+            <button @click="showModalDelete" class="btn danger btnDelete">
+              {{ $t("delete") }}
+            </button>
+          </div>
+          <div class="flexCont bigBlock">
+            <form @submit.prevent="saveUserOnPopup">
+              <div class="form-group">
+                <label for="surname" class="form-name ">{{
+                  $t("surname")
+                }}</label>
+                <input
+                  class="form-control"
+                  name="surname"
+                  v-model.trim="$v.user.surname.$model"
+                  @blur="$v.user.surname.$touch()"
+                  :placeholder="$t('surname')"
+                />
+                <div v-if="$v.user.surname.$error">
+                  <span v-if="!$v.user.surname.required" class="danger">{{
+                    $t("required")
+                  }}</span>
+                  <span v-else-if="!$v.user.surname.alpha" class="danger">{{
+                    $t("requiredLetters")
+                  }}</span>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="name" class="form-name ">{{ $t("name") }}</label>
+                <input
+                  class="form-control"
+                  name="name"
+                  v-model.trim="$v.user.name.$model"
+                  :placeholder="$t('name')"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="patricity" class="form-name ">{{
+                  $t("patricity")
+                }}</label>
+                <input
+                  class="form-control"
+                  name="patricity"
+                  v-model.trim="$v.user.patricity.$model"
+                  :placeholder="$t('patricity')"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="gender" class="form-name ">{{
+                  $t("gender")
+                }}</label>
+                <div class="form_radio">
+                  <input
+                    type="radio"
+                    name="male"
+                    :value="$t('male')"
+                    v-model.trim="$v.user.gender.$model"
+                  />
+                  <label for="male">{{ $t("male") }}</label>
+                </div>
+
+                <div class="form_radio">
+                  <input
+                    type="radio"
+                    name="female"
+                    :value="$t('female')"
+                    v-model.trim="$v.user.gender.$model"
+                  />
+                  <label for="female">{{ $t("female") }}</label>
+                </div>
+                <div class="form_radio">
+                  <input
+                    type="radio"
+                    name="nothing"
+                    :value="$t('notIndicated')"
+                    v-model.trim="$v.user.gender.$model"
+                  />
+                  <label for="nothing">{{ $t("notIndicated") }}</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="login" class="form-name ">{{ $t("login") }}</label>
+                <input
+                  class="form-control"
+                  name="login"
+                  v-model.trim="$v.user.login.$model"
+                  :placeholder="$t('login')"
+                  required
+                />
+              </div>
+              <div class="form-group">
+                <label for="password" class="form-name ">{{
+                  $t("password")
+                }}</label>
+                <input
+                  class="form-control"
+                  name="password"
+                  v-model.trim="$v.user.password.$model"
+                  :placeholder="$t('password')"
+                  required
+                />
+              </div>
+              <div class="double">
+                <button type="submit" class="btn btn-alternate">
+                  {{ $t("save") }}
+                </button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+
+      <popup v-if="isShowModalDelete">
+        <h3 slot="header">
+          {{ $t("deleteQuestion") }}
+          {{ fullName }}?
+        </h3>
+        <div slot="footer" class="double">
+          <button @click="deleteUser" class="btn  btn-alternate danger">
             {{ $t("delete") }}
           </button>
+          <button @click="isShowModalDelete = false" class="btn btn-alternate">
+            {{ $t("cancel") }}
+          </button>
         </div>
-        <div class="flexCont bigBlock">
-          <form @submit.prevent="saveUserOnPopup">
-            <div class="form-group">
-              <label for="surname" class="form-name ">{{
-                $t("surname")
-              }}</label>
-              <input
-                class="form-control"
-                name="surname"
-                v-model.trim="$v.user.surname.$model"
-                @blur="$v.user.surname.$touch()"
-                :placeholder="$t('surname')"
-              />
-              <div v-if="$v.user.surname.$error">
-                <span v-if="!$v.user.surname.required" class="danger">{{
-                  $t("required")
-                }}</span>
-                <span v-else-if="!$v.user.surname.alpha" class="danger">{{
-                  $t("requiredLetters")
-                }}</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="name" class="form-name ">{{ $t("name") }}</label>
-              <input
-                class="form-control"
-                name="name"
-                v-model.trim="$v.user.name.$model"
-                :placeholder="$t('name')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="patricity" class="form-name ">{{
-                $t("patricity")
-              }}</label>
-              <input
-                class="form-control"
-                name="patricity"
-                v-model.trim="$v.user.patricity.$model"
-                :placeholder="$t('patricity')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="gender" class="form-name ">{{ $t("gender") }}</label>
-              <div class="form_radio">
-                <input
-                  type="radio"
-                  name="male"
-                  :value="$t('male')"
-                  v-model.trim="$v.user.gender.$model"
-                />
-                <label for="male">{{ $t("male") }}</label>
-              </div>
-
-              <div class="form_radio">
-                <input
-                  type="radio"
-                  name="female"
-                  :value="$t('female')"
-                  v-model.trim="$v.user.gender.$model"
-                />
-                <label for="female">{{ $t("female") }}</label>
-              </div>
-              <div class="form_radio">
-                <input
-                  type="radio"
-                  name="nothing"
-                  :value="$t('notIndicated')"
-                  v-model.trim="$v.user.gender.$model"
-                />
-                <label for="nothing">{{ $t("notIndicated") }}</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="login" class="form-name ">{{ $t("login") }}</label>
-              <input
-                class="form-control"
-                name="login"
-                v-model.trim="$v.user.login.$model"
-                :placeholder="$t('login')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="password" class="form-name ">{{
-                $t("password")
-              }}</label>
-              <input
-                class="form-control"
-                name="password"
-                v-model.trim="$v.user.password.$model"
-                :placeholder="$t('password')"
-                required
-              />
-            </div>
-            <div class="double">
-              <button type="submit" class="btn btn-alternate">
-                {{ $t("save") }}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      </popup>
+      <minialert v-if="isShowAlertEdit"
+        ><p slot="title">{{ $t("minialertEditUser") }}</p></minialert
+      >
+      <minialert v-if="isShowAlertDelete"
+        ><p slot="title">{{ $t("minialertDeleteUser") }}</p></minialert
+      >
     </div>
-
-    <popup v-if="isShowModalDelete">
-      <h3 slot="header">
-        {{ $t("deleteQuestion") }}
-        {{ fullName }}?
-      </h3>
-      <div slot="footer" class="double">
-        <button @click="deleteUser" class="btn  btn-alternate danger">
-          {{ $t("delete") }}
-        </button>
-        <button @click="isShowModalDelete = false" class="btn btn-alternate">
-          {{ $t("cancel") }}
-        </button>
-      </div>
-    </popup>
-    <minialert v-if="isShowAlertEdit"
-      ><p slot="title">{{ $t("minialertEditUser") }}</p></minialert
-    >
-    <minialert v-if="isShowAlertDelete"
-      ><p slot="title">{{ $t("minialertDeleteUser") }}</p></minialert
-    >
   </div>
 </template>
 
 <script>
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
@@ -215,7 +288,13 @@ import {
   ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup, Edit, Points },
+  components: {
+    minialert,
+    popup,
+    Edit,
+    Points,
+    BreadCrumbs
+  },
   apollo: {
     users: {
       query: USERS_QUERY
@@ -398,6 +477,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 
 .flexCont {
   display: flex;
@@ -409,7 +489,7 @@ export default {
   justify-content: space-around;
 }
 .pad {
-  padding: 2.5rem;
+  // padding: 2.5rem;
 }
 .btnEdit {
   display: flex;
@@ -418,8 +498,10 @@ export default {
   cursor: pointer;
 }
 .card {
+  display: block;
   margin-bottom: 3rem;
   justify-content: center;
+  border-radius: 16px;
 }
 .form-name {
   color: $white;
@@ -457,6 +539,5 @@ export default {
 .bigAvatar {
   height: 125px;
   border-radius: 65px;
-  margin-right: 3rem;
 }
 </style>
