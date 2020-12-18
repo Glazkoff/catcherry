@@ -41,19 +41,12 @@
                           <div class="cent">Looks Like your all caught up!</div>
                         </div>
                         <div class="cont">
-                          <!-- Fold this div and try deleting evrything inbetween -->
-
                           <div
                             class="sec new"
-                            v-for="notification in notifications"
+                            v-for="notification in notificationsForUser"
                             :key="notification.id"
                           >
-                            <div
-                              v-if="
-                                notification.forAllUsers == UserID ||
-                                  notification.forAllUsers == null
-                              "
-                            >
+                            <div>
                               <a href="#">
                                 <div class="profCont">
                                   <img
@@ -104,7 +97,7 @@ import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg?inlin
 import {
   GET_POINTS_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
-  NOTIFICATIONS_USER_QUERY
+  NOTIFICATIONS_FOR_USER_QUERY
 } from "@/graphql/queries";
 export default {
   name: "top-bar",
@@ -136,8 +129,13 @@ export default {
         };
       }
     },
-    notifications: {
-      query: NOTIFICATIONS_USER_QUERY
+    notificationsForUser: {
+      query: NOTIFICATIONS_FOR_USER_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
     }
   },
   methods: {

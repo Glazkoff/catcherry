@@ -3,10 +3,10 @@
     <div class="spaceForNotifications"></div>
     <div class="list">
       <notification
-        @delete="onDelete"
-        v-for="notification in notifications"
+        v-for="notification in notificationsForUser"
         :key="notification.id"
         :notification="notification"
+        @check="onCheckNotification"
       ></notification>
     </div>
   </div>
@@ -14,52 +14,62 @@
 
 <script>
 import Notification from "@/components/NotificationCard.vue";
-import { NOTIFICATIONS_USER_QUERY } from "@/graphql/queries";
+import {
+  NOTIFICATIONS_FOR_USER_QUERY,
+  UPDATE_NOTIFICATION
+} from "@/graphql/queries";
 export default {
   name: "ListOfNotifications",
   components: {
     Notification
   },
-  data() {
-    return {
-      notifications: [
-        {
-          id: 22,
-          body: {
-            header: "Закрытие спринта",
-            text:
-              "В зум-конференции планируется к проведению закрытие спринта, в состав данного мероприятия войдут следующие части: очищение обзора, просмотр задач в работе ...",
-            button: "Zoom-link",
-            buttonLink:
-              "https://us04web.zoom.us/j/8118194172?pwd=UmpJTnAzbFZQUjZLYUJZU2VwN0pPUT09"
-          }
-        },
-        {
-          id: 23,
-          body: {
-            header: "Внимание!",
-            text:
-              "Важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация...",
-            button: null
-          }
-        }
-      ]
-    };
-  },
   apollo: {
-    notifications: {
-      query: NOTIFICATIONS_USER_QUERY,
+    notificationsForUser: {
+      query: NOTIFICATIONS_FOR_USER_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          userId: this.$store.getters.decodedToken.id
         };
       }
     }
   },
   methods: {
-    onDelete(object) {
-      let index = this.notifications.findIndex(el => el.id === object.id);
-      this.notifications.splice(index, 1);
+    onCheckNotification(object) {
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_NOTIFICATION,
+          variables: {
+            notificationId: object.id,
+            userId: this.$store.getters.decodedToken.id,
+            checkNotification: true
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: NOTIFICATIONS_FOR_USER_QUERY,
+              variables: {
+                userId: this.$store.getters.decodedToken.id
+              }
+            });
+            console.log(data);
+            let index = data.notificationsForUser.findIndex(
+              el => el.id === object.id
+            );
+            data.notificationsForUser.splice(index, 1);
+            cache.writeQuery({
+              query: NOTIFICATIONS_FOR_USER_QUERY,
+              variables: {
+                userId: this.$store.getters.decodedToken.id
+              },
+              data
+            });
+          }
+        })
+        .then(data => {
+          console.log(data);
+        })
+        .catch(error => {
+          console.error(error);
+        });
     }
   }
 };

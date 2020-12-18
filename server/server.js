@@ -101,7 +101,7 @@ db.sequelize
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
-      // addAllTables(true);
+      // addAllTables(false);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
@@ -150,16 +150,27 @@ async function addAllTables(destroyTable) {
     db.UsersInTeams.destroy({ where: {} });
   }
   //Можно менять количество заполнений в переменной quantity
-  let quantity = 10;
+  let quantity = 1;
   for (let index = 0; index < quantity; index++) {
     //Тип организации
     let type = await db.OrganizationsTypes.create({
       name: faker.name.findName()
     });
     //Тип оповещения
-    let typeOfNotification = await db.TypeNotification.create({
-      typeName: faker.name.findName()
-    });
+    let typeNotification;
+    if (index == 0) {
+      typeNotification = await db.TypeNotification.create({
+        typeName: "normal"
+      });
+    } else if (index == 1) {
+      typeNotification = await db.TypeNotification.create({
+        typeName: "danger"
+      });
+    } else {
+      typeNotification = await db.TypeNotification.create({
+        typeName: faker.name.findName()
+      });
+    }
     //Пользователи
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
@@ -193,13 +204,14 @@ async function addAllTables(destroyTable) {
       description: faker.lorem.paragraph(),
       maxUsersLimit: faker.random.number()
     });
+
     //Оповещения
     let notification = await db.Notifications.create({
       body: {
         header: faker.random.word(),
         text: faker.lorem.paragraph()
       },
-      typeId: typeOfNotification.dataValues.id,
+      typeId: typeNotification.dataValues.id,
       authorId: user.dataValues.id,
       userId: [
         user.dataValues.id,
@@ -213,6 +225,7 @@ async function addAllTables(destroyTable) {
       userId: user.dataValues.id,
       readOrNot: faker.random.boolean()
     });
+
     //Задачи
     let tasks = await db.Tasks.create({
       teamId: team.dataValues.id,

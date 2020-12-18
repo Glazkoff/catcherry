@@ -86,6 +86,8 @@ type Role {
 input NotificationBody {
   header: String!
   text: String!
+  button: String
+  buttonLink: String
 }
 
 type BodyNotification {
@@ -221,7 +223,7 @@ type Query {
   organizationTypes: [OrganizationType!]
   
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  notificationsForUser(userId: ID!): [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   requests (teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -263,9 +265,9 @@ type Mutation {
   updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String, birthday: String): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
-  createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!, forAllUsers: Int, checkNotification: Boolean ): Notification!
+  createNotification(body: NotificationBody!, typeId:Int!, authorId: Int!, userId: [Int], endTime: String! ): Notification!
   deleteNotification(id: ID!): Int!
-  updateNotification(body: NotificationBody!, id: ID!,checkNotification: Boolean, teamId: Int!, forAllUsers: Boolean, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
+  updateNotification(notificationId: ID!, userId: ID! checkNotification: Boolean): [Int]!
 
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
