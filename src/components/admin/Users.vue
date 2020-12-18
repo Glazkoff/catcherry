@@ -236,6 +236,26 @@
             </button>
           </div>
         </div>
+        <button
+          class="btn btn-primary block"
+          @click="addUserInTeam()"
+          v-if="!isShowAddUserInTeam"
+        >
+          {{ $t("addUserToTeam") }}
+        </button>
+        <div class="addToTeam" v-if="isShowAddUserInTeam">
+          <div class="form-group">
+            <label for="team" class="form-name">Название команды</label>
+            <select name="team" class="form-control">
+              <option v-for="team in teams" :key="team.id">{{
+                team.name
+              }}</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" @click="addOneUserInTeam()">
+            {{ $t("addUserToTeam") }}
+          </button>
+        </div>
         <div class="btn-group">
           <button @click="showModalEdit()" class="btn btn-primary">
             {{ $t("edit") }}
@@ -268,7 +288,12 @@
           :placeholder="$t('placeholderSearchByUsers')"
           class="form-control block"
         />
-        <div class="card" v-for="user in filterUser" :key="user.id">
+        <div
+          class="card"
+          v-for="user in filterUser"
+          :key="user.id"
+          @click="showFullInformation(user.id)"
+        >
           <div class="card_img">
             <img src="~@/assets/avatar.jpg" />
           </div>
@@ -277,7 +302,7 @@
             <p>{{ user.login }}</p>
             <p>№ {{ user.id }}</p>
           </div>
-          <div @click="showFullInformation(user.id)" class="card_action">
+          <div class="card_action">
             <ArrowRight></ArrowRight>
           </div>
         </div>
@@ -316,7 +341,8 @@ import {
   ONE_USER_IN_TEAMS_QUERY,
   ADD_IN_TEAM_QUERY,
   GET_POINTS_QUERY,
-  CARGE_POINTS_QUERY
+  CARGE_POINTS_QUERY,
+  TEAMS_QUERY
 } from "@/graphql/queries";
 
 export default {
@@ -325,6 +351,10 @@ export default {
     // Получить список всех пользователей
     users: {
       query: USERS_QUERY
+    },
+    // Получение списка всех команд
+    teams: {
+      query: TEAMS_QUERY
     },
     // Получить всю информацию про одного пользователя
     user: {
@@ -377,6 +407,7 @@ export default {
       isShowAlertEdit: false,
       isShowModalEdit: false,
       isShowModalDelete: false,
+      isShowAddUserInTeam: false,
       findString: "",
       points: 0,
       isEditPoints: false,
@@ -431,6 +462,10 @@ export default {
       this.isShowModalEdit = false;
       this.isShowModalDelete = false;
     },
+    addUserInTeam() {
+      this.isShowAddUserInTeam = true;
+    },
+    addOneUserInTeam() {},
     // Показать попап с удалением
     showModalDelete() {
       if (this.user.surname === null) {
