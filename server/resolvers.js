@@ -448,6 +448,11 @@ module.exports = {
         password: hashPassword
       });
 
+      // Добавляем кошелёк для баллов
+      await db.Points.create({
+        userId: user.dataValues.id
+      });
+
       // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
       let tokens = generateTokens(user.dataValues);
 
