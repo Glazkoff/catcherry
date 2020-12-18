@@ -15,6 +15,7 @@
   "surname": "Surname",
   "name": "Name",
   "patricity": "Patricity",
+  "fullname": "SNP",
   "gender": "Gender",
   "birthday": "Birthday",
   "login": "Login",

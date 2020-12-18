@@ -15,6 +15,7 @@
   "surname": "Фамилия",
   "name": "Имя",
   "patricity": "Отчество",
+  "fullname": "ФИО",
   "gender": "Пол",
   "birthday": "Дата рождения",
   "login": "Логин",
