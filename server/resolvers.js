@@ -453,6 +453,23 @@ module.exports = {
         userId: user.dataValues.id
       });
 
+      // Добавляем оповещение новому пользователю
+      let result = await db.Notifications.create({
+        body: {
+          header: "Добро пожаловать в Catcherry!",
+          text: "Рады, что Вы с нами!"
+        },
+        typeId: 1,
+        authorId: user.dataValues.id,
+        userId: [user.dataValues.id],
+        endTime: user.dataValues.createdAt
+      });
+      await db.ReadNotification.create({
+        notificationId: result.id,
+        userId: user.dataValues.id,
+        readOrNot: false
+      });
+
       // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
       let tokens = generateTokens(user.dataValues);
 
