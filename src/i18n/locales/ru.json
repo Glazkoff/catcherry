@@ -11,6 +11,7 @@
   "surname": "Фамилия",
   "name": "Имя",
   "patricity": "Отчество",
+  "fullname": "ФИО",
   "gender": "Пол",
   "birthday": "Дата рождения",
   "login": "Логин",
@@ -154,8 +155,20 @@
     "account": "Аккаунт",
     "userInOrg": "Пользователь в организации",
     "listRequest": "Список заявок",
+<<<<<<< HEAD
     "listTeams": "Список команд",
     "tasks": "Задания"
+=======
+    "tasks": "Задания",
+    "teamlist": "Список команд",
+    "manager": "Менеджер",
+    "teamsettings": "Настройки команды",
+    "newtask": "Конструктор заданий",
+    "teammembers": "Участники",
+    "rating": "Рейтинг",
+    "editteam": "Редактирование",
+    "requestlist": "Заявки в команду"
+>>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",

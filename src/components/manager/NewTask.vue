@@ -1,5 +1,5 @@
 <template>
-  <div class="task_constructor">
+  <div class="task_constructor" v-if="!this.$apollo.loading">
     <breadcrumbs></breadcrumbs>
     <h2>{{ $t("taskConstructor.taskConstructor") }}</h2>
     <form @submit.prevent="createTask()">
@@ -92,19 +92,21 @@
       </p>
     </minialert>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import { required, numeric } from "vuelidate/lib/validators";
 import minialert from "@/components/MiniAlert.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
+import loader from "@/components/Loader.vue";
 import {
   USERS_IN_TEAMS_QUERY,
   ADD_TASK_QUERY,
   ALL_TASKS_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, breadcrumbs },
+  components: { minialert, breadcrumbs, loader },
   apollo: {
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,

@@ -339,8 +339,8 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
-.aaa {
-  padding: 3%;
+.main_tasks {
+  padding: 2%;
 }
 .task {
   padding: 1%;

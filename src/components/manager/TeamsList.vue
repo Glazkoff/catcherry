@@ -1,4 +1,5 @@
 <template>
+<<<<<<< HEAD
   <div v-if="!this.$apollo.queries.team.loading">
     <div class="container">
       <bread-crumbs class="bread-crumbs"></bread-crumbs>
@@ -10,6 +11,18 @@
         </div>
       </div>
       <h3 v-else>Команд нет, ничего нет</h3>
+=======
+  <div class="main_team" v-if="!this.$apollo.loading">
+    <h1>Организация "Название"</h1>
+    <h3>Команды</h3>
+    <div v-for="t in team" :key="t.id" class="card">
+      <h3>{{ t.name }}</h3>
+      <router-link
+        :to="{ name: 'TeamMembers', params: { id: t.id } }"
+        class="btn btn-alternate"
+        >Перейти в управление</router-link
+      >
+>>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
     </div>
   </div>
   <div v-else class="wrapOfLoader"><loader></loader></div>
@@ -17,9 +30,14 @@
 
 <script>
 import { TEAM_IN_ORG_QUERY } from "@/graphql/queries";
+<<<<<<< HEAD
 import Loader from "@/components/Loader.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import More from "@/assets/more.svg?inline";
+=======
+import loader from "@/components/Loader.vue";
+
+>>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
 export default {
   components: {
     Loader,
@@ -37,6 +55,7 @@ export default {
       }
     }
   },
+<<<<<<< HEAD
   data() {
     return {};
   },
@@ -57,6 +76,10 @@ export default {
         else return true;
       } else return false;
     }
+=======
+  components: {
+    loader
+>>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
   }
 };
 </script>

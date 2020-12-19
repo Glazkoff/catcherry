@@ -11,6 +11,7 @@
   "surname": "Surname",
   "name": "Name",
   "patricity": "Patricity",
+  "fullname": "SNP",
   "gender": "Gender",
   "birthday": "Birthday",
   "login": "Login",
@@ -155,7 +156,18 @@
     "user": "User",
     "userInOrg": "User in organization",
     "users": "Users",
+<<<<<<< HEAD
     "listTeams": "List of teams"
+=======
+    "teamlist": "Team list",
+    "manager": "Manager",
+    "teamsettings": "Settings",
+    "newtask": "Task constructor",
+    "teammembers": "Participants",
+    "rating": "Rating",
+    "editteam": "Edit team",
+    "requestlist": "Requests"
+>>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",

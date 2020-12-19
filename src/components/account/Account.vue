@@ -1,12 +1,9 @@
 <template>
-  <div>
+  <div v-if="!this.$apollo.loading">
     <div class="double" v-if="!isEdit">
       <div class="flexCont">
         <h2>{{ $t("profileUser") }}</h2>
-        <h3 v-if="$apollo.loading">
-          {{ $t("loading") }}
-        </h3>
-        <div v-if="!$apollo.loading">
+        <div>
           <h6 v-if="users.length == 0">
             К сожалению, такого пользователя нет!
           </h6>
@@ -61,7 +58,7 @@
     </div>
 
     <!-- Редактирование пользователя -->
-    <div v-else>
+    <div v-if="isEdit">
       <h2 class="padLeftTop">{{ $t("profileUser") }}</h2>
       <div class="flexBlock">
         <div class="flexCont smallBlock">
@@ -73,48 +70,28 @@
           </button>
         </div>
         <div class="flexCont bigBlock">
-          <form @submit.prevent="saveUserOnPopup">
+          <form
+            @submit.prevent="saveUserOnPopup(fullname, gender, birthday, login)"
+          >
             <div class="form-group">
-              <label for="surname" class="form-name ">{{
-                $t("surname")
+              <label for="fullname" class="form-name ">{{
+                $t("fullname")
               }}</label>
               <input
                 class="form-control"
-                name="surname"
-                v-model.trim="$v.user.surname.$model"
-                @blur="$v.user.surname.$touch()"
-                :placeholder="$t('surname')"
+                name="fullname"
+                v-model.trim="$v.fullname.$model"
+                @blur="$v.fullname.$touch()"
+                :placeholder="$t('fullname')"
               />
-              <div v-if="$v.user.surname.$error">
-                <span v-if="!$v.user.surname.required" class="danger">{{
+              <div v-if="$v.fullname.$error">
+                <span v-if="!$v.fullname.required" class="danger">{{
                   $t("required")
                 }}</span>
-                <span v-else-if="!$v.user.surname.alpha" class="danger">{{
+                <span v-else-if="!$v.fullname.alpha" class="danger">{{
                   $t("requiredLetters")
                 }}</span>
               </div>
-            </div>
-            <div class="form-group">
-              <label for="name" class="form-name ">{{ $t("name") }}</label>
-              <input
-                class="form-control"
-                name="name"
-                v-model.trim="$v.user.name.$model"
-                :placeholder="$t('name')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="patricity" class="form-name ">{{
-                $t("patricity")
-              }}</label>
-              <input
-                class="form-control"
-                name="patricity"
-                v-model.trim="$v.user.patricity.$model"
-                :placeholder="$t('patricity')"
-                required
-              />
             </div>
             <div class="form-group">
               <label for="gender" class="form-name ">{{ $t("gender") }}</label>
@@ -123,7 +100,7 @@
                   type="radio"
                   name="male"
                   :value="$t('male')"
-                  v-model.trim="$v.user.gender.$model"
+                  v-model.trim="gender"
                 />
                 <label for="male">{{ $t("male") }}</label>
               </div>
@@ -133,7 +110,7 @@
                   type="radio"
                   name="female"
                   :value="$t('female')"
-                  v-model.trim="$v.user.gender.$model"
+                  v-model.trim="gender"
                 />
                 <label for="female">{{ $t("female") }}</label>
               </div>
@@ -142,30 +119,31 @@
                   type="radio"
                   name="nothing"
                   :value="$t('notIndicated')"
-                  v-model.trim="$v.user.gender.$model"
+                  v-model.trim="gender"
                 />
                 <label for="nothing">{{ $t("notIndicated") }}</label>
               </div>
+            </div>
+            <div class="form-group">
+              <label for="birthday" class="form-name ">{{
+                $t("birthday")
+              }}</label>
+              <input
+                type="date"
+                class="form-control"
+                name="name"
+                v-model.trim="birthday"
+                :placeholder="$t('birthday')"
+                required
+              />
             </div>
             <div class="form-group">
               <label for="login" class="form-name ">{{ $t("login") }}</label>
               <input
                 class="form-control"
                 name="login"
-                v-model.trim="$v.user.login.$model"
+                v-model.trim="login"
                 :placeholder="$t('login')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="password" class="form-name ">{{
-                $t("password")
-              }}</label>
-              <input
-                class="form-control"
-                name="password"
-                v-model.trim="$v.user.password.$model"
-                :placeholder="$t('password')"
                 required
               />
             </div>
@@ -182,7 +160,7 @@
     <popup v-if="isShowModalDelete">
       <h3 slot="header">
         {{ $t("deleteQuestion") }}
-        {{ fullName }}?
+        {{ fullname }}?
       </h3>
       <div slot="footer" class="double">
         <button @click="deleteUser" class="btn  btn-alternate danger">
@@ -200,6 +178,7 @@
       ><p slot="title">{{ $t("minialertDeleteUser") }}</p></minialert
     >
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
@@ -207,7 +186,8 @@ import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
 import Points from "@/components/account/PointsUser.vue";
-import { required, minLength } from "vuelidate/lib/validators";
+import loader from "@/components/Loader.vue";
+import { required } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
   DELETE_USER_QUERY,
@@ -215,7 +195,7 @@ import {
   ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup, Edit, Points },
+  components: { minialert, popup, Edit, Points, loader },
   apollo: {
     users: {
       query: USERS_QUERY
@@ -235,46 +215,35 @@ export default {
       isEdit: false,
       index: 0,
       userId: -1,
-      fullName: "",
+      fullname: "",
       isShowAlertDelete: false,
       isShowAlertEdit: false,
       isShowModalDelete: false,
-      findString: ""
+      findString: "",
+      surname: "",
+      name: "",
+      patricity: "",
+      gender: "",
+      birthday: "",
+      login: ""
     };
   },
   validations: {
-    user: {
-      surname: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
-      },
-      name: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
-      },
-      patricity: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
-      },
-      gender: {
-        required
-      },
-      login: {
-        required
-      },
-      password: {
-        required,
-        minLength: minLength(2)
-      }
+    fullname: {
+      required,
+      alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
     }
   },
   methods: {
     showFullInformation(id) {
       this.userId = id;
       this.isEdit = true;
+      this.fullname = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
+      this.gender = this.user.gender;
+      this.birthday = this.user.birthday;
+      this.login = this.user.login;
     },
     showModalDelete() {
-      this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
       this.isShowModalDelete = true;
     },
     deleteUser() {
@@ -304,48 +273,41 @@ export default {
         this.isShowAlertDelete = false;
       }, 3000);
     },
-    saveUserOnPopup() {
-      console.log(this.user);
+    saveUserOnPopup(fullname, gender, birthday, login) {
+      let fio = fullname.split(" ");
+      this.surname = fio[0];
+      if (fio[1] === undefined || fio[1] === null) {
+        this.name = " ";
+      } else this.name = fio[1];
+      if (fio[2] === undefined || fio[2] === null) {
+        this.patricity = " ";
+      } else this.patricity = fio[2];
       this.$apollo
         .mutate({
           mutation: UPDATE_USER_QUERY,
           variables: {
             id: this.user.id,
-            surname: this.user.surname,
-            name: this.user.name,
-            patricity: this.user.patricity,
-            gender: this.user.gender,
-            login: this.user.login
+            surname: this.surname,
+            name: this.name,
+            patricity: this.patricity,
+            gender: gender,
+            birthday: birthday,
+            login: login
           },
           update: (cache, { data: { updateUser } }) => {
             let data = cache.readQuery({ query: USERS_QUERY });
             data.users.find(
               el => el.id === this.user.id
-            ).surname = this.user.surname;
-            data.users.find(el => el.id === this.user.id).name = this.user.name;
+            ).surname = this.surname;
+            data.users.find(el => el.id === this.user.id).name = this.name;
             data.users.find(
               el => el.id === this.user.id
-            ).patricity = this.user.patricity;
-            data.users.find(
-              el => el.id === this.user.id
-            ).gender = this.user.gender;
-            data.users.find(
-              el => el.id === this.user.id
-            ).login = this.user.login;
+            ).patricity = this.patricity;
+            data.users.find(el => el.id === this.user.id).gender = gender;
+            data.users.find(el => el.id === this.user.id).birthday = birthday;
+            data.users.find(el => el.id === this.user.id).login = login;
             cache.writeQuery({ query: USERS_QUERY, data });
             console.log(updateUser);
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createUser: {
-              __typename: "User",
-              id: -1,
-              surname: this.user.surname,
-              name: this.user.name,
-              patricity: this.user.patricity,
-              gender: this.user.gender,
-              login: this.user.login
-            }
           }
         })
         .then(data => {

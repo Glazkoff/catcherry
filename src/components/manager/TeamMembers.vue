@@ -1,6 +1,7 @@
 <template>
-  <div class="main_users_in_teams">
-    <h3>Список участников</h3>
+  <div class="main_users_in_teams" v-if="!this.$apollo.loading">
+    <breadcrumbs></breadcrumbs>
+    <h2>Список участников</h2>
 
     <div v-for="userInTeam in usersInTeams" :key="userInTeam.id">
       <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
@@ -10,11 +11,14 @@
       <p slot="title">{{ message }}</p>
     </Minialert>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
+import breadcrumbs from "@/components/BreadCrumbs.vue";
 import Minialert from "@/components/MiniAlert.vue";
+import loader from "@/components/Loader.vue";
 
 import { USERS_IN_TEAMS_QUERY, DELETE_IN_TEAMS_QUERY } from "@/graphql/queries";
 
@@ -41,7 +45,9 @@ export default {
 
   components: {
     TeamMemberItem,
-    Minialert
+    Minialert,
+    breadcrumbs,
+    loader
   },
   methods: {
     // Для удаления участника команды
