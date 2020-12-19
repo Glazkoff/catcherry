@@ -162,6 +162,8 @@ module.exports = {
     // Получаем список всех пользователей
     users: (parent, args, { db }) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
+    usersInNewTeams: (parent, args, { db }) =>
+      db.UsersInTeams.findAll({ order: [["id", "ASC"]] }),
     // Получаем данные про одного пользователя
     user: (parent, args, { db }) => {
       return db.Users.findOne({
@@ -272,6 +274,9 @@ module.exports = {
       return db.LikesOfComments.findAll({
         where: { userId: args.userId }
       });
+    },
+    roles: (parent, args, { db }) => {
+      return db.Roles.findAll({});
     },
 
     comments: (parent, args, { db }) =>
@@ -616,6 +621,13 @@ module.exports = {
           }
         }
       ),
+    addUserInNewTeam: (parent, { id, userId }, { db }) =>
+      db.UsersInTeams.create({
+        userId: userId,
+        teamId: id,
+        status: "Принят",
+        roleId: 10
+      }),
     // Удаляем пользователя
     deleteUser: (parent, args, { db }) =>
       db.Users.destroy({

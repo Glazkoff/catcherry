@@ -221,15 +221,15 @@
           </p>
           <div class="btn-group">
             <button
-              v-if="team.status === 'Принято'"
-              @click="changeStatusInTeam(team, 'Не принято')"
+              v-if="team.status === 'Принят'"
+              @click="changeStatusInTeam(team, 'Не принят')"
               class="btn btn-primary block"
             >
               {{ $t("deleteUserFromTeam") }}
             </button>
             <button
-              v-if="team.status !== 'Принято'"
-              @click="changeStatusInTeam(team, 'Принято')"
+              v-if="team.status !== 'Принят'"
+              @click="changeStatusInTeam(team, 'Принят')"
               class="btn btn-primary block"
             >
               {{ $t("addUserToTeam") }}
@@ -246,8 +246,8 @@
         <div class="addToTeam" v-if="isShowAddUserInTeam">
           <div class="form-group">
             <label for="team" class="form-name">Название команды</label>
-            <select name="team" class="form-control">
-              <option v-for="team in teams" :key="team.id">{{
+            <select name="team" class="form-control" v-model="newTeam">
+              <option v-for="team in teams" :key="team.id" :value="team.id">{{
                 team.name
               }}</option>
             </select>
@@ -260,7 +260,11 @@
           <button @click="showModalEdit()" class="btn btn-primary">
             {{ $t("edit") }}
           </button>
-          <button @click="showModalDelete()" class="btn btn-primary">
+          <button
+            @click="showModalDelete()"
+            class="btn btn-primary"
+            :disabled="$store.getters.decodedToken.id == userId"
+          >
             {{ $t("delete") }}
           </button>
           <button @click="cancelFullInformation()" class="btn btn-alternate">
@@ -342,7 +346,8 @@ import {
   ADD_IN_TEAM_QUERY,
   GET_POINTS_QUERY,
   CARGE_POINTS_QUERY,
-  TEAMS_QUERY
+  TEAMS_QUERY,
+  ADD_USER_IN_TEAM_QUERY
 } from "@/graphql/queries";
 
 export default {
@@ -408,8 +413,10 @@ export default {
       isShowModalEdit: false,
       isShowModalDelete: false,
       isShowAddUserInTeam: false,
+      nameTeam: "Название команды",
       findString: "",
       points: 0,
+      allTeams: [],
       isEditPoints: false,
       oneUser: {
         id: -1,
@@ -456,16 +463,49 @@ export default {
     // Закрыть попап со всей информацией
     cancelFullInformation() {
       this.isShowFullInformation = false;
+      this.isShowAddUserInTeam = false;
     },
     // Закрыть попапы с редактированием или удалением
     cancelModal() {
       this.isShowModalEdit = false;
       this.isShowModalDelete = false;
+      this.isShowAddUserInTeam = false;
     },
     addUserInTeam() {
+      this.teams = this.teams.filter(
+        team => this.oneUserInTeams.findIndex(t => +t.teamId === +team.id) < 0
+      );
       this.isShowAddUserInTeam = true;
     },
-    addOneUserInTeam() {},
+    addOneUserInTeam() {
+      console.log(this.newTeam);
+      this.$apollo
+        .mutate({
+          mutation: ADD_USER_IN_TEAM_QUERY, // Удаляем из БД
+          variables: {
+            id: this.newTeam,
+            userId: this.userId
+          }
+        })
+        // В случае успеха
+        .then(data => {
+          console.log(data);
+          this.isShowAddUserInTeam = false;
+          this.isShowAlertEdit = true; // Показать окно с информацией об успехе
+          setTimeout(() => {
+            this.isShowAlertEdit = false; // Закрыть окно с информацией об успехе
+          }, 3000);
+        })
+        // В случае ошибки
+        .catch(error => {
+          console.error(error);
+          this.isShowAddUserInTeam = false;
+          this.isError = true; // Показать окно с ошибкой
+          setTimeout(() => {
+            this.isError = false; // Закрыть попап с ошибкой
+          }, 3000);
+        });
+    },
     // Показать попап с удалением
     showModalDelete() {
       if (this.user.surname === null) {
