@@ -1,5 +1,5 @@
 <template>
-  <div class="main_team">
+  <div class="main_team" v-if="!this.$apollo.loading">
     <h1>Организация "Название"</h1>
     <h3>Команды</h3>
     <div v-for="t in team" :key="t.id" class="card">
@@ -12,10 +12,12 @@
     </div>
     <router-view />
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import { TEAM_IN_ORG_QUERY } from "@/graphql/queries";
+import loader from "@/components/Loader.vue";
 
 export default {
   apollo: {
@@ -28,6 +30,9 @@ export default {
         };
       }
     }
+  },
+  components: {
+    loader
   }
 };
 </script>

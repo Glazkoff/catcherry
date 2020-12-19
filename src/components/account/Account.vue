@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!this.$apollo.loading">
     <div class="double" v-if="!isEdit">
       <div class="flexCont">
         <h2>{{ $t("profileUser") }}</h2>
@@ -178,6 +178,7 @@
       ><p slot="title">{{ $t("minialertDeleteUser") }}</p></minialert
     >
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
@@ -185,6 +186,7 @@ import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
 import Points from "@/components/account/PointsUser.vue";
+import loader from "@/components/Loader.vue";
 import { required } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
@@ -193,7 +195,7 @@ import {
   ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup, Edit, Points },
+  components: { minialert, popup, Edit, Points, loader },
   apollo: {
     users: {
       query: USERS_QUERY
