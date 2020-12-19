@@ -1,16 +1,12 @@
 {
   "projectTitle": "Кэтчерри",
-  "nameuserMsg": "Дарья",
-  "roleuserMsg": "Администратор",
   "pointsMsg": "нет баллов | {n} балл | {n} балла | {n} баллов",
-  "pointdefaultMsg": "баллов",
-  "topbarnameMsg": "Личный кабинет",
   "editUser": "Редактировать пользователя",
   "editOrg": "Редактировать организацию",
   "listUser": "Список пользователей",
   "profileUser": "Профиль",
   "listOrganization": "Список организаций",
-  "systemStatisticsBr": "Статистика<br>системы",
+  "systemStatisticsBr": "Статистика системы",
   "systemStatistics": "Статистика системы",
   "surname": "Фамилия",
   "name": "Имя",
@@ -65,7 +61,6 @@
   "male": "Мужской",
   "female": "Женский",
   "notIndicated": "Не указано",
-  "adminPanel": "Административная панель",
   "numberOfPoints": "Количество баллов",
   "editNumberOfPoints": "Изменить количество баллов",
   "saveNumberOfPoints": "Сохранить количество баллов",
@@ -110,7 +105,11 @@
     "youHaveSuccessfullyCreatedNewTask": "Вы успешно создали новую задачу"
   },
   "ratingOfTeamMembers": {
-    "ratingOfTeamMembers": "Рейтинг участников команды"
+    "ratingOfTeamMembers": "Рейтинг участников команды",
+    "history": "История",
+    "statistics": "Статистика",
+    "forTheCurrentWeek": "За текущую неделю",
+    "lastWeek": "На прошлой неделе"
   },
   "logIn": {
     "title": "Вход в Catcherry",
@@ -134,7 +133,8 @@
     "buttonSubmit": "Зарегистрироваться",
     "accountQuestion": "Уже есть аккаунт?",
     "logInLink": "Войти!",
-    "birthday": "День рождения"
+    "birthday": "День рождения",
+    "loginAlreadyTaken": "Такой логин уже занят"
   },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",
@@ -149,12 +149,16 @@
     "statistic": "Статистика",
     "points": "Баллы",
     "post": "Пост",
-    "notification": "Оповещения",
+    "notifications": "Оповещения",
     "createpost": "Создать пост",
     "user": "Личный кабинет",
     "account": "Аккаунт",
     "userInOrg": "Пользователь в организации",
     "listRequest": "Список заявок",
+<<<<<<< HEAD
+    "listTeams": "Список команд",
+    "tasks": "Задания"
+=======
     "tasks": "Задания",
     "teamlist": "Список команд",
     "manager": "Менеджер",
@@ -164,6 +168,7 @@
     "rating": "Рейтинг",
     "editteam": "Редактирование",
     "requestlist": "Заявки в команду"
+>>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",

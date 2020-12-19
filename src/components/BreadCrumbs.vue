@@ -38,7 +38,4 @@ export default {
 a {
   color: $blue;
 }
-.breadcrumbs {
-  padding-left: 48px;
-}
 </style>

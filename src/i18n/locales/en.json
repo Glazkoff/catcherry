@@ -1,10 +1,6 @@
 {
   "projectTitle": "CATCHERRY",
-  "nameuserMsg": "Darya",
-  "roleuserMsg": "Administrator",
-  "topbarnameMsg": "Personal account",
-  "pointsMsg": "point | points",
-  "pointdefaultMsg": "points",
+  "pointsMsg": "{n} point | {n} points",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
   "listUser": "List of users",
@@ -65,7 +61,6 @@
   "male": "Male",
   "female": "Female",
   "notIndicated": "Not indicated",
-  "adminPanel": "Admin panel",
   "numberOfPoints": "Number of points",
   "editNumberOfPoints": "Edit number of points",
   "saveNumberOfPoints": "Save number of points",
@@ -110,7 +105,11 @@
     "youHaveSuccessfullyCreatedNewTask": "You have successfully created a new task"
   },
   "ratingOfTeamMembers": {
-    "ratingOfTeamMembers": "Rating of team members"
+    "ratingOfTeamMembers": "Rating of team members",
+    "history": "History",
+    "statistics": "Statistics",
+    "forTheCurrentWeek": "For the current week",
+    "lastWeek": "Last week"
   },
   "logIn": {
     "title": "Entering Catcherry",
@@ -134,7 +133,8 @@
     "buttonSubmit": "Sign up",
     "accountQuestion": "Already have an account?",
     "logInLink": "Log in!",
-    "birthday": "Birthday"
+    "birthday": "Birthday",
+    "loginAlreadyTaken": "This login is already taken"
   },
   "markRequiredField": "* - required field",
   "startMsg": "Hello, Polyweb!",
@@ -147,7 +147,7 @@
     "dashboard": "Dashboard",
     "home": "Home",
     "listRequest": "List of request",
-    "notification": "Notification",
+    "notifications": "Notifications",
     "organizations": "Organizations",
     "points": "Points",
     "post": "Post",
@@ -156,6 +156,9 @@
     "user": "User",
     "userInOrg": "User in organization",
     "users": "Users",
+<<<<<<< HEAD
+    "listTeams": "List of teams"
+=======
     "teamlist": "Team list",
     "manager": "Manager",
     "teamsettings": "Settings",
@@ -164,6 +167,7 @@
     "rating": "Rating",
     "editteam": "Edit team",
     "requestlist": "Requests"
+>>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",

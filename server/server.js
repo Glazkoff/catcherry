@@ -15,7 +15,7 @@ require("dotenv").config({ path: "../.env" });
 const path = require("path");
 const express = require("express");
 const bodyParser = require("body-parser");
-const faker = require("faker/locale/en");
+const faker = require("faker");
 const bcrypt = require("bcrypt");
 const chalk = require("chalk");
 const cookieParser = require("cookie-parser");
@@ -52,7 +52,7 @@ const schema = makeExecutableSchema({
 
 // Инициализация express-приложения
 const app = express();
-const PORT = 3000;
+const PORT = process.env.PORT || 3000;
 
 // Использование сжатия gzip
 app.use(compression());
@@ -131,6 +131,7 @@ let destroyTable;
 async function addAllTables(destroyTable) {
   if (destroyTable == true) {
     db.Administrators.destroy({ where: {} });
+    db.TypeNotification.destroy({ where: {} });
     db.Comments.destroy({ where: {} });
     db.LikesOfComments.destroy({ where: {} });
     db.LikesOfPosts.destroy({ where: {} });
@@ -149,12 +150,27 @@ async function addAllTables(destroyTable) {
     db.UsersInTeams.destroy({ where: {} });
   }
   //Можно менять количество заполнений в переменной quantity
-  let quantity = 10;
+  let quantity = 1;
   for (let index = 0; index < quantity; index++) {
     //Тип организации
     let type = await db.OrganizationsTypes.create({
       name: faker.name.findName()
     });
+    //Тип оповещения
+    let typeNotification;
+    if (index == 0) {
+      typeNotification = await db.TypeNotification.create({
+        typeName: "normal"
+      });
+    } else if (index == 1) {
+      typeNotification = await db.TypeNotification.create({
+        typeName: "danger"
+      });
+    } else {
+      typeNotification = await db.TypeNotification.create({
+        typeName: faker.name.findName()
+      });
+    }
     //Пользователи
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
@@ -188,20 +204,28 @@ async function addAllTables(destroyTable) {
       description: faker.lorem.paragraph(),
       maxUsersLimit: faker.random.number()
     });
+
     //Оповещения
     let notification = await db.Notifications.create({
       body: {
         header: faker.random.word(),
         text: faker.lorem.paragraph()
       },
+      typeId: typeNotification.dataValues.id,
       authorId: user.dataValues.id,
-      teamId: team.dataValues.id
+      userId: [
+        user.dataValues.id,
+        user.dataValues.id + 1,
+        user.dataValues.id + 2
+      ],
+      endTime: faker.date.future()
     });
     let readnotification = await db.ReadNotification.create({
       notificationId: notification.dataValues.id,
       userId: user.dataValues.id,
       readOrNot: faker.random.boolean()
     });
+
     //Задачи
     let tasks = await db.Tasks.create({
       teamId: team.dataValues.id,
@@ -249,20 +273,20 @@ async function addAllTables(destroyTable) {
       operationDescription: faker.random.word()
     });
     //Комментарии
-    let comment = await db.Comments.create({
-      authorId: user.dataValues.id,
-      postId: post.dataValues.id,
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph()
-      },
-      dateAdd: faker.random.number()
-    });
+    // let comment = await db.Comments.create({
+    //   authorId: user.dataValues.id,
+    //   postId: post.dataValues.id,
+    //   body: {
+    //     header: faker.random.word(),
+    //     text: faker.lorem.paragraph()
+    //   },
+    //   dateAdd: faker.random.number()
+    // });
     //Лайки для комментариев
-    let likesofcomments = await db.LikesOfComments.create({
-      userId: user.dataValues.id,
-      commentId: comment.dataValues.id
-    });
+    // let likesofcomments = await db.LikesOfComments.create({
+    //   userId: user.dataValues.id,
+    //   commentId: comment.dataValues.id
+    // });
     //Лайки для постов
     let likesofposts = await db.LikesOfPosts.create({
       userId: user.dataValues.id,
