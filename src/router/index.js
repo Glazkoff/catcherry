@@ -5,14 +5,9 @@ import Home from "@/views/Home.vue";
 import Main from "@/views/Main.vue";
 
 import Auth from "@/views/Auth.vue";
-import SignUp from "@/components/auth/SignUp.vue";
 import LogIn from "@/components/auth/LogIn.vue";
 
-import AdminPanel from "@/views/AdminPanel.vue";
-import Dashboard from "@/components/admin/Dashboard.vue";
-import Users from "@/components/admin/Users.vue";
 import User from "@/components/account/User.vue";
-import Organization from "@/components/admin/Organization.vue";
 
 import CreatePost from "@/components/CreatePost.vue";
 
@@ -20,15 +15,7 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
-import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
-import TeamMembers from "@/components/manager/TeamMembers.vue";
-import RaitingList from "@/components/manager/RaitingList.vue";
-import EditTeam from "@/components/manager/EditTeam.vue";
-import RequestsList from "@/components/manager/RequestsList.vue";
-import TasksTeam from "@/components/manager/TasksTeam.vue";
 import TeamsList from "@/components/manager/TeamsList.vue";
-import TeamSettings from "@/components/manager/TeamSettings.vue";
-import NewTask from "@/components/manager/NewTask.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
@@ -36,10 +23,6 @@ import PointsUser from "@/components/account/PointsUser.vue";
 import UserStatistic from "@/components/account/UserStatistic.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
-import SideBarManager from "@/components/sidebar/SideBarManager.vue";
-import SideBarAdmin from "@/components/sidebar/SideBarAdmin.vue";
-
-import Manager from "@/views/Manager.vue";
 
 import store from "@/store/index";
 import { i18n } from "@/i18n/i18n.js";
@@ -86,16 +69,19 @@ const routes = [
         },
         meta: {
           // TODO: проверка менеджер ли
-          // TODO: хлебные крошки
-          breadCrumb: "TeamsList"
+          breadCrumb: i18n.t("router.listTeams")
         }
       },
       {
         path: "/manager",
         name: "Manager",
         components: {
-          main: Manager,
-          sidebar: SideBarManager
+          main: () =>
+            import(/* webpackChunkName: "manager" */ "../views/Manager.vue"),
+          sidebar: () =>
+            import(
+              /* webpackChunkName: "sideBarManager" */ "../components/sidebar/SideBarManager.vue"
+            )
         },
         meta: {
           // TODO: проверка менеджер ли
@@ -106,38 +92,59 @@ const routes = [
           {
             path: "teams",
             name: "TeamSettings",
-            component: TeamSettings
+            component: () =>
+              import(
+                /* webpackChunkName: "managerTeamSettings" */ "../components/manager/TeamSettings.vue"
+              )
           },
           {
             path: "new_task",
             name: "NewTask",
-            component: NewTask
+            component: () =>
+              import(
+                /* webpackChunkName: "managerNewTask" */ "../components/manager/NewTask.vue"
+              )
           },
           {
             path: "team_members",
             name: "TeamMembers",
-            component: TeamMembers
+            component: () =>
+              import(
+                /* webpackChunkName: "managerTeamMembers" */ "../components/manager/TeamMembers.vue"
+              )
           },
           {
             // TODO: rating
             path: "raiting",
             name: "RaitingList",
-            component: RaitingList
+            component: () =>
+              import(
+                /* webpackChunkName: "managerRatingList" */ "../components/manager/RaitingList.vue"
+              )
           },
           {
             path: "team_edit",
             name: "EditTeam",
-            component: EditTeam
+            component: () =>
+              import(
+                /* webpackChunkName: "managerEditTeam" */ "../components/manager/EditTeam.vue"
+              )
           },
           {
             path: "requests",
             name: "RequestsList",
-            component: RequestsList
+            component: () =>
+              import(
+                /* webpackChunkName: "managerRequestsList" */ "../components/manager/RequestsList.vue"
+              )
           },
           {
             path: "tasks",
             name: "TasksTeam",
-            component: TasksTeam
+            component: () =>
+              import(
+                /* webpackChunkName: "managerTasksTeam" */ "../components/manager/TasksTeam.vue"
+              )
           }
         ]
       },
@@ -188,8 +195,14 @@ const routes = [
       {
         path: "/admin",
         components: {
-          main: AdminPanel,
-          sidebar: SideBarAdmin
+          main: () =>
+            import(
+              /* webpackChunkName: "adminPanel" */ "../views/AdminPanel.vue"
+            ),
+          sidebar: () =>
+            import(
+              /* webpackChunkName: "sideBarAdmin" */ "../components/sidebar/SideBarAdmin.vue"
+            )
         },
         meta: {
           requiresAuth: true,
@@ -199,7 +212,10 @@ const routes = [
           {
             path: "",
             name: "Dashboard",
-            component: Dashboard,
+            component: () =>
+              import(
+                /* webpackChunkName: "adminDashboard" */ "../components/admin/Dashboard.vue"
+              ),
             meta: {
               breadCrumb: i18n.t("router.dashboard")
             }
@@ -207,7 +223,10 @@ const routes = [
           {
             path: "users",
             name: "Users",
-            component: Users,
+            component: () =>
+              import(
+                /* webpackChunkName: "adminUsers" */ "../components/admin/Users.vue"
+              ),
             meta: {
               breadCrumb: i18n.t("router.users")
             }
@@ -215,7 +234,10 @@ const routes = [
           {
             path: "organizations",
             name: "Organization",
-            component: Organization,
+            component: () =>
+              import(
+                /* webpackChunkName: "adminOrganization" */ "../components/admin/Organization.vue"
+              ),
             meta: {
               breadCrumb: i18n.t("router.organizations")
             }
@@ -234,14 +256,17 @@ const routes = [
         }
       },
       {
-        path: "/notification",
-        name: "ListOfNotifications",
+        path: "/notifications",
+        name: "Notifications",
         components: {
-          main: ListOfNotifications,
+          main: () =>
+            import(
+              /* webpackChunkName: "notifications" */ "../components/account/Notifications.vue"
+            ),
           sidebar: SideBarDefault
         },
         meta: {
-          breadCrumb: i18n.t("router.notification")
+          breadCrumb: i18n.t("router.notifications")
         }
       },
       {
@@ -307,7 +332,10 @@ const routes = [
         path: "",
         name: "SignUp",
         components: {
-          form: SignUp
+          form: () =>
+            import(
+              /* webpackChunkName: "signup" */ "../components/auth/SignUp.vue"
+            )
         }
       }
     ],
@@ -315,15 +343,6 @@ const routes = [
       guest: true
     }
   }
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue")
-  // }
 ];
 
 const router = new VueRouter({

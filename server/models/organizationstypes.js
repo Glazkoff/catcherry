@@ -19,12 +19,12 @@ module.exports = (sequelize, DataTypes) => {
     {
       name: {
         type: DataTypes.STRING,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "OrganizationsTypes",
+      modelName: "OrganizationsTypes"
     }
   );
   return OrganizationsTypes;

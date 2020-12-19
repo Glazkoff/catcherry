@@ -1,8 +1,11 @@
 <template>
   <Popup @close="close()">
-    <template v-slot:header>
+    <div @click="close()" slot="exit">
+      &times;
+    </div>
+    <div slot="header">
       <h2>{{ $t("privacyPolicy.title") }}</h2>
-    </template>
+    </div>
     <template v-slot:body>
       <h5>
         1. Общие положения

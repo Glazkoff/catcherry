@@ -1,5 +1,5 @@
 <template>
-  <div class="search_organization account-view">
+  <div class="search_organization">
     <!-- попап для просмотра информации об организации -->
     <popup v-if="isShowInfoModal">
       <h3 slot="header">Организация "{{ nameOfOrganization }}"</h3>
@@ -40,7 +40,7 @@
       ><p slot="title">Заявка в команду успешно подана</p></minialert
     >
     <!-- свич-табы для поиска организации по названию или номеру  -->
-    <h1>Поиск организации</h1>
+    <h2>Поиск организации</h2>
     <div class="tabs">
       <input
         type="radio"
@@ -50,7 +50,7 @@
         @click="tabFirst = true"
         checked
       />
-      <label for="tab-btn-1">По названию</label>
+      <label for="tab-btn-1"><p>По названию</p></label>
       <input
         type="radio"
         name="tab-btn"
@@ -58,37 +58,47 @@
         value=""
         @click="tabFirst = false"
       />
-      <label for="tab-btn-2">По номеру</label>
+      <label for="tab-btn-2"><p>По номеру</p></label>
 
       <div id="content-1">
-        <h3>Введите название организации</h3>
         <form @submit.prevent="checkForm">
-          <input
+          <button class="formSearchIcon">
+            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
+          ><input
             v-model="findString"
             type="text"
-            placeholder="Поиск по организациям"
-            class="form-control"
-          /><br />
-          <button class="btn btn-primary">Найти</button>
+            placeholder="Введите название организации, которую вы хотите найти"
+            class="formSearch"
+          />
         </form>
       </div>
       <div id="content-2">
-        <h3>Введите номер организации</h3>
         <form @submit.prevent="checkForm">
-          <input
+          <button class="formSearchIcon">
+            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
+          ><input
             type="number"
-            placeholder="Номер организации"
+            placeholder="Введите номер организации, которую вы хотите найти"
             v-model="search"
-            class="form-control"
-          /><br />
-          <button class="btn btn-primary">Найти</button>
+            class="formSearch"
+          />
         </form>
       </div>
     </div>
     <!-- вывод массива всех организаций  -->
     <div class="result_organization">
       <h2>Список организаций</h2>
-      <hr />
+      <div class="card">
+        <a class="orgFoto"></a>
+
+        <div class="card_body">
+          <h3>Название организации</h3>
+          <small>№ 11111111111111</small>
+        </div>
+        <div class="card_action">
+          <ArrowRight></ArrowRight>
+        </div>
+      </div>
       <div v-if="tabFirst">
         <div
           class="oneOrganization"
@@ -104,8 +114,8 @@
           </button>
         </div>
         <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
-        <div v-if="filterOrganization == ''">
-          <h4>Организации не найдены</h4>
+        <div class="organizationNotSearch" v-if="filterOrganization == ''">
+          <h3>Организации не найдены</h3>
           <button class="btn btn-primary" @click="isAddOrganization = true">
             Создать
           </button>
@@ -219,6 +229,8 @@
 </template>
 
 <script>
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
+import SearchIcon from "@/assets/svg/organizations/search_organization.svg?inline";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import {
@@ -233,7 +245,7 @@ import { required } from "vuelidate/lib/validators";
 import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
-  components: { popup, minialert },
+  components: { popup, minialert, SearchIcon, ArrowRight },
   data() {
     return {
       findString: "",
@@ -411,23 +423,60 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
 *,
 *::before,
 *::after {
   box-sizing: border-box;
 }
-body {
-  margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    "Helvetica Neue", Arial, "Noto Sans", sans-serif, "Apple Color Emoji",
-    "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji";
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  text-align: left;
-  background-color: #fff;
+
+.search_organization {
+  margin-left: 52px;
+}
+.organizationNotSearch {
+  text-align: center;
+}
+.organizationNotSearch button {
+  text-align: center;
+  margin-left: auto;
+  margin-right: auto;
+}
+.orgFoto {
+  height: 48px;
+  width: 48px;
+  background-color: $gray_3;
+  border-radius: 25px;
+  border: 2px solid $bright_violet;
+  color: $gray_3;
+  margin-right: 1em;
+}
+.formSearch {
+  background: $violet_2;
+  border: 1px solid $violet_2;
+  box-sizing: border-box;
+  border-radius: 0px 15px 15px 0px;
+  color: $gray_3;
+  padding-top: 3px;
+  padding-bottom: 3px;
+  width: 1025px;
+  height: 57px;
+}
+.formSearchIcon {
+  background: $violet_2;
+  border: 1px solid $violet_2;
+  border-radius: 15px 0px 0px 15px;
+  color: $gray_3;
+  padding-top: 10px;
+  padding-right: 7px;
+  padding-bottom: 20px;
+}
+.formSearchIconSvg {
+  margin-left: 2px;
+  margin-top: 3px;
+  margin-right: 4px;
 }
 .oneTeam p {
   display: inline-block;
@@ -439,21 +488,13 @@ body {
   border-radius: 8px;
   box-shadow: 0 2px 5px #868686;
 }
-.tabs {
-  font-size: 0;
-  max-width: 350px;
-  margin-left: auto;
-  margin-right: auto;
-}
+
 .tabs > input[type="radio"] {
   display: none;
 }
 .tabs > div {
   /* скрыть контент по умолчанию */
   display: none;
-  border: 1px solid #e0e0e0;
-  padding: 10px 15px;
-  font-size: 16px;
 }
 /* отобразить контент, связанный с вабранной радиокнопкой (input type="radio") */
 #tab-btn-1:checked ~ #content-1,
@@ -461,26 +502,46 @@ body {
 #tab-btn-3:checked ~ #content-3 {
   display: block;
 }
+p {
+  line-height: 2px !important;
+}
+h3 {
+  margin-block-start: 0em;
+  margin-block-end: 0.1em;
+}
+small {
+  color: $gray_3;
+}
+.card {
+  width: 1070px !important;
+  height: 114px !important;
+  border-radius: 10px;
+}
 .tabs > label {
   display: inline-block;
   text-align: center;
-  vertical-align: middle;
   user-select: none;
-  background-color: #f5f5f5;
-  border: 1px solid #e0e0e0;
-  padding: 2px 8px;
-  font-size: 16px;
-  line-height: 1.5;
-  transition: color 0.15s ease-in-out, background-color 0.15s ease-in-out;
   cursor: pointer;
   position: relative;
-  top: 1px;
+  border-left: none;
+  background: $violet_2;
+  box-sizing: border-box;
+  color: $gray_3;
+  padding-left: 20px !important;
+  padding-right: 20px !important;
+  margin-bottom: 10px;
+  border-radius: 15px 0px 0px 15px;
+  width: 150px;
 }
 .tabs > label:not(:first-of-type) {
   border-left: none;
+  background: $violet_2;
+  color: $gray_3;
+  border-radius: 0px 15px 15px 0px;
 }
 .tabs > input[type="radio"]:checked + label {
-  background-color: #fff;
-  border-bottom: 1px solid #fff;
+  border-left: none;
+  background: $violet_3;
+  color: $gray_3;
 }
 </style>

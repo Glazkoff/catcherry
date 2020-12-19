@@ -1,13 +1,13 @@
 <template>
   <transition name="modal">
     <div class="modal-mask">
+      <div class="modal-exit">
+        <slot name="exit"></slot>
+      </div>
       <div class="modal-wrapper">
         <div class="modal-container">
           <div class="modal-header">
             <slot name="header"></slot>
-          </div>
-          <div class="modal-exit">
-            <slot name="exit"></slot>
           </div>
           <div class="modal-body">
             <slot name="body"></slot>
@@ -41,8 +41,10 @@ export default {};
 }
 
 .modal-wrapper {
-  display: table-cell;
-  vertical-align: middle;
+  overflow-y: scroll;
+  height: 100vh;
+  padding-top: 2rem;
+  padding-bottom: 2rem;
 }
 
 .modal-container {
@@ -54,8 +56,6 @@ export default {};
   border-radius: 10px;
   box-shadow: 0 2px 8px rgba(0, 0, 0, 0.33);
   transition: all 0.3s ease;
-  max-height: 90vh;
-  overflow-y: scroll;
   position: relative;
 }
 
@@ -68,10 +68,12 @@ export default {};
 
 .modal-exit {
   position: absolute;
-  right: 2%;
-  top: 2%;
+  right: 2rem;
+  top: 1rem;
+  user-select: none;
+  line-height: 2rem;
   cursor: pointer;
-  font-size: 30px;
+  font-size: 3.5rem;
   color: $black;
   font-weight: 900;
   &:hover {

@@ -16,32 +16,32 @@ module.exports = (sequelize, DataTypes) => {
     {
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       refreshToken: {
         type: DataTypes.UUID,
-        allowNull: false,
+        allowNull: false
       },
       ua: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       fingerprint: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       ip: {
         type: DataTypes.STRING,
-        allowNull: true,
+        allowNull: true
       },
       expiresIn: {
         type: DataTypes.BIGINT,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "RefreshSessions",
+      modelName: "RefreshSessions"
     }
   );
   return RefreshSessions;

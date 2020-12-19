@@ -3,7 +3,8 @@ export default function(choice, choicesLength) {
     return 0;
   }
 
-  const teen = choice > 10 && choice < 20;
+  const teen =
+    (choice > 10 && choice < 20) || (choice > 10 && choice % 100 < 20);
   const endsWithOne = choice % 10 === 1;
 
   if (choicesLength < 4) {

@@ -722,40 +722,6 @@ export const BACKLOG_TASKS_QUERY = gql`
   }
 `;
 
-export const NOTIFICATIONS_USER_QUERY = gql`
-  query {
-    notifications {
-      id
-      body {
-        header
-        text
-        buttonLink
-      }
-      authorId
-      teamId
-      forAllUsers
-      createdAt
-    }
-  }
-`;
-
-export const ADD_NOTIFICATION_QUERY = gql`
-  mutation(
-    $body: NotificationBody!
-    $authorId: Int!
-    $teamId: Int!
-    $forAllUsers: Int
-  ) {
-    createNotification(
-      body: $body
-      authorId: $authorId
-      teamId: $teamId
-      forAllUsers: $forAllUsers
-    ) {
-      id
-    }
-  }
-`;
 export const STATISTICS_NEW_QUERY = gql`
   query statisticsNew {
     statisticsNewUsers
@@ -770,8 +736,100 @@ export const STATISTICS_DELETE_QUERY = gql`
   }
 `;
 
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ NOTIFICATIONS
+
+// Получение всех оповещений
+export const NOTIFICATIONS_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      userId
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
+      createdAt
+    }
+  }
+`;
+
+// Получение всех непрочитанных оповещений для одного пользователя
+export const NOTIFICATIONS_FOR_USER_QUERY = gql`
+  query($userId: ID!) {
+    notificationsForUser(userId: $userId) {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      userId
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
+      createdAt
+    }
+  }
+`;
+
+// Создание оповещений
+export const CREATE_NOTIFICATION = gql`
+  mutation(
+    $body: NotificationBody!
+    $typeId: Int!
+    $authorId: Int!
+    $userId: [Int]
+    $endTime: String!
+  ) {
+    createNotification(
+      body: $body
+      typeId: $typeId
+      authorId: $authorId
+      userId: $userId
+      endTime: $endTime
+    ) {
+      id
+    }
+  }
+`;
+
+// Поменять статус оповещения на "Прочитано"
+export const UPDATE_NOTIFICATION = gql`
+  mutation($notificationId: ID!, $userId: ID!, $checkNotification: Boolean) {
+    updateNotification(
+      notificationId: $notificationId
+      userId: $userId
+      checkNotification: $checkNotification
+    )
+  }
+`;
+
+//Удалить оповещение
+export const DELETE_NOTIFICATION = gql`
+  mutation($id: ID!) {
+    deleteNotification(id: $id)
+  }
+`;
+
+// НЕКЛАССИФИЦИРОВАННЫЕ ЗАПРОСЫ
 export const LOG_OUT = gql`
   mutation($fingerprint: String!) {
     logOut(fingerprint: $fingerprint)
+  }
+`;
+
+export const IS_LOGIN_USED = gql`
+  query($login: String!) {
+    isLoginUsed(login: $login)
   }
 `;

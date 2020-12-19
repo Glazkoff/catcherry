@@ -17,18 +17,20 @@
               <a class="userFoto"></a>
               <a class="nav-name"
                 ><p>{{ this.$store.getters.decodedToken.name }}</p>
-                <small>
+                <!-- <small>
                   -
-                </small>
-                <!-- <small v-if="oneUserInTeams.role.name == null">-</small>
-                <small v-if="oneUserInTeams.role.name != null">{{
-                  oneUserInTeams.role.name
-                }}</small> -->
+                </small> -->
+                <small v-if="roleUser == null">-</small>
+                <small v-if="roleUser != null">{{ roleUser }}</small>
               </a>
             </li>
             <li class="right icon-notificationTopBar">
               <div class="notificationTopBar">
-                <a href="#" class="nav-notificationTopBar">
+                <router-link
+                  to="/notifications"
+                  :exact="true"
+                  active-class="nav-checked"
+                >
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
                     <div class="number">.</div>
@@ -39,20 +41,12 @@
                           <div class="cent">Looks Like your all caught up!</div>
                         </div>
                         <div class="cont">
-                          <!-- Fold this div and try deleting evrything inbetween -->
-
                           <div
                             class="sec new"
-                            v-for="notification in notifications"
+                            v-for="notification in notificationsForUser"
                             :key="notification.id"
                           >
-                            <div
-                              v-if="
-                                notification.forAllUsers ==
-                                  oneUserInTeams.userId ||
-                                  notification.forAllUsers == null
-                              "
-                            >
+                            <div>
                               <a href="#">
                                 <div class="profCont">
                                   <img
@@ -74,7 +68,7 @@
                       </div>
                     </div>
                   </div>
-                </a>
+                </router-link>
               </div>
             </li>
             <li class="right">
@@ -103,7 +97,7 @@ import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg?inlin
 import {
   GET_POINTS_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
-  NOTIFICATIONS_USER_QUERY
+  NOTIFICATIONS_FOR_USER_QUERY
 } from "@/graphql/queries";
 export default {
   name: "top-bar",
@@ -135,8 +129,13 @@ export default {
         };
       }
     },
-    notifications: {
-      query: NOTIFICATIONS_USER_QUERY
+    notificationsForUser: {
+      query: NOTIFICATIONS_FOR_USER_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
     }
   },
   methods: {
@@ -161,6 +160,20 @@ export default {
         return "-";
       } else {
         return this.getPointsUser.pointQuantity;
+      }
+    },
+    roleUser() {
+      if (this.role == undefined) {
+        return "-";
+      } else {
+        return this.oneUserInTeams.role.name;
+      }
+    },
+    UserID() {
+      if (this.userId == undefined) {
+        return "-";
+      } else {
+        return this.$store.getters.decodedToken.id;
       }
     }
   }
@@ -261,6 +274,7 @@ header {
 }
 .box::-webkit-scrollbar-track {
   -webkit-box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
+  box-shadow: inset 0 0 6px rgba(0, 0, 0, 0.3);
   background-color: #f5f5f5;
   border-radius: 5px;
 }
