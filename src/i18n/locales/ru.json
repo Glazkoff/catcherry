@@ -6,7 +6,7 @@
   "listUser": "Список пользователей",
   "profileUser": "Профиль",
   "listOrganization": "Список организаций",
-  "systemStatisticsBr": "Статистика<br>системы",
+  "systemStatisticsBr": "Статистика системы",
   "systemStatistics": "Статистика системы",
   "surname": "Фамилия",
   "name": "Имя",
@@ -104,7 +104,11 @@
     "youHaveSuccessfullyCreatedNewTask": "Вы успешно создали новую задачу"
   },
   "ratingOfTeamMembers": {
-    "ratingOfTeamMembers": "Рейтинг участников команды"
+    "ratingOfTeamMembers": "Рейтинг участников команды",
+    "history": "История",
+    "statistics": "Статистика",
+    "forTheCurrentWeek": "За текущую неделю",
+    "lastWeek": "На прошлой неделе"
   },
   "logIn": {
     "title": "Вход в Catcherry",

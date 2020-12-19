@@ -1,11 +1,11 @@
 <template>
   <div class="main_rating">
     <breadcrumbs></breadcrumbs>
-    <h2>Рейтинг участников</h2>
+    <h2>{{ $t("ratingOfTeamMembers.ratingOfTeamMembers") }}</h2>
     <div v-if="$apollo.queries.usersInTeams.loading" class="wrapOfLoader">
       <loader></loader>
     </div>
-    <div v-if="usersInTeams !== null">
+    <div v-if="usersInTeams == null">
       <p>Нет пользователей в команде</p>
     </div>
     <div>
@@ -49,7 +49,7 @@
               oneUser.user.id === userId
           "
         >
-          Загрузка...
+          {{ $t("loading") }}...
         </div>
         <div
           class="card_more"
@@ -60,22 +60,22 @@
           "
         >
           <div>
-            <h3>История</h3>
+            <h3>{{ $t("ratingOfTeamMembers.history") }}</h3>
             <p
               v-for="pointsOperation in getOperationPointsUser"
               :key="pointsOperation.id"
               class="history"
             >
               <small v-if="pointsOperation.delta > 0">+</small
-              >{{ pointsOperation.delta }} балла(ов)
+              >{{ $tc("pointsMsg", pointsOperation.delta) }}
               {{ pointsOperation.operationDescription }}
             </p>
           </div>
           <div>
-            <h3>Статистика</h3>
+            <h3>{{ $t("ratingOfTeamMembers.statistics") }}</h3>
             <div class="statistics">
               <div>
-                <p>За текущую неделю:</p>
+                <p>{{ $t("ratingOfTeamMembers.forTheCurrentWeek") }}:</p>
                 <p
                   class="points_now"
                   :class="{
@@ -89,7 +89,7 @@
                   <userStatisticsUp
                     v-show="pointsLastWeek[0] > pointsLastWeek[1]"
                   ></userStatisticsUp>
-                  {{ pointsLastWeek[0] }} баллов
+                  {{ $tc("pointsMsg", pointsLastWeek[0]) }}
                 </p>
                 <small v-if="pointsLastWeek[0] > pointsLastWeek[1]">
                   на {{ pointsLastWeek[0] - pointsLastWeek[1] }} баллов больше,
@@ -101,9 +101,9 @@
                 </small>
               </div>
               <div>
-                <p>На прошлой неделе:</p>
+                <p>{{ $t("ratingOfTeamMembers.lastWeek") }}:</p>
                 <p v-if="pointsLastWeek !== null" class="points_now">
-                  {{ pointsLastWeek[1] }} баллов
+                  {{ $tc("pointsMsg", pointsLastWeek[1]) }}
                 </p>
               </div>
             </div>

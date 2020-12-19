@@ -104,7 +104,11 @@
     "youHaveSuccessfullyCreatedNewTask": "You have successfully created a new task"
   },
   "ratingOfTeamMembers": {
-    "ratingOfTeamMembers": "Rating of team members"
+    "ratingOfTeamMembers": "Rating of team members",
+    "history": "History",
+    "statistics": "Statistics",
+    "forTheCurrentWeek": "For the current week",
+    "lastWeek": "Last week"
   },
   "logIn": {
     "title": "Entering Catcherry",

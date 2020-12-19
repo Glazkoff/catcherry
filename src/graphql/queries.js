@@ -313,6 +313,14 @@ export const UPDATE_TEAMS_QUERY = gql`
   }
 `;
 
+export const ADD_USER_IN_TEAM_QUERY = gql`
+  mutation($id: ID!, $userId: ID!) {
+    addUserInNewTeam(id: $id, userId: $userId) {
+      id
+    }
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {

@@ -213,34 +213,62 @@
         </p>
         <p v-if="oneUserInTeams.length !== 0">{{ $t("userTeams") }}:</p>
         <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
-          <p>{{ $t("nameInanimate") }}: {{ team.team.name }}</p>
-          <p>{{ $t("organization") }}: {{ team.team.organization.name }}</p>
+          <p v-if="team.team.name !== null">
+            {{ $t("nameInanimate") }}: {{ team.team.name }}
+          </p>
+          <p v-if="team.team.organization !== null">
+            {{ $t("organization") }}: {{ team.team.organization.name }}
+          </p>
           <p>{{ $t("status") }}: {{ team.status }}</p>
           <p v-if="team.role !== null">
             {{ $t("role") }}: {{ team.role.name }}
           </p>
           <div class="btn-group">
             <button
-              v-if="team.status === 'Принято'"
-              @click="changeStatusInTeam(team, 'Не принято')"
+              v-if="team.status === 'Принят'"
+              @click="changeStatusInTeam(team, 'Не принят')"
               class="btn btn-primary block"
             >
               {{ $t("deleteUserFromTeam") }}
             </button>
             <button
-              v-if="team.status !== 'Принято'"
-              @click="changeStatusInTeam(team, 'Принято')"
+              v-if="team.status !== 'Принят'"
+              @click="changeStatusInTeam(team, 'Принят')"
               class="btn btn-primary block"
             >
               {{ $t("addUserToTeam") }}
             </button>
           </div>
         </div>
+        <button
+          class="btn btn-primary block"
+          @click="addUserInTeam()"
+          v-if="!isShowAddUserInTeam"
+        >
+          {{ $t("addUserToTeam") }}
+        </button>
+        <div class="addToTeam" v-if="isShowAddUserInTeam">
+          <div class="form-group">
+            <label for="team" class="form-name">Название команды</label>
+            <select name="team" class="form-control" v-model="newTeam">
+              <option v-for="team in teams" :key="team.id" :value="team.id">{{
+                team.name
+              }}</option>
+            </select>
+          </div>
+          <button class="btn btn-primary" @click="addOneUserInTeam()">
+            {{ $t("addUserToTeam") }}
+          </button>
+        </div>
         <div class="btn-group">
           <button @click="showModalEdit()" class="btn btn-primary">
             {{ $t("edit") }}
           </button>
-          <button @click="showModalDelete()" class="btn btn-primary">
+          <button
+            @click="showModalDelete()"
+            class="btn btn-primary"
+            :disabled="$store.getters.decodedToken.id == userId"
+          >
             {{ $t("delete") }}
           </button>
           <button @click="cancelFullInformation()" class="btn btn-alternate">
@@ -268,7 +296,12 @@
           :placeholder="$t('placeholderSearchByUsers')"
           class="form-control block"
         />
-        <div class="card" v-for="user in filterUser" :key="user.id">
+        <div
+          class="card"
+          v-for="user in filterUser"
+          :key="user.id"
+          @click="showFullInformation(user.id)"
+        >
           <div class="card_img">
             <img src="~@/assets/avatar.jpg" />
           </div>
@@ -277,7 +310,7 @@
             <p>{{ user.login }}</p>
             <p>№ {{ user.id }}</p>
           </div>
-          <div @click="showFullInformation(user.id)" class="card_action">
+          <div class="card_action">
             <ArrowRight></ArrowRight>
           </div>
         </div>
@@ -316,7 +349,9 @@ import {
   ONE_USER_IN_TEAMS_QUERY,
   ADD_IN_TEAM_QUERY,
   GET_POINTS_QUERY,
-  CARGE_POINTS_QUERY
+  CARGE_POINTS_QUERY,
+  TEAMS_QUERY,
+  ADD_USER_IN_TEAM_QUERY
 } from "@/graphql/queries";
 
 export default {
@@ -325,6 +360,10 @@ export default {
     // Получить список всех пользователей
     users: {
       query: USERS_QUERY
+    },
+    // Получение списка всех команд
+    teams: {
+      query: TEAMS_QUERY
     },
     // Получить всю информацию про одного пользователя
     user: {
@@ -377,8 +416,11 @@ export default {
       isShowAlertEdit: false,
       isShowModalEdit: false,
       isShowModalDelete: false,
+      isShowAddUserInTeam: false,
+      nameTeam: "Название команды",
       findString: "",
       points: 0,
+      allTeams: [],
       isEditPoints: false,
       oneUser: {
         id: -1,
@@ -425,11 +467,66 @@ export default {
     // Закрыть попап со всей информацией
     cancelFullInformation() {
       this.isShowFullInformation = false;
+      this.isShowAddUserInTeam = false;
     },
     // Закрыть попапы с редактированием или удалением
     cancelModal() {
       this.isShowModalEdit = false;
       this.isShowModalDelete = false;
+      this.isShowAddUserInTeam = false;
+    },
+    addUserInTeam() {
+      console.log(this.teams);
+      this.teams = this.teams.filter(
+        team => this.oneUserInTeams.findIndex(t => +t.teamId === +team.id) < 0
+      );
+      this.isShowAddUserInTeam = true;
+    },
+    addOneUserInTeam() {
+      console.log(this.newTeam);
+      this.$apollo
+        .mutate({
+          mutation: ADD_USER_IN_TEAM_QUERY, // Удаляем из БД
+          variables: {
+            id: this.newTeam,
+            userId: this.userId
+          }
+          // update: cache => {
+          //   let data = cache.readQuery({
+          //     query: ONE_USER_IN_TEAMS_QUERY,
+          //     variables: { userId: this.userId }
+          //   });
+          //   let newUserInTeam = {
+          //     status: "Принят",
+          //     team: {
+          //       name: this.teams.find(t => +t.id === +this.newTeam).name
+          //     }
+          //   };
+          //   data.oneUserInTeams.push(newUserInTeam);
+          //   cache.writeQuery({
+          //     query: ONE_USER_IN_TEAMS_QUERY,
+          //     variables: { userId: this.userId },
+          //     data
+          //   });
+          // }
+        })
+        // В случае успеха
+        .then(() => {
+          this.isShowAddUserInTeam = false;
+          this.isShowAlertEdit = true; // Показать окно с информацией об успехе
+          setTimeout(() => {
+            this.isShowAlertEdit = false; // Закрыть окно с информацией об успехе
+          }, 3000);
+        })
+        // В случае ошибки
+        .catch(error => {
+          console.error(error);
+          this.isShowAddUserInTeam = false;
+          this.isError = true; // Показать окно с ошибкой
+          setTimeout(() => {
+            this.isError = false; // Закрыть попап с ошибкой
+          }, 3000);
+        });
     },
     // Показать попап с удалением
     showModalDelete() {
