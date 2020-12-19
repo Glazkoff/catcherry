@@ -68,12 +68,8 @@ const routes = [
           sidebar: SideBarDefault
         },
         meta: {
-<<<<<<< HEAD
           // TODO: проверка менеджер ли
           breadCrumb: i18n.t("router.listTeams")
-=======
-          breadCrumb: i18n.t("router.teamlist")
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
         }
       },
       {
@@ -94,107 +90,79 @@ const routes = [
           {
             path: "teams",
             name: "TeamSettings",
-<<<<<<< HEAD
             component: () =>
               import(
                 /* webpackChunkName: "managerTeamSettings" */ "../components/manager/TeamSettings.vue"
-              )
-=======
-            component: TeamSettings,
+              ),
             meta: {
               breadCrumb: i18n.t("router.teamsettings")
             }
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
           },
           {
             path: "new_task",
             name: "NewTask",
-<<<<<<< HEAD
             component: () =>
               import(
                 /* webpackChunkName: "managerNewTask" */ "../components/manager/NewTask.vue"
-              )
-=======
-            component: NewTask,
+              ),
             meta: {
               breadCrumb: i18n.t("router.newtask")
             }
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
           },
           {
             path: "team_members",
             name: "TeamMembers",
-<<<<<<< HEAD
             component: () =>
               import(
                 /* webpackChunkName: "managerTeamMembers" */ "../components/manager/TeamMembers.vue"
-              )
-=======
-            component: TeamMembers,
+              ),
             meta: {
               breadCrumb: i18n.t("router.teammembers")
             }
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
           },
           {
             path: "raiting",
             name: "RaitingList",
-<<<<<<< HEAD
             component: () =>
               import(
                 /* webpackChunkName: "managerRatingList" */ "../components/manager/RaitingList.vue"
-              )
-=======
-            component: RaitingList,
+              ),
             meta: {
               breadCrumb: i18n.t("router.rating")
             }
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
           },
           {
             path: "team_edit",
             name: "EditTeam",
-<<<<<<< HEAD
             component: () =>
               import(
                 /* webpackChunkName: "managerEditTeam" */ "../components/manager/EditTeam.vue"
-              )
-=======
-            component: EditTeam,
+              ),
             meta: {
               breadCrumb: i18n.t("router.editteam")
             }
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
           },
           {
             path: "requests",
             name: "RequestsList",
-<<<<<<< HEAD
             component: () =>
               import(
                 /* webpackChunkName: "managerRequestsList" */ "../components/manager/RequestsList.vue"
-              )
-=======
-            component: RequestsList,
+              ),
             meta: {
               breadCrumb: i18n.t("router.requestlist")
             }
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
           },
           {
             path: "tasks",
             name: "TasksTeam",
-<<<<<<< HEAD
             component: () =>
               import(
                 /* webpackChunkName: "managerTasksTeam" */ "../components/manager/TasksTeam.vue"
-              )
-=======
-            component: TasksTeam,
+              ),
             meta: {
               breadCrumb: i18n.t("router.tasks")
             }
->>>>>>> c0e70744471f813ac3e5a5df47a4c0883941ba77
           }
         ]
       },
