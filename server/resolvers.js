@@ -435,15 +435,21 @@ module.exports = {
     /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
-      { name, birthday, login, password, fingerprint },
+      { name, surname, patricity, birthday, login, password, fingerprint },
       { res, db }
     ) => {
       let hashPassword = bcrypt.hashSync(password, salt);
+
+      if ("" + birthday == "") {
+        birthday = null;
+      }
 
       // Добавляем данные в БД
       let user = await db.Users.create({
         login,
         name,
+        surname,
+        patricity,
         birthday,
         password: hashPassword
       });
@@ -606,12 +612,15 @@ module.exports = {
         name: name
       }),
     // Обновляем фамилию, имени, отчества, пола и логина пользователя
-    updateUser: (
+    updateUser: async (
       parent,
       { surname, name, patricity, gender, login, id, birthday },
       { db }
-    ) =>
-      db.Users.update(
+    ) => {
+      if ("" + birthday == "") {
+        birthday = null;
+      }
+      let resUpdate = await db.Users.update(
         {
           name,
           surname,
@@ -625,7 +634,9 @@ module.exports = {
             id: id
           }
         }
-      ),
+      );
+      return resUpdate;
+    },
     // Меняем статус пользователя в команде (добавляем или удаляем)
     addUserInTeam: (parent, { status, id }, { db }) =>
       db.UsersInTeams.update(

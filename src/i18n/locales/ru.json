@@ -99,7 +99,13 @@
     "accountQuestion": "Уже есть аккаунт?",
     "logInLink": "Войти!",
     "birthday": "День рождения",
-    "loginAlreadyTaken": "Такой логин уже занят"
+    "loginAlreadyTaken": "Такой логин уже занят",
+    "patricity": "Отчество",
+    "patricityPlaceholder": "Введите отчество",
+    "namePlaceholder": "Введите имя",
+    "name": "Имя",
+    "surnamePlaceholder": "Введите фамилию",
+    "surname": "Фамилия"
   },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",

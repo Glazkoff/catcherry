@@ -7,16 +7,19 @@
         </div>
       </div>
     </div>
-    <div class="container" v-if="!isEdit">
+    <div class="container" v-if="$apollo.loading">
+      <Loader></Loader>
+    </div>
+    <div class="container" v-else-if="!isEdit && !$apollo.loading">
       <div class="row">
-        <div class="col-4" v-if="!$apollo.loading">
+        <div class="col-4">
           <h6 v-if="users.length == 0">
             К сожалению, такого пользователя нет!
           </h6>
           <div class="card">
             <div class="container">
               <div class="row">
-                <div class="col-5">
+                <div class="col-5  flex flex-center">
                   <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
                 </div>
                 <div class="col-5 ">
@@ -105,7 +108,7 @@
     <div>
       <div v-if="isEdit" class="container">
         <div class="row">
-          <div class="col-2">
+          <div class="col-2 flex flex-center">
             <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
           </div>
           <div class="col-1"></div>
@@ -216,6 +219,7 @@
                   type="date"
                   v-model="$v.userEditData.birthday.$model"
                   class="form-control block"
+                  :max="new Date().toISOString().substr(0, 10)"
                 />
               </div>
               <div class="form-group">
@@ -304,6 +308,7 @@ import Popup from "@/components/Popup.vue";
 import MiniAlert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
 import Points from "@/components/account/PointsUser.vue";
+import Loader from "@/components/Loader.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
@@ -317,7 +322,8 @@ export default {
     Popup,
     Edit,
     Points,
-    BreadCrumbs
+    BreadCrumbs,
+    Loader
   },
   apollo: {
     users: {
@@ -392,9 +398,12 @@ export default {
       this.userEditData.patricity = this.user.patricity;
       this.userEditData.gender = this.user.gender;
       this.userEditData.login = this.user.login;
-      this.userEditData.birthday = new Date(+this.user.birthday)
-        .toISOString()
-        .substr(0, 10);
+      console.log("BIRTH!: ", this.user.birthday);
+      if (this.user.birthday != null) {
+        this.userEditData.birthday = new Date(+this.user.birthday)
+          .toISOString()
+          .substr(0, 10);
+      }
     },
     closeFullInformation() {
       this.isEdit = false;
@@ -417,7 +426,9 @@ export default {
             cache.writeQuery({ query: USERS_QUERY, data });
           }
         })
-        .then(() => {})
+        .then(() => {
+          this.$store.dispatch("LOG_OUT");
+        })
         .catch(error => {
           console.error(error);
         });
@@ -450,7 +461,15 @@ export default {
             user.patricity = this.userEditData.patricity;
             user.gender = this.userEditData.gender;
             user.login = this.userEditData.login;
-            user.birthday = "" + new Date(this.userEditData.birthday).getTime();
+            if (
+              this.userEditData.birthday != "" &&
+              this.userEditData.birthday != null
+            ) {
+              user.birthday =
+                "" + new Date(this.userEditData.birthday).getTime();
+            } else {
+              user.birthday = null;
+            }
             cache.writeQuery({ query: USERS_QUERY, data });
           },
           optimisticResponse: {
