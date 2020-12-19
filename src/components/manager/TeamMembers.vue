@@ -11,7 +11,7 @@
       <p slot="title">{{ message }}</p>
     </Minialert>
   </div>
-   <div v-else class="wrapOfLoader"><loader></loader></div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
