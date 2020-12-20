@@ -33,7 +33,9 @@
                 >
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
-                    <div class="number">.</div>
+                    <div class="number" v-if="lengthNotifocations >= 1">
+                      .
+                    </div>
                     <NotificationIcon></NotificationIcon>
                     <div class="box">
                       <div class="display">
@@ -77,10 +79,11 @@
               </p>
             </li>
             <li class="right">
-              <p class="nav-point">
-                {{ $tc("pointsMsg", pointQuantity) }}
-                <StarIcon></StarIcon>
-              </p>
+              <router-link to="/points">
+                <p class="nav-point">
+                  {{ $tc("pointsMsg", pointQuantity) }}
+                  <StarIcon></StarIcon></p
+              ></router-link>
             </li>
           </ul>
         </nav>
@@ -160,6 +163,13 @@ export default {
         return "-";
       } else {
         return this.getPointsUser.pointQuantity;
+      }
+    },
+    lengthNotifocations() {
+      if (this.notificationsForUser == undefined) {
+        return 0;
+      } else {
+        return this.notificationsForUser.length;
       }
     },
     roleUser() {
@@ -255,6 +265,7 @@ header {
 }
 
 #topbar ul li .nav-point {
+  margin-block-start: 0em;
   font-style: normal;
   color: #ffffff;
   // padding-left: 30px;
