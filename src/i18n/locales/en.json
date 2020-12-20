@@ -134,7 +134,12 @@
     "accountQuestion": "Already have an account?",
     "logInLink": "Log in!",
     "birthday": "Birthday",
-    "loginAlreadyTaken": "This login is already taken"
+    "loginAlreadyTaken": "This login is already taken",
+    "patricity": "",
+    "patricityPlaceholder": "",
+    "namePlaceholder": "",
+    "name": "",
+    "surnamePlaceholder": ""
   },
   "markRequiredField": "* - required field",
   "startMsg": "Hello, Polyweb!",

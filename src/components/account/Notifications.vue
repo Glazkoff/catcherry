@@ -70,7 +70,6 @@ export default {
                 userId: this.$store.getters.decodedToken.id
               }
             });
-            console.log(data);
             let index = data.notificationsForUser.findIndex(el => el.id === id);
             data.notificationsForUser.splice(index, 1);
             cache.writeQuery({
@@ -82,9 +81,7 @@ export default {
             });
           }
         })
-        .then(data => {
-          console.log(data);
-        })
+        .then(() => {})
         .catch(error => {
           console.error(error);
         });

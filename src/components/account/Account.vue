@@ -535,6 +535,10 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_grid.scss";
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
 .flexCont {
   display: flex;
   padding: 3rem;
@@ -546,6 +550,10 @@ export default {
 }
 .btnEdit {
   display: flex;
+<<<<<<< HEAD
+=======
+
+>>>>>>> dev
   & > * {
     margin: 0 auto;
     cursor: pointer;

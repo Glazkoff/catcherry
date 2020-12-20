@@ -134,7 +134,13 @@
     "accountQuestion": "Уже есть аккаунт?",
     "logInLink": "Войти!",
     "birthday": "День рождения",
-    "loginAlreadyTaken": "Такой логин уже занят"
+    "loginAlreadyTaken": "Такой логин уже занят",
+    "patricity": "Отчество",
+    "patricityPlaceholder": "Введите отчество",
+    "namePlaceholder": "Введите имя",
+    "name": "Имя",
+    "surnamePlaceholder": "Введите фамилию",
+    "surname": "Фамилия"
   },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",
@@ -152,7 +158,7 @@
     "notifications": "Оповещения",
     "createpost": "Создать пост",
     "user": "Личный кабинет",
-    "account": "Аккаунт",
+    "account": "Профиль",
     "userInOrg": "Пользователь в организации",
     "listRequest": "Список заявок",
     "listTeams": "Список команд",
