@@ -82,8 +82,12 @@ const store = new Vuex.Store({
                   resp.data.updateTokens.accessToken
                 );
 
-                if ("" + store.$app.$route.name != "FeedOfPosts") {
-                  store.$app.$router.push({ name: "FeedOfPosts" });
+                let route = localStorage.getItem("first-route");
+                console.log("LS NAME: ", route);
+                if ("" + store.$app.$route.name != route) {
+                  console.log("LS NAME: ", route);
+                  store.$app.$router.push({ name: route });
+                  localStorage.removeItem("first-route");
                 }
 
                 // Никаких ошибок, загрузка завершена

@@ -352,6 +352,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if (to.name !== null && from.name === null && to.name !== "LogIn") {
+    localStorage.setItem("first-route", to.name);
+  }
+
   let lang = localStorage.getItem("lang");
   if (!lang) {
     lang = process.env.VUE_APP_I18N_LOCALE;
