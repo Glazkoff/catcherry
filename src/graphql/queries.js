@@ -775,6 +775,11 @@ export const NOTIFICATIONS_FOR_USER_QUERY = gql`
       }
       authorId
       userId
+      notificationAuthor {
+        name
+        surname
+        patricity
+      }
       ReadOrNot {
         userId
         notificationId

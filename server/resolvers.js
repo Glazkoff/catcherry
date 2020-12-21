@@ -233,6 +233,10 @@ module.exports = {
             model: db.ReadNotification,
             as: "ReadOrNot",
             where: { userId: args.userId, readOrNot: false }
+          },
+          {
+            model: db.Users,
+            as: "notificationAuthor"
           }
         ],
         where: {
@@ -241,6 +245,7 @@ module.exports = {
           }
         }
       });
+      console.log("!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(result));
       return result;
     },
 
