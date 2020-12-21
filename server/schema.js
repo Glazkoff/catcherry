@@ -101,7 +101,8 @@ type Notification {
   id: ID!
   body: BodyNotification!
   typeId: Int!
-  authorId: Int!
+  authorId: Int
+  notificationAuthor: User
   userId: [Int]
   ReadOrNot: [UserReadNotification]
   endTime: String!
