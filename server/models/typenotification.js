@@ -1,30 +1,27 @@
 "use strict";
 const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
-  class TeamCustomization extends Model {
+  class TypeNotification extends Model {
     /**
      * Helper method for defining associations.
      * This method is not a part of Sequelize lifecycle.
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      TeamCustomization.belongsTo(models.Teams, {
-        foreignKey: "teamId"
-        // as: "teamCustomization"
+      TypeNotification.belongsTo(models.Notifications, {
+        foreignKey: "typeId",
+        as: "typeNotification"
       });
     }
   }
-  TeamCustomization.init(
+  TypeNotification.init(
     {
-      settings: {
-        type: DataTypes.JSONB,
-        allowNull: false
-      }
+      typeName: DataTypes.STRING
     },
     {
       sequelize,
-      modelName: "TeamCustomization"
+      modelName: "TypeNotification"
     }
   );
-  return TeamCustomization;
+  return TypeNotification;
 };

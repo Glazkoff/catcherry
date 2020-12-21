@@ -1,7 +1,5 @@
-'use strict';
-const {
-  Model
-} = require('sequelize');
+"use strict";
+const { Model } = require("sequelize");
 module.exports = (sequelize, DataTypes) => {
   class Comments extends Model {
     /**
@@ -19,13 +17,13 @@ module.exports = (sequelize, DataTypes) => {
         as: "post"
       });
     }
-  };
+  }
   Comments.init(
     {
       authorId: DataTypes.INTEGER,
       postId: DataTypes.INTEGER,
       body: {
-        type: DataTypes.JSONB,
+        type: DataTypes.STRING,
         allowNull: false
       },
       dateAdd: DataTypes.STRING

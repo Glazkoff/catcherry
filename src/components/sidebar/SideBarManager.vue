@@ -4,7 +4,10 @@
       <router-link
         :to="{
           name: 'RaitingList',
-          params: { id: $route.params.id }
+          params: {
+            id: $route.params.id,
+            userId: $store.getters.decodedToken.id
+          }
         }"
         :exact="true"
         active-class="nav-checked"
@@ -179,7 +182,7 @@
         </div>
       </router-link>
       <router-link
-        :to="{ name: 'TasksTeam', params: { id: $route.params.id } }"
+        :to="{ name: 'NewTask', params: { id: $route.params.id } }"
         active-class="nav-checked"
       >
         <div class="side-bar__nav-list__nav-element">

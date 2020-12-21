@@ -1,25 +1,14 @@
 "use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
-    await queryInterface.createTable("Tasks", {
+    await queryInterface.createTable("TypeNotifications", {
       id: {
         allowNull: false,
         autoIncrement: true,
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      teamId: {
-        type: Sequelize.INTEGER,
-        allowNull: false
-      },
-      userId: {
-        type: Sequelize.INTEGER,
-        allowNull: true
-      },
-      body: {
-        type: Sequelize.JSONB
-      },
-      status: {
+      typeName: {
         type: Sequelize.STRING
       },
       createdAt: {
@@ -33,6 +22,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable("Tasks");
+    await queryInterface.dropTable("TypeNotifications");
   }
 };

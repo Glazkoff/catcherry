@@ -10,41 +10,40 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       UsersInTeams.belongsTo(models.Users, {
         foreignKey: "userId",
-        as: "user",
+        as: "user"
       });
       UsersInTeams.belongsTo(models.Teams, {
         foreignKey: "teamId",
-        as: "team",
+        as: "team"
       });
       UsersInTeams.belongsTo(models.Roles, {
         foreignKey: "roleId",
-        as: "role",
+        as: "role"
       });
-      
     }
   }
   UsersInTeams.init(
     {
       userId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       teamId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
+        allowNull: false
       },
       status: {
         type: DataTypes.STRING,
-        allowNull: false,
+        allowNull: false
       },
       roleId: {
         type: DataTypes.INTEGER,
-        allowNull: false,
-      },
+        allowNull: false
+      }
     },
     {
       sequelize,
-      modelName: "UsersInTeams",
+      modelName: "UsersInTeams"
     }
   );
   return UsersInTeams;

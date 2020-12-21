@@ -4,13 +4,17 @@ import gql from "graphql-tag";
 export const SIGN_UP = gql`
   mutation(
     $name: String!
-    $birthday: String!
+    $surname: String
+    $patricity: String
+    $birthday: String
     $login: String!
     $password: String!
     $fingerprint: String!
   ) {
     signUp(
       name: $name
+      surname: $surname
+      patricity: $patricity
       birthday: $birthday
       login: $login
       password: $password
@@ -84,6 +88,10 @@ export const REQUESTS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
+        gender
+        birthday
       }
     }
   }
@@ -135,6 +143,8 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
       }
       team {
         id
@@ -181,6 +191,7 @@ export const UPDATE_USER_QUERY = gql`
     $patricity: String
     $gender: String
     $login: String
+    $birthday: String
     $id: ID!
   ) {
     updateUser(
@@ -189,6 +200,7 @@ export const UPDATE_USER_QUERY = gql`
       patricity: $patricity
       gender: $gender
       login: $login
+      birthday: $birthday
       id: $id
     )
   }
@@ -228,12 +240,6 @@ export const ORGS_QUERY = gql`
       ownerId
       organizationTypeId
       maxTeamsLimit
-      owner {
-        name
-      }
-      organizationType {
-        name
-      }
     }
   }
 `;
@@ -401,22 +407,6 @@ export const ONE_POST_QUERY = gql`
   }
 `;
 
-export const REVOKE_REQUEST_QUERY = gql`
-  mutation($id: ID!) {
-    revokeRequst(id: $id)
-  }
-`;
-
-export const GET_POINTS_QUERY = gql`
-  query($userId: ID) {
-    getPointsUser(userId: $userId) {
-      id
-      userId
-      pointQuantity
-    }
-  }
-`;
-
 export const POSTS_QUERY = gql`
   query {
     posts {
@@ -509,12 +499,40 @@ export const DELETE_LIKE_OF_COMMENT = gql`
 
 // -- //
 
+export const REVOKE_REQUEST_QUERY = gql`
+  mutation($id: ID!) {
+    revokeRequst(id: $id)
+  }
+`;
+
+export const GET_POINTS_QUERY = gql`
+  query($userId: ID!) {
+    getPointsUser(userId: $userId) {
+      id
+      userId
+      pointQuantity
+    }
+  }
+`;
+
+export const GET_POINTS_OPERATION_QUERY = gql`
+  query($pointAccountId: ID!) {
+    getOperationPointsUser(pointAccountId: $pointAccountId) {
+      delta
+      operationDescription
+      createdAt
+    }
+  }
+`;
+
+export const GET_POINTS_LAST_WEEK_QUERY = gql`
+  query($id: ID!) {
+    pointsLastWeek(id: $id)
+  }
+`;
+
 export const CARGE_POINTS_QUERY = gql`
-  mutation(
-    $pointAccountId: Int!
-    $delta: Int!
-    $operationDescription: String!
-  ) {
+  mutation($pointAccountId: ID!, $delta: Int!, $operationDescription: String!) {
     createPointOperation(
       pointAccountId: $pointAccountId
       delta: $delta
@@ -528,8 +546,8 @@ export const CARGE_POINTS_QUERY = gql`
 export const RAITING_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {
     raitingInTeams(teamId: $teamId) {
-      id
       user {
+        id
         name
         userPoints {
           pointQuantity
@@ -579,6 +597,37 @@ export const TASKS_QUERY = gql`
     }
   }
 `;
+export const ALL_TASKS_QUERY = gql`
+  query($teamId: ID!) {
+    allTasks(teamId: $teamId) {
+      id
+      userId
+      teamId
+      status
+      body {
+        header
+        text
+        points
+      }
+      status
+      tasksUser {
+        name
+        surname
+        id
+        userPoints {
+          id
+        }
+      }
+    }
+  }
+`;
+
+export const DELETE_TASK_QUERY = gql`
+  mutation($id: ID!) {
+    deleteTask(id: $id)
+  }
+`;
+
 export const ADD_TASK_QUERY = gql`
   mutation(
     $teamId: ID
@@ -654,40 +703,29 @@ export const BACKLOG_QUERY = gql`
   }
 `;
 
-export const NOTIFICATIONS_USER_QUERY = gql`
-  query {
-    notifications {
+export const BACKLOG_TASKS_QUERY = gql`
+  query($teamId: ID!) {
+    backlogTasks(teamId: $teamId) {
       id
+      userId
+      teamId
+      status
       body {
         header
         text
-        buttonLink
+        points
       }
-      authorId
-      teamId
-      forAllUsers
-      createdAt
+      tasksUser {
+        name
+        surname
+        userPoints {
+          id
+        }
+      }
     }
   }
 `;
 
-export const ADD_NOTIFICATION_QUERY = gql`
-  mutation(
-    $body: NotificationBody!
-    $authorId: Int!
-    $teamId: Int!
-    $forAllUsers: Int
-  ) {
-    createNotification(
-      body: $body
-      authorId: $authorId
-      teamId: $teamId
-      forAllUsers: $forAllUsers
-    ) {
-      id
-    }
-  }
-`;
 export const STATISTICS_NEW_QUERY = gql`
   query statisticsNew {
     statisticsNewUsers
@@ -702,17 +740,100 @@ export const STATISTICS_DELETE_QUERY = gql`
   }
 `;
 
-export const USER_OPERATION_POINTS_QUERY = gql`
-  query($pointAccountId: Int) {
-    getOperationPointsUser(pointAccountId: $pointAccountId) {
-      delta
-      operationDescription
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ NOTIFICATIONS
+
+// Получение всех оповещений
+export const NOTIFICATIONS_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      userId
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
       createdAt
     }
   }
 `;
+
+// Получение всех непрочитанных оповещений для одного пользователя
+export const NOTIFICATIONS_FOR_USER_QUERY = gql`
+  query($userId: ID!) {
+    notificationsForUser(userId: $userId) {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      userId
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
+      createdAt
+    }
+  }
+`;
+
+// Создание оповещений
+export const CREATE_NOTIFICATION = gql`
+  mutation(
+    $body: NotificationBody!
+    $typeId: Int!
+    $authorId: Int!
+    $userId: [Int]
+    $endTime: String!
+  ) {
+    createNotification(
+      body: $body
+      typeId: $typeId
+      authorId: $authorId
+      userId: $userId
+      endTime: $endTime
+    ) {
+      id
+    }
+  }
+`;
+
+// Поменять статус оповещения на "Прочитано"
+export const UPDATE_NOTIFICATION = gql`
+  mutation($notificationId: ID!, $userId: ID!, $checkNotification: Boolean) {
+    updateNotification(
+      notificationId: $notificationId
+      userId: $userId
+      checkNotification: $checkNotification
+    )
+  }
+`;
+
+//Удалить оповещение
+export const DELETE_NOTIFICATION = gql`
+  mutation($id: ID!) {
+    deleteNotification(id: $id)
+  }
+`;
+
+// НЕКЛАССИФИЦИРОВАННЫЕ ЗАПРОСЫ
 export const LOG_OUT = gql`
   mutation($fingerprint: String!) {
     logOut(fingerprint: $fingerprint)
+  }
+`;
+
+export const IS_LOGIN_USED = gql`
+  query($login: String!) {
+    isLoginUsed(login: $login)
   }
 `;

@@ -69,7 +69,7 @@ type UserInTeam {
   userId: ID!
   teamId: ID!
   status: String!
-  user: User!
+  user: User
   team: Team!
   roleId: ID!
   role: Role
@@ -86,6 +86,8 @@ type Role {
 input NotificationBody {
   header: String!
   text: String!
+  button: String
+  buttonLink: String
 }
 
 type BodyNotification {
@@ -98,13 +100,27 @@ type BodyNotification {
 type Notification {
   id: ID!
   body: BodyNotification!
+  typeId: Int!
   authorId: Int!
-  teamId: Int!
-  forAllUsers: Int
-  forAllOrganization: Boolean
-  forAllTeam: Boolean
+  userId: [Int]
+  ReadOrNot: [UserReadNotification]
+  endTime: String!
   createdAt: String!
   updatedAt: String!
+}
+
+type UserReadNotification {
+  userId: ID!
+  notificationId: ID!
+  readOrNot: Boolean!
+}
+
+type TeamIdForNotification {
+  teamId: ID!
+}
+
+type UserIdForNotification {
+  userId: ID!
 }
 
 type PointsUser{
@@ -117,9 +133,8 @@ type PointsUser{
 }
 
 type PointOperations{
-  id: ID
-  pointAccountId: Int
-  delta: Int
+  id: ID!
+  delta: Int!
   operationDescription: String
   createdAt: String
 }
@@ -191,6 +206,8 @@ type Comment {
 }
 
 type Query { 
+  isLoginUsed(login: String!): Boolean!
+
   users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   deletedUsers: [User!]
@@ -206,11 +223,12 @@ type Query {
   organizationTypes: [OrganizationType!]
   
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  notification(id: ID!): Notification @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  notificationsForUser(userId: ID!): [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  requests:[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  requests (teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  getOperationPointsUser(userId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(pointAccountId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  pointsLastWeek(id: ID!): [Int]
   
   posts: [Post]!
   post(id: ID!): Post
@@ -227,6 +245,8 @@ type Query {
   tasks (teamId:ID!): [Task]!
   backlog (teamId:ID!): [Task]!
 
+  allTasks(teamId:ID!): [Task]!
+
   statisticsNewUsers: Int
   statisticsNewOrgs: Int
   statisticsDeleteUsers: Int
@@ -242,12 +262,12 @@ type Mutation {
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String): [Int]!
+  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String, birthday: String): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
-  createNotification(body: NotificationBody!, authorId: Int!, teamId: Int!, forAllUsers: Int): Notification!
+  createNotification(body: NotificationBody!, typeId:Int!, authorId: Int!, userId: [Int], endTime: String! ): Notification!
   deleteNotification(id: ID!): Int!
-  updateNotification(body: NotificationBody!, id: ID!, teamId: Int!, forAllUsers: Int, forAllOrganization: Boolean, forAllTeam: Boolean): [Int]!
+  updateNotification(notificationId: ID!, userId: ID! checkNotification: Boolean): [Int]!
 
   createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
   deletePost(id: ID!): Int!
@@ -278,11 +298,11 @@ type Mutation {
   revokeRequst(id: ID!): [Int]!
   rejectRequst(id: ID!): [Int]!
 
-  createPointOperation(pointAccountId: Int!, delta: Int!, operationDescription: String!): PointsUser!	 
+  createPointOperation(pointAccountId: ID!, delta: Int!, operationDescription: String!): PointsUser!	 
   deletePointOperation(id: ID!): Int!	
   deletePoints(id: ID!): Int!
   updatePoints(id: ID!, pointQuantity: Int!): [Int]!
-  updatePointOperation(id: ID!, pointAccountId: Int!, delta: Int!): [Int]!
+  updatePointOperation(id: ID!, pointAccountId: ID!, delta: Int!): [Int]!
 
   createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
   updateTask(id: ID!, status: String): Task!

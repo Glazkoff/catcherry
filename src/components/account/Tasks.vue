@@ -1,18 +1,17 @@
 <template>
   <div>
-    <h2>Задания</h2>
+    <h2 class="tasks">Задания</h2>
     <div class="tasks">
       <div>
         <h3>Бэклог заданий</h3>
         <div v-for="taskNoneUser in backlog" :key="taskNoneUser.id">
-          <div v-if="!taskNoneUser.tasksUser" class="backlogTask">
-            <b>{{ taskNoneUser.body.header }}</b>
-            <span>{{ taskNoneUser.body.text }}</span>
-            <span>+{{ taskNoneUser.body.points }} баллов</span>
-            <button
-              class="btn btn-secondary"
-              @click="toAddTask(taskNoneUser.id)"
-            >
+          <div v-if="!taskNoneUser.tasksUser" class="oneUser ">
+            <h2>{{ taskNoneUser.body.header }}</h2>
+            <p>{{ taskNoneUser.body.text }}</p>
+            <div class="oneUser__points">
+              <h3>Награда:<br />+{{ taskNoneUser.body.points }} баллов</h3>
+            </div>
+            <button class="btn btn-primary" @click="toAddTask(taskNoneUser.id)">
               Взять задание
             </button>
           </div>
@@ -189,14 +188,9 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_classes.scss";
-.backlogTask {
-  display: grid;
-  grid-template-columns: 1fr 2fr 0.5fr 0.5fr;
-  padding: 15px;
-  background: $violet;
-  border-radius: 10px;
-}
+
 .tasks {
+  margin-left: 20px;
   display: grid;
   grid-template-columns: 1fr 1fr;
   grid-auto-rows: 2em;
@@ -204,6 +198,7 @@ export default {
 }
 
 .oneUser {
+  margin-bottom: 15px;
   padding: 15px;
   background: $violet;
   border-radius: 10px;

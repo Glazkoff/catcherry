@@ -1,38 +1,50 @@
 <template>
   <div>
-    <span>Последнее редактирование: {{ $d(t.updatedAt, "long") }} </span>
+    <div class="marginB">
+      <small>Последнее редактирование: {{ $d(t.updatedAt, "long") }} </small>
+    </div>
     <form
       action=""
       @submit="$emit('update', name, description, parseInt(maxUsersLimit))"
     >
-      <label for="name">Название</label>
-      <input
-        type="text"
-        name="name"
-        class="form-control"
-        placeholder="Название"
-        v-model="name"
-      />
-      <label for="description">Описание</label>
-      <textarea
-        name="description"
-        class="form-control"
-        id=""
-        cols="10"
-        rows="5"
-        placeholder="Описание"
-        v-model="description"
-      ></textarea>
-      <label for="maxUsersLimit">Максимальное число пользователей</label>
-      <input
-        type="number"
-        name="maxUsersLimit"
-        class="form-control"
-        placeholder="Максимальное число участников"
-        v-model="maxUsersLimit"
-      />
-      <button type="submit" class="btn btn-primary">
-        Сохранить
+      <div class="form-group">
+        <label for="name" class="form-name">{{ $t("nameInanimate") }}</label>
+        <input
+          type="text"
+          name="name"
+          class="form-control"
+          :placeholder="$t('nameInanimate')"
+          v-model="name"
+        />
+      </div>
+      <div class="form-group">
+        <label for="description" class="form-name">{{
+          $t("description")
+        }}</label>
+        <textarea
+          name="description"
+          class="form-control"
+          id=""
+          cols="10"
+          rows="5"
+          :placeholder="$t('description')"
+          v-model="description"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <label for="maxUsersLimit" class="form-name">{{
+          $t("numberOfParticipants")
+        }}</label>
+        <input
+          type="number"
+          name="maxUsersLimit"
+          class="form-control"
+          :placeholder="$t('numberOfParticipants')"
+          v-model="maxUsersLimit"
+        />
+      </div>
+      <button type="submit" class="btn btn-alternate">
+        {{ $t("save") }}
       </button>
     </form>
   </div>
@@ -53,19 +65,24 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-form {
-  display: flex;
-  flex-direction: column;
-  margin-top: 2rem;
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+.form-control {
+  background: $violet;
+  border: 1px solid $violet_2;
+  color: $gray_3;
+  width: -webkit-fill-available;
 }
-
-form input,
-textarea {
-  padding: 0.5rem;
-  margin-bottom: 1rem;
+.form-name {
+  color: $white;
 }
-
-form button {
-  padding: 0.5rem;
+small {
+  color: $gray_3;
+}
+.marginB {
+  margin-bottom: 2rem;
+}
+.btn {
+  margin-top: 4rem;
 }
 </style>
