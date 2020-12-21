@@ -23,6 +23,9 @@
               <userStatisticsUp
                 v-show="pointsLastWeek[0] > pointsLastWeek[1]"
               ></userStatisticsUp>
+              <userStatisticsStable
+                v-show="pointsLastWeek[0] == pointsLastWeek[1]"
+              ></userStatisticsStable>
               {{ pointsLastWeek[0] }} баллов
             </p>
             <small v-if="pointsLastWeek[0] > pointsLastWeek[1]">
@@ -32,6 +35,9 @@
             <small v-if="pointsLastWeek[0] < pointsLastWeek[1]">
               на {{ pointsLastWeek[1] - pointsLastWeek[0] }} баллов меньше, чем
               за предыдущую неделю
+            </small>
+            <small v-if="pointsLastWeek[0] == pointsLastWeek[1]">
+              столько же, как на прошлой неделе
             </small>
           </div>
           <div>
@@ -65,6 +71,7 @@
 <script>
 import userStatisticsDown from "@/assets/svg/manager/userStatisticsDown.svg?inline";
 import userStatisticsUp from "@/assets/svg/manager/userStatisticsUp.svg?inline";
+import userStatisticsStable from "@/assets/svg/manager/userStatisticsStable.svg?inline";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import Loader from "@/components/Loader.vue";
 import {
@@ -78,6 +85,7 @@ export default {
   components: {
     userStatisticsDown,
     userStatisticsUp,
+    userStatisticsStable,
     breadcrumbs,
     Loader
   },
