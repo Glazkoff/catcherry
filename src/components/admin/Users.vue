@@ -691,6 +691,9 @@ export default {
           if (el.patricity === undefined || el.patricity === null) {
             el.patricity = " ";
           }
+          if (el.login === undefined || el.login === null) {
+            el.login = " ";
+          }
           return (
             (el.surname.toLowerCase().indexOf(this.findString.toLowerCase()) !==
               -1 &&
