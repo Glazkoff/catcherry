@@ -108,7 +108,6 @@ export default {
             }
           })
           .then(resp => {
-            console.log("AUTH", resp);
             this.authLoading = false;
             if (resp.data.logIn && !resp.data.logIn.error) {
               if (resp.data.logIn.accessToken !== null) {

@@ -106,7 +106,8 @@ type Notification {
   id: ID!
   body: BodyNotification!
   typeId: Int!
-  authorId: Int!
+  authorId: Int
+  notificationAuthor: User
   userId: [Int]
   ReadOrNot: [UserReadNotification]
   endTime: String!
@@ -264,7 +265,7 @@ type Query {
 }
 
 type Mutation {
-  signUp(name: String!, login: String!, birthday:String, password: String!, fingerprint:String!): jwt
+  signUp(name: String!, surname: String, patricity: String, login: String!, birthday:String, password: String!, fingerprint:String!): jwt
   logIn(login: String!, password: String!, fingerprint:String!): jwt
   updateTokens(fingerprint:String!): jwt!
   logOut(fingerprint:String!): Int

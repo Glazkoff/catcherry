@@ -1,313 +1,326 @@
 <template>
-  <div class="main">
-    <BreadCrumbs></BreadCrumbs>
-    <popup v-if="isShowFullInformation">
-      <!-- Редактирование пользователя -->
-      <h3 slot="header" v-if="isShowModalEdit">
-        {{ $t("editUser") }}
-        {{ fullName }}
-      </h3>
-      <div slot="exit" @click="cancelModal()" v-if="isShowModalEdit">×</div>
-      <div slot="body" v-if="isShowModalEdit">
-        <form @submit.prevent="editUser()">
-          <div class="form-group">
-            <label for="surname">{{ $t("surname") }}</label>
-            <input
-              name="surname"
-              v-model.trim="$v.oneUser.surname.$model"
-              @blur="$v.oneUser.surname.$touch()"
-              :placeholder="$t('surname')"
-              class="form-control"
-            />
-            <div v-if="$v.oneUser.surname.$error" class="error">
-              <span
-                v-if="!$v.oneUser.surname.required"
-                class="form-text danger"
-                >{{ $t("required") }}</span
-              >
-              <span
-                v-else-if="!$v.oneUser.surname.alpha"
-                class="form-text danger"
-                >{{ $t("requiredLetters") }}</span
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="name">{{ $t("name") }}</label>
-            <input
-              name="name"
-              v-model.trim="$v.oneUser.name.$model"
-              :placeholder="$t('name')"
-              class="form-control"
-            />
-            <div v-if="$v.oneUser.name.$error" class="error">
-              <span v-if="!$v.oneUser.name.required" class="form-text danger">{{
-                $t("required")
-              }}</span>
-              <span
-                v-else-if="!$v.oneUser.name.alpha"
-                class="form-text danger"
-                >{{ $t("requiredLetters") }}</span
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="patricity">{{ $t("patricity") }}</label>
-            <input
-              name="patricity"
-              v-model.trim="$v.oneUser.patricity.$model"
-              :placeholder="$t('patricity')"
-              class="form-control"
-            />
-          </div>
-          <div class="form-group">
-            <label for="gender">{{ $t("gender") }}</label>
-            <select name="gender" v-model.trim="$v.oneUser.gender.$model">
-              <option>{{ $t("male") }}</option>
-              <option>{{ $t("female") }}</option>
-            </select>
-            <div v-if="$v.oneUser.gender.$error" class="error">
-              <span
-                v-if="!$v.oneUser.gender.required"
-                class="form-text danger"
-                >{{ $t("required") }}</span
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="login">{{ $t("login") }}</label>
-            <input
-              name="login"
-              v-model.trim="$v.oneUser.login.$model"
-              :placeholder="$t('login')"
-              class="form-control"
-            />
-            <div v-if="$v.oneUser.login.$error" class="error">
-              <span
-                v-if="!$v.oneUser.login.required"
-                class="form-text danger"
-                >{{ $t("required") }}</span
-              >
-            </div>
-          </div>
-          <div class="form-group">
-            <label for="birthday">{{ $t("birthday") }}</label>
-            <input
-              name="birthday"
-              type="date"
-              v-model.trim="$v.oneUser.birthday.$model"
-              :placeholder="$t('birthday')"
-              class="form-control"
-            />
-            <div v-if="$v.oneUser.birthday.$error" class="error">
-              <span
-                v-if="!$v.oneUser.birthday.required"
-                class="form-text danger"
-                >{{ $t("required") }}</span
-              >
-            </div>
-          </div>
-          <div class="btn-group">
-            <button
-              class="btn btn-primary"
-              :disabled="$v.oneUser.$invalid"
-              @click="editUser()"
-            >
-              {{ $t("save") }}
-            </button>
-            <button @click="cancelModal()" class="btn btn-alternate">
-              {{ $t("cancel") }}
-            </button>
-          </div>
-        </form>
-      </div>
-
-      <!-- Удаление пользователя -->
-      <h3 slot="header" v-if="isShowModalDelete">
-        {{ $t("deleteQuestion") }}
-        {{ fullName }}?
-      </h3>
-      <div slot="exit" @click="cancelModal()" v-if="isShowModalDelete">×</div>
-      <div slot="body" v-if="isShowModalDelete" class="btn-group">
-        <button @click="deleteUser()" slot="action" class="btn btn-primary">
-          {{ $t("delete") }}
-        </button>
-        <button @click="cancelModal()" class="btn btn-alternate">
-          {{ $t("cancel") }}
-        </button>
-      </div>
-
-      <!-- Заголовок загрузки информации про одного пользователя -->
-      <div
-        slot="header"
-        v-if="
-          !isShowModalDelete &&
-            !isShowModalEdit &&
-            $apollo.loading &&
-            isShowFullInformation
-        "
-      >
-        <h3>{{ $t("loading") }}...</h3>
-        <h4 v-if="queryError">{{ queryError }}</h4>
-        <button
-          @click="cancelFullInformation()"
-          class="btn btn-alternate block"
-        >
-          {{ $t("cancel") }}
-        </button>
-      </div>
-
-      <!-- Подробная информация про одного пользователя -->
-      <h3
-        slot="header"
-        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
-      >
-        {{ $t("user") }} {{ user.surname }} {{ user.name }} {{ user.patricity }}
-      </h3>
-      <div
-        slot="exit"
-        @click="cancelFullInformation()"
-        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
-      >
-        ×
-      </div>
-      <div
-        slot="body"
-        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
-      >
-        <p>{{ $t("surname") }}: {{ user.surname }}</p>
-        <p>{{ $t("name") }}: {{ user.name }}</p>
-        <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
-        <p>{{ $t("gender") }}: {{ user.gender }}</p>
-        <p>{{ $t("birthday") }}: {{ $d(user.birthday, "number") }}</p>
-        <p>{{ $t("login") }}: {{ user.login }}</p>
-        <div v-if="!isEditPoints && getPointsUser !== null">
-          <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
-          <button @click="editPoints()" class="btn btn-primary block">
-            {{ $t("editNumberOfPoints") }}
-          </button>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
         </div>
-        <div v-if="isEditPoints">
-          <p>
-            {{ $t("numberOfPoints") }}:
-            <input
-              type="number"
-              name="points"
-              v-model.trim="points"
-              class="form-control"
-            />
-          </p>
-          <div class="btn-group">
-            <button @click="savePoints()" class="btn btn-primary">
-              {{ $t("saveNumberOfPoints") }}
-            </button>
-            <button @click="cancelPoints()" class="btn btn-alternate">
-              {{ $t("cancel") }}
-            </button>
-          </div>
+      </div>
+      <popup v-if="isShowFullInformation">
+        <!-- Редактирование пользователя -->
+        <h3 slot="header" v-if="isShowModalEdit">
+          {{ $t("editUser") }}
+          {{ fullName }}
+        </h3>
+        <div slot="exit" @click="cancelModal()" v-if="isShowModalEdit">×</div>
+        <div slot="body" v-if="isShowModalEdit">
+          <form @submit.prevent="editUser()">
+            <div class="form-group">
+              <label for="surname">{{ $t("surname") }}</label>
+              <input
+                name="surname"
+                v-model.trim="$v.oneUser.surname.$model"
+                @blur="$v.oneUser.surname.$touch()"
+                :placeholder="$t('surname')"
+                class="form-control"
+              />
+              <div v-if="$v.oneUser.surname.$error" class="error">
+                <span
+                  v-if="!$v.oneUser.surname.required"
+                  class="form-text danger"
+                  >{{ $t("required") }}</span
+                >
+                <span
+                  v-else-if="!$v.oneUser.surname.alpha"
+                  class="form-text danger"
+                  >{{ $t("requiredLetters") }}</span
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="name">{{ $t("name") }}</label>
+              <input
+                name="name"
+                v-model.trim="$v.oneUser.name.$model"
+                :placeholder="$t('name')"
+                class="form-control"
+              />
+              <div v-if="$v.oneUser.name.$error" class="error">
+                <span
+                  v-if="!$v.oneUser.name.required"
+                  class="form-text danger"
+                  >{{ $t("required") }}</span
+                >
+                <span
+                  v-else-if="!$v.oneUser.name.alpha"
+                  class="form-text danger"
+                  >{{ $t("requiredLetters") }}</span
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="patricity">{{ $t("patricity") }}</label>
+              <input
+                name="patricity"
+                v-model.trim="$v.oneUser.patricity.$model"
+                :placeholder="$t('patricity')"
+                class="form-control"
+              />
+            </div>
+            <div class="form-group">
+              <label for="gender">{{ $t("gender") }}</label>
+              <select name="gender" v-model.trim="$v.oneUser.gender.$model">
+                <option>{{ $t("male") }}</option>
+                <option>{{ $t("female") }}</option>
+              </select>
+              <div v-if="$v.oneUser.gender.$error" class="error">
+                <span
+                  v-if="!$v.oneUser.gender.required"
+                  class="form-text danger"
+                  >{{ $t("required") }}</span
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="login">{{ $t("login") }}</label>
+              <input
+                name="login"
+                v-model.trim="$v.oneUser.login.$model"
+                :placeholder="$t('login')"
+                class="form-control"
+              />
+              <div v-if="$v.oneUser.login.$error" class="error">
+                <span
+                  v-if="!$v.oneUser.login.required"
+                  class="form-text danger"
+                  >{{ $t("required") }}</span
+                >
+              </div>
+            </div>
+            <div class="form-group">
+              <label for="birthday">{{ $t("birthday") }}</label>
+              <input
+                name="birthday"
+                type="date"
+                v-model.trim="$v.oneUser.birthday.$model"
+                :placeholder="$t('birthday')"
+                class="form-control"
+              />
+              <div v-if="$v.oneUser.birthday.$error" class="error">
+                <span
+                  v-if="!$v.oneUser.birthday.required"
+                  class="form-text danger"
+                  >{{ $t("required") }}</span
+                >
+              </div>
+            </div>
+            <div class="btn-group">
+              <button
+                class="btn btn-primary"
+                :disabled="$v.oneUser.$invalid"
+                @click="editUser()"
+              >
+                {{ $t("save") }}
+              </button>
+              <button @click="cancelModal()" class="btn btn-alternate">
+                {{ $t("cancel") }}
+              </button>
+            </div>
+          </form>
         </div>
 
-        <p>{{ $t("createdAt") }}: {{ $d(user.createdAt, "long") }}</p>
-        <p v-if="oneUserInTeams.length === 0">
-          {{ $t("noTeam") }}
-        </p>
-        <p v-if="oneUserInTeams.length !== 0">{{ $t("userTeams") }}:</p>
-        <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
-          <p>{{ $t("nameInanimate") }}: {{ team.team.name }}</p>
-          <p>{{ $t("organization") }}: {{ team.team.organization.name }}</p>
-          <p>{{ $t("status") }}: {{ team.status }}</p>
-          <p v-if="team.role !== null">
-            {{ $t("role") }}: {{ team.role.name }}
-          </p>
-          <div class="btn-group">
-            <button
-              v-if="team.status === 'Принят'"
-              @click="changeStatusInTeam(team, 'Не принят')"
-              class="btn btn-primary block"
-            >
-              {{ $t("deleteUserFromTeam") }}
-            </button>
-            <button
-              v-if="team.status !== 'Принят'"
-              @click="changeStatusInTeam(team, 'Принят')"
-              class="btn btn-primary block"
-            >
-              {{ $t("addUserToTeam") }}
-            </button>
-          </div>
-        </div>
-        <button
-          class="btn btn-primary block"
-          @click="addUserInTeam()"
-          v-if="!isShowAddUserInTeam"
-        >
-          {{ $t("addUserToTeam") }}
-        </button>
-        <div class="addToTeam" v-if="isShowAddUserInTeam">
-          <div class="form-group">
-            <label for="team" class="form-name">Название команды</label>
-            <select name="team" class="form-control" v-model="newTeam">
-              <option v-for="team in teams" :key="team.id" :value="team.id">{{
-                team.name
-              }}</option>
-            </select>
-          </div>
-          <button class="btn btn-primary" @click="addOneUserInTeam()">
-            {{ $t("addUserToTeam") }}
-          </button>
-        </div>
-        <div class="btn-group">
-          <button @click="showModalEdit()" class="btn btn-primary">
-            {{ $t("edit") }}
-          </button>
-          <button
-            @click="showModalDelete()"
-            class="btn btn-primary"
-            :disabled="$store.getters.decodedToken.id == userId"
-          >
+        <!-- Удаление пользователя -->
+        <h3 slot="header" v-if="isShowModalDelete">
+          {{ $t("deleteQuestion") }}
+          {{ fullName }}?
+        </h3>
+        <div slot="exit" @click="cancelModal()" v-if="isShowModalDelete">×</div>
+        <div slot="body" v-if="isShowModalDelete" class="btn-group">
+          <button @click="deleteUser()" slot="action" class="btn btn-primary">
             {{ $t("delete") }}
           </button>
-          <button @click="cancelFullInformation()" class="btn btn-alternate">
+          <button @click="cancelModal()" class="btn btn-alternate">
             {{ $t("cancel") }}
           </button>
         </div>
-      </div>
-    </popup>
 
-    <!-- Вывод списка краткой информации пользователей -->
-    <h2>
-      {{ $t("listUser") }}
-    </h2>
-    <div v-if="$apollo.queries.users.loading" class="wrapOfLoader">
-      <loader></loader>
-    </div>
-    <div v-if="!$apollo.queries.users.loading">
-      <h6 v-if="users.length == 0">
-        {{ $t("noUser") }}
-      </h6>
-      <div>
-        <input
-          v-model.trim="findString"
-          type="text"
-          :placeholder="$t('placeholderSearchByUsers')"
-          class="form-control block"
-        />
+        <!-- Заголовок загрузки информации про одного пользователя -->
         <div
-          class="card"
-          v-for="user in filterUser"
-          :key="user.id"
-          @click="showFullInformation(user.id)"
+          slot="header"
+          v-if="
+            !isShowModalDelete &&
+              !isShowModalEdit &&
+              $apollo.loading &&
+              isShowFullInformation
+          "
         >
-          <div class="card_img">
-            <img src="~@/assets/avatar.jpg" />
+          <h3>{{ $t("loading") }}...</h3>
+          <h4 v-if="queryError">{{ queryError }}</h4>
+          <button
+            @click="cancelFullInformation()"
+            class="btn btn-alternate block"
+          >
+            {{ $t("cancel") }}
+          </button>
+        </div>
+
+        <!-- Подробная информация про одного пользователя -->
+        <h3
+          slot="header"
+          v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+        >
+          {{ $t("user") }} {{ user.surname }} {{ user.name }}
+          {{ user.patricity }}
+        </h3>
+        <div
+          slot="exit"
+          @click="cancelFullInformation()"
+          v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+        >
+          ×
+        </div>
+        <div
+          slot="body"
+          v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+        >
+          <p>{{ $t("surname") }}: {{ user.surname }}</p>
+          <p>{{ $t("name") }}: {{ user.name }}</p>
+          <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
+          <p>{{ $t("gender") }}: {{ user.gender }}</p>
+          <p>{{ $t("birthday") }}: {{ $d(user.birthday, "number") }}</p>
+          <p>{{ $t("login") }}: {{ user.login }}</p>
+          <div v-if="!isEditPoints && getPointsUser !== null">
+            <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
+            <button @click="editPoints()" class="btn btn-primary block">
+              {{ $t("editNumberOfPoints") }}
+            </button>
           </div>
-          <div class="card_body">
-            <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
-            <p>{{ user.login }}</p>
-            <p>№ {{ user.id }}</p>
+          <div v-if="isEditPoints">
+            <p>
+              {{ $t("numberOfPoints") }}:
+              <input
+                type="number"
+                name="points"
+                v-model.trim="points"
+                class="form-control"
+              />
+            </p>
+            <div class="btn-group">
+              <button @click="savePoints()" class="btn btn-primary">
+                {{ $t("saveNumberOfPoints") }}
+              </button>
+              <button @click="cancelPoints()" class="btn btn-alternate">
+                {{ $t("cancel") }}
+              </button>
+            </div>
           </div>
-          <div class="card_action">
-            <ArrowRight></ArrowRight>
+
+          <p>{{ $t("createdAt") }}: {{ $d(user.createdAt, "long") }}</p>
+          <p v-if="oneUserInTeams.length === 0">
+            {{ $t("noTeam") }}
+          </p>
+          <p v-if="oneUserInTeams.length !== 0">{{ $t("userTeams") }}:</p>
+          <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
+            <p>{{ $t("nameInanimate") }}: {{ team.team.name }}</p>
+            <p>{{ $t("organization") }}: {{ team.team.organization.name }}</p>
+            <p>{{ $t("status") }}: {{ team.status }}</p>
+            <p v-if="team.role !== null">
+              {{ $t("role") }}: {{ team.role.name }}
+            </p>
+            <div class="btn-group">
+              <button
+                v-if="team.status === 'Принят'"
+                @click="changeStatusInTeam(team, 'Не принят')"
+                class="btn btn-primary block"
+              >
+                {{ $t("deleteUserFromTeam") }}
+              </button>
+              <button
+                v-if="team.status !== 'Принят'"
+                @click="changeStatusInTeam(team, 'Принят')"
+                class="btn btn-primary block"
+              >
+                {{ $t("addUserToTeam") }}
+              </button>
+            </div>
+          </div>
+          <button
+            class="btn btn-primary block"
+            @click="addUserInTeam()"
+            v-if="!isShowAddUserInTeam"
+          >
+            {{ $t("addUserToTeam") }}
+          </button>
+          <div class="addToTeam" v-if="isShowAddUserInTeam">
+            <div class="form-group">
+              <label for="team" class="form-name">Название команды</label>
+              <select name="team" class="form-control" v-model="newTeam">
+                <option v-for="team in teams" :key="team.id" :value="team.id">{{
+                  team.name
+                }}</option>
+              </select>
+            </div>
+            <button class="btn btn-primary" @click="addOneUserInTeam()">
+              {{ $t("addUserToTeam") }}
+            </button>
+          </div>
+          <div class="btn-group">
+            <button @click="showModalEdit()" class="btn btn-primary">
+              {{ $t("edit") }}
+            </button>
+            <button
+              @click="showModalDelete()"
+              class="btn btn-primary"
+              :disabled="$store.getters.decodedToken.id == userId"
+            >
+              {{ $t("delete") }}
+            </button>
+            <button @click="cancelFullInformation()" class="btn btn-alternate">
+              {{ $t("cancel") }}
+            </button>
+          </div>
+        </div>
+      </popup>
+
+      <!-- Вывод списка краткой информации пользователей -->
+      <div class="row">
+        <div class="col-12">
+          <h2>
+            {{ $t("listUser") }}
+          </h2>
+          <div v-if="$apollo.queries.users.loading" class="wrapOfLoader">
+            <loader></loader>
+          </div>
+          <div v-if="!$apollo.queries.users.loading">
+            <h6 v-if="users.length == 0">
+              {{ $t("noUser") }}
+            </h6>
+            <div>
+              <input
+                v-model.trim="findString"
+                type="text"
+                :placeholder="$t('placeholderSearchByUsers')"
+                class="form-control block"
+              />
+              <div
+                class="row card"
+                v-for="user in filterUser"
+                :key="user.id"
+                @click="showFullInformation(user.id)"
+              >
+                <div class="col-2">
+                  <img src="~@/assets/avatar.jpg" />
+                </div>
+                <div class="col-9">
+                  <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
+                  <p>{{ user.login }}</p>
+                  <p>№ {{ user.id }}</p>
+                </div>
+                <div class="col-2">
+                  <ArrowRight></ArrowRight>
+                </div>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -785,6 +798,7 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
+@import "@/styles/_grid.scss";
 .oneTeam {
   border: 1px solid black;
   padding: 10px;

@@ -29,7 +29,6 @@ p {
   font-style: normal;
   font-weight: normal;
   font-size: 16px;
-  line-height: 20px;
 }
 
 small {
@@ -133,35 +132,9 @@ a {
   display: flex;
   margin: 1% 0%;
   align-items: center;
-  &_img {
-    width: 5%;
+  img {
+    width: 100%;
     border-radius: 100%;
-    margin-right: 3%;
-    img {
-      width: 100%;
-      border-radius: 100%;
-    }
-  }
-  &_body {
-    color: $white;
-    width: 85%;
-    p {
-      padding: 0;
-      margin: 0;
-      line-height: 1;
-      font-size: 18px;
-      font-weight: 400;
-    }
-    p:first-child {
-      font-size: 28px;
-      font-weight: 500;
-    }
-    p:last-child {
-      color: $gray_4;
-      font-weight: 400;
-      font-size: 15px;
-      margin-top: 10px;
-    }
   }
   &_body_max {
     color: $white;

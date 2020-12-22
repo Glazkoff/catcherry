@@ -4,13 +4,17 @@ import gql from "graphql-tag";
 export const SIGN_UP = gql`
   mutation(
     $name: String!
-    $birthday: String!
+    $surname: String
+    $patricity: String
+    $birthday: String
     $login: String!
     $password: String!
     $fingerprint: String!
   ) {
     signUp(
       name: $name
+      surname: $surname
+      patricity: $patricity
       birthday: $birthday
       login: $login
       password: $password
@@ -779,6 +783,11 @@ export const NOTIFICATIONS_FOR_USER_QUERY = gql`
       }
       authorId
       userId
+      notificationAuthor {
+        name
+        surname
+        patricity
+      }
       ReadOrNot {
         userId
         notificationId

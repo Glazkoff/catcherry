@@ -1,6 +1,5 @@
 <template>
   <div class="wrapOfList">
-    <div class="spaceForNotifications"></div>
     <div class="list">
       <notification
         v-for="notification in notificationsForUser"
@@ -50,7 +49,6 @@ export default {
                 userId: this.$store.getters.decodedToken.id
               }
             });
-            console.log(data);
             let index = data.notificationsForUser.findIndex(
               el => el.id === object.id
             );
@@ -64,9 +62,7 @@ export default {
             });
           }
         })
-        .then(data => {
-          console.log(data);
-        })
+        .then(() => {})
         .catch(error => {
           console.error(error);
         });
@@ -79,22 +75,18 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_classes.scss";
-.spaceForNotifications {
+
+.wrapOfList {
   width: 24rem;
 }
 
-.wrapOfList {
-  margin-top: -20px;
-}
-
 .list {
-  height: calc(100vh - #{$topBarHeight});
+  height: calc(100vh - #{$topBarHeight} - 2px);
   width: 24rem;
   display: flex;
   flex-direction: column;
   align-items: center;
   top: $topBarHeight;
-  bottom: -$topBarHeight;
   background: $violet;
   position: sticky;
   overflow-x: hidden;

@@ -235,6 +235,10 @@ module.exports = {
             model: db.ReadNotification,
             as: "ReadOrNot",
             where: { userId: args.userId, readOrNot: false }
+          },
+          {
+            model: db.Users,
+            as: "notificationAuthor"
           }
         ],
         where: {
@@ -243,6 +247,7 @@ module.exports = {
           }
         }
       });
+      console.log("!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(result));
       return result;
     },
 
@@ -440,17 +445,45 @@ module.exports = {
     /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
-      { name, birthday, login, password, fingerprint },
+      { name, surname, patricity, birthday, login, password, fingerprint },
       { res, db }
     ) => {
       let hashPassword = bcrypt.hashSync(password, salt);
+
+      if ("" + birthday == "") {
+        birthday = null;
+      }
 
       // Добавляем данные в БД
       let user = await db.Users.create({
         login,
         name,
+        surname,
+        patricity,
         birthday,
         password: hashPassword
+      });
+
+      // Добавляем кошелёк для баллов
+      await db.Points.create({
+        userId: user.dataValues.id
+      });
+
+      // Добавляем оповещение новому пользователю
+      let result = await db.Notifications.create({
+        body: {
+          header: "Добро пожаловать в Catcherry!",
+          text: "Рады, что Вы с нами!"
+        },
+        typeId: 1,
+        authorId: user.dataValues.id,
+        userId: [user.dataValues.id],
+        endTime: user.dataValues.createdAt
+      });
+      await db.ReadNotification.create({
+        notificationId: result.id,
+        userId: user.dataValues.id,
+        readOrNot: false
       });
 
       // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -589,12 +622,15 @@ module.exports = {
         name: name
       }),
     // Обновляем фамилию, имени, отчества, пола и логина пользователя
-    updateUser: (
+    updateUser: async (
       parent,
       { surname, name, patricity, gender, login, id, birthday },
       { db }
-    ) =>
-      db.Users.update(
+    ) => {
+      if ("" + birthday == "") {
+        birthday = null;
+      }
+      let resUpdate = await db.Users.update(
         {
           name,
           surname,
@@ -608,7 +644,9 @@ module.exports = {
             id: id
           }
         }
-      ),
+      );
+      return resUpdate;
+    },
     // Меняем статус пользователя в команде (добавляем или удаляем)
     addUserInTeam: (parent, { status, id }, { db }) =>
       db.UsersInTeams.update(
