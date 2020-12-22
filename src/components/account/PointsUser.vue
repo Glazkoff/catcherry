@@ -1,149 +1,96 @@
 <template>
-  <div class="pointsUser account-view">
-    <p class="pointsName">Баллы</p>
-    <hr class="" />
-    <div v-if="$apollo.loading">
-      <h3>
-        <i18n path="loading">{{ $t("loading") }}</i18n
-        >...
-      </h3>
-    </div>
-    <div v-if="!$apollo.loading">
-      <p class="pointsQan">{{ getPointsUser.pointQuantity }} балла</p>
-      <div>
-        <ul v-if="isMini">
-          <li
-            v-for="operation in miniPointsOperation"
-            :key="operation.pointAccountId"
-            class="pointsOperation"
-          >
-            <span class="pointsDate">{{
-              $d(operation.createdAt, "long")
-            }}</span>
-            <span class="pointsDelta">{{ operation.delta }}</span>
-            <span class="pointsDescription">{{
-              operation.operationDescription
-            }}</span>
-          </li>
-        </ul>
-        <ul v-if="isBig">
-          <li
-            v-for="operation in getOperationPointsUser"
-            :key="operation.pointAccountId"
-            class="pointsOperation"
-          >
-            <span class="pointsDate">{{
-              $d(operation.createdAt, "long")
-            }}</span>
-            <span class="pointsDelta">{{ operation.delta }}</span>
-            <span class="pointsDescription">{{
-              operation.operationDescription
-            }}</span>
-          </li>
-        </ul>
+  <div v-if="!this.$apollo.queries.getPointsUser.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
       </div>
-      <button class="showAllPoints" @click="showFull()" v-if="isMini">
-        Показать полностью
-      </button>
     </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1>{{ pointQuantity }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div
+        class="row"
+        v-for="point in getPointsUser.userPointsOperation"
+        :key="point.id"
+        :point="point"
+      >
+        <div class="col-12 class">
+          <small class="mr-1">{{ $d(point.createdAt, "number") }}</small>
+          <small class="mr-1">{{ $d(point.createdAt, "time") }}</small>
+          <small class="mr-1">{{ point.operationDescription }}</small>
+          <small class="float">
+            <small v-if="point.delta > 0">+</small>
+            {{ $tc("pointsMsg", point.delta) }}</small
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else class="wrapOfLoader">
+    <Loader></Loader>
   </div>
 </template>
 
 <script>
-import {
-  USER_OPERATION_POINTS_QUERY,
-  GET_POINTS_QUERY
-} from "@/graphql/queries";
+import Loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import { GET_POINTS_USER_QUERY } from "@/graphql/queries";
 export default {
+  name: "PointsUser",
+  components: {
+    Loader,
+    BreadCrumbs
+  },
   apollo: {
-    getOperationPointsUser: {
-      query: USER_OPERATION_POINTS_QUERY,
-      variables() {
-        return {
-          pointAccountId: +this.$route.params.id
-        };
-      }
-    },
     getPointsUser: {
-      query: GET_POINTS_QUERY,
+      query: GET_POINTS_USER_QUERY,
       variables() {
         return {
-          userId: +this.$route.params.id
+          userId: this.$store.getters.decodedToken.id
         };
       }
     }
   },
-  data() {
-    return {
-      isMini: true,
-      isBig: false
-    };
-  },
-  methods: {
-    showFull() {
-      this.isMini = false;
-      this.isBig = true;
-    }
-  },
+  methods: {},
   computed: {
-    miniPointsOperation() {
-      return this.getOperationPointsUser.filter((el, index) => {
-        return index < 3;
-      });
+    pointQuantity() {
+      if (this.getPointsUser == undefined) {
+        return "-";
+      } else {
+        return this.getPointsUser.pointQuantity;
+      }
     }
   }
 };
 </script>
 
-<style lang="scss">
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+<style lang="scss" scoped>
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_classes.scss";
+@import "@/styles/_grid.scss";
 
-body {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  text-align: left;
-  background-color: #fff;
+h1 {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
 }
-li {
-  list-style-type: none;
+.mr-1 {
+  margin-right: 0.4rem;
 }
-.showAllPoints {
-  margin-left: 40px;
+.class {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $violet_2;
 }
-.pointsQan {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 48px;
-  line-height: 59px;
-  padding-left: 40px;
-}
-.pointsName {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 29px;
-  padding-left: 40px;
-}
-.pointsOperation {
-  font-family: Montserrat;
-  display: flex;
-  justify-content: space-between;
-  border-bottom: 1px solid black;
-  text-align: center;
-  width: 80%;
-  font-size: 20px;
-  padding: 1%;
-  span {
-    width: 33%;
-  }
+.float {
+  float: right;
+  padding-top: 4px;
+  color: $gray_3;
 }
 </style>
