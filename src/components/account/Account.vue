@@ -1,212 +1,314 @@
 <template>
   <div>
-    <div class="double" v-if="!isEdit">
-      <div class="flexCont">
-        <h2>{{ $t("profileUser") }}</h2>
-        <h3 v-if="$apollo.loading">
-          {{ $t("loading") }}
-        </h3>
-        <div v-if="!$apollo.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+    </div>
+    <div class="container" v-if="$apollo.loading">
+      <Loader></Loader>
+    </div>
+    <div class="container" v-else-if="!isEdit && !$apollo.loading">
+      <div class="row">
+        <div class="col-4">
           <h6 v-if="users.length == 0">
             К сожалению, такого пользователя нет!
           </h6>
           <div class="card">
-            <div class="pad">
-              <div class="double">
-                <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
-
-                <div>
-                  <p>{{ user.surname }}</p>
-                  <p>{{ user.name }}</p>
-
-                  <p>{{ user.patricity }}</p>
+            <div class="container">
+              <div class="row">
+                <div class="col-5  flex flex-center">
+                  <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
                 </div>
-              </div>
-              <div class="double">
-                <div>
-                  <p>{{ $t("gender") }}: {{ user.gender }}</p>
+                <div class="col-5 ">
                   <p>
-                    {{ $t("birthday") }}:
-                    {{
-                      new Date(user.birthday).toLocaleString("ru", {
-                        day: "numeric",
-                        month: "long",
-                        year: "numeric"
-                      })
-                    }}
+                    {{ user.surname }}<br />
+                    {{ user.name }}<br />
+                    {{ user.patricity }}
                   </p>
-                  <p>{{ $t("login") }}: {{ user.login }}</p>
                 </div>
-                <div></div>
+                <div class="col-2 btnEdit">
+                  <Edit @click="showFullInformation(user.id)" />
+                </div>
               </div>
-            </div>
-            <div class="btnEdit">
-              <Edit @click="showFullInformation(user.id)" />
+              <div class="row">
+                <div class="col-12">
+                  <p>
+                    {{ $t("gender") }}:
+                    <span v-if="user.gender != null">{{ user.gender }}</span
+                    ><span v-else>Не указано</span><br />{{ $t("birthday") }}:
+                    <span
+                      v-if="
+                        new Date(+user.birthday).toLocaleString('ru', {
+                          day: 'numeric',
+                          month: 'long',
+                          year: 'numeric'
+                        }) != 'Invalid date' && user.birthday != null
+                      "
+                    >
+                      {{
+                        new Date(+user.birthday).toLocaleString("ru", {
+                          day: "numeric",
+                          month: "long",
+                          year: "numeric"
+                        })
+                      }}</span
+                    ><span v-else>Не указано</span>
+                    <br />
+                    {{ $t("login") }}:
+                    <span v-if="user.login != null">{{ user.login }}</span
+                    ><span v-else>Не указано</span>
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
-
-          <div class="card pad">
-            <Points />
+          <div class="card">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <Points />
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-5 card h-100">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
+                  provident cupiditate, a culpa adipisci laudantium repudiandae
+                  excepturi consequuntur architecto officiis ex, voluptatem est
+                  obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-3 card h-100">
+          <div class="container">
+            <div class="row">
+              <div class="col-12">
+                <p>
+                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
+                  provident cupiditate, a culpa adipisci laudantium repudiandae
+                  excepturi consequuntur architecto officiis ex, voluptatem est
+                  obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
+                </p>
+              </div>
+            </div>
           </div>
         </div>
       </div>
-      <div class="card">
-        <p>
-          Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
-          provident cupiditate, a culpa adipisci laudantium repudiandae
-          excepturi consequuntur architecto officiis ex, voluptatem est
-          obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
-        </p>
-      </div>
     </div>
-
-    <!-- Редактирование пользователя -->
-    <div v-else>
-      <h2 class="padLeftTop">{{ $t("profileUser") }}</h2>
-      <div class="flexBlock">
-        <div class="flexCont smallBlock">
-          <div>
+    <div>
+      <div v-if="isEdit" class="container">
+        <div class="row">
+          <div class="col-2 flex flex-center">
             <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
           </div>
-          <button @click="showModalDelete" class="btn danger btnDelete">
+          <div class="col-1"></div>
+          <div class="col-5">
+            <form @submit.prevent="saveUserOnPopup">
+              <div class="form-group">
+                <label for="surname" class="form-name ">{{
+                  $t("surname")
+                }}</label>
+                <input
+                  class="form-control"
+                  name="surname"
+                  v-model.trim="$v.userEditData.surname.$model"
+                  @blur="$v.userEditData.surname.$touch()"
+                  :placeholder="$t('surname')"
+                />
+                <div v-if="$v.userEditData.surname.$error">
+                  <span
+                    v-if="!$v.userEditData.surname.required"
+                    class="danger"
+                    >{{ $t("required") }}</span
+                  >
+                  <span
+                    v-else-if="!$v.userEditData.surname.alpha"
+                    class="danger"
+                    >{{ $t("requiredLetters") }}</span
+                  >
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="name" class="form-name ">{{ $t("name") }}</label>
+                <input
+                  class="form-control"
+                  name="name"
+                  v-model.trim="$v.userEditData.name.$model"
+                  :placeholder="$t('name')"
+                  required
+                />
+                <div v-if="$v.userEditData.name.$error">
+                  <span v-if="!$v.userEditData.name.required" class="danger">{{
+                    $t("required")
+                  }}</span>
+                  <span
+                    v-else-if="!$v.userEditData.name.alpha"
+                    class="danger"
+                    >{{ $t("requiredLetters") }}</span
+                  >
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="patricity" class="form-name ">{{
+                  $t("patricity")
+                }}</label>
+                <input
+                  class="form-control"
+                  name="patricity"
+                  v-model.trim="$v.userEditData.patricity.$model"
+                  :placeholder="$t('patricity')"
+                  required
+                />
+                <div v-if="$v.userEditData.patricity.$error">
+                  <span
+                    v-if="!$v.userEditData.patricity.alpha"
+                    class="danger"
+                    >{{ $t("requiredLetters") }}</span
+                  >
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="gender" class="form-name ">{{
+                  $t("gender")
+                }}</label>
+                <div class="form_radio">
+                  <input
+                    type="radio"
+                    name="male"
+                    :value="$t('male')"
+                    v-model.trim="$v.userEditData.gender.$model"
+                  />
+                  <label for="male">{{ $t("male") }}</label>
+                </div>
+
+                <div class="form_radio">
+                  <input
+                    type="radio"
+                    name="female"
+                    :value="$t('female')"
+                    v-model.trim="$v.userEditData.gender.$model"
+                  />
+                  <label for="female">{{ $t("female") }}</label>
+                </div>
+                <div class="form_radio">
+                  <input
+                    type="radio"
+                    name="nothing"
+                    :value="$t('notIndicated')"
+                    v-model.trim="$v.userEditData.gender.$model"
+                  />
+                  <label for="nothing">{{ $t("notIndicated") }}</label>
+                </div>
+              </div>
+              <div class="form-group">
+                <label for="birthday" class="form-name">{{
+                  $t("signUp.birthday")
+                }}</label>
+                <input
+                  name="birthday"
+                  type="date"
+                  v-model="$v.userEditData.birthday.$model"
+                  class="form-control block"
+                  :max="new Date().toISOString().substr(0, 10)"
+                />
+              </div>
+              <div class="form-group">
+                <label for="login" class="form-name ">{{ $t("login") }}</label>
+                <input
+                  class="form-control"
+                  name="login"
+                  v-model.trim="$v.userEditData.login.$model"
+                  :placeholder="$t('login')"
+                  required
+                />
+                <div v-if="$v.userEditData.login.$error">
+                  <span v-if="!$v.userEditData.login.required" class="danger">{{
+                    $t("required")
+                  }}</span>
+                  <span
+                    v-else-if="!$v.userEditData.login.alpha"
+                    class="danger"
+                    >{{ $t("requiredLetters") }}</span
+                  >
+                </div>
+              </div>
+              <!-- <div class="form-group">
+                <label for="password" class="form-name ">{{
+                  $t("password")
+                }}</label>
+                <input
+                  class="form-control"
+                  name="password"
+                  v-model.trim="$v.userEditData.password.$model"
+                  :placeholder="$t('password')"
+                  required
+                />
+              </div> -->
+            </form>
+            <button @click="showModalDelete" class="btn danger btnDelete">
+              {{ $t("delete") }}
+            </button>
+          </div>
+          <div class="col-1"></div>
+          <div class="col-3">
+            <button
+              class="btn btn-alternate w-100 mb-2"
+              @click="closeFullInformation"
+            >
+              {{ $t("cancel") }}
+            </button>
+            <button
+              type="submit"
+              class="btn btn-alternate w-100"
+              @click="saveUserOnPopup"
+              :disabled="$v.userEditData.$anyError"
+            >
+              {{ $t("save") }}
+            </button>
+          </div>
+        </div>
+      </div>
+      <Popup v-if="isShowModalDelete">
+        <h3 slot="header">
+          {{ $t("deleteQuestion") }}
+          {{ fullName }}?
+        </h3>
+        <div slot="footer" class="double">
+          <button @click="deleteUser" class="btn  btn-alternate danger">
             {{ $t("delete") }}
           </button>
+          <button @click="isShowModalDelete = false" class="btn btn-alternate">
+            {{ $t("cancel") }}
+          </button>
         </div>
-        <div class="flexCont bigBlock">
-          <form @submit.prevent="saveUserOnPopup">
-            <div class="form-group">
-              <label for="surname" class="form-name ">{{
-                $t("surname")
-              }}</label>
-              <input
-                class="form-control"
-                name="surname"
-                v-model.trim="$v.user.surname.$model"
-                @blur="$v.user.surname.$touch()"
-                :placeholder="$t('surname')"
-              />
-              <div v-if="$v.user.surname.$error">
-                <span v-if="!$v.user.surname.required" class="danger">{{
-                  $t("required")
-                }}</span>
-                <span v-else-if="!$v.user.surname.alpha" class="danger">{{
-                  $t("requiredLetters")
-                }}</span>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="name" class="form-name ">{{ $t("name") }}</label>
-              <input
-                class="form-control"
-                name="name"
-                v-model.trim="$v.user.name.$model"
-                :placeholder="$t('name')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="patricity" class="form-name ">{{
-                $t("patricity")
-              }}</label>
-              <input
-                class="form-control"
-                name="patricity"
-                v-model.trim="$v.user.patricity.$model"
-                :placeholder="$t('patricity')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="gender" class="form-name ">{{ $t("gender") }}</label>
-              <div class="form_radio">
-                <input
-                  type="radio"
-                  name="male"
-                  :value="$t('male')"
-                  v-model.trim="$v.user.gender.$model"
-                />
-                <label for="male">{{ $t("male") }}</label>
-              </div>
-
-              <div class="form_radio">
-                <input
-                  type="radio"
-                  name="female"
-                  :value="$t('female')"
-                  v-model.trim="$v.user.gender.$model"
-                />
-                <label for="female">{{ $t("female") }}</label>
-              </div>
-              <div class="form_radio">
-                <input
-                  type="radio"
-                  name="nothing"
-                  :value="$t('notIndicated')"
-                  v-model.trim="$v.user.gender.$model"
-                />
-                <label for="nothing">{{ $t("notIndicated") }}</label>
-              </div>
-            </div>
-            <div class="form-group">
-              <label for="login" class="form-name ">{{ $t("login") }}</label>
-              <input
-                class="form-control"
-                name="login"
-                v-model.trim="$v.user.login.$model"
-                :placeholder="$t('login')"
-                required
-              />
-            </div>
-            <div class="form-group">
-              <label for="password" class="form-name ">{{
-                $t("password")
-              }}</label>
-              <input
-                class="form-control"
-                name="password"
-                v-model.trim="$v.user.password.$model"
-                :placeholder="$t('password')"
-                required
-              />
-            </div>
-            <div class="double">
-              <button type="submit" class="btn btn-alternate">
-                {{ $t("save") }}
-              </button>
-            </div>
-          </form>
-        </div>
-      </div>
+      </Popup>
+      <MiniAlert v-if="isShowAlertEdit"
+        ><p slot="title">{{ $t("minialertEditUser") }}</p></MiniAlert
+      >
+      <MiniAlert v-if="isShowAlertDelete"
+        ><p slot="title">{{ $t("minialertDeleteUser") }}</p></MiniAlert
+      >
     </div>
-
-    <popup v-if="isShowModalDelete">
-      <h3 slot="header">
-        {{ $t("deleteQuestion") }}
-        {{ fullName }}?
-      </h3>
-      <div slot="footer" class="double">
-        <button @click="deleteUser" class="btn  btn-alternate danger">
-          {{ $t("delete") }}
-        </button>
-        <button @click="isShowModalDelete = false" class="btn btn-alternate">
-          {{ $t("cancel") }}
-        </button>
-      </div>
-    </popup>
-    <minialert v-if="isShowAlertEdit"
-      ><p slot="title">{{ $t("minialertEditUser") }}</p></minialert
-    >
-    <minialert v-if="isShowAlertDelete"
-      ><p slot="title">{{ $t("minialertDeleteUser") }}</p></minialert
-    >
   </div>
 </template>
 
 <script>
-import popup from "@/components/Popup.vue";
-import minialert from "@/components/MiniAlert.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import Popup from "@/components/Popup.vue";
+import MiniAlert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
 import Points from "@/components/account/PointsUser.vue";
+import Loader from "@/components/Loader.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
@@ -215,7 +317,14 @@ import {
   ONE_USER_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, popup, Edit, Points },
+  components: {
+    MiniAlert,
+    Popup,
+    Edit,
+    Points,
+    BreadCrumbs,
+    Loader
+  },
   apollo: {
     users: {
       query: USERS_QUERY
@@ -239,11 +348,20 @@ export default {
       isShowAlertDelete: false,
       isShowAlertEdit: false,
       isShowModalDelete: false,
-      findString: ""
+      findString: "",
+      userEditData: {
+        surname: "",
+        name: "",
+        patricity: "",
+        gender: "",
+        login: "",
+        password: "",
+        birthday: ""
+      }
     };
   },
   validations: {
-    user: {
+    userEditData: {
       surname: {
         required,
         alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
@@ -253,10 +371,12 @@ export default {
         alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
       },
       patricity: {
-        required,
         alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
       },
       gender: {
+        required
+      },
+      birthday: {
         required
       },
       login: {
@@ -272,6 +392,21 @@ export default {
     showFullInformation(id) {
       this.userId = id;
       this.isEdit = true;
+      this.userEditData.id = this.user.id;
+      this.userEditData.name = this.user.name;
+      this.userEditData.surname = this.user.surname;
+      this.userEditData.patricity = this.user.patricity;
+      this.userEditData.gender = this.user.gender;
+      this.userEditData.login = this.user.login;
+      console.log("BIRTH!: ", this.user.birthday);
+      if (this.user.birthday != null) {
+        this.userEditData.birthday = new Date(+this.user.birthday)
+          .toISOString()
+          .substr(0, 10);
+      }
+    },
+    closeFullInformation() {
+      this.isEdit = false;
     },
     showModalDelete() {
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`;
@@ -291,8 +426,8 @@ export default {
             cache.writeQuery({ query: USERS_QUERY, data });
           }
         })
-        .then(data => {
-          console.log(data);
+        .then(() => {
+          this.$store.dispatch("LOG_OUT");
         })
         .catch(error => {
           console.error(error);
@@ -305,52 +440,53 @@ export default {
       }, 3000);
     },
     saveUserOnPopup() {
-      console.log(this.user);
       this.$apollo
         .mutate({
           mutation: UPDATE_USER_QUERY,
           variables: {
-            id: this.user.id,
-            surname: this.user.surname,
-            name: this.user.name,
-            patricity: this.user.patricity,
-            gender: this.user.gender,
-            login: this.user.login
+            id: this.userEditData.id,
+            surname: this.userEditData.surname,
+            name: this.userEditData.name,
+            patricity: this.userEditData.patricity,
+            gender: this.userEditData.gender,
+            login: this.userEditData.login,
+            birthday: this.$v.userEditData.birthday.$model
           },
           update: (cache, { data: { updateUser } }) => {
+            console.log("updateUser", updateUser);
             let data = cache.readQuery({ query: USERS_QUERY });
-            data.users.find(
-              el => el.id === this.user.id
-            ).surname = this.user.surname;
-            data.users.find(el => el.id === this.user.id).name = this.user.name;
-            data.users.find(
-              el => el.id === this.user.id
-            ).patricity = this.user.patricity;
-            data.users.find(
-              el => el.id === this.user.id
-            ).gender = this.user.gender;
-            data.users.find(
-              el => el.id === this.user.id
-            ).login = this.user.login;
+            let user = data.users.find(el => el.id === this.userEditData.id);
+            user.surname = this.userEditData.surname;
+            user.name = this.userEditData.name;
+            user.patricity = this.userEditData.patricity;
+            user.gender = this.userEditData.gender;
+            user.login = this.userEditData.login;
+            if (
+              this.userEditData.birthday != "" &&
+              this.userEditData.birthday != null
+            ) {
+              user.birthday =
+                "" + new Date(this.userEditData.birthday).getTime();
+            } else {
+              user.birthday = null;
+            }
             cache.writeQuery({ query: USERS_QUERY, data });
-            console.log(updateUser);
           },
           optimisticResponse: {
             __typename: "Mutation",
-            createUser: {
+            updateUser: {
               __typename: "User",
               id: -1,
-              surname: this.user.surname,
-              name: this.user.name,
-              patricity: this.user.patricity,
-              gender: this.user.gender,
-              login: this.user.login
+              surname: this.userEditData.surname,
+              name: this.userEditData.name,
+              patricity: this.userEditData.patricity,
+              gender: this.userEditData.gender,
+              login: this.userEditData.login,
+              birthday: this.$v.userEditData.birthday.$model
             }
           }
         })
-        .then(data => {
-          console.log(data);
-        })
+        .then(() => {})
         .catch(error => {
           console.error(error);
         });
@@ -398,6 +534,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 
 .flexCont {
   display: flex;
@@ -408,35 +545,22 @@ export default {
   display: flex;
   justify-content: space-around;
 }
-.pad {
-  padding: 2.5rem;
-}
 .btnEdit {
   display: flex;
-  align-self: flex-start;
-  margin: 2rem;
-  cursor: pointer;
+
+  & > * {
+    margin: 0 auto;
+    cursor: pointer;
+  }
 }
 .card {
+  display: block;
   margin-bottom: 3rem;
   justify-content: center;
+  border-radius: 16px;
 }
 .form-name {
   color: $white;
-}
-.flexBlock {
-  display: flex;
-}
-.smallBlock {
-  justify-content: space-between;
-}
-.bigBlock {
-  margin-left: 6rem;
-  width: 40%;
-}
-.padLeftTop {
-  padding-left: 2.5rem;
-  padding-top: 2.5rem;
 }
 .form-group {
   margin-bottom: 2.5rem;
@@ -455,8 +579,11 @@ export default {
   }
 }
 .bigAvatar {
-  height: 125px;
-  border-radius: 65px;
-  margin-right: 3rem;
+  border-radius: 50%;
+  width: 100%;
+  max-width: 200px;
+}
+.container {
+  position: relative;
 }
 </style>

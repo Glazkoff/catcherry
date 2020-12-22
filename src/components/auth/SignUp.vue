@@ -3,7 +3,58 @@
     <h1>{{ $t("signUp.title") }}</h1>
     <p>{{ $t("markRequiredField") }}</p>
     <div class="form-group">
-      <label class="form-name">{{ $t("signUp.fullName") }} *</label><br />
+      <label class="form-name">{{ $t("signUp.name") }} *</label>
+      <input
+        :disabled="signUpLoading"
+        type="text"
+        v-model.trim="$v.name.$model"
+        :placeholder="$t('signUp.namePlaceholder')"
+        class="form-control block"
+      />
+      <div v-if="$v.name.$error" class="error">
+        <span class="form-text danger" v-if="!$v.name.required">{{
+          $t("required")
+        }}</span>
+        <span class="form-text danger" v-else-if="!$v.name.alpha">{{
+          $t("requiredLetters")
+        }}</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-name">{{ $t("signUp.surname") }} *</label>
+      <input
+        :disabled="signUpLoading"
+        type="text"
+        v-model.trim="$v.surname.$model"
+        :placeholder="$t('signUp.surnamePlaceholder')"
+        class="form-control block"
+      />
+      <div v-if="$v.surname.$error" class="error">
+        <span class="form-text danger" v-if="!$v.surname.required">{{
+          $t("required")
+        }}</span>
+        <span class="form-text danger" v-else-if="!$v.surname.alpha">{{
+          $t("requiredLetters")
+        }}</span>
+      </div>
+    </div>
+    <div class="form-group">
+      <label class="form-name">{{ $t("signUp.patricity") }}</label>
+      <input
+        :disabled="signUpLoading"
+        type="text"
+        v-model.trim="$v.patricity.$model"
+        :placeholder="$t('signUp.patricityPlaceholder')"
+        class="form-control block"
+      />
+      <div v-if="$v.patricity.$error" class="error">
+        <span class="form-text danger" v-if="!$v.patricity.alpha">{{
+          $t("requiredLetters")
+        }}</span>
+      </div>
+    </div>
+    <!-- <div class="form-group">
+      <label class="form-name">{{ $t("signUp.fullName") }} *</label>
       <input
         :disabled="signUpLoading"
         type="text"
@@ -19,19 +70,19 @@
           $t("requiredLetters")
         }}</span>
       </div>
-    </div>
+    </div> -->
     <div class="form-group">
-      <label class="form-name">{{ $t("signUp.birthday") }}</label
-      ><br />
+      <label class="form-name">{{ $t("signUp.birthday") }}</label>
       <input
         :disabled="signUpLoading"
         type="date"
         v-model="$v.birthday.$model"
         class="form-control block"
+        :max="new Date().toISOString().substr(0, 10)"
       />
     </div>
     <div class="form-group">
-      <label class="form-name">{{ $t("signUp.login") }} *</label><br />
+      <label class="form-name">{{ $t("signUp.login") }} *</label>
       <input
         :disabled="signUpLoading"
         type="text"
@@ -126,7 +177,9 @@ export default {
   },
   data() {
     return {
-      fullName: "",
+      name: "",
+      surname: "",
+      patricity: "",
       birthday: "",
       login: "",
       password: "",
@@ -144,13 +197,18 @@ export default {
     this.fingerprint = visitorId;
   },
   validations: {
-    fullName: {
+    surname: {
       required,
       alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
     },
-    birthday: {
-      required
+    name: {
+      required,
+      alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
     },
+    patricity: {
+      alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
+    },
+    birthday: {},
     login: {
       required
       // email,
@@ -165,8 +223,11 @@ export default {
       if (this.$v.$invalid) {
         this.$v.$touch();
       } else {
+        console.log("BIRTHDAY: ", this.$v.birthday.$model);
         let userData = {
-          name: this.$v.fullName.$model,
+          name: this.$v.name.$model,
+          surname: this.$v.surname.$model,
+          patricity: this.$v.patricity.$model,
           birthday: this.$v.birthday.$model,
           login: this.$v.login.$model,
           password: this.$v.password.$model
@@ -179,6 +240,8 @@ export default {
               mutation: SIGN_UP,
               variables: {
                 name: userData.name,
+                surname: userData.surname,
+                patricity: userData.patricity,
                 birthday: userData.birthday,
                 login: userData.login,
                 password: userData.password,
