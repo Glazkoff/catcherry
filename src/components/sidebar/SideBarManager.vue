@@ -9,7 +9,7 @@
             <BackIcon></BackIcon>
           </div>
           <div class="side-bar__nav-list__nav-element__text">
-            Назад
+            {{ $t("back") }}
           </div>
         </div>
       </router-link>

@@ -14,6 +14,7 @@
       <div class="row">
         <div class="col-4">
           <div>
+            <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
             <h3 class="sticky-header">Без исполнителя</h3>
             <div v-for="taskNoneUser in tasks" :key="taskNoneUser.id">
               <div v-if="!taskNoneUser.tasksUser" class="oneUser ">
@@ -34,6 +35,7 @@
         </div>
         <div class="col-4">
           <div>
+            <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
             <h3 class="sticky-header">Назначенные вам</h3>
             <div v-for="task in tasks" :key="task.id">
               <div v-if="task.tasksUser" class="oneUser">
@@ -76,6 +78,7 @@
           </div>
         </div>
         <div class="col-4">
+          <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
           <h3 class="sticky-header">Завершённые</h3>
         </div>
       </div>
@@ -100,27 +103,30 @@ import Loader from "@/components/Loader.vue";
 export default {
   components: { MiniAlert, BreadCrumbs, Loader },
   apollo: {
+    // TODO: ПЕРЕДЕЛАТЬ!
     tasks: {
       query: TASKS_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.$store.getters.decodedToken.id
         };
       }
     },
+    // TODO: ПЕРЕДЕЛАТЬ!
     backlog: {
       query: BACKLOG_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.$store.getters.decodedToken.id
         };
       }
     },
+    // TODO: ПЕРЕДЕЛАТЬ!
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.$store.getters.decodedToken.id
         };
       }
     }

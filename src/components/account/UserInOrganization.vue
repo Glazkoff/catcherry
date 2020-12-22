@@ -270,12 +270,13 @@ export default {
     organizations: {
       query: ORGS_QUERY
     },
+    // TODO: ПЕРЕДЕЛАТЬ!
     // массив информации об одной организации
     organization: {
       query: ONE_ORG_QUERY,
       variables() {
         return {
-          id: this.$route.params.id
+          id: this.$store.getters.decodedToken.id
         };
       }
     },

@@ -327,13 +327,16 @@ export default {
   },
   apollo: {
     users: {
-      query: USERS_QUERY
+      query: USERS_QUERY,
+      skip() {
+        return !this.$store.getters.decodedToken.id;
+      }
     },
     user: {
       query: ONE_USER_QUERY,
       variables() {
         return {
-          id: this.$route.params.id
+          id: this.$store.getters.decodedToken.id
         };
       }
     }
