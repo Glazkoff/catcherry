@@ -1,103 +1,96 @@
 <template>
-  <div class="pointsUser account-view">
-    <p class="pointsName">Баллы</p>
-    <hr class="" />
-    <p class="pointsQan">322 балла</p>
-    <div class="pointsOperation">
-      <ul>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-      </ul>
+  <div v-if="!this.$apollo.queries.getPointsUser.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
     </div>
-    <button class="showAllPoints">Показать полностью</button>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1>{{ pointQuantity }}</h1>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div
+        class="row"
+        v-for="point in getPointsUser.userPointsOperation"
+        :key="point.id"
+        :point="point"
+      >
+        <div class="col-12 class">
+          <small class="mr-1">{{ $d(point.createdAt, "number") }}</small>
+          <small class="mr-1">{{ $d(point.createdAt, "time") }}</small>
+          <small class="mr-1">{{ point.operationDescription }}</small>
+          <small class="float">
+            <small v-if="point.delta > 0">+</small>
+            {{ $tc("pointsMsg", point.delta) }}</small
+          >
+        </div>
+      </div>
+    </div>
+  </div>
+  <div v-else class="wrapOfLoader">
+    <Loader></Loader>
   </div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import { GET_POINTS_USER_QUERY } from "@/graphql/queries";
 export default {
-  name: "PointsUser"
+  name: "PointsUser",
+  components: {
+    Loader,
+    BreadCrumbs
+  },
+  apollo: {
+    getPointsUser: {
+      query: GET_POINTS_USER_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
+    }
+  },
+  methods: {},
+  computed: {
+    pointQuantity() {
+      if (this.getPointsUser == undefined) {
+        return "-";
+      } else {
+        return this.getPointsUser.pointQuantity;
+      }
+    }
+  }
 };
 </script>
 
-<style>
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+<style lang="scss" scoped>
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_classes.scss";
+@import "@/styles/_grid.scss";
 
-body {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  text-align: left;
-  background-color: #fff;
+h1 {
+  margin-top: 1.5rem;
+  margin-bottom: 2rem;
 }
-li {
-  list-style-type: none;
+.mr-1 {
+  margin-right: 0.4rem;
 }
-.showAllPoints {
-  margin-left: 40px;
+.class {
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $violet_2;
 }
-.pointsQan {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 48px;
-  line-height: 59px;
-  padding-left: 40px;
-}
-.pointsName {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 29px;
-  padding-left: 40px;
-}
-.pointsOperation {
-  display: flex;
-}
-.pointsDate,
-.pointsDelta {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
-}
-.pointsDelta {
+.float {
   float: right;
-  padding-left: 70px;
+  padding-top: 4px;
+  color: $gray_3;
 }
 </style>
