@@ -83,9 +83,7 @@ const store = new Vuex.Store({
                 );
 
                 let route = localStorage.getItem("first-route");
-                console.log("LS NAME: ", route);
                 if ("" + store.$app.$route.name != route) {
-                  console.log("LS NAME: ", route);
                   store.$app.$router.push({ name: route });
                   localStorage.removeItem("first-route");
                 }
