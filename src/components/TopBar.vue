@@ -33,7 +33,9 @@
                 >
                   <div class="notBtnNotification" href="#">
                     <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
-                    <div class="number">.</div>
+                    <div class="number" v-if="lengthNotifocations >= 1">
+                      .
+                    </div>
                     <NotificationIcon></NotificationIcon>
                     <div class="box">
                       <div class="display">
@@ -77,10 +79,11 @@
               </p>
             </li>
             <li class="right">
-              <p class="nav-point">
-                {{ $tc("pointsMsg", pointQuantity) }}
-                <StarIcon></StarIcon>
-              </p>
+              <router-link to="/points">
+                <p class="nav-point">
+                  {{ $tc("pointsMsg", pointQuantity) }}
+                  <StarIcon></StarIcon></p
+              ></router-link>
             </li>
           </ul>
         </nav>
@@ -95,7 +98,7 @@ import MailIcon from "@/assets/svg/topbar/mail_top-bar.svg?inline";
 import StarIcon from "@/assets/svg/topbar/star_top-bar.svg?inline";
 import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg?inline";
 import {
-  GET_POINTS_QUERY,
+  GET_POINTS_USER_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
   NOTIFICATIONS_FOR_USER_QUERY
 } from "@/graphql/queries";
@@ -114,7 +117,7 @@ export default {
   // },
   apollo: {
     getPointsUser: {
-      query: GET_POINTS_QUERY,
+      query: GET_POINTS_USER_QUERY,
       variables() {
         return {
           userId: this.$store.getters.decodedToken.id
@@ -160,6 +163,13 @@ export default {
         return "-";
       } else {
         return this.getPointsUser.pointQuantity;
+      }
+    },
+    lengthNotifocations() {
+      if (this.notificationsForUser == undefined) {
+        return 0;
+      } else {
+        return this.notificationsForUser.length;
       }
     },
     roleUser() {
@@ -255,6 +265,7 @@ header {
 }
 
 #topbar ul li .nav-point {
+  margin-block-start: 0em;
   font-style: normal;
   color: #ffffff;
   // padding-left: 30px;

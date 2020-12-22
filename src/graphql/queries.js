@@ -505,33 +505,36 @@ export const REVOKE_REQUEST_QUERY = gql`
   }
 `;
 
-export const GET_POINTS_QUERY = gql`
+// Получение баллов и информации о них для пользователя
+export const GET_POINTS_USER_QUERY = gql`
   query($userId: ID!) {
     getPointsUser(userId: $userId) {
       id
       userId
       pointQuantity
+      userPointsOperation {
+        id
+        delta
+        operationDescription
+        createdAt
+      }
     }
   }
 `;
 
-export const GET_POINTS_OPERATION_QUERY = gql`
-  query($pointAccountId: ID!) {
-    getOperationPointsUser(pointAccountId: $pointAccountId) {
-      delta
-      operationDescription
-      createdAt
-    }
+// Удаление операции с баллами
+export const DELETE_POINTS_OPERATION = gql`
+  mutation($id: ID!, $pointAccountId: ID!, $delta: Int!) {
+    deletePointOperation(
+      id: $id
+      pointAccountId: $pointAccountId
+      delta: $delta
+    )
   }
 `;
 
-export const GET_POINTS_LAST_WEEK_QUERY = gql`
-  query($id: ID!) {
-    pointsLastWeek(id: $id)
-  }
-`;
-
-export const CARGE_POINTS_QUERY = gql`
+// Создание операции с баллами
+export const CREATE_POINTS_OPERATION = gql`
   mutation($pointAccountId: ID!, $delta: Int!, $operationDescription: String!) {
     createPointOperation(
       pointAccountId: $pointAccountId
@@ -539,7 +542,16 @@ export const CARGE_POINTS_QUERY = gql`
       operationDescription: $operationDescription
     ) {
       id
+      delta
+      pointAccountId
+      operationDescription
     }
+  }
+`;
+
+export const GET_POINTS_LAST_WEEK_QUERY = gql`
+  query($id: ID!) {
+    pointsLastWeek(id: $id)
   }
 `;
 
@@ -775,6 +787,11 @@ export const NOTIFICATIONS_FOR_USER_QUERY = gql`
       }
       authorId
       userId
+      notificationAuthor {
+        name
+        surname
+        patricity
+      }
       ReadOrNot {
         userId
         notificationId

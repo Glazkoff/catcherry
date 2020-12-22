@@ -42,6 +42,15 @@ export default {
   width: 100vw;
   max-width: 100vw;
 }
+body {
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 [v-cloak] {
   display: none;
