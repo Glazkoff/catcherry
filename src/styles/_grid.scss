@@ -65,7 +65,14 @@
   display: flex;
   &.flex-center {
     justify-content: center;
+    justify-content: center;
+    align-items: center;
   }
+}
+
+.clearfix {
+  float: unset !important;
+  clear: both !important;
 }
 
 // *********** GRID ***********

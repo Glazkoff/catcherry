@@ -1,11 +1,11 @@
 <template>
   <div class="mainTopBar">
     <div id="topbar">
-      <nav class="navtopbar">
+      <nav class="navtopbar d-block w-100">
         <a class="icon right">☰</a>
         <ul class="m-0">
           <input type="checkbox" id="gepleasurprised" style="display: none;" />
-          <li class="nav-logo">
+          <li class="nav-logo d-block h-100">
             <h1>{{ routeTitle }}</h1>
           </li>
           <li class="right ">
@@ -77,6 +77,7 @@
                 <StarIcon></StarIcon></p
             ></router-link>
           </li>
+          <li class="clearfix"></li>
         </ul>
       </nav>
     </div>
@@ -231,11 +232,14 @@ export default {
 
 #topbar {
   width: 100%;
+  display: flex;
+  align-items: center;
   height: $topBarHeight;
+  // height: auto;
   background: $dark_blue;
   justify-content: center;
-  padding-top: 10px;
-  padding-bottom: 60px;
+  padding-top: 1rem;
+  // padding-bottom: 60px;
   border-bottom: 2px solid $violet_3;
 }
 
