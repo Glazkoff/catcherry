@@ -32,7 +32,7 @@
       </div>
     </div>
     <div id="main-content">
-      <div id="top-bar"><top-bar></top-bar></div>
+      <div id="top-bar"><TopBar></TopBar></div>
       <router-view name="main" id="main-router-view"></router-view>
     </div>
   </div>
@@ -108,6 +108,7 @@ export default {
       width: 100%;
       top: 0;
       z-index: 10000;
+      height: $topBarHeight;
       box-sizing: border-box;
     }
   }

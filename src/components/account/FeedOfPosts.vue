@@ -1,22 +1,34 @@
 <template>
   <div v-if="!this.$apollo.queries.posts.loading" class="doubleColumn">
-    <div class="flexbox">
-      <bread-crumbs class="bread-crumbs"></bread-crumbs>
-      <div>
-        <div v-if="!this.isEmpty">
-          <non-detailed-post
-            @like="onLike"
-            v-for="post in posts"
-            :key="post.id"
-            :post="post"
-          ></non-detailed-post>
+    <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <BreadCrumbs></BreadCrumbs>
+          </div>
         </div>
-        <h3 v-else>Постов пока нет, мне очень жаль</h3>
+      </div>
+      <div class="container">
+        <div class="row">
+          <div class="col-12" v-if="!this.isEmpty">
+            <non-detailed-post
+              @like="onLike"
+              v-for="post in posts"
+              :key="post.id"
+              :post="post"
+            ></non-detailed-post>
+          </div>
+          <div v-else class="col-12">
+            <h3>Постов пока нет, мне очень жаль</h3>
+          </div>
+        </div>
       </div>
     </div>
     <list-of-notifications></list-of-notifications>
   </div>
-  <div v-else class="wrapOfLoader"><loader></loader></div>
+  <div v-else class="wrapOfLoader">
+    <Loader></Loader>
+  </div>
 </template>
 
 <script>
@@ -126,24 +138,14 @@ export default {
 </script>
 
 <style lang="scss">
+@import "@/styles/_grid.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
+@import "@/styles/_dimensions.scss";
 
 .doubleColumn {
   display: flex;
+  width: 100%;
   justify-content: space-between;
-
-  & .flexbox {
-    display: flex;
-    width: 100%;
-    padding: 3rem;
-    padding-top: 0.625rem;
-    flex-direction: column;
-
-    & .bread-crumbs {
-      padding-left: 0;
-      margin-bottom: 2.5rem;
-    }
-  }
 }
 </style>

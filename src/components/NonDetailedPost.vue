@@ -121,7 +121,7 @@ export default {
 }
 
 .infoDate {
-  color: $gray_3;
+  color: $gray;
   display: inline-block;
   margin-bottom: 1rem;
 }
@@ -129,7 +129,7 @@ export default {
 .infoBody {
   width: 100%;
   margin-bottom: 1rem;
-  color: $gray_3;
+  color: $gray;
   overflow: hidden;
   text-overflow: ellipsis;
   display: -webkit-box;

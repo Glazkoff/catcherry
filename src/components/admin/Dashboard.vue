@@ -1,21 +1,33 @@
 <template>
   <div>
-    <BreadCrumbs></BreadCrumbs>
-    <h2>{{ $t("systemStatistics") }}</h2>
-    <div class="wrapOfLoader" v-if="$apollo.loading">
-      <loader></loader>
-    </div>
-    <div class="graphs" v-if="!$apollo.loading">
-      <NewStatistics
-        v-if="!this.$apollo.loading"
-        :users="statisticsNew.statisticsNewUsers"
-        :orgs="statisticsNew.statisticsNewOrgs"
-      ></NewStatistics>
-      <DeleteStatistics
-        v-if="!this.$apollo.loading"
-        :users="statisticsDelete.statisticsDeleteUsers"
-        :orgs="statisticsDelete.statisticsDeleteOrgs"
-      ></DeleteStatistics>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h2>{{ $t("systemStatistics") }}</h2>
+          <div class="wrapOfLoader" v-if="$apollo.loading">
+            <loader></loader>
+          </div>
+        </div>
+      </div>
+      <div class="row" v-if="!$apollo.loading">
+        <NewStatistics
+          class="col-6"
+          v-if="!this.$apollo.loading"
+          :users="statisticsNew.statisticsNewUsers"
+          :orgs="statisticsNew.statisticsNewOrgs"
+        ></NewStatistics>
+        <DeleteStatistics
+          class="col-6"
+          v-if="!this.$apollo.loading"
+          :users="statisticsDelete.statisticsDeleteUsers"
+          :orgs="statisticsDelete.statisticsDeleteOrgs"
+        ></DeleteStatistics>
+      </div>
     </div>
   </div>
 </template>

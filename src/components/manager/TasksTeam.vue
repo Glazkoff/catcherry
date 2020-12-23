@@ -357,7 +357,7 @@ export default {
     div {
       align-self: start;
       p {
-        color: $gray_4;
+        color: $gray;
         font-size: 16px;
         line-height: 18px;
         padding: 0;

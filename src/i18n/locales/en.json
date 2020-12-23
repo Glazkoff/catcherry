@@ -1,6 +1,6 @@
 {
   "projectTitle": "CATCHERRY",
-  "pointsMsg": "{n} point | {n} points",
+  "pointsMsg": "{n} point | {n} points| 0 points",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
   "listUser": "List of users",
@@ -135,11 +135,12 @@
     "logInLink": "Log in!",
     "birthday": "Birthday",
     "loginAlreadyTaken": "This login is already taken",
-    "patricity": "",
-    "patricityPlaceholder": "",
-    "namePlaceholder": "",
-    "name": "",
-    "surnamePlaceholder": ""
+    "patricity": "Patricity",
+    "patricityPlaceholder": "Enter patricity",
+    "namePlaceholder": "Enter name",
+    "name": "Name",
+    "surnamePlaceholder": "Enter surname",
+    "surname": "Surname"
   },
   "markRequiredField": "* - required field",
   "startMsg": "Hello, Polyweb!",
@@ -177,5 +178,6 @@
   "privacyPolicy": {
     "acceptBtn": "I accept the terms",
     "title": "Data processing policy"
-  }
+  },
+  "back": "Back"
 }

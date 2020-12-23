@@ -1,6 +1,5 @@
 <template>
   <div class="wrapOfList">
-    <div class="spaceForNotifications"></div>
     <div class="list">
       <notification
         v-for="notification in notificationsForUser"
@@ -76,12 +75,9 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_classes.scss";
-.spaceForNotifications {
-  width: 24rem;
-}
 
 .wrapOfList {
-  margin-top: -20px;
+  width: 24rem;
 }
 
 .list {
@@ -91,7 +87,6 @@ export default {
   flex-direction: column;
   align-items: center;
   top: $topBarHeight;
-  bottom: -$topBarHeight;
   background: $violet;
   position: sticky;
   overflow-x: hidden;

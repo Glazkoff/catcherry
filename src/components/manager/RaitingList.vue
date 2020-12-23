@@ -222,7 +222,7 @@ export default {
 }
 
 .card_more small {
-  color: $gray_3;
+  color: $gray;
   padding: 0;
   margin: 0;
 }
