@@ -44,6 +44,11 @@ export default {
       }
     }
   },
+  methods: {
+    refreshQuery() {
+      this.$apollo.queries.getPointsUser.refetch();
+    }
+  },
   computed: {
     isEmpty() {
       if (this.getPointsUser == undefined) {

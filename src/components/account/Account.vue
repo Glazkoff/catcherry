@@ -86,7 +86,7 @@
             <div class="row">
               <div class="col-12">
                 <PointQuantity></PointQuantity>
-                <PointOperation :limit="3"></PointOperation>
+                <PointOperation :limit="3" ref="pOperation"></PointOperation>
                 <button
                   class="mt-4 w-100 btn btn-primary"
                   v-on:click="onLink()"
@@ -397,6 +397,15 @@ export default {
         minLength: minLength(2)
       }
     }
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      // console.log("HUI ", vm.$refs.pOperation);
+      if (vm.$refs.pOperation) {
+        vm.$refs.pOperation.refreshQuery();
+      }
+      next();
+    });
   },
   methods: {
     showFullInformation(id) {

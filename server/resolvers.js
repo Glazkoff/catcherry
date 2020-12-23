@@ -336,7 +336,8 @@ module.exports = {
           {
             model: db.PointsOperations,
             as: "userPointsOperation",
-            limit: args.limit
+            limit: args.limit,
+            order: [[{ model: db.PointsOperations }, "id", "DESC"]]
           }
         ]
       });
