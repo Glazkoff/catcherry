@@ -359,8 +359,8 @@ import {
   ONE_USER_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
   ADD_IN_TEAM_QUERY,
-  GET_POINTS_QUERY,
-  CARGE_POINTS_QUERY,
+  GET_POINTS_USER_QUERY,
+  CREATE_POINTS_OPERATION,
   TEAMS_QUERY,
   ADD_USER_IN_TEAM_QUERY
 } from "@/graphql/queries";
@@ -402,7 +402,7 @@ export default {
     },
     // Получить количество баллов пользователя
     getPointsUser: {
-      query: GET_POINTS_QUERY,
+      query: GET_POINTS_USER_QUERY,
       error(error) {
         this.queryError = JSON.stringify(error.message);
       },
@@ -714,7 +714,7 @@ export default {
       this.isEditPoints = false;
       this.$apollo
         .mutate({
-          mutation: CARGE_POINTS_QUERY, // Изменяем в БД
+          mutation: CREATE_POINTS_OPERATION, // Изменяем в БД
           variables: {
             pointAccountId: parseInt(this.getPointsUser.id),
             delta: parseInt(this.points - this.getPointsUser.pointQuantity),
@@ -723,12 +723,12 @@ export default {
           // Обновляем кеш
           update: (cache, { data: { updatePoints } }) => {
             let data = cache.readQuery({
-              query: GET_POINTS_QUERY,
+              query: GET_POINTS_USER_QUERY,
               variables: { userId: this.userId }
             });
             data.getPointsUser.pointQuantity = this.points; // Редактируем количество баллов
             cache.writeQuery({
-              qquery: GET_POINTS_QUERY,
+              query: GET_POINTS_USER_QUERY,
               variables: { userId: this.userId },
               data
             });

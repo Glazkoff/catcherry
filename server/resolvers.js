@@ -247,7 +247,6 @@ module.exports = {
           }
         }
       });
-      console.log("!!!!!!!!!!!!!!!!!!!!! " + JSON.stringify(result));
       return result;
     },
 
@@ -333,16 +332,17 @@ module.exports = {
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
-    getPointsUser: (parent, args, { db }) =>
-      db.Points.findOne({
+
+    // Получение баллов и информации о них для пользователя по id
+    getPointsUser: async (parent, args, { db }) => {
+      let result = await db.Points.findOne({
         where: { userId: args.userId },
-        order: [["id", "ASC"]]
-      }),
-    getOperationPointsUser: (parent, args, { db }) =>
-      db.PointsOperations.findAll({
-        where: { pointAccountId: args.pointAccountId },
-        order: [["id", "ASC"]]
-      }),
+        order: [["id", "DESC"]],
+        include: [{ model: db.PointsOperations, as: "userPointsOperation" }]
+      });
+      return result;
+    },
+
     pointsLastWeek: async (parent, args, { db }) => {
       let operationLastWeek = await db.PointsOperations.findAll({
         where: {
@@ -893,48 +893,7 @@ module.exports = {
           id: args.id
         }
       }),
-    /*
-      [Ниже] Мутации работы с баллами (PointsOperstion)     
-    */
-    //Изменить операцию с баллами (если ввели неправильное число баллов, его можно исправить)
-    updatePointOperation: (parent, { pointAccountId, delta, id }, { db }) =>
-      db.PointsOperations.update(
-        {
-          pointAccountId: pointAccountId,
-          delta: delta
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    //Напрямую изменить количество баллов у конкретного пользователя
-    updatePoints: (parent, { pointQuantity, id }, { db }) =>
-      db.PointsOperations.update(
-        {
-          pointQuantity: pointQuantity
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    //Удалить операцию с баллами
-    deletePointOperation: (parent, args, { db }) =>
-      db.PointsOperations.destroy({
-        where: {
-          id: args.id
-        }
-      }),
-    //Удалить счет пользователя
-    deletePoints: (parent, args, { db }) =>
-      db.Points.destroy({
-        where: {
-          id: args.id
-        }
-      }),
+
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
@@ -975,6 +934,8 @@ module.exports = {
     /*
       [Ниже] Мутации работы с баллами     
     */
+
+    // Добавление  баллов
     createPointOperation: async (
       parent,
       { pointAccountId, delta, operationDescription },
@@ -983,9 +944,10 @@ module.exports = {
       let total = await db.Points.findOne({
         where: { id: pointAccountId }
       });
-      db.Points.update(
+
+      await db.Points.update(
         {
-          pointQuantity: total.pointQuantity + delta
+          pointQuantity: +total.pointQuantity + delta
         },
         {
           where: {
@@ -993,12 +955,41 @@ module.exports = {
           }
         }
       );
-      return db.PointsOperations.create({
+      let creation = await db.PointsOperations.create({
         pointAccountId: pointAccountId,
         delta: delta,
         operationDescription: operationDescription
       });
+      return creation;
     },
+
+    //Удалить операцию с баллами
+    deletePointOperation: async (
+      parent,
+      { id, pointAccountId, delta },
+      { db }
+    ) => {
+      let total = await db.Points.findOne({
+        where: { id: pointAccountId }
+      });
+
+      await db.Points.update(
+        {
+          pointQuantity: +total.pointQuantity - delta
+        },
+        {
+          where: {
+            id: pointAccountId
+          }
+        }
+      );
+      return db.PointsOperations.destroy({
+        where: {
+          id: id
+        }
+      });
+    },
+
     /*
       [Ниже] Мутации работы с командами     
     */

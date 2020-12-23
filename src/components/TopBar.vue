@@ -98,7 +98,7 @@ import MailIcon from "@/assets/svg/topbar/mail_top-bar.svg?inline";
 import StarIcon from "@/assets/svg/topbar/star_top-bar.svg?inline";
 import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg?inline";
 import {
-  GET_POINTS_QUERY,
+  GET_POINTS_USER_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
   NOTIFICATIONS_FOR_USER_QUERY
 } from "@/graphql/queries";
@@ -117,7 +117,7 @@ export default {
   // },
   apollo: {
     getPointsUser: {
-      query: GET_POINTS_QUERY,
+      query: GET_POINTS_USER_QUERY,
       variables() {
         return {
           userId: this.$store.getters.decodedToken.id
