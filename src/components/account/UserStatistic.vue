@@ -39,16 +39,18 @@
             <small v-if="pointsLastWeek[0] == pointsLastWeek[1]">
               столько же, как на прошлой неделе
             </small>
+            <p>Заработанные баллы: {{ positivePoints }}</p>
           </div>
           <div>
             <p>На прошлой неделе:</p>
             <p v-if="pointsLastWeek !== null" class="points_now">
               {{ pointsLastWeek[1] }} баллов
             </p>
+            <br />
+            <p>Потраченные баллы: {{ negativePoints }}</p>
           </div>
         </div>
       </div>
-      <p>Заработанные баллы: {{ personalUserStatistics.pointQuantity }}</p>
 
       <h3>История:</h3>
       <div
@@ -58,10 +60,8 @@
       >
         <div>
           <p>Дата: {{ $d(statistic.createdAt, "long") }}</p>
-          <p>
-            Баллов:
-            {{ statistic.delta }} за "{{ statistic.operationDescription }}"
-          </p>
+          Баллов:
+          {{ statistic.delta }} за "{{ statistic.operationDescription }}"
         </div>
       </div>
     </div>
@@ -82,6 +82,28 @@ import {
 } from "@/graphql/queries";
 
 export default {
+  data() {
+    return {
+      positivePoints: 0,
+      negativePoints: 0
+    };
+  },
+  created: function() {
+    for (
+      let i = 0;
+      i < this.personalUserStatistics.pointsOperation.length;
+      i++
+    ) {
+      if (this.personalUserStatistics.pointsOperation[i].delta > 0)
+        this.positivePoints += this.personalUserStatistics.pointsOperation[
+          i
+        ].delta;
+      else
+        this.negativePoints += Math.abs(
+          this.personalUserStatistics.pointsOperation[i].delta
+        );
+    }
+  },
   components: {
     userStatisticsDown,
     userStatisticsUp,
@@ -94,7 +116,7 @@ export default {
       query: PERSONAL_USER_STATISTIC_QUERY,
       variables() {
         return {
-          userId: 21 //this.$route.params.id
+          userId: this.$route.params.id
         };
       }
     },
