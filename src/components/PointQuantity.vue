@@ -1,10 +1,15 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <h1>{{ $tc("pointsMsg", pointQuantity) }}</h1>
+  <div v-if="!this.$apollo.queries.getPointsUser.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1>{{ $tc("pointsMsg", pointQuantity) }}</h1>
+        </div>
       </div>
     </div>
+  </div>
+  <div v-else class="wrapOfLoader">
+    <Loader></Loader>
   </div>
 </template>
 
