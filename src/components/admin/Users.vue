@@ -312,7 +312,9 @@
                   <img src="~@/assets/avatar.jpg" />
                 </div>
                 <div class="col-9">
-                  <h3>{{ user.surname }} {{ user.name }} {{ user.patricity }}</h3>
+                  <h3>
+                    {{ user.surname }} {{ user.name }} {{ user.patricity }}
+                  </h3>
                   <p>{{ user.login }}</p>
                   <small>№ {{ user.id }}</small>
                 </div>
