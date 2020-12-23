@@ -330,18 +330,18 @@ module.exports = {
 
     // Получение баллов и информации о них для пользователя по id
     getPointsUser: async (parent, args, { db }) => {
-      let result = await db.Points.findOne({
-        where: { userId: args.userId },
-        include: [
-          {
-            model: db.PointsOperations,
-            as: "userPointsOperation",
-            limit: args.limit,
-            order: [[{ model: db.PointsOperations }, "id", "DESC"]]
-          }
-        ]
+      let resultPoints = await db.Points.findOne({
+        where: { userId: args.userId }
       });
-      return result;
+      let resultPointsOperation = await db.PointsOperations.findAll({
+        where: { pointAccountId: resultPoints.id },
+        order: [["id", "DESC"]],
+        limit: +args.limit == 0 ? undefined : args.limit
+      });
+
+      resultPoints.userPointsOperation = resultPointsOperation;
+
+      return resultPoints;
     },
 
     pointsLastWeek: async (parent, args, { db }) => {

@@ -29,7 +29,7 @@ export default {
     PointQuantity
   },
   beforeRouteEnter: (to, from, next) => {
-    next(vm=>{
+    next(vm => {
       vm.$refs.pOperation.refreshQuery();
       next();
     });
