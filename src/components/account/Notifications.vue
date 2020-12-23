@@ -143,7 +143,7 @@ export default {
     height: 0.875rem;
   }
   & small {
-    color: $gray_3;
+    color: $gray;
     position: absolute;
     bottom: 1rem;
     &.date {

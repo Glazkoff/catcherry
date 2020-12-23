@@ -448,10 +448,10 @@ export default {
 .orgFoto {
   height: 48px;
   width: 48px;
-  background-color: $gray_3;
+  background-color: $gray;
   border-radius: 25px;
   border: 2px solid $bright_violet;
-  color: $gray_3;
+  color: $gray;
   margin-right: 1em;
 }
 .formSearch {
@@ -459,7 +459,7 @@ export default {
   border: 1px solid $violet_2;
   box-sizing: border-box;
   border-radius: 0px 15px 15px 0px;
-  color: $gray_3;
+  color: $gray;
   padding-top: 3px;
   padding-bottom: 3px;
   width: 1025px;
@@ -469,7 +469,7 @@ export default {
   background: $violet_2;
   border: 1px solid $violet_2;
   border-radius: 15px 0px 0px 15px;
-  color: $gray_3;
+  color: $gray;
   padding-top: 10px;
   padding-right: 7px;
   padding-bottom: 20px;
@@ -511,7 +511,7 @@ h3 {
   margin-block-end: 0.1em;
 }
 small {
-  color: $gray_3;
+  color: $gray;
 }
 .card {
   width: 1070px !important;
@@ -527,7 +527,7 @@ small {
   border-left: none;
   background: $violet_2;
   box-sizing: border-box;
-  color: $gray_3;
+  color: $gray;
   padding-left: 20px !important;
   padding-right: 20px !important;
   margin-bottom: 10px;
@@ -537,12 +537,12 @@ small {
 .tabs > label:not(:first-of-type) {
   border-left: none;
   background: $violet_2;
-  color: $gray_3;
+  color: $gray;
   border-radius: 0px 15px 15px 0px;
 }
 .tabs > input[type="radio"]:checked + label {
   border-left: none;
   background: $violet_3;
-  color: $gray_3;
+  color: $gray;
 }
 </style>

@@ -18,6 +18,7 @@
               @blur="$v.oneUser.surname.$touch()"
               :placeholder="$t('surname')"
               class="form-control"
+              :class="{ is_invalid: $v.oneUser.surname.$error }"
             />
             <div v-if="$v.oneUser.surname.$error" class="error">
               <span
@@ -39,6 +40,7 @@
               v-model.trim="$v.oneUser.name.$model"
               :placeholder="$t('name')"
               class="form-control"
+              :class="{ is_invalid: $v.oneUser.name.$error }"
             />
             <div v-if="$v.oneUser.name.$error" class="error">
               <span v-if="!$v.oneUser.name.required" class="form-text danger">{{
@@ -62,7 +64,12 @@
           </div>
           <div class="form-group">
             <label for="gender">{{ $t("gender") }}</label>
-            <select name="gender" v-model.trim="$v.oneUser.gender.$model">
+            <select
+              name="gender"
+              v-model.trim="$v.oneUser.gender.$model"
+              class="form-control"
+              :class="{ is_invalid: $v.oneUser.gender.$error }"
+            >
               <option>{{ $t("male") }}</option>
               <option>{{ $t("female") }}</option>
             </select>
@@ -81,6 +88,7 @@
               v-model.trim="$v.oneUser.login.$model"
               :placeholder="$t('login')"
               class="form-control"
+              :class="{ is_invalid: $v.oneUser.login.$error }"
             />
             <div v-if="$v.oneUser.login.$error" class="error">
               <span
@@ -98,6 +106,7 @@
               v-model.trim="$v.oneUser.birthday.$model"
               :placeholder="$t('birthday')"
               class="form-control"
+              :class="{ is_invalid: $v.oneUser.birthday.$error }"
             />
             <div v-if="$v.oneUser.birthday.$error" class="error">
               <span
@@ -266,7 +275,7 @@
           v-model.trim="findString"
           type="text"
           :placeholder="$t('placeholderSearchByUsers')"
-          class="form-control block"
+          class="form-control dark block find"
         />
         <div class="card" v-for="user in filterUser" :key="user.id">
           <div class="card_img">
@@ -681,6 +690,9 @@ export default {
           }
           if (el.patricity === undefined || el.patricity === null) {
             el.patricity = " ";
+          }
+          if (el.login === undefined || el.login === null) {
+            el.login = " ";
           }
           return (
             (el.surname.toLowerCase().indexOf(this.findString.toLowerCase()) !==

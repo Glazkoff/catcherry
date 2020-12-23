@@ -289,7 +289,7 @@
           v-model="findString"
           type="text"
           :placeholder="$t('placeholderSearchByOrgs')"
-          class="form-control block"
+          class="form-control block dark find"
         />
         <div
           class="card"

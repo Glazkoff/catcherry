@@ -315,10 +315,10 @@ export default {
 .userFoto {
   height: 48px;
   width: 48px;
-  background-color: $gray_3;
+  background-color: $gray;
   border-radius: 25px;
   border: 2px solid $bright_violet;
-  color: $gray_3;
+  color: $gray;
   margin-right: 1em;
   margin-left: 7em;
 }
@@ -448,7 +448,7 @@ export default {
 }
 
 .sec:hover {
-  background-color: $gray_3;
+  background-color: $gray;
 }
 @media screen and (max-width: 1090px) {
   nav ul li:not(:nth-child(1)) {

@@ -253,7 +253,7 @@ export default {
   color: $white;
 }
 .oneUser p {
-  color: $gray_3;
+  color: $gray;
 }
 .form-control {
   margin-top: 20px;
