@@ -5,14 +5,12 @@
 // Типографика
 h1 {
   font-size: 1.5rem;
-  line-height: 1.75rem;
   font-family: Lato;
   font-weight: 500;
 }
 
 h2 {
   font-size: 1.125rem;
-  line-height: 1.3125rem;
   font-family: Lato;
   font-weight: 500;
 }
@@ -20,7 +18,18 @@ h2 {
 h3 {
   font-weight: 500;
   font-size: 1rem;
-  line-height: 1.1875rem;
+  font-family: Lato;
+}
+
+h4 {
+  font-weight: 500;
+  font-size: 0.75rem;
+  font-family: Lato;
+}
+
+h5 {
+  font-weight: 500;
+  font-size: 0.5rem;
   font-family: Lato;
 }
 
@@ -29,23 +38,20 @@ p {
   font-style: normal;
   font-weight: normal;
   font-size: 0.875rem;
-  line-height: 1.25rem;
 }
 
 small {
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 0.75rem;
 }
 
 a {
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
+  font-size: 0.875rem;
   text-decoration: underline;
   color: $black;
 }
@@ -123,25 +129,11 @@ a {
       border: 1px solid $dark_red;
     }
   }
-}
-
-.btn-alert {
-  color: $red;
-  background: $violet;
-  border: 1px solid $red;
-  &:hover {
-    background: $violet_2;
+  &-group {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
   }
-  &:disabled {
-    background: $violet;
-    color: $gray_3;
-  }
-}
-
-.btn-group {
-  display: flex;
-  justify-content: space-around;
-  width: 100%;
 }
 
 .notification {
@@ -176,52 +168,18 @@ a {
   &_body {
     color: $white;
     width: 85%;
-    p {
-      padding: 0;
-      margin: 0;
-      line-height: 1;
-      font-size: 18px;
-      font-weight: 400;
-    }
-    p:first-child {
-      font-size: 28px;
-      font-weight: 500;
-    }
-    p:last-child {
-      color: $gray_4;
-      font-weight: 400;
-      font-size: 15px;
-      margin-top: 10px;
-    }
-  }
-  &_body_max {
-    color: $white;
-    width: 60%;
-    p {
-      padding: 0;
-      margin: 0;
-      line-height: 1;
-      font-size: 18px;
-      font-weight: 400;
-    }
-    p:first-child {
-      font-size: 28px;
-      font-weight: 500;
-    }
-    p:last-child {
-      color: $gray_4;
-      font-weight: 400;
-      font-size: 15px;
-      margin-top: 10px;
+    &_min {
+      color: $white;
+      width: 60%;
     }
   }
   &_action {
     width: 5%;
     cursor: pointer;
-  }
-  &_action_max {
-    width: 20%;
-    cursor: pointer;
+    &_max {
+      width: 20%;
+      cursor: pointer;
+    }
   }
   &_more {
     border: 2px solid $violet;
@@ -347,6 +305,13 @@ a {
   }
 }
 
-.danger {
+// Классы для цветов
+.red {
   color: $red;
+}
+.gray {
+  color: $gray;
+}
+.bright_violet {
+  color: $bright_violet;
 }

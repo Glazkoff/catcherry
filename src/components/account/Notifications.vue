@@ -1,28 +1,41 @@
 <template>
   <div v-if="!this.$apollo.queries.notificationsForUser.loading">
-    <bread-crumbs class="bread-crumbs"></bread-crumbs>
     <div class="container">
-      <div
-        v-for="notification in notificationsForUser"
-        :key="notification.id"
-        :notification="notification"
-      >
-        <div class="cardOfNotification">
-          <h2>{{ notification.body.header }}</h2>
-          <p>
-            {{ notification.body.text }}
-          </p>
-          <div class="spaceForAuthor"></div>
-          <div class="icon" @click="onCheckNotification(notification.id)">
-            <Cross></Cross>
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+    </div>
+    <div class="container">
+      <div class="row">
+        <div
+          class="col-12"
+          v-for="notification in notificationsForUser"
+          :key="notification.id"
+          :notification="notification"
+        >
+          <div class="cardOfNotification">
+            <h2>{{ notification.body.header }}</h2>
+            <p>
+              {{ notification.body.text }}
+            </p>
+            <div class="spaceForAuthor"></div>
+            <div class="icon" @click="onCheckNotification(notification.id)">
+              <Cross></Cross>
+            </div>
+            <small>{{ fullName(notification) }}</small>
+            <small class="date">{{
+              $d(notification.createdAt, "number")
+            }}</small>
           </div>
-          <small>Computer</small>
-          <small class="date">{{ $d(notification.createdAt, "number") }}</small>
         </div>
       </div>
     </div>
   </div>
-  <div v-else class="wrapOfLoader"><loader></loader></div>
+  <div v-else class="wrapOfLoader">
+    <Loader></Loader>
+  </div>
 </template>
 
 <script>
@@ -54,6 +67,20 @@ export default {
     return {};
   },
   methods: {
+    fullName(notification) {
+      if (
+        notification != undefined &&
+        notification.notificationAuthor != undefined
+      ) {
+        return (
+          notification.notificationAuthor.surname +
+          " " +
+          notification.notificationAuthor.name +
+          " " +
+          notification.notificationAuthor.patricity
+        );
+      } else return "-";
+    },
     onCheckNotification(id) {
       this.$apollo
         .mutate({
@@ -94,15 +121,8 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_classes.scss";
+@import "@/styles/_grid.scss";
 
-.container {
-  padding: 3rem;
-  padding-top: 0.625rem;
-}
-.bread-crumbs {
-  margin-left: 3rem;
-  margin-bottom: 2.5rem;
-}
 .cardOfNotification {
   background: $violet;
   position: relative;

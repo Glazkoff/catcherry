@@ -16,5 +16,9 @@
     "year": "numeric",
     "month": "numeric",
     "day": "numeric"
+  },
+  "time": {
+    "hour": "numeric",
+    "minute": "numeric"
   }
 }
