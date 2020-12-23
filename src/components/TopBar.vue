@@ -1,94 +1,85 @@
 <template>
   <div class="mainTopBar">
-    <header>
-      <div id="topbar">
-        <nav class="navtopbar">
-          <a class="icon right">☰</a>
-          <ul>
-            <input
-              type="checkbox"
-              id="gepleasurprised"
-              style="display: none;"
-            />
-            <li class="nav-logo">
-              <h1>{{ routeTitle }}</h1>
-            </li>
-            <li class="right ">
-              <a class="userFoto"></a>
-              <a class="nav-name"
-                ><p>{{ this.$store.getters.decodedToken.name }}</p>
-                <!-- <small>
-                  -
-                </small> -->
-                <small v-if="roleUser == null">-</small>
-                <small v-if="roleUser != null">{{ roleUser }}</small>
-              </a>
-            </li>
-            <li class="right icon-notificationTopBar">
-              <div class="notificationTopBar">
-                <router-link
-                  to="/notifications"
-                  :exact="true"
-                  active-class="nav-checked"
-                >
-                  <div class="notBtnNotification" href="#">
-                    <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
-                    <div class="number" v-if="lengthNotifocations >= 1">
-                      .
-                    </div>
-                    <NotificationIcon></NotificationIcon>
-                    <div class="box">
-                      <div class="display">
-                        <div class="nothing">
-                          <div class="cent">Looks Like your all caught up!</div>
-                        </div>
-                        <div class="cont">
-                          <div
-                            class="sec new"
-                            v-for="notification in notificationsForUser"
-                            :key="notification.id"
-                          >
-                            <div>
-                              <a href="#">
-                                <div class="profCont">
-                                  <img
-                                    class="profile"
-                                    src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
-                                  />
-                                </div>
-                                <div class="txt">
-                                  <h3>{{ notification.body.header }}</h3>
-                                  <p>{{ notification.body.text }}</p>
-                                </div>
-                                <div class="txt sub">
-                                  {{ $d(notification.createdAt, "number") }}
-                                </div>
-                              </a>
-                            </div>
+    <div id="topbar">
+      <nav class="navtopbar">
+        <a class="icon right">☰</a>
+        <ul class="m-0">
+          <input type="checkbox" id="gepleasurprised" style="display: none;" />
+          <li class="nav-logo">
+            <h1>{{ routeTitle }}</h1>
+          </li>
+          <li class="right ">
+            <a class="userFoto"></a>
+            <a class="nav-name"
+              ><p>{{ this.$store.getters.decodedToken.name }}</p>
+              <small v-if="roleUser == null">-</small>
+              <small v-if="roleUser != null">{{ roleUser }}</small>
+            </a>
+          </li>
+          <li class="right icon-notificationTopBar">
+            <div class="notificationTopBar">
+              <router-link
+                to="/notifications"
+                :exact="true"
+                active-class="nav-checked"
+              >
+                <div class="notBtnNotification" href="#">
+                  <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
+                  <div class="number" v-if="lengthNotifocations >= 1">
+                    .
+                  </div>
+                  <NotificationIcon></NotificationIcon>
+                  <div class="box">
+                    <div class="display">
+                      <div class="nothing">
+                        <div class="cent">Looks Like your all caught up!</div>
+                      </div>
+                      <div class="cont">
+                        <div
+                          class="sec new"
+                          v-for="notification in notificationsForUser"
+                          :key="notification.id"
+                        >
+                          <div>
+                            <a href="#">
+                              <div class="profCont">
+                                <img
+                                  class="profile"
+                                  src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
+                                />
+                              </div>
+                              <div class="txt">
+                                <h3>{{ notification.body.header }}</h3>
+                                <p>{{ notification.body.text }}</p>
+                              </div>
+                              <div class="txt sub">
+                                {{ $d(notification.createdAt, "number") }}
+                              </div>
+                            </a>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </router-link>
-              </div>
-            </li>
-            <li class="right">
-              <p class="emailCard">
-                <MailIcon></MailIcon>
-              </p>
-            </li>
-            <li class="right">
-              <router-link to="/points">
-                <p class="nav-point">
-                  {{ $tc("pointsMsg", pointQuantity) }}
-                  <StarIcon></StarIcon></p
-              ></router-link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+                </div>
+              </router-link>
+            </div>
+          </li>
+          <li class="right">
+            <p class="emailCard">
+              <MailIcon></MailIcon>
+            </p>
+          </li>
+          <li class="right">
+            <router-link to="/points">
+              <p class="nav-point">
+                {{ $tc("pointsMsg", pointQuantity) }}
+                <StarIcon></StarIcon></p
+            ></router-link>
+          </li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </template>
 
@@ -238,7 +229,7 @@ export default {
   font-size: 0.95em;
 }
 
-header {
+#topbar {
   width: 100%;
   height: $topBarHeight;
   background: $dark_blue;
