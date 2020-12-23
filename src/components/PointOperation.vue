@@ -1,26 +1,28 @@
 <template>
-  <div class="container" v-if="!this.isEmpty">
-    <div
-      class="row border-block"
-      v-for="point in getPointsUser.userPointsOperation"
-      :key="point.id"
-      :point="point"
-    >
-      <small class="col-2"
-        >{{ $d(point.createdAt, "number") }}
-        {{ $d(point.createdAt, "time") }}</small
+  <div>
+    <div class="container" v-if="!isEmpty">
+      <div
+        class="row border-block"
+        v-for="point in getPointsUser.userPointsOperation"
+        :key="point.id"
+        :point="point"
       >
-      <small class="col-8">{{ point.operationDescription }}</small>
-      <small class="col-2 grey">
-        <small v-if="point.delta > 0">+</small
-        >{{ $tc("pointsMsg", point.delta) }}</small
-      >
+        <small class="col-2"
+          >{{ $d(point.createdAt, "number") }}
+          {{ $d(point.createdAt, "time") }}</small
+        >
+        <small class="col-8">{{ point.operationDescription }}</small>
+        <small class="col-2 grey">
+          <small v-if="point.delta > 0">+</small
+          >{{ $tc("pointsMsg", point.delta) }}</small
+        >
+      </div>
     </div>
-  </div>
-  <div v-else class="container">
-    <div class="row">
-      <div class="col-12">
-        <h1>Операций с Вашими баллами не найдено</h1>
+    <div v-else class="container">
+      <div class="row">
+        <div class="col-12">
+          <h3>Операций с Вашими баллами не найдено</h3>
+        </div>
       </div>
     </div>
   </div>
@@ -44,16 +46,13 @@ export default {
   },
   computed: {
     isEmpty() {
-      if (!this.$apollo.queries.getPointsUser.loading) {
-        if (
-          this.getPointsUser.userPointsOperation !== undefined ||
-          this.getPointsUser.userPointsOperation.length != 0 ||
-          this.getPointsUser.userPointsOperation != [] ||
-          this.getPointsUser.userPointsOperation != null
-        )
-          return false;
-        else return true;
-      } else return false;
+      if (this.getPointsUser == undefined) {
+        return true;
+      } else {
+        if (this.getPointsUser.userPointsOperation.length == 0) {
+          return true;
+        } else return false;
+      }
     }
   }
 };
@@ -71,5 +70,8 @@ export default {
 }
 .grey {
   color: $gray_3;
+}
+h3 {
+  margin: 0;
 }
 </style>

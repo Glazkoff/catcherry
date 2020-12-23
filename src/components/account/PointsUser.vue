@@ -8,7 +8,7 @@
       </div>
     </div>
     <PointQuantity></PointQuantity>
-    <PointOperation></PointOperation>
+    <PointOperation :limit="0"></PointOperation>
   </div>
   <div v-else class="wrapOfLoader">
     <Loader></Loader>

@@ -87,6 +87,12 @@
               <div class="col-12">
                 <PointQuantity></PointQuantity>
                 <PointOperation :limit="3"></PointOperation>
+                <button
+                  class="mt-4 w-100 btn btn-primary"
+                  v-on:click="onLink()"
+                >
+                  Посмотреть все операции
+                </button>
               </div>
             </div>
           </div>
@@ -499,9 +505,15 @@ export default {
       setTimeout(() => {
         this.isShowAlertEdit = false;
       }, 3000);
+    },
+    onLink() {
+      this.$router.push({ name: "PointsUser" });
     }
   },
   computed: {
+    createLimit() {
+      return this.$route.query;
+    },
     filterUser() {
       if (this.findString !== "") {
         return this.users.filter(el => {

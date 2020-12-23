@@ -332,7 +332,6 @@ module.exports = {
     getPointsUser: async (parent, args, { db }) => {
       let result = await db.Points.findOne({
         where: { userId: args.userId },
-        order: [["id", "DESC"]],
         include: [
           {
             model: db.PointsOperations,
