@@ -308,13 +308,13 @@
                 :key="user.id"
                 @click="showFullInformation(user.id)"
               >
-                <div class="col-2">
+                <div class="col-1">
                   <img src="~@/assets/avatar.jpg" />
                 </div>
                 <div class="col-9">
-                  <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
+                  <h3>{{ user.surname }} {{ user.name }} {{ user.patricity }}</h3>
                   <p>{{ user.login }}</p>
-                  <p>№ {{ user.id }}</p>
+                  <small>№ {{ user.id }}</small>
                 </div>
                 <div class="col-2">
                   <ArrowRight></ArrowRight>
@@ -769,6 +769,9 @@ export default {
           }
           if (el.patricity === undefined || el.patricity === null) {
             el.patricity = " ";
+          }
+          if (el.login === undefined || el.login === null) {
+            el.login = " ";
           }
           return (
             (el.surname.toLowerCase().indexOf(this.findString.toLowerCase()) !==
