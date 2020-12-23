@@ -333,7 +333,13 @@ module.exports = {
       let result = await db.Points.findOne({
         where: { userId: args.userId },
         order: [["id", "DESC"]],
-        include: [{ model: db.PointsOperations, as: "userPointsOperation" }]
+        include: [
+          {
+            model: db.PointsOperations,
+            as: "userPointsOperation",
+            limit: args.limit
+          }
+        ]
       });
       return result;
     },
@@ -926,11 +932,11 @@ module.exports = {
     // Добавление  баллов
     createPointOperation: async (
       parent,
-      { pointAccountId, delta, operationDescription },
+      { userId, delta, operationDescription },
       { db }
     ) => {
       let total = await db.Points.findOne({
-        where: { id: pointAccountId }
+        where: { userId: userId }
       });
 
       await db.Points.update(
@@ -939,43 +945,16 @@ module.exports = {
         },
         {
           where: {
-            id: pointAccountId
+            userId: userId
           }
         }
       );
       let creation = await db.PointsOperations.create({
-        pointAccountId: pointAccountId,
+        pointAccountId: total.id,
         delta: delta,
         operationDescription: operationDescription
       });
       return creation;
-    },
-
-    //Удалить операцию с баллами
-    deletePointOperation: async (
-      parent,
-      { id, pointAccountId, delta },
-      { db }
-    ) => {
-      let total = await db.Points.findOne({
-        where: { id: pointAccountId }
-      });
-
-      await db.Points.update(
-        {
-          pointQuantity: +total.pointQuantity - delta
-        },
-        {
-          where: {
-            id: pointAccountId
-          }
-        }
-      );
-      return db.PointsOperations.destroy({
-        where: {
-          id: id
-        }
-      });
     },
 
     /*

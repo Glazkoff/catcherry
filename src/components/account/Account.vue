@@ -86,7 +86,7 @@
             <div class="row">
               <div class="col-12">
                 <PointQuantity></PointQuantity>
-                <PointOperation></PointOperation>
+                <PointOperation :limit="3"></PointOperation>
               </div>
             </div>
           </div>

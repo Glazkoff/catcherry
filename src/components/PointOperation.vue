@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container" v-if="!this.isEmpty">
     <div
       class="row border-block"
       v-for="point in getPointsUser.userPointsOperation"
@@ -17,20 +17,43 @@
       >
     </div>
   </div>
+  <div v-else class="container">
+    <div class="row">
+      <div class="col-12">
+        <h1>Операций с Вашими баллами не найдено</h1>
+      </div>
+    </div>
+  </div>
 </template>
 
 <script>
 import { GET_POINTS_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "PointsOperation",
+  props: ["limit"],
   apollo: {
     getPointsUser: {
       query: GET_POINTS_USER_QUERY,
       variables() {
         return {
-          userId: this.$store.getters.decodedToken.id
+          userId: this.$store.getters.decodedToken.id,
+          limit: this.limit
         };
       }
+    }
+  },
+  computed: {
+    isEmpty() {
+      if (!this.$apollo.queries.getPointsUser.loading) {
+        if (
+          this.getPointsUser.userPointsOperation !== undefined ||
+          this.getPointsUser.userPointsOperation.length != 0 ||
+          this.getPointsUser.userPointsOperation != [] ||
+          this.getPointsUser.userPointsOperation != null
+        )
+          return false;
+        else return true;
+      } else return false;
     }
   }
 };
