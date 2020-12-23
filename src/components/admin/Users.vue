@@ -300,7 +300,7 @@
                 v-model.trim="findString"
                 type="text"
                 :placeholder="$t('placeholderSearchByUsers')"
-                class="form-control block"
+                class="form-control block find dark"
               />
               <div
                 class="row card"
@@ -308,17 +308,17 @@
                 :key="user.id"
                 @click="showFullInformation(user.id)"
               >
-                <div class="col-1">
+                <div class="card_img">
                   <img src="~@/assets/avatar.jpg" />
                 </div>
-                <div class="col-9">
+                <div class="card_body">
                   <h3>
                     {{ user.surname }} {{ user.name }} {{ user.patricity }}
                   </h3>
                   <p>{{ user.login }}</p>
                   <small>№ {{ user.id }}</small>
                 </div>
-                <div class="col-2">
+                <div class="card_action">
                   <ArrowRight></ArrowRight>
                 </div>
               </div>
