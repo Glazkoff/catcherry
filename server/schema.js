@@ -234,7 +234,7 @@ type Query {
 
   requests (teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
-  getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getPointsUser(userId: ID!, limit: Int): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   pointsLastWeek(id: ID!): [Int]
   
   posts: [Post]!
@@ -309,8 +309,7 @@ type Mutation {
   revokeRequst(id: ID!): [Int]!
   rejectRequst(id: ID!): [Int]!
 
-  createPointOperation(pointAccountId: ID!, delta: Int!, operationDescription: String!): PointOperations!
-  deletePointOperation(id: ID!, pointAccountId: ID!, delta: Int!): Int!
+  createPointOperation(userId: ID!, delta: Int!, operationDescription: String!): PointOperations!
 
   createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
   updateTask(id: ID!, status: String): Task!

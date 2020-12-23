@@ -515,8 +515,8 @@ export const REVOKE_REQUEST_QUERY = gql`
 
 // Получение баллов и информации о них для пользователя
 export const GET_POINTS_USER_QUERY = gql`
-  query($userId: ID!) {
-    getPointsUser(userId: $userId) {
+  query($userId: ID!, $limit: Int) {
+    getPointsUser(userId: $userId, limit: $limit) {
       id
       userId
       pointQuantity
@@ -530,26 +530,14 @@ export const GET_POINTS_USER_QUERY = gql`
   }
 `;
 
-// Удаление операции с баллами
-export const DELETE_POINTS_OPERATION = gql`
-  mutation($id: ID!, $pointAccountId: ID!, $delta: Int!) {
-    deletePointOperation(
-      id: $id
-      pointAccountId: $pointAccountId
-      delta: $delta
-    )
-  }
-`;
-
 // Создание операции с баллами
 export const CREATE_POINTS_OPERATION = gql`
-  mutation($pointAccountId: ID!, $delta: Int!, $operationDescription: String!) {
+  mutation($userId: ID!, $delta: Int!, $operationDescription: String!) {
     createPointOperation(
-      pointAccountId: $pointAccountId
+      userId: $userId
       delta: $delta
       operationDescription: $operationDescription
     ) {
-      id
       delta
       pointAccountId
       operationDescription

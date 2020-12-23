@@ -1,24 +1,47 @@
-.mb {
-  &-1 {
-    margin-bottom: 4px;
-  }
-  &-2 {
-    margin-bottom: 8px;
-  }
-  &-3 {
-    margin-bottom: 12px;
-  }
-  &-4 {
-    margin-bottom: 16px;
-  }
-}
-
 .m-0 {
   margin: 0;
 }
 
 .m0-auto {
-  margin: 0auto;
+  margin: 0 auto;
+}
+
+$m1: 4px;
+$m2: 8px;
+$m3: 12px;
+$m4: 16px;
+
+.mb {
+  &-1 {
+    margin-bottom: $m1;
+  }
+  &-2 {
+    margin-bottom: $m2;
+  }
+  &-3 {
+    margin-bottom: $m3;
+  }
+  &-4 {
+    margin-bottom: $m4;
+  }
+}
+
+.mt {
+  &-1 {
+    margin-top: $m1;
+  }
+
+  &-2 {
+    margin-top: $m2;
+  }
+
+  &-3 {
+    margin-top: $m3;
+  }
+
+  &-4 {
+    margin-top: $m4;
+  }
 }
 
 // *********** UTILITY ***********

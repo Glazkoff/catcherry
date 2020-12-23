@@ -1,6 +1,6 @@
 {
   "projectTitle": "CATCHERRY",
-  "pointsMsg": "{n} point | {n} points",
+  "pointsMsg": "{n} point | {n} points| 0 points",
   "editUser": "Edit user",
   "editOrg": "Edit organization",
   "listUser": "List of users",
