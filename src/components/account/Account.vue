@@ -69,7 +69,13 @@
             <div class="container">
               <div class="row">
                 <div class="col-12">
-                  <Points />
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Quam provident cupiditate, a culpa adipisci laudantium
+                    repudiandae excepturi consequuntur architecto officiis ex,
+                    voluptatem est obcaecati odit ipsum? Necessitatibus placeat
+                    animi pariatur.
+                  </p>
                 </div>
               </div>
             </div>
@@ -79,12 +85,8 @@
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
-                  provident cupiditate, a culpa adipisci laudantium repudiandae
-                  excepturi consequuntur architecto officiis ex, voluptatem est
-                  obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
-                </p>
+                <PointQuantity></PointQuantity>
+                <PointOperation></PointOperation>
               </div>
             </div>
           </div>
@@ -307,7 +309,8 @@ import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Popup from "@/components/Popup.vue";
 import MiniAlert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
-import Points from "@/components/account/PointsUser.vue";
+import PointOperation from "@/components/PointOperation.vue";
+import PointQuantity from "@/components/PointQuantity.vue";
 import Loader from "@/components/Loader.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import {
@@ -321,9 +324,10 @@ export default {
     MiniAlert,
     Popup,
     Edit,
-    Points,
     BreadCrumbs,
-    Loader
+    Loader,
+    PointOperation,
+    PointQuantity
   },
   apollo: {
     users: {

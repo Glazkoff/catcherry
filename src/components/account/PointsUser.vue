@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.$apollo.queries.getPointsUser.loading">
+  <div v-if="!this.$apollo.queries.loading">
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -7,31 +7,8 @@
         </div>
       </div>
     </div>
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <h1>{{ pointQuantity }}</h1>
-        </div>
-      </div>
-    </div>
-    <div class="container">
-      <div
-        class="row"
-        v-for="point in getPointsUser.userPointsOperation"
-        :key="point.id"
-        :point="point"
-      >
-        <div class="col-12 class">
-          <small class="mr-1">{{ $d(point.createdAt, "number") }}</small>
-          <small class="mr-1">{{ $d(point.createdAt, "time") }}</small>
-          <small class="mr-1">{{ point.operationDescription }}</small>
-          <small class="float">
-            <small v-if="point.delta > 0">+</small>
-            {{ $tc("pointsMsg", point.delta) }}</small
-          >
-        </div>
-      </div>
-    </div>
+    <PointQuantity></PointQuantity>
+    <PointOperation></PointOperation>
   </div>
   <div v-else class="wrapOfLoader">
     <Loader></Loader>
@@ -41,12 +18,16 @@
 <script>
 import Loader from "@/components/Loader.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import PointOperation from "@/components/PointOperation.vue";
+import PointQuantity from "@/components/PointQuantity.vue";
 import { GET_POINTS_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "PointsUser",
   components: {
     Loader,
-    BreadCrumbs
+    BreadCrumbs,
+    PointOperation,
+    PointQuantity
   },
   apollo: {
     getPointsUser: {
@@ -84,13 +65,13 @@ h1 {
 .mr-1 {
   margin-right: 0.4rem;
 }
-.class {
-  padding-bottom: 1rem;
+.border-block {
+  display: flex;
+  align-items: center;
+  height: 3rem;
   border-bottom: 1px solid $violet_2;
 }
-.float {
-  float: right;
-  padding-top: 4px;
+.grey {
   color: $gray_3;
 }
 </style>
