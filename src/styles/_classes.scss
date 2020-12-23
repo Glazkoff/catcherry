@@ -142,7 +142,7 @@ a {
   border-radius: 10px;
   padding: 1.5rem 2.4rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  & .footer small{
+  & .footer small {
     display: flex;
     color: $gray;
   }
@@ -156,21 +156,29 @@ a {
   display: flex;
   margin: 1% 0%;
   align-items: center;
-  &_img {
-    width: 5%;
+  img {
+    width: 100%;
     border-radius: 100%;
-    margin-right: 3%;
-    img {
-      width: 100%;
-      border-radius: 100%;
-    }
   }
-  &_body {
+  &_body_max {
     color: $white;
-    width: 85%;
-    &_min {
-      color: $white;
-      width: 60%;
+    width: 60%;
+    p {
+      padding: 0;
+      margin: 0;
+      line-height: 1;
+      font-size: 18px;
+      font-weight: 400;
+    }
+    p:first-child {
+      font-size: 28px;
+      font-weight: 500;
+    }
+    p:last-child {
+      color: $gray_4;
+      font-weight: 400;
+      font-size: 15px;
+      margin-top: 10px;
     }
   }
   &_action {
@@ -285,7 +293,7 @@ a {
     width: 1rem;
     display: inline-block;
   }
-  #checkbox:checked+.box::before {
+  #checkbox:checked + .box::before {
     content: url("~@/assets/check-square.svg");
     animation: checkanimate 200ms;
   }

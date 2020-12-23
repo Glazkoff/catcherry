@@ -34,6 +34,11 @@ type User {
   userInTeam: UserInTeam
 }
 
+type UserInNewTeam {
+  id: ID!
+  userId: ID
+}
+
 type Organization {
   id: ID!
   name: String!
@@ -234,6 +239,8 @@ type Query {
   
   posts: [Post]!
   post(id: ID!): Post
+
+  roles: [Role]
   
   likesOfPostFromUser (userId:ID!): [LikeOfPost]! 
   likesOfCommentFromUser (userId:ID!): [LikeOfComment]!  
@@ -253,6 +260,8 @@ type Query {
   statisticsNewOrgs: Int
   statisticsDeleteUsers: Int
   statisticsDeleteOrgs: Int
+
+  usersInNewTeams: Team
 
 }
 
@@ -307,6 +316,8 @@ type Mutation {
   updateTask(id: ID!, status: String): Task!
   addUserToTask(id: ID!, userId: ID): Task!
   deleteTask(id: ID!): Int!
+
+  addUserInNewTeam(id: ID!, userId: ID!): UserInNewTeam!
 }
 `;
 
