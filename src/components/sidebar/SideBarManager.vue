@@ -1,6 +1,18 @@
 <template>
   <div>
     <div class="side-bar__nav-list">
+      <router-link to="/feed" :exact="true" active-class="nav-checked">
+        <div
+          class="side-bar__nav-list__nav-element side-bar__nav-list__back-btn"
+        >
+          <div class="side-bar__nav-list__nav-element__icon">
+            <BackIcon></BackIcon>
+          </div>
+          <div class="side-bar__nav-list__nav-element__text">
+            {{ $t("back") }}
+          </div>
+        </div>
+      </router-link>
       <router-link
         :to="{
           name: 'RaitingList',
@@ -128,6 +140,7 @@
               <path
                 d="M3.0332 12.6875C3.07227 12.6875 3.11133 12.6836 3.15039 12.6777L6.43555 12.1016C6.47461 12.0938 6.51172 12.0762 6.53906 12.0469L14.8184 3.76758C14.8365 3.74951 14.8508 3.72805 14.8606 3.70442C14.8704 3.68079 14.8755 3.65546 14.8755 3.62988C14.8755 3.6043 14.8704 3.57897 14.8606 3.55535C14.8508 3.53172 14.8365 3.51026 14.8184 3.49219L11.5723 0.244141C11.5352 0.207031 11.4863 0.1875 11.4336 0.1875C11.3809 0.1875 11.332 0.207031 11.2949 0.244141L3.01562 8.52344C2.98633 8.55273 2.96875 8.58789 2.96094 8.62695L2.38477 11.9121C2.36577 12.0167 2.37255 12.1244 2.40454 12.2258C2.43654 12.3273 2.49276 12.4193 2.56836 12.4941C2.69727 12.6191 2.85938 12.6875 3.0332 12.6875ZM4.34961 9.28125L11.4336 2.19922L12.8652 3.63086L5.78125 10.7129L4.04492 11.0195L4.34961 9.28125ZM15.1875 14.3281H0.8125C0.466797 14.3281 0.1875 14.6074 0.1875 14.9531V15.6562C0.1875 15.7422 0.257812 15.8125 0.34375 15.8125H15.6562C15.7422 15.8125 15.8125 15.7422 15.8125 15.6562V14.9531C15.8125 14.6074 15.5332 14.3281 15.1875 14.3281Z"
                 fill="white"
+                class="fill"
               />
             </svg>
           </div>
@@ -213,34 +226,18 @@
           </div>
         </div>
       </router-link>
-      <router-link to="/feed" :exact="true" active-class="nav-checked">
-        <div class="side-bar__nav-list__nav-element">
-          <div class="side-bar__nav-list__nav-element__icon">
-            <svg
-              width="20"
-              height="20"
-              viewBox="0 0 20 20"
-              fill="none"
-              xmlns="http://www.w3.org/2000/svg"
-            >
-              <path
-                d="M10 0C6.93667 0 4.44444 2.36105 4.44444 5.26316C4.44444 8.16526 6.93667 10.5263 10 10.5263C13.0633 10.5263 15.5556 8.16526 15.5556 5.26316C15.5556 2.36105 13.0633 0 10 0ZM10 8.42105C8.16222 8.42105 6.66667 7.00421 6.66667 5.26316C6.66667 3.5221 8.16222 2.10526 10 2.10526C11.8378 2.10526 13.3333 3.5221 13.3333 5.26316C13.3333 7.00421 11.8378 8.42105 10 8.42105ZM20 20V18.9474C20 14.8853 16.51 11.5789 12.2222 11.5789H7.77778C3.48889 11.5789 0 14.8853 0 18.9474V20H2.22222V18.9474C2.22222 16.0453 4.71444 13.6842 7.77778 13.6842H12.2222C15.2856 13.6842 17.7778 16.0453 17.7778 18.9474V20H20Z"
-                fill="white"
-                class="fill"
-              />
-            </svg>
-          </div>
-          <div class="side-bar__nav-list__nav-element__text">
-            Назад
-          </div>
-        </div>
-      </router-link>
     </div>
   </div>
 </template>
 
 <script>
-export default {};
+import BackIcon from "@/assets/svg/sidebar/back.svg?inline";
+export default {
+  name: "SideBarManager",
+  components: {
+    BackIcon
+  }
+};
 </script>
 
 <style lang="scss" scoped>

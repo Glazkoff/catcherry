@@ -1,64 +1,89 @@
 <template>
   <div>
-    <h2 class="tasks">Задания</h2>
-    <div class="tasks">
-      <div>
-        <h3>Бэклог заданий</h3>
-        <div v-for="taskNoneUser in backlog" :key="taskNoneUser.id">
-          <div v-if="!taskNoneUser.tasksUser" class="oneUser ">
-            <h2>{{ taskNoneUser.body.header }}</h2>
-            <p>{{ taskNoneUser.body.text }}</p>
-            <div class="oneUser__points">
-              <h3>Награда:<br />+{{ taskNoneUser.body.points }} баллов</h3>
-            </div>
-            <button class="btn btn-primary" @click="toAddTask(taskNoneUser.id)">
-              Взять задание
-            </button>
-          </div>
-        </div>
-      </div>
-      <div>
-        <h3>Ваши задания</h3>
-        <div v-for="task in tasks" :key="task.id">
-          <div v-if="task.tasksUser" class="oneUser">
-            <h2>{{ task.body.header }}</h2>
-            <p>{{ task.body.text }}</p>
-            <!-- Ответственный:
-        <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
-        {{ task.tasksUser.name }} {{ task.tasksUser.surname }} -->
-            <div class="oneUser__points">
-              <div>
-                <h3>Награда:<br />+{{ task.body.points }} баллов</h3>
-              </div>
-              <div>
-                <select
-                  class="form-control small"
-                  v-model="task.status"
-                  @change="
-                    toEditTask(
-                      task.id,
-                      task.status,
-                      task.tasksUser.userPoints.id,
-                      task.body.points
-                    )
-                  "
-                >
-                  <option>Запланировано</option>
-                  <option>В работе</option>
-                  <option>Готово</option></select
-                >
-              </div>
-
-              <minialert v-if="isShowAlertPoints"
-                ><p slot="title">
-                  Вам начислено {{ task.body.points }} баллов
-                </p></minialert
-              >
-            </div>
-          </div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
         </div>
       </div>
     </div>
+    <div class="container" v-if="$apollo.loading">
+      <Loader></Loader>
+    </div>
+    <div class="container" v-else>
+      <div class="row">
+        <div class="col-4">
+          <div>
+            <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
+            <h3 class="sticky-header">Без исполнителя</h3>
+            <div v-for="taskNoneUser in tasks" :key="taskNoneUser.id">
+              <div v-if="!taskNoneUser.tasksUser" class="oneUser ">
+                <h2>{{ taskNoneUser.body.header }}</h2>
+                <p>{{ taskNoneUser.body.text }}</p>
+                <div class="oneUser__points">
+                  <h3>Награда:<br />+{{ taskNoneUser.body.points }} баллов</h3>
+                </div>
+                <button
+                  class="btn btn-primary"
+                  @click="toAddTask(taskNoneUser.id)"
+                >
+                  Взять задание
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <div>
+            <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
+            <h3 class="sticky-header">Назначенные вам</h3>
+            <div v-for="task in tasks" :key="task.id">
+              <div v-if="task.tasksUser" class="oneUser">
+                <h2>{{ task.body.header }}</h2>
+                <p>{{ task.body.text }}</p>
+                <!-- Ответственный:
+        <img src="@/assets/avatar.jpg" alt="photo" class="smallAvatar" />
+        {{ task.tasksUser.name }} {{ task.tasksUser.surname }} -->
+                <div class="oneUser__points">
+                  <div>
+                    <h3>Награда:<br />+{{ task.body.points }} баллов</h3>
+                  </div>
+                  <div>
+                    <select
+                      class="form-control small"
+                      v-model="task.status"
+                      @change="
+                        toEditTask(
+                          task.id,
+                          task.status,
+                          task.tasksUser.userPoints.id,
+                          task.body.points
+                        )
+                      "
+                    >
+                      <option>Запланировано</option>
+                      <option>В работе</option>
+                      <option>Готово</option></select
+                    >
+                  </div>
+
+                  <MiniAlert v-if="isShowAlertPoints"
+                    ><p slot="title">
+                      Вам начислено {{ task.body.points }} баллов
+                    </p></MiniAlert
+                  >
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
+          <h3 class="sticky-header">Завершённые</h3>
+        </div>
+      </div>
+    </div>
+    <div class="tasks"></div>
   </div>
 </template>
 
@@ -71,32 +96,37 @@ import {
   EDIT_TASK_QUERY,
   CARGE_POINTS_QUERY
 } from "@/graphql/queries";
-import minialert from "@/components/MiniAlert.vue";
+import MiniAlert from "@/components/MiniAlert.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import Loader from "@/components/Loader.vue";
 
 export default {
-  components: { minialert },
+  components: { MiniAlert, BreadCrumbs, Loader },
   apollo: {
+    // TODO: ПЕРЕДЕЛАТЬ!
     tasks: {
       query: TASKS_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.$store.getters.decodedToken.id
         };
       }
     },
+    // TODO: ПЕРЕДЕЛАТЬ!
     backlog: {
       query: BACKLOG_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.$store.getters.decodedToken.id
         };
       }
     },
+    // TODO: ПЕРЕДЕЛАТЬ!
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          teamId: this.$store.getters.decodedToken.id
         };
       }
     }
@@ -188,6 +218,17 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_classes.scss";
+@import "@/styles/_grid.scss";
+
+.sticky-header {
+  position: sticky;
+  top: $topBarHeight;
+  background: $dark_blue;
+  margin: 0;
+  padding-top: 0.5rem;
+  padding-bottom: 0.5rem;
+  z-index: 9000;
+}
 
 .tasks {
   margin-left: 20px;
@@ -202,7 +243,7 @@ export default {
   padding: 15px;
   background: $violet;
   border-radius: 10px;
-  margin-right: 2 * $scrollBarVerticalWidth;
+  // margin-right: 2 * $scrollBarVerticalWidth;
 }
 .oneUser__points {
   display: grid;
@@ -212,7 +253,7 @@ export default {
   color: $white;
 }
 .oneUser p {
-  color: $gray_3;
+  color: $gray;
 }
 .form-control {
   margin-top: 20px;

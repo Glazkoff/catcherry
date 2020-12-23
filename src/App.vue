@@ -42,6 +42,15 @@ export default {
   width: 100vw;
   max-width: 100vw;
 }
+body {
+  margin: 0;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
 
 [v-cloak] {
   display: none;
@@ -111,6 +120,17 @@ export default {
   width: 100vw;
   height: 100vh;
   padding-top: calc(50vh - 100px);
+}
+
+.side-bar__nav-list__back-btn {
+  border-bottom: 2px solid $violet_3;
+  margin-bottom: 0.5rem;
+  & > * {
+    transition: transform 400ms ease;
+  }
+  &:hover > * {
+    transform: translateX(-4px);
+  }
 }
 // .btn {
 //   display: block;

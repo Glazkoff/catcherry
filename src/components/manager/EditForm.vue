@@ -70,14 +70,14 @@ export default {
 .form-control {
   background: $violet;
   border: 1px solid $violet_2;
-  color: $gray_3;
+  color: $gray;
   width: -webkit-fill-available;
 }
 .form-name {
   color: $white;
 }
 small {
-  color: $gray_3;
+  color: $gray;
 }
 .marginB {
   margin-bottom: 2rem;

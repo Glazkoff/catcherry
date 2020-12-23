@@ -10,7 +10,7 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Notifications.belongsTo(models.Users, {
         foreignKey: "authorId",
-        as: "author"
+        as: "notificationAuthor"
       });
       Notifications.hasMany(models.ReadNotification, {
         foreignKey: "notificationId",

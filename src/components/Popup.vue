@@ -74,10 +74,10 @@ export default {};
   line-height: 2rem;
   cursor: pointer;
   font-size: 3.5rem;
-  color: $black;
+  color: $red;
   font-weight: 900;
   &:hover {
-    color: $gray_3;
+    color: $bright_red;
   }
 }
 

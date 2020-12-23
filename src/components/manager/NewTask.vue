@@ -254,7 +254,7 @@ textarea {
   font-weight: normal;
   font-size: 16px;
   line-height: 20px;
-  color: $gray_3;
+  color: $gray;
 }
 input::-webkit-outer-spin-button,
 input::-webkit-inner-spin-button {
