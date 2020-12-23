@@ -81,7 +81,7 @@ export default {
 }
 
 .list {
-  height: calc(100vh - #{$topBarHeight} - 2px);
+  height: calc(100vh - #{$topBarHeight});
   width: 24rem;
   display: flex;
   flex-direction: column;

@@ -8,7 +8,6 @@
           </div>
         </div>
       </div>
-
       <div class="container">
         <div class="row">
           <div class="col-12" v-if="!this.isEmpty">
@@ -140,9 +139,9 @@ export default {
 
 <style lang="scss">
 @import "@/styles/_grid.scss";
-@import "@/styles/_grid.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
+@import "@/styles/_dimensions.scss";
 
 .doubleColumn {
   display: flex;
