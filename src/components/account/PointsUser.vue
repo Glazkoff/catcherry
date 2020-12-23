@@ -91,6 +91,6 @@ h1 {
 .float {
   float: right;
   padding-top: 4px;
-  color: $gray_3;
+  color: $gray;
 }
 </style>

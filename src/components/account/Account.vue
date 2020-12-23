@@ -568,7 +568,7 @@ export default {
 .form-control {
   background: $violet;
   border: 1px solid $violet_2;
-  color: $gray_3;
+  color: $gray;
   width: -webkit-fill-available;
 }
 .btnDelete {
