@@ -672,7 +672,7 @@ export const ADD_TASK_QUERY = gql`
     }
   }
 `;
-export const EDIT_TASK_QUERY = gql`
+export const CHANGE_STATUS_TASK_QUERY = gql`
   mutation($id: ID!, $status: String) {
     updateTask(id: $id, status: $status) {
       status

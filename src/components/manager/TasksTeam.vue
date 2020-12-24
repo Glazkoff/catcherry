@@ -9,32 +9,65 @@
     <div v-if="!$apollo.loading">
       <div class="row">
         <div class="col-4">
-          <h2>{{ $t("task.backlogTask") }}</h2>
+          <h2 class="mb-4">{{ $t("task.backlogTask") }}</h2>
           <p v-if="backlog.length === 0">
             {{ $t("task.noTasksInTheBacklog") }}
           </p>
           <div v-for="task in backlog" :key="task.id" class="task">
-            <div class="row">
-              <div class="col-12">
-                <h3>{{ task.body.header }} ({{ task.id }})</h3>
-                <p>{{ task.body.text }}</p>
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <h3 class="mb-2">{{ task.body.header }} ({{ task.id }})</h3>
+                  <p>{{ task.body.text }}</p>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div>
+                  <img
+                    :class="{ 'col-2': task.tasksUser !== null }"
+                    v-if="task.tasksUser !== null"
+                    src="@/assets/avatar.jpg"
+                  />
+                  <div :class="[task.tasksUser !== null ? 'col-10' : 'col-12']">
+                    <p>
+                      {{ $t("task.reward") }}: +{{
+                        $tc("pointsMsg", task.body.points)
+                      }}
+                    </p>
+                    <p v-if="task.tasksUser === null">
+                      {{ $t("task.responsible") }}:
+                      {{ $t("task.personNotAssigned") }}
+                    </p>
+                    <p v-if="task.tasksUser !== null">
+                      {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
+                      {{ task.tasksUser.surname }}
+                    </p>
+                  </div>
+                </div>
               </div>
             </div>
-            <div class="row">
-              <div>
-                <img
-                  :class="{ 'col-2': task.tasksUser !== null }"
-                  v-if="task.tasksUser !== null"
-                  src="@/assets/avatar.jpg"
-                />
-                <div :class="[task.tasksUser !== null ? 'col-10' : 'col-12']">
+          </div>
+        </div>
+        <div class="col-4">
+          <h2 class="mb-4">{{ $t("task.completedTasksForReview") }}</h2>
+          <p v-if="toCheck.length === 0">
+            {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
+          </p>
+          <div v-for="task in toCheck" :key="task.id" class="task">
+            <div class="container">
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h3 class="mb-2">{{ task.body.header }} ({{ task.id }})</h3>
+                  <p>{{ task.body.text }}</p>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <img src="@/assets/avatar.jpg" class="col-2" />
+                <div class="col-10">
                   <p>
-                    {{ $t("task.reward") }}: +
-                    {{ $tc("pointsMsg", task.body.points) }}
-                  </p>
-                  <p v-if="task.tasksUser === null">
-                    {{ $t("task.responsible") }}:
-                    {{ $t("task.personNotAssigned") }}
+                    {{ $t("task.reward") }}:+{{
+                      $tc("pointsMsg", task.body.points)
+                    }}
                   </p>
                   <p v-if="task.tasksUser !== null">
                     {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
@@ -42,44 +75,15 @@
                   </p>
                 </div>
               </div>
-            </div>
-          </div>
-        </div>
-        <div class="col-4">
-          <h2>{{ $t("task.completedTasksForReview") }}</h2>
-          <p v-if="toCheck.length === 0">
-            {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
-          </p>
-          <div v-for="task in toCheck" :key="task.id" class="task container">
-            <div class="row">
-              <div class="col-12">
-                <h3>{{ task.body.header }} ({{ task.id }})</h3>
-                <p>{{ task.body.text }}</p>
-              </div>
-            </div>
-            <div class="row">
-              <img src="@/assets/avatar.jpg" class="col-2" />
-              <div class="col-10">
-                <p>
-                  {{ $t("task.reward") }}: +
-                  {{ $tc("pointsMsg", task.body.points) }}
-                </p>
-                <p v-if="task.tasksUser !== null">
-                  {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
-                  {{ task.tasksUser.surname }}
-                </p>
-              </div>
               <div class="row">
                 <button
-                  class="btn btn-primary col-12"
+                  class="btn btn-primary mb-2 block"
                   @click="creditPoints(task)"
                 >
                   {{ $t("task.toReadTheScores") }}
                 </button>
-              </div>
-              <div class="row">
                 <button
-                  class="btn btn-danger col-12"
+                  class="btn btn-danger mb-1 block"
                   @click="sendForRevision(task)"
                 >
                   {{ $t("task.toSendBackForRevision") }}
@@ -89,36 +93,42 @@
           </div>
         </div>
         <div class="col-4">
-          <h2>{{ $t("task.completedTasks") }}</h2>
+          <h2 class="mb-4">{{ $t("task.completedTasks") }}</h2>
           <p v-if="done.length === 0">{{ $t("task.noCompletedTasks") }}</p>
-          <div v-for="task in done" :key="task.id" class="task container">
-            <div class="row">
-              <div class="col-12">
-                <h3>{{ task.body.header }}</h3>
-                <p>{{ task.body.text }}</p>
+          <div v-for="task in done" :key="task.id" class="task">
+            <div class="container">
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h3 class="mb-2">{{ task.body.header }}</h3>
+                  <p>{{ task.body.text }}</p>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <img
-                v-if="task.tasksUser !== null"
-                src="@/assets/avatar.jpg"
-                class="col-2"
-              />
-              <div class="col-10">
-                <p>
-                  {{ $t("task.reward") }}: +
-                  {{ $tc("pointsMsg", task.body.points) }}
-                </p>
-                <p v-if="task.tasksUser !== null">
-                  {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
-                  {{ task.tasksUser.surname }}
-                </p>
+              <div class="row mb-4">
+                <img
+                  v-if="task.tasksUser !== null"
+                  src="@/assets/avatar.jpg"
+                  class="col-2"
+                />
+                <div class="col-10">
+                  <p>
+                    {{ $t("task.reward") }}: +{{
+                      $tc("pointsMsg", task.body.points)
+                    }}
+                  </p>
+                  <p v-if="task.tasksUser !== null">
+                    {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
+                    {{ task.tasksUser.surname }}
+                  </p>
+                </div>
               </div>
-            </div>
-            <div class="row">
-              <button class="btn btn-danger col-12" @click="deleteTask(task)">
-                {{ $t("task.deleteTask") }}
-              </button>
+              <div class="row">
+                <button
+                  class="btn btn-danger block mb-1"
+                  @click="deleteTask(task)"
+                >
+                  {{ $t("task.deleteTask") }}
+                </button>
+              </div>
             </div>
           </div>
         </div>
@@ -156,7 +166,7 @@ import Loader from "@/components/Loader.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
   ALL_TASKS_QUERY,
-  EDIT_TASK_QUERY,
+  CHANGE_STATUS_TASK_QUERY,
   CREATE_POINTS_OPERATION,
   DELETE_TASK_QUERY,
   CREATE_NOTIFICATION
@@ -210,7 +220,7 @@ export default {
           console.log(data);
           this.$apollo
             .mutate({
-              mutation: EDIT_TASK_QUERY,
+              mutation: CHANGE_STATUS_TASK_QUERY,
               variables: {
                 id: task.id,
                 status: "Готово"
@@ -233,7 +243,10 @@ export default {
               let notification = {
                 body: {
                   header: "Начисление баллов",
-                  text: `Вам было начислено ${task.body.points} балла(ов) за выполнение задания "${task.body.header}"`
+                  text: `Вам было начислено ${this.$tc(
+                    "pointsMsg",
+                    task.body.points
+                  )} за выполнение задания "${task.body.header}"`
                 },
                 authorId: this.$store.getters.decodedToken.id,
                 userId: [+task.tasksUser.id],
@@ -285,7 +298,7 @@ export default {
     sendForRevision(task) {
       this.$apollo
         .mutate({
-          mutation: EDIT_TASK_QUERY,
+          mutation: CHANGE_STATUS_TASK_QUERY,
           variables: {
             id: task.id,
             status: "Запланировано"
@@ -358,19 +371,25 @@ export default {
   },
   computed: {
     backlog() {
-      return this.allTasks.filter(el => {
-        return el.status === "Запланировано";
-      });
+      if (!this.allTasks !== undefined) {
+        return this.allTasks.filter(el => {
+          return el.status === "Запланировано";
+        });
+      } else return [];
     },
     toCheck() {
-      return this.allTasks.filter(el => {
-        return el.status === "На проверке";
-      });
+      if (!this.allTasks !== undefined) {
+        return this.allTasks.filter(el => {
+          return el.status === "На проверке";
+        });
+      } else return [];
     },
     done() {
-      return this.allTasks.filter(el => {
-        return el.status === "Готово";
-      });
+      if (!this.allTasks !== undefined) {
+        return this.allTasks.filter(el => {
+          return el.status === "Готово";
+        });
+      } else return [];
     }
   }
 };

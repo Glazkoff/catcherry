@@ -257,7 +257,7 @@
               type="number"
               name="points"
               v-model.trim="points"
-              class="form-control"
+              class="form-control col-12"
             />
           </p>
           <div class="btn-group">
@@ -313,13 +313,13 @@
         <div class="addToTeam" v-if="isShowAddUserInTeam">
           <div class="form-group">
             <label for="team" class="form-name">Название команды</label>
-            <select name="team" class="form-control" v-model="newTeam">
+            <select name="team" class="form-control col-12" v-model="newTeam">
               <option v-for="team in teams" :key="team.id" :value="team.id">{{
                 team.name
               }}</option>
             </select>
           </div>
-          <button class="btn btn-primary" @click="addOneUserInTeam()">
+          <button class="btn btn-primary col-12" @click="addOneUserInTeam()">
             {{ $t("addUserToTeam") }}
           </button>
         </div>
