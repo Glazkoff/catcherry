@@ -747,7 +747,7 @@ export default {
         .mutate({
           mutation: CREATE_POINTS_OPERATION, // Изменяем в БД
           variables: {
-            pointAccountId: parseInt(this.getPointsUser.id),
+            userId: this.userId,
             delta: parseInt(this.points - this.getPointsUser.pointQuantity),
             operationDescription: "Действия администратора"
           },

@@ -950,7 +950,6 @@ module.exports = {
       let total = await db.Points.findOne({
         where: { userId: userId }
       });
-
       await db.Points.update(
         {
           pointQuantity: +total.pointQuantity + delta
