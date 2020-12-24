@@ -1,48 +1,110 @@
 <template>
-  <div class="aaa">
-    <breadcrumbs></breadcrumbs>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <breadcrumbs></breadcrumbs>
+      </div>
+    </div>
     <div class="wrapOfLoader" v-if="$apollo.loading"><loader></loader></div>
-    <minialert v-if="queryError">
-      <p slot="title">{{ queryError }}</p>
-    </minialert>
     <div v-if="!$apollo.loading">
-      <h2>{{ $t("task.backlogTask") }}</h2>
-      <p v-if="backlog.length === 0">{{ $t("task.noTasksInTheBacklog") }}</p>
-      <div v-for="task in backlog" :key="task.id" class="task">
-        <h3>{{ task.body.header }}</h3>
-        <p>{{ task.id }}</p>
-        <div class="task_body">
-          <p>{{ task.body.text }}</p>
-          <div :class="{ task_body_user: task.tasksUser !== null }">
-            <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
-            <div>
-              <p>
-                {{ $t("task.reward") }}: +
-                {{ $tc("pointsMsg", task.body.points) }}
-              </p>
-              <p v-if="task.tasksUser === null">
-                {{ $t("task.responsible") }}: {{ $t("task.personNotAssigned") }}
-              </p>
-              <p v-if="task.tasksUser !== null">
-                {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
-                {{ task.tasksUser.surname }}
-              </p>
+      <div class="row">
+        <div class="col-4">
+          <h2>{{ $t("task.backlogTask") }}</h2>
+          <p v-if="backlog.length === 0">
+            {{ $t("task.noTasksInTheBacklog") }}
+          </p>
+          <div v-for="task in backlog" :key="task.id" class="task">
+            <div class="row">
+              <div class="col-12">
+                <h3>{{ task.body.header }} ({{ task.id }})</h3>
+                <p>{{ task.body.text }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <div>
+                <img
+                  :class="{ 'col-2': task.tasksUser !== null }"
+                  v-if="task.tasksUser !== null"
+                  src="@/assets/avatar.jpg"
+                />
+                <div :class="[task.tasksUser !== null ? 'col-10' : 'col-12']">
+                  <p>
+                    {{ $t("task.reward") }}: +
+                    {{ $tc("pointsMsg", task.body.points) }}
+                  </p>
+                  <p v-if="task.tasksUser === null">
+                    {{ $t("task.responsible") }}:
+                    {{ $t("task.personNotAssigned") }}
+                  </p>
+                  <p v-if="task.tasksUser !== null">
+                    {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
+                    {{ task.tasksUser.surname }}
+                  </p>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <h2>{{ $t("task.completedTasksForReview") }}</h2>
-      <p v-if="toCheck.length === 0">
-        {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
-      </p>
-      <div v-for="task in toCheck" :key="task.id" class="task">
-        <h3>{{ task.body.header }}</h3>
-        <div class="task_body">
-          <p>{{ task.body.text }}</p>
-          <div>
-            <div class="task_body_user">
-              <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
-              <div>
+        <div class="col-4">
+          <h2>{{ $t("task.completedTasksForReview") }}</h2>
+          <p v-if="toCheck.length === 0">
+            {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
+          </p>
+          <div v-for="task in toCheck" :key="task.id" class="task container">
+            <div class="row">
+              <div class="col-12">
+                <h3>{{ task.body.header }} ({{ task.id }})</h3>
+                <p>{{ task.body.text }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <img src="@/assets/avatar.jpg" class="col-2" />
+              <div class="col-10">
+                <p>
+                  {{ $t("task.reward") }}: +
+                  {{ $tc("pointsMsg", task.body.points) }}
+                </p>
+                <p v-if="task.tasksUser !== null">
+                  {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
+                  {{ task.tasksUser.surname }}
+                </p>
+              </div>
+              <div class="row">
+                <button
+                  class="btn btn-primary col-12"
+                  @click="creditPoints(task)"
+                >
+                  {{ $t("task.toReadTheScores") }}
+                </button>
+              </div>
+              <div class="row">
+                <button
+                  class="btn btn-danger col-12"
+                  @click="sendForRevision(task)"
+                >
+                  {{ $t("task.toSendBackForRevision") }}
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="col-4">
+          <h2>{{ $t("task.completedTasks") }}</h2>
+          <p v-if="done.length === 0">{{ $t("task.noCompletedTasks") }}</p>
+          <div v-for="task in done" :key="task.id" class="task container">
+            <div class="row">
+              <div class="col-12">
+                <h3>{{ task.body.header }}</h3>
+                <p>{{ task.body.text }}</p>
+              </div>
+            </div>
+            <div class="row">
+              <img
+                v-if="task.tasksUser !== null"
+                src="@/assets/avatar.jpg"
+                class="col-2"
+              />
+              <div class="col-10">
                 <p>
                   {{ $t("task.reward") }}: +
                   {{ $tc("pointsMsg", task.body.points) }}
@@ -53,38 +115,11 @@
                 </p>
               </div>
             </div>
-            <button class="btn btn-alternate" @click="creditPoints(task)">
-              {{ $t("task.toReadTheScores") }}
-            </button>
-            <button class="btn btn-alternate" @click="sendForRevision(task)">
-              {{ $t("task.toSendBackForRevision") }}
-            </button>
-          </div>
-        </div>
-      </div>
-      <h2>{{ $t("task.completedTasks") }}</h2>
-      <p v-if="done.length === 0">{{ $t("task.noCompletedTasks") }}</p>
-      <div v-for="task in done" :key="task.id" class="task">
-        <h3>{{ task.body.header }}</h3>
-        <div class="task_body">
-          <p>{{ task.body.text }}</p>
-          <div>
-            <div class="task_body_user">
-              <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
-              <div>
-                <p>
-                  {{ $t("task.reward") }}: +
-                  {{ $tc("pointsMsg", task.body.points) }}
-                </p>
-                <p v-if="task.tasksUser !== null">
-                  {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
-                  {{ task.tasksUser.surname }}
-                </p>
-              </div>
+            <div class="row">
+              <button class="btn btn-danger col-12" @click="deleteTask(task)">
+                {{ $t("task.deleteTask") }}
+              </button>
             </div>
-            <button class="btn btn-alternate" @click="deleteTask(task)">
-              {{ $t("task.deleteTask") }}
-            </button>
           </div>
         </div>
       </div>
@@ -109,6 +144,9 @@
         {{ $t("task.youHaveSuccessfullyReturnedTheTaskForRevision") }}
       </p>
     </minialert>
+    <minialert v-if="queryError">
+      <p slot="title">{{ queryError }}</p>
+    </minialert>
   </div>
 </template>
 
@@ -119,9 +157,9 @@ import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
   ALL_TASKS_QUERY,
   EDIT_TASK_QUERY,
-  CARGE_POINTS_QUERY,
+  CREATE_POINTS_OPERATION,
   DELETE_TASK_QUERY,
-  ADD_NOTIFICATION_QUERY
+  CREATE_NOTIFICATION
 } from "@/graphql/queries";
 
 export default {
@@ -161,11 +199,11 @@ export default {
     creditPoints(task) {
       this.$apollo
         .mutate({
-          mutation: CARGE_POINTS_QUERY,
+          mutation: CREATE_POINTS_OPERATION,
           variables: {
-            pointAccountId: +task.tasksUser.id,
+            userId: +task.tasksUser.id,
             delta: +task.body.points,
-            operationDescription: `За выполненное задание ${task.body.header}`
+            operationDescription: `За выполненное задание "${task.body.header}"`
           }
         })
         .then(data => {
@@ -198,17 +236,19 @@ export default {
                   text: `Вам было начислено ${task.body.points} балла(ов) за выполнение задания "${task.body.header}"`
                 },
                 authorId: this.$store.getters.decodedToken.id,
-                teamId: this.$route.params.id,
-                forAllUsers: task.tasksUser.id
+                userId: [+task.tasksUser.id],
+                typeId: 20,
+                endTime: new Date(new Date() + 365 * 24 * 60 * 60 * 1000)
               };
               this.$apollo
                 .mutate({
-                  mutation: ADD_NOTIFICATION_QUERY,
+                  mutation: CREATE_NOTIFICATION,
                   variables: {
                     body: notification.body,
                     authorId: notification.authorId,
-                    teamId: +notification.teamId,
-                    forAllUsers: +notification.forAllUsers
+                    typeId: notification.typeId,
+                    endTime: notification.endTime,
+                    userId: notification.userId
                   }
                 })
                 .then(data => {
@@ -339,6 +379,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 .main_tasks {
   padding: 2%;
 }
@@ -347,32 +388,9 @@ export default {
   background: $violet;
   margin-bottom: 1rem;
   border-radius: 10px;
-  .btn {
-    margin-top: 5%;
-  }
-  &_body {
-    display: grid;
-    grid-template-columns: 60% 30%;
-    grid-column-gap: 10%;
-    div {
-      align-self: start;
-      p {
-        color: $gray;
-        font-size: 16px;
-        line-height: 18px;
-        padding: 0;
-        margin: 0;
-      }
-    }
-    &_user {
-      display: flex;
-      align-items: center;
-      img {
-        width: 15%;
-        border-radius: 100%;
-        margin-right: 5%;
-      }
-    }
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  img {
+    border-radius: 100%;
   }
 }
 .wrapOfLoader {
