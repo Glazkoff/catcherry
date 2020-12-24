@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div v-if="!this.$apollo.queries.getPointsUser.loading">
     <div class="container" v-if="!isEmpty">
       <div
         class="row border-block"
@@ -25,6 +25,9 @@
         </div>
       </div>
     </div>
+  </div>
+  <div v-else class="wrapOfLoader">
+    <Loader></Loader>
   </div>
 </template>
 
