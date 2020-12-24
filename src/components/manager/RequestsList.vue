@@ -1,9 +1,9 @@
 <template>
-  <div class="main_request">
+  <div class="main_request" v-if="!this.$apollo.loading">
     <breadcrumbs></breadcrumbs>
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == teamId">
-        <h3>Заявки на вхождение {{ (name = t.name) }}</h3>
+        <h2>Заявки на вхождение {{ (name = t.name) }}</h2>
         <div v-for="request in requests" :key="request.id" class="request">
           <RequestsItem
             :request="request"
@@ -17,12 +17,14 @@
       </div>
     </div>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import RequestsItem from "@/components/manager/RequestsItem";
 import Minialert from "@/components/MiniAlert.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
+import loader from "@/components/Loader.vue";
 import {
   REQUESTS_QUERY,
   ACCEPT_REQUEST_QUERY,
@@ -75,7 +77,8 @@ export default {
   components: {
     RequestsItem,
     Minialert,
-    breadcrumbs
+    breadcrumbs,
+    loader
   },
 
   methods: {

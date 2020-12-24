@@ -11,41 +11,50 @@
           <h2>
             {{ $t("listOrganization") }}
           </h2>
-          <div
-            v-if="$apollo.queries.organizations.loading"
-            class="wrapOfLoader"
-          >
-            <loader></loader>
+        </div>
+      </div>
+      <div v-if="$apollo.queries.organizations.loading" class="wrapOfLoader">
+        <loader></loader>
+      </div>
+      <div v-if="!$apollo.queries.organizations.loading">
+        <div class="row">
+          <div class="col-12">
+            <h4 v-if="organizations.length == 0">
+              {{ $t("noOrg") }}
+            </h4>
           </div>
         </div>
-        <div v-if="!$apollo.queries.organizations.loading">
-          <h4 v-if="organizations.length == 0">
-            {{ $t("noOrg") }}
-          </h4>
-          <div v-if="organizations.length > 0">
-            <input
-              v-model="findString"
-              type="text"
-              :placeholder="$t('placeholderSearchByOrgs')"
-              class="form-control block find dark"
-            />
-            <div
-              class="card"
-              v-for="organization in filterOrganization"
-              :key="organization.id"
-            >
-              <div class="card_img">
-                <img src="~@/assets/avatar.jpg" />
-              </div>
-              <div class="card_body">
-                <p>{{ organization.name }}</p>
-                <p>№ {{ organization.id }}</p>
-              </div>
+        <div v-if="organizations.length > 0">
+          <div class="row">
+            <div class="col-12">
+              <input
+                v-model="findString"
+                type="text"
+                :placeholder="$t('placeholderSearchByOrgs')"
+                class="form-control block find dark"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
               <div
-                @click="showFullInformation(organization.id)"
-                class="card_action"
+                class="card"
+                v-for="organization in filterOrganization"
+                :key="organization.id"
               >
-                <ArrowRight></ArrowRight>
+                <div class="card_img">
+                  <img src="~@/assets/avatar.jpg" />
+                </div>
+                <div class="card_body">
+                  <p>{{ organization.name }}</p>
+                  <p>№ {{ organization.id }}</p>
+                </div>
+                <div
+                  @click="showFullInformation(organization.id)"
+                  class="card_action"
+                >
+                  <ArrowRight></ArrowRight>
+                </div>
               </div>
             </div>
           </div>

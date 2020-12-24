@@ -11,6 +11,7 @@
   "surname": "Фамилия",
   "name": "Имя",
   "patricity": "Отчество",
+  "fullname": "ФИО",
   "gender": "Пол",
   "birthday": "Дата рождения",
   "login": "Логин",
@@ -76,6 +77,40 @@
     "settings": "Настройки",
     "quit": "Выход"
   },
+  "task": {
+    "backlogTask": "Бэклог задания",
+    "noTasksInTheBacklog": "Нет заданий в бэклоге",
+    "completedTasksForReview": "Готовые задания на проверку",
+    "thereAreNoReadyMadeTasksToCheck": "Нет готовых заданий на проверку",
+    "completedTasks": "Завершенные задачи",
+    "noCompletedTasks": "Нет завершенных задач",
+    "responsible": "Ответственный",
+    "personNotAssigned": "не назначен",
+    "reward": "Награда",
+    "toReadTheScores": "Зачесть баллы",
+    "toSendBackForRevision": "Отправить на доработку",
+    "deleteTask": "Удалить задачу",
+    "youHaveSuccessfullyCreditedPointsToTheUser": "Вы успешно зачислили баллы пользователю",
+    "youHaveSuccessfullyDeletedTheTask": "Вы успешно удалили задачу",
+    "youHaveSuccessfullyReturnedTheTaskForRevision": "Вы успешно вернули задачу на доработку"
+  },
+  "taskConstructor": {
+    "taskConstructor": "Конструктор заданий",
+    "theNameOfTheTask": "Название задачи",
+    "taskDescription": "Описание задачи",
+    "responsible": "Ответственный",
+    "reward": "Награда",
+    "isAssignedIndependently": "Назначается самостоятельно",
+    "createATask": "Создать задачу",
+    "youHaveSuccessfullyCreatedNewTask": "Вы успешно создали новую задачу"
+  },
+  "ratingOfTeamMembers": {
+    "ratingOfTeamMembers": "Рейтинг участников команды",
+    "history": "История",
+    "statistics": "Статистика",
+    "forTheCurrentWeek": "За текущую неделю",
+    "lastWeek": "На прошлой неделе"
+  },
   "logIn": {
     "title": "Вход в Catcherry",
     "loginPasswordError": "Ошибка ввода логина или пароля!",
@@ -127,7 +162,15 @@
     "userInOrg": "Пользователь в организации",
     "listRequest": "Список заявок",
     "listTeams": "Список команд",
-    "tasks": "Задания"
+    "tasks": "Задания",
+    "teamlist": "Список команд",
+    "manager": "Менеджер",
+    "teamsettings": "Настройки команды",
+    "newtask": "Конструктор заданий",
+    "teammembers": "Участники",
+    "rating": "Рейтинг",
+    "editteam": "Редактирование",
+    "requestlist": "Заявки в команду"
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",

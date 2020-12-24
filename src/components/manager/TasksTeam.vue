@@ -6,8 +6,8 @@
       <p slot="title">{{ queryError }}</p>
     </minialert>
     <div v-if="!$apollo.loading">
-      <h2>Бэклог заданий</h2>
-      <p v-if="backlog.length === 0">Нет задач в бэклоге</p>
+      <h2>{{ $t("task.backlogTask") }}</h2>
+      <p v-if="backlog.length === 0">{{ $t("task.noTasksInTheBacklog") }}</p>
       <div v-for="task in backlog" :key="task.id" class="task">
         <h3>{{ task.body.header }}</h3>
         <p>{{ task.id }}</p>
@@ -16,18 +16,25 @@
           <div :class="{ task_body_user: task.tasksUser !== null }">
             <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
             <div>
-              <p>Награда: +{{ task.body.points }} баллов</p>
-              <p v-if="task.tasksUser === null">Ответственный: не назначен</p>
+              <p>
+                {{ $t("task.reward") }}: +
+                {{ $tc("pointsMsg", task.body.points) }}
+              </p>
+              <p v-if="task.tasksUser === null">
+                {{ $t("task.responsible") }}: {{ $t("task.personNotAssigned") }}
+              </p>
               <p v-if="task.tasksUser !== null">
-                Ответственный: {{ task.tasksUser.name }}
+                {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
                 {{ task.tasksUser.surname }}
               </p>
             </div>
           </div>
         </div>
       </div>
-      <h2>Готовые задания на проверку</h2>
-      <p v-if="toCheck.length === 0">Нет готовых задач на проверку</p>
+      <h2>{{ $t("task.completedTasksForReview") }}</h2>
+      <p v-if="toCheck.length === 0">
+        {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
+      </p>
       <div v-for="task in toCheck" :key="task.id" class="task">
         <h3>{{ task.body.header }}</h3>
         <div class="task_body">
@@ -36,24 +43,27 @@
             <div class="task_body_user">
               <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
               <div>
-                <p>Награда: +{{ task.body.points }} баллов</p>
+                <p>
+                  {{ $t("task.reward") }}: +
+                  {{ $tc("pointsMsg", task.body.points) }}
+                </p>
                 <p v-if="task.tasksUser !== null">
-                  Ответственный: {{ task.tasksUser.name }}
+                  {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
                   {{ task.tasksUser.surname }}
                 </p>
               </div>
             </div>
             <button class="btn btn-alternate" @click="creditPoints(task)">
-              Зачесть баллы
+              {{ $t("task.toReadTheScores") }}
             </button>
             <button class="btn btn-alternate" @click="sendForRevision(task)">
-              Отправить на доработку
+              {{ $t("task.toSendBackForRevision") }}
             </button>
           </div>
         </div>
       </div>
-      <h2>Завершенные задачи</h2>
-      <p v-if="done.length === 0">Нет завершенных задач</p>
+      <h2>{{ $t("task.completedTasks") }}</h2>
+      <p v-if="done.length === 0">{{ $t("task.noCompletedTasks") }}</p>
       <div v-for="task in done" :key="task.id" class="task">
         <h3>{{ task.body.header }}</h3>
         <div class="task_body">
@@ -62,15 +72,18 @@
             <div class="task_body_user">
               <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
               <div>
-                <p>Награда: +{{ task.body.points }} баллов</p>
+                <p>
+                  {{ $t("task.reward") }}: +
+                  {{ $tc("pointsMsg", task.body.points) }}
+                </p>
                 <p v-if="task.tasksUser !== null">
-                  Ответственный: {{ task.tasksUser.name }}
+                  {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
                   {{ task.tasksUser.surname }}
                 </p>
               </div>
             </div>
             <button class="btn btn-alternate" @click="deleteTask(task)">
-              Удалить задачу
+              {{ $t("task.deleteTask") }}
             </button>
           </div>
         </div>
@@ -78,7 +91,7 @@
     </div>
     <minialert v-if="isShowAlert">
       <p slot="title">
-        Вы успешно зачислили баллы пользователю
+        {{ $t("task.youHaveSuccessfullyCreditedPointsToTheUser") }}
       </p>
     </minialert>
     <minialert v-if="isShowAlertError">
@@ -88,12 +101,12 @@
     </minialert>
     <minialert v-if="isShowAlertDelete">
       <p slot="title">
-        Вы успешно удалили задачу
+        {{ $t("task.youHaveSuccessfullyDeletedTheTask") }}
       </p>
     </minialert>
     <minialert v-if="isShowAlertSendForRevision">
       <p slot="title">
-        Вы успешно вернули задачу на доработку
+        {{ $t("task.youHaveSuccessfullyReturnedTheTaskForRevision") }}
       </p>
     </minialert>
   </div>
@@ -326,8 +339,8 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
-.aaa {
-  padding: 3%;
+.main_tasks {
+  padding: 2%;
 }
 .task {
   padding: 1%;
