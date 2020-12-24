@@ -9,10 +9,10 @@
       <div class="row">
         <div class="col-12">
           <h2>{{ $t("systemStatistics") }}</h2>
-          <div class="wrapOfLoader" v-if="$apollo.loading">
-            <loader></loader>
-          </div>
         </div>
+      </div>
+      <div class="wrapOfLoader" v-if="$apollo.loading">
+        <loader></loader>
       </div>
       <div class="row" v-if="!$apollo.loading">
         <NewStatistics
@@ -65,12 +65,7 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
-.graphs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-gap: 3vw;
-}
+@import "@/styles/_grid.scss";
 .wrapOfLoader {
   overflow: hidden;
   background: $dark_blue;
