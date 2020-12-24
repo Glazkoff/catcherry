@@ -305,7 +305,8 @@ a {
 }
 
 // Классы для цветов
-.red {
+.red,
+.danger {
   color: $red;
 }
 .gray {

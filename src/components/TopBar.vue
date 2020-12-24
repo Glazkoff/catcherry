@@ -6,7 +6,7 @@
         <ul class="m-0">
           <input type="checkbox" id="gepleasurprised" style="display: none;" />
           <li class="nav-logo d-block h-100">
-            <h1>{{ routeTitle }}</h1>
+            <h1 class="centerAlignTopBar">{{ routeTitle }}</h1>
           </li>
           <li class="right ">
             <a class="userFoto"></a>
@@ -22,6 +22,7 @@
                 to="/notifications"
                 :exact="true"
                 active-class="nav-checked"
+                class="centerAlignTopBar"
               >
                 <div class="notBtnNotification" href="#">
                   <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
@@ -66,12 +67,12 @@
             </div>
           </li>
           <li class="right">
-            <p class="emailCard">
+            <p class="emailCard centerAlignTopBar">
               <MailIcon></MailIcon>
             </p>
           </li>
           <li class="right">
-            <router-link to="/points">
+            <router-link to="/points" class="centerAlignTopBar">
               <p class="nav-point">
                 {{ $tc("pointsMsg", pointQuantity) }}
                 <StarIcon></StarIcon></p
@@ -186,6 +187,13 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
+
+.centerAlignTopBar {
+  display: flex;
+  align-items: center;
+  height: $topBarHeight;
+}
+
 .mainTopBar h1 {
   margin-block-start: 0em;
   margin-block-end: 0em;
@@ -238,7 +246,7 @@ export default {
   // height: auto;
   background: $dark_blue;
   justify-content: center;
-  padding-top: 1rem;
+  // padding-top: 1rem;
   // padding-bottom: 60px;
   border-bottom: 2px solid $violet_3;
 }
