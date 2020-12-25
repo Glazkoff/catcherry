@@ -20,7 +20,7 @@
   "cancel": "Cancel",
   "close": "Close",
   "edit": "Edit",
-  "delete": "Delete",
+  "delete": "Delete account",
   "deleteQuestion": "Are you sure you want to delete user",
   "deleteOrgQuestion": "Are you sure you want to delete organization",
   "placeholderSearchByUsers": "Search by users",
@@ -169,7 +169,8 @@
     "teammembers": "Participants",
     "rating": "Rating",
     "editteam": "Edit team",
-    "requestlist": "Requests"
+    "requestlist": "Requests",
+    "listTeams": ""
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",

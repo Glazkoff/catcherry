@@ -86,6 +86,12 @@ $m4: 16px;
 
 .d-flex {
   display: flex;
+  &.flex-row {
+    flex-direction: row;
+  }
+  &.flex-column {
+    flex-direction: column;
+  }
   &.flex-center {
     justify-content: center;
     justify-content: center;
