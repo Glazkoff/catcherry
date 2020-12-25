@@ -251,10 +251,7 @@ type Query {
   personalUserStatistics(userId: Int!): PointsUser
   teamsInOneOrganization(organizationId: ID!): [Team]
 
-  tasks (teamId:ID!): [Task]!
-  backlog (teamId:ID!): [Task]!
-
-  allTasks(teamId:ID!): [Task]!
+  allTasksInOneTeam(teamId:ID!): [Task]!
 
   statisticsNewUsers: Int
   statisticsNewOrgs: Int
@@ -312,7 +309,7 @@ type Mutation {
   createPointOperation(userId: ID!, delta: Int!, operationDescription: String!): PointOperations!
 
   createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
-  updateTask(id: ID!, status: String): Task!
+  updateStatusTask(id: ID!, status: String): Task!
   addUserToTask(id: ID!, userId: ID): Task!
   deleteTask(id: ID!): Int!
 

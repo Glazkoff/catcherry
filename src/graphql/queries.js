@@ -583,31 +583,9 @@ export const PERSONAL_USER_STATISTIC_QUERY = gql`
   }
 `;
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TASKS
-export const TASKS_QUERY = gql`
+export const ALL_TASKS_IN_TEAM_QUERY = gql`
   query($teamId: ID!) {
-    tasks(teamId: $teamId) {
-      id
-      userId
-      teamId
-      body {
-        header
-        text
-        points
-      }
-      status
-      tasksUser {
-        name
-        surname
-        userPoints {
-          id
-        }
-      }
-    }
-  }
-`;
-export const ALL_TASKS_QUERY = gql`
-  query($teamId: ID!) {
-    allTasks(teamId: $teamId) {
+    allTasksInOneTeam(teamId: $teamId) {
       id
       userId
       teamId
@@ -674,7 +652,7 @@ export const ADD_TASK_QUERY = gql`
 `;
 export const CHANGE_STATUS_TASK_QUERY = gql`
   mutation($id: ID!, $status: String) {
-    updateTask(id: $id, status: $status) {
+    updateStatusTask(id: $id, status: $status) {
       status
     }
   }
@@ -684,52 +662,6 @@ export const ADD_USER_TO_TASK_QUERY = gql`
   mutation($id: ID!, $userId: ID) {
     addUserToTask(id: $id, userId: $userId) {
       userId
-    }
-  }
-`;
-
-export const BACKLOG_QUERY = gql`
-  query($teamId: ID!) {
-    backlog(teamId: $teamId) {
-      id
-      userId
-      teamId
-      body {
-        header
-        text
-        points
-      }
-      status
-      tasksUser {
-        name
-        surname
-        userPoints {
-          id
-        }
-      }
-    }
-  }
-`;
-
-export const BACKLOG_TASKS_QUERY = gql`
-  query($teamId: ID!) {
-    backlogTasks(teamId: $teamId) {
-      id
-      userId
-      teamId
-      status
-      body {
-        header
-        text
-        points
-      }
-      tasksUser {
-        name
-        surname
-        userPoints {
-          id
-        }
-      }
     }
   }
 `;

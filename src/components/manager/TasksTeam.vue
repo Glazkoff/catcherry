@@ -165,7 +165,7 @@ import minialert from "@/components/MiniAlert.vue";
 import Loader from "@/components/Loader.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
-  ALL_TASKS_QUERY,
+  ALL_TASKS_IN_TEAM_QUERY,
   CHANGE_STATUS_TASK_QUERY,
   CREATE_POINTS_OPERATION,
   DELETE_TASK_QUERY,
@@ -176,8 +176,8 @@ export default {
   components: { minialert, Loader, breadcrumbs },
   apollo: {
     // массив задач с назначенными ответственными
-    allTasks: {
-      query: ALL_TASKS_QUERY,
+    allTasksInOneTeam: {
+      query: ALL_TASKS_IN_TEAM_QUERY,
       error(error) {
         this.queryError = JSON.stringify(error.message);
       },
@@ -227,12 +227,13 @@ export default {
               },
               update: cache => {
                 let data = cache.readQuery({
-                  query: ALL_TASKS_QUERY,
+                  query: ALL_TASKS_IN_TEAM_QUERY,
                   variables: { teamId: this.$route.params.id }
                 });
-                data.allTasks.find(el => el.id === task.id).status = "Готово";
+                data.allTasksInOneTeam.find(el => el.id === task.id).status =
+                  "Готово";
                 cache.writeQuery({
-                  query: ALL_TASKS_QUERY,
+                  query: ALL_TASKS_IN_TEAM_QUERY,
                   variables: { teamId: this.$route.params.id },
                   data
                 });
@@ -305,13 +306,13 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id }
             });
-            data.allTasks.find(el => el.id === task.id).status =
+            data.allTasksInOneTeam.find(el => el.id === task.id).status =
               "Запланировано";
             cache.writeQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id },
               data
             });
@@ -341,13 +342,15 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id }
             });
-            let index = data.allTasks.findIndex(el => el.id == task.id);
-            data.allTasks.splice(index, 1);
+            let index = data.allTasksInOneTeam.findIndex(
+              el => el.id == task.id
+            );
+            data.allTasksInOneTeam.splice(index, 1);
             cache.writeQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id },
               data
             });
@@ -371,22 +374,22 @@ export default {
   },
   computed: {
     backlog() {
-      if (!this.allTasks !== undefined) {
-        return this.allTasks.filter(el => {
+      if (!this.allTasksInOneTeam !== undefined) {
+        return this.allTasksInOneTeam.filter(el => {
           return el.status === "Запланировано";
         });
       } else return [];
     },
     toCheck() {
-      if (!this.allTasks !== undefined) {
-        return this.allTasks.filter(el => {
+      if (!this.allTasksInOneTeam !== undefined) {
+        return this.allTasksInOneTeam.filter(el => {
           return el.status === "На проверке";
         });
       } else return [];
     },
     done() {
-      if (!this.allTasks !== undefined) {
-        return this.allTasks.filter(el => {
+      if (!this.allTasksInOneTeam !== undefined) {
+        return this.allTasksInOneTeam.filter(el => {
           return el.status === "Готово";
         });
       } else return [];

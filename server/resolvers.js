@@ -377,30 +377,7 @@ module.exports = {
       }
       return [pointsLastWeek, points2LastWeek];
     },
-    tasks: (parent, { teamId }, { db }) =>
-      db.Tasks.findAll({
-        where: { teamId: teamId, userId: { [Op.ne]: null } },
-        order: [["id", "DESC"]],
-        include: [
-          {
-            model: db.Users,
-            as: "tasksUser",
-            include: {
-              model: db.Points,
-              as: "userPoints"
-            }
-          },
-          {
-            model: db.Teams,
-            as: "tasksTeam",
-            include: {
-              model: db.UsersInTeams,
-              as: "team"
-            }
-          }
-        ]
-      }),
-    allTasks: (parent, { teamId }, { db }) =>
+    allTasksInOneTeam: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId },
         order: [["id", "DESC"]],
@@ -423,29 +400,6 @@ module.exports = {
           }
         ]
       }),
-    backlog: (parent, { teamId }, { db }) =>
-      db.Tasks.findAll({
-        where: { teamId: teamId, userId: null },
-        order: [["id", "DESC"]],
-        include: [
-          {
-            model: db.Users,
-            as: "tasksUser",
-            include: {
-              model: db.Points,
-              as: "userPoints"
-            }
-          },
-          {
-            model: db.Teams,
-            as: "tasksTeam",
-            include: {
-              model: db.UsersInTeams,
-              as: "team"
-            }
-          }
-        ]
-      })
   },
   Mutation: {
     /* [Ниже] Мутации регистрации и авторизации */
@@ -986,7 +940,7 @@ module.exports = {
         body: { header: header, text: text, points: points },
         status: status
       }),
-    updateTask: (parent, { id, status }, { db }) =>
+    updateStatusTask: (parent, { id, status }, { db }) =>
       db.Tasks.update(
         {
           status: status
