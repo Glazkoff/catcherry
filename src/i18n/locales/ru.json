@@ -80,8 +80,8 @@
   "task": {
     "backlogTask": "Бэклог задания",
     "noTasksInTheBacklog": "Нет заданий в бэклоге",
-    "completedTasksForReview": "Готовые задания на проверку",
-    "thereAreNoReadyMadeTasksToCheck": "Нет готовых заданий на проверку",
+    "completedTasksForReview": "Готовые задания на проверке",
+    "thereAreNoReadyMadeTasksToCheck": "Нет готовых заданий на проверке",
     "completedTasks": "Завершенные задачи",
     "noCompletedTasks": "Нет завершенных задач",
     "responsible": "Ответственный",

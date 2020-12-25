@@ -400,6 +400,31 @@ module.exports = {
           }
         ]
       }),
+    allUserTasks: (parent, { id }, { db }) =>
+      db.Tasks.findAll({
+        where: {
+          [Op.or]: [{ userId: id }, { userId: null }]
+        },
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.Users,
+            as: "tasksUser",
+            include: {
+              model: db.Points,
+              as: "userPoints"
+            }
+          },
+          {
+            model: db.Teams,
+            as: "tasksTeam",
+            include: {
+              model: db.UsersInTeams,
+              as: "team"
+            }
+          }
+        ]
+      })
   },
   Mutation: {
     /* [Ниже] Мутации регистрации и авторизации */

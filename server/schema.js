@@ -252,6 +252,7 @@ type Query {
   teamsInOneOrganization(organizationId: ID!): [Team]
 
   allTasksInOneTeam(teamId:ID!): [Task]!
+  allUserTasks(id:ID!): [Task]!
 
   statisticsNewUsers: Int
   statisticsNewOrgs: Int

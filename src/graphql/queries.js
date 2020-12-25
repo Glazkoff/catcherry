@@ -608,6 +608,27 @@ export const ALL_TASKS_IN_TEAM_QUERY = gql`
   }
 `;
 
+export const ALL_USER_TASK_QUERY = gql`
+  query($id: ID!) {
+    allUserTasks(id: $id) {
+      id
+      teamId
+      status
+      body {
+        header
+        text
+        points
+      }
+      tasksTeam {
+        name
+      }
+      tasksUser {
+        id
+      }
+    }
+  }
+`;
+
 export const DELETE_TASK_QUERY = gql`
   mutation($id: ID!) {
     deleteTask(id: $id)
