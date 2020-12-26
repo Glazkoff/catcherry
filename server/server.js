@@ -25,6 +25,7 @@ const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
 const { createRateLimitDirective } = require("graphql-rate-limit");
+const { constraintDirective, constraintDirectiveTypeDefs } = require('graphql-constraint-directive')
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 
@@ -42,11 +43,12 @@ const rateLimitDirective = createRateLimitDirective({
 
 // Соедняем всё в схему
 const schema = makeExecutableSchema({
-  typeDefs,
+  typeDefs: [constraintDirectiveTypeDefs, typeDefs],
   resolvers,
   context: { db },
+  schemaTransforms: [constraintDirective()],
   schemaDirectives: {
-    rateLimit: rateLimitDirective
+    rateLimit: rateLimitDirective,
   }
 });
 
