@@ -1,14 +1,21 @@
 <template>
-  <div class="flexCont" v-if="!this.$apollo.loading">
-    <breadcrumbs></breadcrumbs>
-    <h3>{{ $t("editTeam") }}</h3>
-    <div v-for="t in team" :key="t.id">
-      <div v-if="t.id == id">
-        <EditForm :t="t" @update="toSaveEditTeam" />
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <breadcrumbs></breadcrumbs>
+        </div>
       </div>
     </div>
+    <div class="container" v-if="!this.$apollo.loading">
+      <div v-for="t in team" :key="t.id">
+        <div v-if="t.id == id">
+          <EditForm :t="t" @update="toSaveEditTeam" />
+        </div>
+      </div>
+    </div>
+    <div v-else class="container"><loader></loader></div>
   </div>
-  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
@@ -81,12 +88,8 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 @import "@/styles/_classes.scss";
-.flexCont {
-  display: flex;
-  padding: 3rem;
-  flex-direction: column;
-}
 h3 {
   margin-bottom: 0.5rem;
 }

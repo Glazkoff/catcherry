@@ -84,10 +84,11 @@ import {
 export default {
   data() {
     return {
-      positivePoints: 0,
-      negativePoints: 0
+      positivePoints: 0, // заработанные баллы
+      negativePoints: 0 // потраченные баллы
     };
   },
+  // Функция для отображения заработанных и потрченных баллов
   created: function() {
     for (
       let i = 0;
