@@ -18,11 +18,6 @@
               <span v-if="!$v.newTeam.name.required" class="form-text danger">{{
                 $t("required")
               }}</span>
-              <span
-                v-else-if="!$v.newTeam.name.alpha"
-                class="form-text danger"
-                >{{ $t("requiredLetters") }}</span
-              >
             </div>
           </div>
           <div class="form-group">
@@ -39,11 +34,6 @@
                 v-if="!$v.newTeam.description.required"
                 class="form-text danger"
                 >{{ $t("required") }}</span
-              >
-              <span
-                v-else-if="!$v.newTeam.description.alpha"
-                class="form-text danger"
-                >{{ $t("requiredLetters") }}</span
               >
             </div>
           </div>
@@ -124,12 +114,10 @@ export default {
   validations: {
     newTeam: {
       name: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
+        required
       },
       description: {
-        required,
-        alpha: val => /^[а-яёa-zA-Z ]*$/i.test(val)
+        required
       },
       maxUsersLimit: {
         required,
@@ -158,7 +146,7 @@ export default {
               variables: {
                 userId: this.$store.getters.decodedToken.id,
                 teamId: this.idTeam,
-                status: "Принято",
+                status: "Принят",
                 roleId: 1
               }
             })
