@@ -170,6 +170,11 @@ module.exports = {
         where: { id: args.id }
       });
     },
+    userOrganization: (parent, args, { db }) => {
+      return db.Organizations.findOne({
+        where: { ownerId: args.id }
+      });
+    },
     // Получаем данные о командах пользователя + информация о команде (об организации)
     oneUserInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({

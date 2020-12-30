@@ -20,6 +20,11 @@
                 <More v-on:click="onLink(t.id)"></More>
               </div>
             </div>
+            <router-link :to="{ name: 'NewTeam' }" :exact="true">
+              <button class="btn btn-primary block">
+                Создать новую задачу
+              </button>
+            </router-link>
           </div>
         </div>
       </div>

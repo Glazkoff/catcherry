@@ -169,7 +169,8 @@
     "teammembers": "Participants",
     "rating": "Rating",
     "editteam": "Edit team",
-    "requestlist": "Requests"
+    "requestlist": "Requests",
+    "newTeam": "Create team"
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",

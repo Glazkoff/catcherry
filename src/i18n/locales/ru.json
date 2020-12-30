@@ -170,7 +170,8 @@
     "teammembers": "Участники",
     "rating": "Рейтинг",
     "editteam": "Редактирование",
-    "requestlist": "Заявки в команду"
+    "requestlist": "Заявки в команду",
+    "newTeam": "Новая команда"
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",

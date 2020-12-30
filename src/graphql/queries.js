@@ -244,6 +244,14 @@ export const ORGS_QUERY = gql`
   }
 `;
 
+export const USER_ORG_QUERY = gql`
+  query($id: ID!) {
+    userOrganization(id: $id) {
+      id
+    }
+  }
+`;
+
 export const ORG_TYPES_QUERY = gql`
   query {
     organizationTypes {

@@ -16,6 +16,7 @@ import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
 import TeamsList from "@/components/manager/TeamsList.vue";
+//import NewTeam from "@/components/manager/NewTeam.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
@@ -107,6 +108,17 @@ const routes = [
               ),
             meta: {
               breadCrumb: i18n.t("router.newtask")
+            }
+          },
+          {
+            path: "new_team",
+            name: "NewTeam",
+            component: () =>
+              import(
+                /* webpackChunkName: "managerNewTask" */ "../components/manager/NewTeam.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.newTeam")
             }
           },
           {
