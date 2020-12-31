@@ -252,18 +252,37 @@ module.exports = {
 
     // Получаем все посты
     posts: async (parent, args, { db }) => {
-      let resultOfPosts = db.Posts.findAll({
+      let resultOfPosts = await db.Posts.findAll({
         order: [["id", "DESC"]],
-        include: [{ model: db.LikesOfPosts, as: "likesOfPost" }]
+        include: [
+          {
+            model: db.LikesOfPosts,
+            as: "likesOfPost"
+          }
+        ],
+        where: {
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        }
       });
+      // console.log("Hurray!!! ", JSON.stringify(resultOfPosts));
       return resultOfPosts;
     },
+
     // Получаем информацию о посте по id
-    post: (parent, args, { db }) => {
-      return db.Posts.findOne({
-        where: { id: args.id },
+    post: async (parent, args, { db }) => {
+      let resultOfPost = await db.Posts.findOne({
+        where: {
+          id: args.id,
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        },
         include: [{ model: db.LikesOfPosts, as: "likesOfPost" }]
       });
+      // console.log("Hurray!!! ", JSON.stringify(resultOfPost));
+      return resultOfPost;
     },
 
     // Получаем информацию о всех лайках постов пользователя
@@ -822,11 +841,11 @@ module.exports = {
     /*
       [Ниже] Мутации работы с постами (Posts)     
     */
-    createPost: (parent, { body, authorId, organizationId }, { db }) =>
+    createPost: (parent, { body, authorId, userId }, { db }) =>
       db.Posts.create({
         body: body,
         authorId: authorId,
-        organizationId: organizationId
+        userId: userId
       }),
     deletePost: (parent, args, { db }) =>
       db.Posts.destroy({
