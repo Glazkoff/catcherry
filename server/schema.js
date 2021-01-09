@@ -279,15 +279,30 @@ input signUpInput {
   fingerprint:String!
 }
 
+input loginInput {
+  login: String!
+  password: String! @constraint(minLength: 6)
+  fingerprint:String!
+}
+
+input updateUserInput {
+  name: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  surname: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  patricity: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  gender: String
+  birthday: String
+  login: String!
+}
+
 type Mutation {
   signUp(input: signUpInput): jwt
-  logIn(login: String!, password: String!, fingerprint:String!): jwt
+  logIn(input: loginInput): jwt
   updateTokens(fingerprint:String!): jwt!
   logOut(fingerprint:String!): Int
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String, birthday: String): [Int]!
+  updateUser(id: ID!, input: updateUserInput): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
   createNotification(body: NotificationBody!, typeId:Int!, authorId: Int!, userId: [Int], endTime: String! ): Notification!
