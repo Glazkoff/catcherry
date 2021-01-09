@@ -1,10 +1,6 @@
 <template>
   <div class="home">
-    <p>
-      <i18n path="startMsg">
-        <span place="title">{{ $t("projectTitle") }}</span>
-      </i18n>
-    </p>
+    <p>{{ $t("startMsg") }} | {{ $t("projectTitle") }}</p>
     <TestGraphql></TestGraphql>
   </div>
 </template>

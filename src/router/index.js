@@ -84,9 +84,7 @@ const routes = [
             )
         },
         meta: {
-          // TODO: проверка менеджер ли
-          // TODO: хлебные крошки
-          breadCrumb: "manager"
+          breadCrumb: i18n.t("router.manager")
         },
         children: [
           {
@@ -95,7 +93,10 @@ const routes = [
             component: () =>
               import(
                 /* webpackChunkName: "managerTeamSettings" */ "../components/manager/TeamSettings.vue"
-              )
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.teamsettings")
+            }
           },
           {
             path: "new_task",
@@ -103,7 +104,10 @@ const routes = [
             component: () =>
               import(
                 /* webpackChunkName: "managerNewTask" */ "../components/manager/NewTask.vue"
-              )
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.newtask")
+            }
           },
           {
             path: "team_members",
@@ -111,16 +115,21 @@ const routes = [
             component: () =>
               import(
                 /* webpackChunkName: "managerTeamMembers" */ "../components/manager/TeamMembers.vue"
-              )
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.teammembers")
+            }
           },
           {
-            // TODO: rating
             path: "raiting",
             name: "RaitingList",
             component: () =>
               import(
                 /* webpackChunkName: "managerRatingList" */ "../components/manager/RaitingList.vue"
-              )
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.rating")
+            }
           },
           {
             path: "team_edit",
@@ -128,7 +137,10 @@ const routes = [
             component: () =>
               import(
                 /* webpackChunkName: "managerEditTeam" */ "../components/manager/EditTeam.vue"
-              )
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.editteam")
+            }
           },
           {
             path: "requests",
@@ -136,7 +148,10 @@ const routes = [
             component: () =>
               import(
                 /* webpackChunkName: "managerRequestsList" */ "../components/manager/RequestsList.vue"
-              )
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.requestlist")
+            }
           },
           {
             path: "tasks",
@@ -144,7 +159,10 @@ const routes = [
             component: () =>
               import(
                 /* webpackChunkName: "managerTasksTeam" */ "../components/manager/TasksTeam.vue"
-              )
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.tasks")
+            }
           }
         ]
       },
@@ -352,6 +370,10 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if (to.name !== null && from.name === null && to.name !== "LogIn") {
+    localStorage.setItem("first-route", to.name);
+  }
+
   let lang = localStorage.getItem("lang");
   if (!lang) {
     lang = process.env.VUE_APP_I18N_LOCALE;

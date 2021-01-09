@@ -37,10 +37,18 @@ export default {
 <style lang="scss">
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
+// @import "@/styles/_reset.scss";
 
 #app {
   width: 100vw;
   max-width: 100vw;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
 }
 
 [v-cloak] {
@@ -111,6 +119,17 @@ export default {
   width: 100vw;
   height: 100vh;
   padding-top: calc(50vh - 100px);
+}
+
+.side-bar__nav-list__back-btn {
+  border-bottom: 2px solid $violet_3;
+  margin-bottom: 0.5rem;
+  & > * {
+    transition: transform 400ms ease;
+  }
+  &:hover > * {
+    transform: translateX(-4px);
+  }
 }
 // .btn {
 //   display: block;

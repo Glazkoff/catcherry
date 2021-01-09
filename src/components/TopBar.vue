@@ -1,94 +1,87 @@
 <template>
   <div class="mainTopBar">
-    <header>
-      <div id="topbar">
-        <nav class="navtopbar">
-          <a class="icon right">☰</a>
-          <ul>
-            <input
-              type="checkbox"
-              id="gepleasurprised"
-              style="display: none;"
-            />
-            <li class="nav-logo">
-              <h1>{{ routeTitle }}</h1>
-            </li>
-            <li class="right ">
-              <a class="userFoto"></a>
-              <a class="nav-name"
-                ><p>{{ this.$store.getters.decodedToken.name }}</p>
-                <!-- <small>
-                  -
-                </small> -->
-                <small v-if="roleUser == null">-</small>
-                <small v-if="roleUser != null">{{ roleUser }}</small>
-              </a>
-            </li>
-            <li class="right icon-notificationTopBar">
-              <div class="notificationTopBar">
-                <router-link
-                  to="/notifications"
-                  :exact="true"
-                  active-class="nav-checked"
-                >
-                  <div class="notBtnNotification" href="#">
-                    <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
-                    <div class="number" v-if="lengthNotifocations >= 1">
-                      .
-                    </div>
-                    <NotificationIcon></NotificationIcon>
-                    <div class="box">
-                      <div class="display">
-                        <div class="nothing">
-                          <div class="cent">Looks Like your all caught up!</div>
-                        </div>
-                        <div class="cont">
-                          <div
-                            class="sec new"
-                            v-for="notification in notificationsForUser"
-                            :key="notification.id"
-                          >
-                            <div>
-                              <a href="#">
-                                <div class="profCont">
-                                  <img
-                                    class="profile"
-                                    src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
-                                  />
-                                </div>
-                                <div class="txt">
-                                  <h3>{{ notification.body.header }}</h3>
-                                  <p>{{ notification.body.text }}</p>
-                                </div>
-                                <div class="txt sub">
-                                  {{ $d(notification.createdAt, "number") }}
-                                </div>
-                              </a>
-                            </div>
+    <div id="topbar">
+      <nav class="navtopbar d-block w-100">
+        <a class="icon right">☰</a>
+        <ul class="m-0">
+          <input type="checkbox" id="gepleasurprised" style="display: none;" />
+          <li class="nav-logo d-block h-100">
+            <h1 class="centerAlignTopBar">{{ routeTitle }}</h1>
+          </li>
+          <li class="right ">
+            <a class="userFoto"></a>
+            <a class="nav-name"
+              ><p>{{ this.$store.getters.decodedToken.name }}</p>
+              <small v-if="roleUser == null">-</small>
+              <small v-if="roleUser != null">{{ roleUser }}</small>
+            </a>
+          </li>
+          <li class="right icon-notificationTopBar">
+            <div class="notificationTopBar">
+              <router-link
+                to="/notifications"
+                :exact="true"
+                active-class="nav-checked"
+                class="centerAlignTopBar"
+              >
+                <div class="notBtnNotification" href="#">
+                  <!--Number supports double digets and automaticly hides itself when there is nothing between divs -->
+                  <div class="number" v-if="lengthNotifocations >= 1">
+                    .
+                  </div>
+                  <NotificationIcon></NotificationIcon>
+                  <div class="box">
+                    <div class="display">
+                      <div class="nothing">
+                        <div class="cent">Looks Like your all caught up!</div>
+                      </div>
+                      <div class="cont">
+                        <div
+                          class="sec new"
+                          v-for="notification in notificationsForUser"
+                          :key="notification.id"
+                        >
+                          <div>
+                            <a href="#">
+                              <div class="profCont">
+                                <img
+                                  class="profile"
+                                  src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
+                                />
+                              </div>
+                              <div class="txt">
+                                <h3>{{ notification.body.header }}</h3>
+                                <p>{{ notification.body.text }}</p>
+                              </div>
+                              <div class="txt sub">
+                                {{ $d(notification.createdAt, "number") }}
+                              </div>
+                            </a>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
-                </router-link>
-              </div>
-            </li>
-            <li class="right">
-              <p class="emailCard">
-                <MailIcon></MailIcon>
-              </p>
-            </li>
-            <li class="right">
-              <router-link to="/points">
-                <p class="nav-point">
-                  {{ $tc("pointsMsg", pointQuantity) }}
-                  <StarIcon></StarIcon></p
-              ></router-link>
-            </li>
-          </ul>
-        </nav>
-      </div>
-    </header>
+                </div>
+              </router-link>
+            </div>
+          </li>
+          <li class="right">
+            <p class="emailCard centerAlignTopBar">
+              <MailIcon></MailIcon>
+            </p>
+          </li>
+          <li class="right">
+            <router-link to="/points" class="centerAlignTopBar">
+              <p class="nav-point">
+                {{ $tc("pointsMsg", pointQuantity) }}
+                <StarIcon></StarIcon></p
+            ></router-link>
+          </li>
+          <li class="clearfix"></li>
+        </ul>
+      </nav>
+    </div>
   </div>
 </template>
 
@@ -98,7 +91,7 @@ import MailIcon from "@/assets/svg/topbar/mail_top-bar.svg?inline";
 import StarIcon from "@/assets/svg/topbar/star_top-bar.svg?inline";
 import NotificationIcon from "@/assets/svg/topbar/notification_top-bar.svg?inline";
 import {
-  GET_POINTS_QUERY,
+  GET_POINTS_USER_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
   NOTIFICATIONS_FOR_USER_QUERY
 } from "@/graphql/queries";
@@ -117,7 +110,7 @@ export default {
   // },
   apollo: {
     getPointsUser: {
-      query: GET_POINTS_QUERY,
+      query: GET_POINTS_USER_QUERY,
       variables() {
         return {
           userId: this.$store.getters.decodedToken.id
@@ -194,6 +187,13 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
+
+.centerAlignTopBar {
+  display: flex;
+  align-items: center;
+  height: $topBarHeight;
+}
+
 .mainTopBar h1 {
   margin-block-start: 0em;
   margin-block-end: 0em;
@@ -238,13 +238,16 @@ export default {
   font-size: 0.95em;
 }
 
-header {
+#topbar {
   width: 100%;
+  display: flex;
+  align-items: center;
   height: $topBarHeight;
+  // height: auto;
   background: $dark_blue;
   justify-content: center;
-  padding-top: 10px;
-  padding-bottom: 60px;
+  // padding-top: 1rem;
+  // padding-bottom: 60px;
   border-bottom: 2px solid $violet_3;
 }
 
@@ -320,10 +323,10 @@ header {
 .userFoto {
   height: 48px;
   width: 48px;
-  background-color: $gray_3;
+  background-color: $gray;
   border-radius: 25px;
   border: 2px solid $bright_violet;
-  color: $gray_3;
+  color: $gray;
   margin-right: 1em;
   margin-left: 7em;
 }
@@ -453,7 +456,7 @@ header {
 }
 
 .sec:hover {
-  background-color: $gray_3;
+  background-color: $gray;
 }
 @media screen and (max-width: 1090px) {
   nav ul li:not(:nth-child(1)) {

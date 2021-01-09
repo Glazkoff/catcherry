@@ -69,7 +69,13 @@
             <div class="container">
               <div class="row">
                 <div class="col-12">
-                  <Points />
+                  <p>
+                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
+                    Quam provident cupiditate, a culpa adipisci laudantium
+                    repudiandae excepturi consequuntur architecto officiis ex,
+                    voluptatem est obcaecati odit ipsum? Necessitatibus placeat
+                    animi pariatur.
+                  </p>
                 </div>
               </div>
             </div>
@@ -79,12 +85,14 @@
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
-                  provident cupiditate, a culpa adipisci laudantium repudiandae
-                  excepturi consequuntur architecto officiis ex, voluptatem est
-                  obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
-                </p>
+                <PointQuantity></PointQuantity>
+                <PointOperation :limit="3" ref="pOperation"></PointOperation>
+                <button
+                  class="mt-4 w-100 btn btn-primary"
+                  v-on:click="onLink()"
+                >
+                  Посмотреть все операции
+                </button>
               </div>
             </div>
           </div>
@@ -307,7 +315,8 @@ import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Popup from "@/components/Popup.vue";
 import MiniAlert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
-import Points from "@/components/account/PointsUser.vue";
+import PointOperation from "@/components/PointOperation.vue";
+import PointQuantity from "@/components/PointQuantity.vue";
 import Loader from "@/components/Loader.vue";
 import { required, minLength } from "vuelidate/lib/validators";
 import {
@@ -321,19 +330,23 @@ export default {
     MiniAlert,
     Popup,
     Edit,
-    Points,
     BreadCrumbs,
-    Loader
+    Loader,
+    PointOperation,
+    PointQuantity
   },
   apollo: {
     users: {
-      query: USERS_QUERY
+      query: USERS_QUERY,
+      skip() {
+        return !this.$store.getters.decodedToken.id;
+      }
     },
     user: {
       query: ONE_USER_QUERY,
       variables() {
         return {
-          id: this.$route.params.id
+          id: this.$store.getters.decodedToken.id
         };
       }
     }
@@ -387,6 +400,15 @@ export default {
         minLength: minLength(2)
       }
     }
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      // console.log("HUI ", vm.$refs.pOperation);
+      if (vm.$refs.pOperation) {
+        vm.$refs.pOperation.refreshQuery();
+      }
+      next();
+    });
   },
   methods: {
     showFullInformation(id) {
@@ -495,9 +517,15 @@ export default {
       setTimeout(() => {
         this.isShowAlertEdit = false;
       }, 3000);
+    },
+    onLink() {
+      this.$router.push({ name: "PointsUser" });
     }
   },
   computed: {
+    createLimit() {
+      return this.$route.query;
+    },
     filterUser() {
       if (this.findString !== "") {
         return this.users.filter(el => {
@@ -535,7 +563,6 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_grid.scss";
-
 .flexCont {
   display: flex;
   padding: 3rem;
@@ -547,7 +574,6 @@ export default {
 }
 .btnEdit {
   display: flex;
-
   & > * {
     margin: 0 auto;
     cursor: pointer;
@@ -568,7 +594,7 @@ export default {
 .form-control {
   background: $violet;
   border: 1px solid $violet_2;
-  color: $gray_3;
+  color: $gray;
   width: -webkit-fill-available;
 }
 .btnDelete {

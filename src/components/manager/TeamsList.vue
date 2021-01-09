@@ -1,12 +1,26 @@
 <template>
   <div v-if="!this.$apollo.queries.team.loading">
     <div class="container">
-      <bread-crumbs class="bread-crumbs"></bread-crumbs>
+      <div class="row">
+        <div class="col-12">
+          <bread-crumbs></bread-crumbs>
+        </div>
+      </div>
       <div v-if="!this.isEmpty">
-        <div v-for="t in team" :key="t.id" class="card">
-          <img src="../../assets/avatar.jpg" v-bind:alt="t.name" class="img" />
-          <h3 v-on:click="onLink(t.id)">{{ t.name }}</h3>
-          <More class="icon" v-on:click="onLink(t.id)"></More>
+        <div class="row">
+          <div class="col-12">
+            <div v-for="t in team" :key="t.id" class="card">
+              <div class="card_img">
+                <img src="../../assets/avatar.jpg" v-bind:alt="t.name" />
+              </div>
+              <div class="card_body">
+                <h3 v-on:click="onLink(t.id)">{{ t.name }}</h3>
+              </div>
+              <div class="card_action">
+                <More v-on:click="onLink(t.id)"></More>
+              </div>
+            </div>
+          </div>
         </div>
       </div>
       <h3 v-else>Команд нет, ничего нет</h3>
@@ -64,32 +78,5 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
-
-.bread-crumbs {
-  margin-bottom: 2.5rem;
-  padding-left: 0;
-}
-.container {
-  padding: 3rem;
-  padding-top: 0.625rem;
-}
-.card {
-  padding-right: 2.4rem;
-  padding-left: 2.4rem;
-  margin-bottom: 1rem;
-  position: relative;
-  & .img {
-    max-height: 3.5rem;
-    border-radius: 50%;
-    margin-right: 1.25rem;
-  }
-  & h3 {
-    cursor: pointer;
-  }
-  & .icon {
-    position: absolute;
-    right: 2.4rem;
-    cursor: pointer;
-  }
-}
+@import "@/styles/_grid.scss";
 </style>

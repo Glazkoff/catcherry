@@ -1,6 +1,81 @@
 <template>
-  <div class="main">
-    <BreadCrumbs></BreadCrumbs>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h2>
+            {{ $t("listOrganization") }}
+          </h2>
+        </div>
+      </div>
+      <div v-if="$apollo.queries.organizations.loading" class="wrapOfLoader">
+        <loader></loader>
+      </div>
+      <div v-if="!$apollo.queries.organizations.loading">
+        <div class="row">
+          <div class="col-12">
+            <h4 v-if="organizations.length == 0">
+              {{ $t("noOrg") }}
+            </h4>
+          </div>
+        </div>
+        <div v-if="organizations.length > 0">
+          <div class="row">
+            <div class="col-12">
+              <input
+                v-model="findString"
+                type="text"
+                :placeholder="$t('placeholderSearchByOrgs')"
+                class="form-control block find dark"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div
+                class="card"
+                v-for="organization in filterOrganization"
+                :key="organization.id"
+              >
+                <div class="card_img">
+                  <img src="~@/assets/avatar.jpg" />
+                </div>
+                <div class="card_body">
+                  <p>{{ organization.name }}</p>
+                  <p>№ {{ organization.id }}</p>
+                </div>
+                <div
+                  @click="showFullInformation(organization.id)"
+                  class="card_action"
+                >
+                  <ArrowRight></ArrowRight>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <minialert v-if="isShowAlertEdit"
+      ><p slot="title">
+        {{ $t("minialertEditOrg") }}
+      </p></minialert
+    >
+    <minialert v-if="isShowAlertDelete"
+      ><p slot="title">
+        {{ $t("minialertDeleteOrg") }}
+      </p></minialert
+    >
+    <minialert v-if="isError"
+      ><p slot="title">
+        {{ $t("minialertError") }}
+      </p></minialert
+    >
     <popup v-if="isShowFullInformation">
       <!-- Заголовок загрузки информации про одного пользователя -->
       <div
@@ -71,10 +146,10 @@
             <div
               v-for="team in teamsInOneOrganization"
               :key="team.id"
-              class="teams-list"
+              class="oneOrg"
             >
               <div>
-                <p>{{ $t("nameInanimate") }}: {{ team.name }}</p>
+                <h3>{{ $t("nameInanimate") }}: {{ team.name }}</h3>
                 <p>{{ team.description }}</p>
                 <p>
                   {{ $t("numberOfParticipants") }}: {{ team.maxUsersLimit }}
@@ -194,7 +269,9 @@
       <h3 v-if="isShowModalEditTeam" slot="header">
         {{ $t("editTeam") }} "{{ nameOfTeam }}"?
       </h3>
-      <div slot="exit" @click="cancelModal()" v-if="isShowModalEditTeam">×</div>
+      <div slot="exit" @click="cancelModal()" v-if="isShowModalEditTeam">
+        ×
+      </div>
       <div slot="body" v-if="isShowModalEditTeam">
         <form @submit.prevent="editTeam()">
           <div class="form-group">
@@ -273,60 +350,6 @@
         </form>
       </div>
     </popup>
-
-    <h2>
-      {{ $t("listOrganization") }}
-    </h2>
-    <div v-if="$apollo.queries.organizations.loading" class="wrapOfLoader">
-      <loader></loader>
-    </div>
-    <div v-if="!$apollo.queries.organizations.loading">
-      <h4 v-if="organizations.length == 0">
-        {{ $t("noOrg") }}
-      </h4>
-      <div v-if="organizations.length > 0">
-        <input
-          v-model="findString"
-          type="text"
-          :placeholder="$t('placeholderSearchByOrgs')"
-          class="form-control block"
-        />
-        <div
-          class="card"
-          v-for="organization in filterOrganization"
-          :key="organization.id"
-        >
-          <div class="card_img">
-            <img src="~@/assets/avatar.jpg" />
-          </div>
-          <div class="card_body">
-            <p>{{ organization.name }}</p>
-            <p>№ {{ organization.id }}</p>
-          </div>
-          <div
-            @click="showFullInformation(organization.id)"
-            class="card_action"
-          >
-            <ArrowRight></ArrowRight>
-          </div>
-        </div>
-      </div>
-    </div>
-    <minialert v-if="isShowAlertEdit"
-      ><p slot="title">
-        {{ $t("minialertEditOrg") }}
-      </p></minialert
-    >
-    <minialert v-if="isShowAlertDelete"
-      ><p slot="title">
-        {{ $t("minialertDeleteOrg") }}
-      </p></minialert
-    >
-    <minialert v-if="isError"
-      ><p slot="title">
-        {{ $t("minialertError") }}
-      </p></minialert
-    >
   </div>
 </template>
 
@@ -663,9 +686,18 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 .teams-list {
   border: 1px solid black;
   padding: 5px;
+}
+.oneOrg {
+  padding: 1%;
+  background: $violet;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: $white;
 }
 .wrapOfLoader {
   overflow: hidden;

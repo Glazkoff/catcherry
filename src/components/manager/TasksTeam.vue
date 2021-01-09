@@ -1,84 +1,142 @@
 <template>
-  <div class="aaa">
-    <breadcrumbs></breadcrumbs>
+  <div class="container">
+    <div class="row">
+      <div class="col-12">
+        <breadcrumbs></breadcrumbs>
+      </div>
+    </div>
     <div class="wrapOfLoader" v-if="$apollo.loading"><loader></loader></div>
-    <minialert v-if="queryError">
-      <p slot="title">{{ queryError }}</p>
-    </minialert>
     <div v-if="!$apollo.loading">
-      <h2>Бэклог заданий</h2>
-      <p v-if="backlog.length === 0">Нет задач в бэклоге</p>
-      <div v-for="task in backlog" :key="task.id" class="task">
-        <h3>{{ task.body.header }}</h3>
-        <p>{{ task.id }}</p>
-        <div class="task_body">
-          <p>{{ task.body.text }}</p>
-          <div :class="{ task_body_user: task.tasksUser !== null }">
-            <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
-            <div>
-              <p>Награда: +{{ task.body.points }} баллов</p>
-              <p v-if="task.tasksUser === null">Ответственный: не назначен</p>
-              <p v-if="task.tasksUser !== null">
-                Ответственный: {{ task.tasksUser.name }}
-                {{ task.tasksUser.surname }}
-              </p>
+      <div class="row">
+        <div class="col-4">
+          <h2 class="mb-4">{{ $t("task.backlogTask") }}</h2>
+          <p v-if="backlog.length === 0">
+            {{ $t("task.noTasksInTheBacklog") }}
+          </p>
+          <div v-for="task in backlog" :key="task.id" class="task">
+            <div class="container">
+              <div class="row">
+                <div class="col-12">
+                  <h3 class="mb-2">{{ task.body.header }} ({{ task.id }})</h3>
+                  <p>{{ task.body.text }}</p>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <div>
+                  <img
+                    :class="{ 'col-2': task.tasksUser !== null }"
+                    v-if="task.tasksUser !== null"
+                    src="@/assets/avatar.jpg"
+                  />
+                  <div :class="[task.tasksUser !== null ? 'col-10' : 'col-12']">
+                    <p>
+                      {{ $t("task.reward") }}: +{{
+                        $tc("pointsMsg", task.body.points)
+                      }}
+                    </p>
+                    <p v-if="task.tasksUser === null">
+                      {{ $t("task.responsible") }}:
+                      {{ $t("task.personNotAssigned") }}
+                    </p>
+                    <p v-if="task.tasksUser !== null">
+                      {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
+                      {{ task.tasksUser.surname }}
+                    </p>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      </div>
-      <h2>Готовые задания на проверку</h2>
-      <p v-if="toCheck.length === 0">Нет готовых задач на проверку</p>
-      <div v-for="task in toCheck" :key="task.id" class="task">
-        <h3>{{ task.body.header }}</h3>
-        <div class="task_body">
-          <p>{{ task.body.text }}</p>
-          <div>
-            <div class="task_body_user">
-              <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
-              <div>
-                <p>Награда: +{{ task.body.points }} баллов</p>
-                <p v-if="task.tasksUser !== null">
-                  Ответственный: {{ task.tasksUser.name }}
-                  {{ task.tasksUser.surname }}
-                </p>
+        <div class="col-4">
+          <h2 class="mb-4">{{ $t("task.completedTasksForReview") }}</h2>
+          <p v-if="toCheck.length === 0">
+            {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
+          </p>
+          <div v-for="task in toCheck" :key="task.id" class="task">
+            <div class="container">
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h3 class="mb-2">{{ task.body.header }} ({{ task.id }})</h3>
+                  <p>{{ task.body.text }}</p>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <img src="@/assets/avatar.jpg" class="col-2" />
+                <div class="col-10">
+                  <p>
+                    {{ $t("task.reward") }}:+{{
+                      $tc("pointsMsg", task.body.points)
+                    }}
+                  </p>
+                  <p v-if="task.tasksUser !== null">
+                    {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
+                    {{ task.tasksUser.surname }}
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <button
+                  class="btn btn-primary mb-2 block"
+                  @click="creditPoints(task)"
+                >
+                  {{ $t("task.toReadTheScores") }}
+                </button>
+                <button
+                  class="btn btn-danger mb-1 block"
+                  @click="sendForRevision(task)"
+                >
+                  {{ $t("task.toSendBackForRevision") }}
+                </button>
               </div>
             </div>
-            <button class="btn btn-alternate" @click="creditPoints(task)">
-              Зачесть баллы
-            </button>
-            <button class="btn btn-alternate" @click="sendForRevision(task)">
-              Отправить на доработку
-            </button>
           </div>
         </div>
-      </div>
-      <h2>Завершенные задачи</h2>
-      <p v-if="done.length === 0">Нет завершенных задач</p>
-      <div v-for="task in done" :key="task.id" class="task">
-        <h3>{{ task.body.header }}</h3>
-        <div class="task_body">
-          <p>{{ task.body.text }}</p>
-          <div>
-            <div class="task_body_user">
-              <img v-if="task.tasksUser !== null" src="@/assets/avatar.jpg" />
-              <div>
-                <p>Награда: +{{ task.body.points }} баллов</p>
-                <p v-if="task.tasksUser !== null">
-                  Ответственный: {{ task.tasksUser.name }}
-                  {{ task.tasksUser.surname }}
-                </p>
+        <div class="col-4">
+          <h2 class="mb-4">{{ $t("task.completedTasks") }}</h2>
+          <p v-if="done.length === 0">{{ $t("task.noCompletedTasks") }}</p>
+          <div v-for="task in done" :key="task.id" class="task">
+            <div class="container">
+              <div class="row mb-4">
+                <div class="col-12">
+                  <h3 class="mb-2">{{ task.body.header }}</h3>
+                  <p>{{ task.body.text }}</p>
+                </div>
+              </div>
+              <div class="row mb-4">
+                <img
+                  v-if="task.tasksUser !== null"
+                  src="@/assets/avatar.jpg"
+                  class="col-2"
+                />
+                <div class="col-10">
+                  <p>
+                    {{ $t("task.reward") }}: +{{
+                      $tc("pointsMsg", task.body.points)
+                    }}
+                  </p>
+                  <p v-if="task.tasksUser !== null">
+                    {{ $t("task.responsible") }}: {{ task.tasksUser.name }}
+                    {{ task.tasksUser.surname }}
+                  </p>
+                </div>
+              </div>
+              <div class="row">
+                <button
+                  class="btn btn-danger block mb-1"
+                  @click="deleteTask(task)"
+                >
+                  {{ $t("task.deleteTask") }}
+                </button>
               </div>
             </div>
-            <button class="btn btn-alternate" @click="deleteTask(task)">
-              Удалить задачу
-            </button>
           </div>
         </div>
       </div>
     </div>
     <minialert v-if="isShowAlert">
       <p slot="title">
-        Вы успешно зачислили баллы пользователю
+        {{ $t("task.youHaveSuccessfullyCreditedPointsToTheUser") }}
       </p>
     </minialert>
     <minialert v-if="isShowAlertError">
@@ -88,13 +146,16 @@
     </minialert>
     <minialert v-if="isShowAlertDelete">
       <p slot="title">
-        Вы успешно удалили задачу
+        {{ $t("task.youHaveSuccessfullyDeletedTheTask") }}
       </p>
     </minialert>
     <minialert v-if="isShowAlertSendForRevision">
       <p slot="title">
-        Вы успешно вернули задачу на доработку
+        {{ $t("task.youHaveSuccessfullyReturnedTheTaskForRevision") }}
       </p>
+    </minialert>
+    <minialert v-if="queryError">
+      <p slot="title">{{ queryError }}</p>
     </minialert>
   </div>
 </template>
@@ -104,19 +165,19 @@ import minialert from "@/components/MiniAlert.vue";
 import Loader from "@/components/Loader.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
-  ALL_TASKS_QUERY,
-  EDIT_TASK_QUERY,
-  CARGE_POINTS_QUERY,
+  ALL_TASKS_IN_TEAM_QUERY,
+  CHANGE_STATUS_TASK_QUERY,
+  CREATE_POINTS_OPERATION,
   DELETE_TASK_QUERY,
-  ADD_NOTIFICATION_QUERY
+  CREATE_NOTIFICATION
 } from "@/graphql/queries";
 
 export default {
   components: { minialert, Loader, breadcrumbs },
   apollo: {
     // массив задач с назначенными ответственными
-    allTasks: {
-      query: ALL_TASKS_QUERY,
+    allTasksInOneTeam: {
+      query: ALL_TASKS_IN_TEAM_QUERY,
       error(error) {
         this.queryError = JSON.stringify(error.message);
       },
@@ -148,30 +209,31 @@ export default {
     creditPoints(task) {
       this.$apollo
         .mutate({
-          mutation: CARGE_POINTS_QUERY,
+          mutation: CREATE_POINTS_OPERATION,
           variables: {
-            pointAccountId: +task.tasksUser.id,
+            userId: +task.tasksUser.id,
             delta: +task.body.points,
-            operationDescription: `За выполненное задание ${task.body.header}`
+            operationDescription: `За выполненное задание "${task.body.header}"`
           }
         })
         .then(data => {
           console.log(data);
           this.$apollo
             .mutate({
-              mutation: EDIT_TASK_QUERY,
+              mutation: CHANGE_STATUS_TASK_QUERY,
               variables: {
                 id: task.id,
                 status: "Готово"
               },
               update: cache => {
                 let data = cache.readQuery({
-                  query: ALL_TASKS_QUERY,
+                  query: ALL_TASKS_IN_TEAM_QUERY,
                   variables: { teamId: this.$route.params.id }
                 });
-                data.allTasks.find(el => el.id === task.id).status = "Готово";
+                data.allTasksInOneTeam.find(el => el.id === task.id).status =
+                  "Готово";
                 cache.writeQuery({
-                  query: ALL_TASKS_QUERY,
+                  query: ALL_TASKS_IN_TEAM_QUERY,
                   variables: { teamId: this.$route.params.id },
                   data
                 });
@@ -182,20 +244,25 @@ export default {
               let notification = {
                 body: {
                   header: "Начисление баллов",
-                  text: `Вам было начислено ${task.body.points} балла(ов) за выполнение задания "${task.body.header}"`
+                  text: `Вам было начислено ${this.$tc(
+                    "pointsMsg",
+                    task.body.points
+                  )} за выполнение задания "${task.body.header}"`
                 },
                 authorId: this.$store.getters.decodedToken.id,
-                teamId: this.$route.params.id,
-                forAllUsers: task.tasksUser.id
+                userId: [+task.tasksUser.id],
+                typeId: 20,
+                endTime: new Date(new Date() + 365 * 24 * 60 * 60 * 1000)
               };
               this.$apollo
                 .mutate({
-                  mutation: ADD_NOTIFICATION_QUERY,
+                  mutation: CREATE_NOTIFICATION,
                   variables: {
                     body: notification.body,
                     authorId: notification.authorId,
-                    teamId: +notification.teamId,
-                    forAllUsers: +notification.forAllUsers
+                    typeId: notification.typeId,
+                    endTime: notification.endTime,
+                    userId: notification.userId
                   }
                 })
                 .then(data => {
@@ -232,20 +299,20 @@ export default {
     sendForRevision(task) {
       this.$apollo
         .mutate({
-          mutation: EDIT_TASK_QUERY,
+          mutation: CHANGE_STATUS_TASK_QUERY,
           variables: {
             id: task.id,
             status: "Запланировано"
           },
           update: cache => {
             let data = cache.readQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id }
             });
-            data.allTasks.find(el => el.id === task.id).status =
+            data.allTasksInOneTeam.find(el => el.id === task.id).status =
               "Запланировано";
             cache.writeQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id },
               data
             });
@@ -275,13 +342,15 @@ export default {
           },
           update: cache => {
             let data = cache.readQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id }
             });
-            let index = data.allTasks.findIndex(el => el.id == task.id);
-            data.allTasks.splice(index, 1);
+            let index = data.allTasksInOneTeam.findIndex(
+              el => el.id == task.id
+            );
+            data.allTasksInOneTeam.splice(index, 1);
             cache.writeQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id },
               data
             });
@@ -305,19 +374,25 @@ export default {
   },
   computed: {
     backlog() {
-      return this.allTasks.filter(el => {
-        return el.status === "Запланировано";
-      });
+      if (!this.allTasksInOneTeam !== undefined) {
+        return this.allTasksInOneTeam.filter(el => {
+          return el.status === "Запланировано";
+        });
+      } else return [];
     },
     toCheck() {
-      return this.allTasks.filter(el => {
-        return el.status === "На проверке";
-      });
+      if (!this.allTasksInOneTeam !== undefined) {
+        return this.allTasksInOneTeam.filter(el => {
+          return el.status === "На проверке";
+        });
+      } else return [];
     },
     done() {
-      return this.allTasks.filter(el => {
-        return el.status === "Готово";
-      });
+      if (!this.allTasksInOneTeam !== undefined) {
+        return this.allTasksInOneTeam.filter(el => {
+          return el.status === "Готово";
+        });
+      } else return [];
     }
   }
 };
@@ -326,40 +401,18 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
-.aaa {
-  padding: 3%;
+@import "@/styles/_grid.scss";
+.main_tasks {
+  padding: 2%;
 }
 .task {
   padding: 1%;
   background: $violet;
   margin-bottom: 1rem;
   border-radius: 10px;
-  .btn {
-    margin-top: 5%;
-  }
-  &_body {
-    display: grid;
-    grid-template-columns: 60% 30%;
-    grid-column-gap: 10%;
-    div {
-      align-self: start;
-      p {
-        color: $gray_4;
-        font-size: 16px;
-        line-height: 18px;
-        padding: 0;
-        margin: 0;
-      }
-    }
-    &_user {
-      display: flex;
-      align-items: center;
-      img {
-        width: 15%;
-        border-radius: 100%;
-        margin-right: 5%;
-      }
-    }
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  img {
+    border-radius: 100%;
   }
 }
 .wrapOfLoader {

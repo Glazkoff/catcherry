@@ -1,5 +1,5 @@
 <template>
-  <div class="adminPanel">
+  <div>
     <router-view></router-view>
   </div>
 </template>
@@ -11,8 +11,5 @@ export default {};
 <style lang="scss">
 * {
   box-sizing: border-box;
-}
-.adminPanel {
-  padding: 2%;
 }
 </style>

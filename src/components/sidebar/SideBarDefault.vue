@@ -114,7 +114,13 @@
           </div>
         </div>
       </router-link>
-      <router-link :to="{ name: 'Dashboard' }" active-class="nav-checked">
+      <router-link
+        :to="{
+          name: 'Dashboard',
+          params: { id: $store.getters.decodedToken.id }
+        }"
+        active-class="nav-checked"
+      >
         <div class="side-bar__nav-list__nav-element">
           <div class="side-bar__nav-list__nav-element__icon">
             <ProfileIcon></ProfileIcon>

@@ -4,23 +4,32 @@
 
 // Типографика
 h1 {
-  font-size: 38px;
-  line-height: 45.6px;
+  font-size: 1.5rem;
   font-family: Lato;
   font-weight: 500;
 }
 
 h2 {
-  font-size: 28px;
-  line-height: 34px;
+  font-size: 1.125rem;
   font-family: Lato;
   font-weight: 500;
 }
 
 h3 {
   font-weight: 500;
-  font-size: 21px;
-  line-height: 25px;
+  font-size: 1rem;
+  font-family: Lato;
+}
+
+h4 {
+  font-weight: 500;
+  font-size: 0.75rem;
+  font-family: Lato;
+}
+
+h5 {
+  font-weight: 500;
+  font-size: 0.5rem;
   font-family: Lato;
 }
 
@@ -28,24 +37,21 @@ p {
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 0.875rem;
 }
 
 small {
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 12px;
-  line-height: 14px;
+  font-size: 0.75rem;
 }
 
 a {
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
-  line-height: 19px;
+  font-size: 0.875rem;
   text-decoration: underline;
   color: $black;
 }
@@ -57,60 +63,77 @@ a {
 // Кнопки
 .btn {
   display: block;
-  line-height: 18px;
   border-radius: 8px;
   cursor: pointer;
-  padding: 1rem 4rem;
+  padding: 1rem 3rem;
   font-family: Roboto;
   font-style: normal;
   font-weight: 500;
-  font-size: 16px;
+  font-size: 1rem;
   text-align: center;
-}
-
-.btn-primary {
-  color: $white;
-  background: $violet_2;
-  border: 1px solid $violet_2;
-  &:hover {
-    background: $violet_3;
-  }
-  &:disabled {
-    background: $violet;
-    color: $gray_3;
-  }
-}
-.btn-alert {
-  color: $red;
-  background: $violet;
-  border: 1px solid $red;
-  &:hover {
+  &-primary {
+    color: $white;
     background: $violet_2;
-  }
-  &:disabled {
-    background: $violet;
-    color: $gray_3;
-  }
-}
+    border: 1px solid $violet_2;
 
-.btn-alternate {
-  color: $violet_2;
-  background: transparent;
-  border: 1px solid $violet_2;
-  &:hover {
-    color: $violet_3;
-    border: 1px solid $violet_3;
-  }
-  &:disabled {
-    color: $violet;
-    border: 1px solid $violet;
-  }
-}
+    &:hover {
+      background: $violet_3;
+    }
 
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
+    &:disabled {
+      background: $violet;
+      color: $gray;
+    }
+  }
+  &-alternate {
+    color: $violet_2;
+    background: transparent;
+    border: 1px solid $violet_2;
+
+    &:hover {
+      color: $violet_3;
+      border: 1px solid $violet_3;
+    }
+
+    &:disabled {
+      color: $violet;
+      border: 1px solid $violet;
+    }
+  }
+  &-link {
+    color: $violet_2;
+    background: transparent;
+    text-decoration: underline;
+    border: 0px solid red;
+
+    &:hover {
+      color: $violet_3;
+    }
+
+    &:disabled {
+      color: $violet;
+    }
+  }
+  &-danger {
+    color: $red;
+    background: transparent;
+    border: 1px solid $red;
+
+    &:hover {
+      color: $bright_red;
+      border: 1px solid $bright_red;
+    }
+
+    &:disabled {
+      color: $dark_red;
+      border: 1px solid $dark_red;
+    }
+  }
+  &-group {
+    display: flex;
+    justify-content: space-around;
+    width: 100%;
+  }
 }
 
 .notification {
@@ -119,9 +142,9 @@ a {
   border-radius: 10px;
   padding: 1.5rem 2.4rem;
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
-  & .footer small{
+  & .footer small {
     display: flex;
-    color: $gray_3;
+    color: $gray;
   }
 }
 
@@ -131,66 +154,31 @@ a {
   box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
   padding: 1%;
   display: flex;
+  justify-content: space-between;
   margin: 1% 0%;
   align-items: center;
+  cursor: pointer;
   &_img {
     width: 5%;
-    border-radius: 100%;
-    margin-right: 3%;
     img {
       width: 100%;
       border-radius: 100%;
     }
   }
   &_body {
-    color: $white;
-    width: 85%;
-    p {
-      padding: 0;
-      margin: 0;
-      line-height: 1;
-      font-size: 18px;
-      font-weight: 400;
-    }
-    p:first-child {
-      font-size: 28px;
-      font-weight: 500;
-    }
-    p:last-child {
-      color: $gray_4;
-      font-weight: 400;
-      font-size: 15px;
-      margin-top: 10px;
-    }
-  }
-  &_body_max {
-    color: $white;
-    width: 60%;
-    p {
-      padding: 0;
-      margin: 0;
-      line-height: 1;
-      font-size: 18px;
-      font-weight: 400;
-    }
-    p:first-child {
-      font-size: 28px;
-      font-weight: 500;
-    }
-    p:last-child {
-      color: $gray_4;
-      font-weight: 400;
-      font-size: 15px;
-      margin-top: 10px;
+    width: 88%;
+    &_min {
+      color: $white;
+      width: 60%;
     }
   }
   &_action {
     width: 5%;
     cursor: pointer;
-  }
-  &_action_max {
-    width: 20%;
-    cursor: pointer;
+    &_max {
+      width: 20%;
+      cursor: pointer;
+    }
   }
   &_more {
     border: 2px solid $violet;
@@ -199,7 +187,7 @@ a {
     grid-template-columns: 40% 55%;
     grid-column-gap: 5%;
     .history {
-      color: $gray_3;
+      color: $gray;
       margin: 0 0 5px 0;
       padding: 0;
     }
@@ -224,46 +212,66 @@ a {
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 16px;
-  line-height: 20px;
+  font-size: 0.875rem;
+  line-height: 1.25rem;
 }
 
 .form-control {
   display: block;
   position: relative;
-  border: 1px solid $gray_3;
+  border: 1px solid $gray;
   background: $white;
-  padding: 0.5rem 1rem;
+  padding: 1rem 1.1875rem;
   border-radius: 10px;
   box-shadow: 0px 4px 10px 3px rgba(0, 0, 0, 0.11);
   font-family: Lato;
   font-style: normal;
   font-weight: normal;
-  font-size: 21px;
-  line-height: 25px;
+  font-size: 1rem;
+  line-height: 1.1875rem;
   &:focus {
     border: 1px solid $bright_violet !important;
     color: $bright_violet !important;
     outline: none;
   }
+  &-touch {
+    border: 1px solid $bright_violet;
+    color: $bright_violet;
+  }
 }
 
-.form-control-touch {
-  border: 1px solid $bright_violet;
-  color: $bright_violet;
+.dark {
+  background: $violet_2;
+  border-color: $violet_2;
+  color: $white;
 }
 
-.form-control-danger {
-  border: 1px solid $red;
+.is_invalid {
+  border-color: $red;
+  padding-right: calc(1.5em + 0.75rem);
+  background-image: url("~@/assets/svg/ui-kit/invalid.svg");
+  background-repeat: no-repeat;
+  background-position: right calc(0.375em + 0.1875rem) center;
+  background-size: 1.25rem 1.25rem;
+}
+
+.find {
+  padding-left: 3rem;
+  background-image: url("~@/assets/svg/ui-kit/find.svg");
+  background-repeat: no-repeat;
+  background-position: left 1rem center;
+  background-size: 1.5rem 1.5rem;
 }
 
 .form-text {
   font-size: 0.8rem;
   color: $bright_violet;
+  font-family: Lato;
 }
 
 .box-label {
   display: inline-block;
+  font-family: Lato;
   margin: 5px;
   cursor: pointer;
   input[type="checkbox"] {
@@ -276,7 +284,7 @@ a {
     width: 1rem;
     display: inline-block;
   }
-  #checkbox:checked+.box::before {
+  #checkbox:checked + .box::before {
     content: url("~@/assets/check-square.svg");
     animation: checkanimate 200ms;
   }
@@ -296,6 +304,17 @@ a {
   }
 }
 
+// Классы для цветов
+.red,
 .danger {
   color: $red;
+}
+.gray {
+  color: $gray;
+}
+.bright_violet {
+  color: $bright_violet;
+}
+.white {
+  color: $white;
 }

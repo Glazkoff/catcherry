@@ -34,6 +34,11 @@ type User {
   userInTeam: UserInTeam
 }
 
+type UserInNewTeam {
+  id: ID!
+  userId: ID
+}
+
 type Organization {
   id: ID!
   name: String!
@@ -101,7 +106,8 @@ type Notification {
   id: ID!
   body: BodyNotification!
   typeId: Int!
-  authorId: Int!
+  authorId: Int
+  notificationAuthor: User
   userId: [Int]
   ReadOrNot: [UserReadNotification]
   endTime: String!
@@ -126,8 +132,8 @@ type UserIdForNotification {
 type PointsUser{
   id: ID!
   userId: Int!
-  pointQuantity: Int!
-  pointsOperation: [PointOperations]
+  pointQuantity: Int
+  userPointsOperation: [PointOperations]
   createdAt: String!
   updatedAt: String!
 }
@@ -135,8 +141,9 @@ type PointsUser{
 type PointOperations{
   id: ID!
   delta: Int!
-  operationDescription: String
-  createdAt: String
+  pointAccountId: ID!
+  operationDescription: String!
+  createdAt: String!
 }
 
 type Post {
@@ -232,6 +239,9 @@ type Query {
   
   posts: [Post]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   post(id: ID!): Post @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+
+
+  roles: [Role]
   
   likesOfPostFromUser (userId:ID!): [LikeOfPost]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   likesOfCommentFromUser (userId:ID!): [LikeOfComment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -240,17 +250,22 @@ type Query {
   oneUserInTeams(userId: ID!): [UserInTeam!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   raitingInTeams (teamId:ID!): [UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   personalUserStatistics(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  teamsInOneOrganization(organizationId: ID!): [Team] 
+  teamsInOneOrganization(organizationId: ID!): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   tasks (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   backlog (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   allTasks(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
+  allTasksInOneTeam(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  allUserTasks(id:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+
   statisticsNewUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsNewOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsDeleteUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsDeleteOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+
+  usersInNewTeams: Team
 
 }
 
@@ -308,16 +323,14 @@ type Mutation {
   revokeRequst(id: ID!): [Int]!
   rejectRequst(id: ID!): [Int]!
 
-  createPointOperation(pointAccountId: ID!, delta: Int!, operationDescription: String!): PointsUser!	 
-  deletePointOperation(id: ID!): Int!	
-  deletePoints(id: ID!): Int!
-  updatePoints(id: ID!, pointQuantity: Int!): [Int]!
-  updatePointOperation(id: ID!, pointAccountId: ID!, delta: Int!): [Int]!
+  createPointOperation(userId: ID!, delta: Int!, operationDescription: String!): PointOperations!
 
   createTask(teamId: ID, userId: ID, header: String, text: String, points: Int, status: String): Task!
-  updateTask(id: ID!, status: String): Task!
+  updateStatusTask(id: ID!, status: String): Task!
   addUserToTask(id: ID!, userId: ID): Task!
   deleteTask(id: ID!): Int!
+
+  addUserInNewTeam(id: ID!, userId: ID!): UserInNewTeam!
 }
 `;
 

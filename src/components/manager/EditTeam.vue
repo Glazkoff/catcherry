@@ -1,5 +1,6 @@
 <template>
-  <div class="flexCont">
+  <div class="flexCont" v-if="!this.$apollo.loading">
+    <breadcrumbs></breadcrumbs>
     <h3>{{ $t("editTeam") }}</h3>
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == id">
@@ -7,11 +8,14 @@
       </div>
     </div>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import { TEAM_IN_ORG_QUERY, UPDATE_TEAMS_QUERY } from "@/graphql/queries";
+import breadcrumbs from "@/components/BreadCrumbs.vue";
 import EditForm from "@/components/manager/EditForm";
+import loader from "@/components/Loader.vue";
 export default {
   apollo: {
     // Массив команд организации
@@ -19,7 +23,7 @@ export default {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
-          organizationId: 23
+          organizationId: +this.$route.params.id
         };
       }
     }
@@ -30,7 +34,9 @@ export default {
     };
   },
   components: {
-    EditForm
+    EditForm,
+    breadcrumbs,
+    loader
   },
   methods: {
     // Метод для редактирования команды; сохраняет внесенные пользователем изменения

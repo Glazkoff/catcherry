@@ -9,8 +9,8 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       PointsOperations.belongsTo(models.Points, {
-        foreignKey: "pointAccountId"
-        // as: "points"	        // as: "points"
+        foreignKey: "pointAccountId",
+        as: "userPointsOperation"
       });
     }
   }

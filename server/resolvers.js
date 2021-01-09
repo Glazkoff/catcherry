@@ -162,6 +162,8 @@ module.exports = {
     // Получаем список всех пользователей
     users: (parent, args, { db }) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
+    usersInNewTeams: (parent, args, { db }) =>
+      db.UsersInTeams.findAll({ order: [["id", "ASC"]] }),
     // Получаем данные про одного пользователя
     user: (parent, args, { db }) => {
       return db.Users.findOne({
@@ -233,6 +235,10 @@ module.exports = {
             model: db.ReadNotification,
             as: "ReadOrNot",
             where: { userId: args.userId, readOrNot: false }
+          },
+          {
+            model: db.Users,
+            as: "notificationAuthor"
           }
         ],
         where: {
@@ -272,6 +278,9 @@ module.exports = {
       return db.LikesOfComments.findAll({
         where: { userId: args.userId }
       });
+    },
+    roles: (parent, args, { db }) => {
+      return db.Roles.findAll({});
     },
 
     comments: (parent, args, { db }) =>
@@ -323,16 +332,23 @@ module.exports = {
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
-    getPointsUser: (parent, args, { db }) =>
-      db.Points.findOne({
-        where: { userId: args.userId },
-        order: [["id", "ASC"]]
-      }),
-    getOperationPointsUser: (parent, args, { db }) =>
-      db.PointsOperations.findAll({
-        where: { pointAccountId: args.pointAccountId },
-        order: [["id", "ASC"]]
-      }),
+
+    // Получение баллов и информации о них для пользователя по id
+    getPointsUser: async (parent, args, { db }) => {
+      let resultPoints = await db.Points.findOne({
+        where: { userId: args.userId }
+      });
+      let resultPointsOperation = await db.PointsOperations.findAll({
+        where: { pointAccountId: resultPoints.id },
+        order: [["id", "DESC"]],
+        limit: +args.limit == 0 ? undefined : args.limit
+      });
+
+      resultPoints.userPointsOperation = resultPointsOperation;
+
+      return resultPoints;
+    },
+
     pointsLastWeek: async (parent, args, { db }) => {
       let operationLastWeek = await db.PointsOperations.findAll({
         where: {
@@ -361,30 +377,7 @@ module.exports = {
       }
       return [pointsLastWeek, points2LastWeek];
     },
-    tasks: (parent, { teamId }, { db }) =>
-      db.Tasks.findAll({
-        where: { teamId: teamId, userId: { [Op.ne]: null } },
-        order: [["id", "DESC"]],
-        include: [
-          {
-            model: db.Users,
-            as: "tasksUser",
-            include: {
-              model: db.Points,
-              as: "userPoints"
-            }
-          },
-          {
-            model: db.Teams,
-            as: "tasksTeam",
-            include: {
-              model: db.UsersInTeams,
-              as: "team"
-            }
-          }
-        ]
-      }),
-    allTasks: (parent, { teamId }, { db }) =>
+    allTasksInOneTeam: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId },
         order: [["id", "DESC"]],
@@ -407,9 +400,11 @@ module.exports = {
           }
         ]
       }),
-    backlog: (parent, { teamId }, { db }) =>
+    allUserTasks: (parent, { id }, { db }) =>
       db.Tasks.findAll({
-        where: { teamId: teamId, userId: null },
+        where: {
+          [Op.or]: [{ userId: id }, { userId: null }]
+        },
         order: [["id", "DESC"]],
         include: [
           {
@@ -649,6 +644,13 @@ module.exports = {
           }
         }
       ),
+    addUserInNewTeam: (parent, { id, userId }, { db }) =>
+      db.UsersInTeams.create({
+        userId: userId,
+        teamId: id,
+        status: "Принят",
+        roleId: 10
+      }),
     // Удаляем пользователя
     deleteUser: (parent, args, { db }) =>
       db.Users.destroy({
@@ -876,48 +878,7 @@ module.exports = {
           id: args.id
         }
       }),
-    /*
-      [Ниже] Мутации работы с баллами (PointsOperstion)     
-    */
-    //Изменить операцию с баллами (если ввели неправильное число баллов, его можно исправить)
-    updatePointOperation: (parent, { pointAccountId, delta, id }, { db }) =>
-      db.PointsOperations.update(
-        {
-          pointAccountId: pointAccountId,
-          delta: delta
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    //Напрямую изменить количество баллов у конкретного пользователя
-    updatePoints: (parent, { pointQuantity, id }, { db }) =>
-      db.PointsOperations.update(
-        {
-          pointQuantity: pointQuantity
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    //Удалить операцию с баллами
-    deletePointOperation: (parent, args, { db }) =>
-      db.PointsOperations.destroy({
-        where: {
-          id: args.id
-        }
-      }),
-    //Удалить счет пользователя
-    deletePoints: (parent, args, { db }) =>
-      db.Points.destroy({
-        where: {
-          id: args.id
-        }
-      }),
+
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
@@ -958,30 +919,34 @@ module.exports = {
     /*
       [Ниже] Мутации работы с баллами     
     */
+
+    // Добавление  баллов
     createPointOperation: async (
       parent,
-      { pointAccountId, delta, operationDescription },
+      { userId, delta, operationDescription },
       { db }
     ) => {
       let total = await db.Points.findOne({
-        where: { id: pointAccountId }
+        where: { userId: userId }
       });
-      db.Points.update(
+      await db.Points.update(
         {
-          pointQuantity: total.pointQuantity + delta
+          pointQuantity: +total.pointQuantity + delta
         },
         {
           where: {
-            id: pointAccountId
+            userId: userId
           }
         }
       );
-      return db.PointsOperations.create({
-        pointAccountId: pointAccountId,
+      let creation = await db.PointsOperations.create({
+        pointAccountId: total.id,
         delta: delta,
         operationDescription: operationDescription
       });
+      return creation;
     },
+
     /*
       [Ниже] Мутации работы с командами     
     */
@@ -1000,7 +965,7 @@ module.exports = {
         body: { header: header, text: text, points: points },
         status: status
       }),
-    updateTask: (parent, { id, status }, { db }) =>
+    updateStatusTask: (parent, { id, status }, { db }) =>
       db.Tasks.update(
         {
           status: status
