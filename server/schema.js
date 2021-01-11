@@ -150,8 +150,7 @@ type Post {
   id: ID!
   body: BodyPost!
   authorId: Int!
-  organizationId: Int!
-  forAllTeam: Boolean
+  userId: [Int]
   likesOfPost: [LikeOfPost]
   createdAt: String!
   updatedAt: String!
@@ -237,8 +236,8 @@ type Query {
   getPointsUser(userId: ID!, limit: Int): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   pointsLastWeek(id: ID!): [Int]
   
-  posts: [Post]!
-  post(id: ID!): Post
+  posts(userId: ID!): [Post]!
+  post(id: ID!, userId: ID!): Post
 
   roles: [Role]
   
@@ -278,7 +277,7 @@ type Mutation {
   deleteNotification(id: ID!): Int!
   updateNotification(notificationId: ID!, userId: ID! checkNotification: Boolean): [Int]!
 
-  createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
+  createPost(body: PostBody!, authorId: Int!, userId: [Int]): Post!
   deletePost(id: ID!): Int!
  
   addLikeOfPost(userId: ID!, postId: ID!): LikeOfPost!

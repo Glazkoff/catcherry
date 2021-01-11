@@ -101,7 +101,7 @@ db.sequelize
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
-      // addAllTables(false);
+      // addAllTables(true);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
@@ -150,7 +150,7 @@ async function addAllTables(destroyTable) {
     db.UsersInTeams.destroy({ where: {} });
   }
   //Можно менять количество заполнений в переменной quantity
-  let quantity = 1;
+  let quantity = 10;
   for (let index = 0; index < quantity; index++) {
     //Тип организации
     let type = await db.OrganizationsTypes.create({
@@ -244,8 +244,11 @@ async function addAllTables(destroyTable) {
         text: faker.lorem.paragraph()
       },
       authorId: user.dataValues.id,
-      organizationId: organization.dataValues.id,
-      forAllTeam: faker.random.boolean()
+      userId: [
+        user.dataValues.id,
+        user.dataValues.id + 1,
+        user.dataValues.id + 2
+      ]
     });
     let likesOfPost = await db.LikesOfPosts.create({
       userId: user.dataValues.id,
@@ -287,11 +290,6 @@ async function addAllTables(destroyTable) {
     //   userId: user.dataValues.id,
     //   commentId: comment.dataValues.id
     // });
-    //Лайки для постов
-    let likesofposts = await db.LikesOfPosts.create({
-      userId: user.dataValues.id,
-      postId: post.dataValues.id
-    });
   }
 }
 /* TODO: рекомендую использовать следующие библиотеки

@@ -43,7 +43,7 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 
-.sticky{
+.sticky {
   position: sticky;
   background-color: $dark_blue;
   z-index: 7000;
