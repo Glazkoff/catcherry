@@ -1,12 +1,15 @@
 <template>
   <div class="wrapOfList">
-    <div class="list">
+    <div class="list" v-if="!isEmpty">
       <notification
         v-for="notification in notificationsForUser"
         :key="notification.id"
         :notification="notification"
         @check="onCheckNotification"
       ></notification>
+    </div>
+    <div v-else class="list">
+      <h3>Оповещений не найдено</h3>
     </div>
   </div>
 </template>
@@ -66,6 +69,17 @@ export default {
         .catch(error => {
           console.error(error);
         });
+    }
+  },
+  computed: {
+    isEmpty() {
+      if (this.notificationsForUser == undefined) {
+        return true;
+      } else {
+        if (this.notificationsForUser.length == 0) {
+          return true;
+        } else return false;
+      }
     }
   }
 };
