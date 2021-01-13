@@ -8,15 +8,19 @@
       </div>
     </div>
   </div>
-  <div v-else class="wrapOfLoader">
+  <div v-else>
     <Loader></Loader>
   </div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
 import { GET_POINTS_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "PointsQuantity",
+  components: {
+    Loader
+  },
   apollo: {
     getPointsUser: {
       query: GET_POINTS_USER_QUERY,

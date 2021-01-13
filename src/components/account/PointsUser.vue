@@ -10,7 +10,7 @@
     <PointQuantity class="sticky w-100"></PointQuantity>
     <PointOperation :limit="0" ref="pOperation"></PointOperation>
   </div>
-  <div v-else class="wrapOfLoader">
+  <div v-else>
     <Loader></Loader>
   </div>
 </template>
