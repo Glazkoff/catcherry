@@ -361,7 +361,7 @@
 <script>
 import popup from "@/components/Popup.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
-import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
 import minialert from "@/components/MiniAlert.vue";
 import Loader from "@/components/Loader.vue";
 import { required } from "vuelidate/lib/validators";

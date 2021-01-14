@@ -354,7 +354,7 @@
 </template>
 
 <script>
-import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import popup from "@/components/Popup.vue";
 import Loader from "@/components/Loader.vue";
