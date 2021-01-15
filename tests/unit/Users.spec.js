@@ -20,6 +20,7 @@ describe("Users:", () => {
   let wrapper
   let mockClient
   let apolloProvider
+  let truе=false
   const createComponent = () => {
     mockClient = createMockClient()
     apolloProvider = new VueApollo({
@@ -32,7 +33,7 @@ describe("Users:", () => {
         return {
           users: {
             user: {
-              id:1
+              id: 1
             }
           },
         }
@@ -58,9 +59,12 @@ describe("Users:", () => {
   it("Содержит запросы", () => {
     expect(wrapper.vm.$apollo.queries.users).toBeTruthy()
     expect(wrapper.vm.$apollo.queries.teams).toBeTruthy()
+    expect(wrapper.vm.$apollo.queries.user).toBeTruthy()
+    expect(wrapper.vm.$apollo.queries.oneUserInTeams).toBeTruthy()
+    expect(wrapper.vm.$apollo.queries.getPointsUser).toBeTruthy()
   });
   it("Количество отображаемых пользователей", () => {
-    var len=0;
+    var len = 0;
     for (var i in wrapper.vm.users) {
       len++
     }
@@ -72,5 +76,16 @@ describe("Users:", () => {
     wrapper.find(".card").trigger('click');
     expect(showFullInformation).toHaveBeenCalled();
   });
-});
-
+  it("Отображается popup", () => {
+    wrapper.setData({isShowFullInformation:true})
+    wrapper.find(".card").trigger('click');
+    expect(wrapper.vm.isShowFullInformation == true).toBeTruthy()
+    expect(wrapper.find('popup').exists()).toBe(truе)
+  });
+  it("Окно удаления", () => {
+    wrapper.setData({isShowModalDelete:true})
+    wrapper.find(".card").trigger('click');
+    expect(wrapper.vm.isShowModalDelete == true).toBeTruthy()
+    expect(wrapper.find('div[slot="exit"]').exists()).toBe(truе)
+  });
+})

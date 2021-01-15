@@ -1,22 +1,25 @@
 import Vuelidate from 'vuelidate'
 import Vuex from 'vuex'
-import { shallowMount, createLocalVue } from "@vue/test-utils";
+import { shallowMount ,mount, createLocalVue } from "@vue/test-utils";
 import { createMockClient } from 'mock-apollo-client'
-import Account from "@/components/account/Account.vue";
+import TasksTeam from "@/components/manager/TasksTeam.vue";
 import VueApollo from 'vue-apollo'
 import FingerprintJS from '@fingerprintjs/fingerprintjs';
+import VueRouter from 'vue-router'
 
 const localVue = createLocalVue()
 localVue.use(Vuelidate)
 localVue.use(Vuex)
 localVue.use(VueApollo)
 localVue.use(FingerprintJS)
+localVue.use(VueRouter)
+const router = new VueRouter()
 
 const fs = require('fs');
 var locale = "ru";
 var data = JSON.parse(fs.readFileSync("src/i18n/locales/"+locale+".json"));
 
-describe("Users:", () => {
+describe("TasksTeam:", () => {
   let wrapper
   let mockClient
   let apolloProvider
@@ -25,9 +28,15 @@ describe("Users:", () => {
     apolloProvider = new VueApollo({
       defaultClient: mockClient,
     })
-    wrapper = shallowMount(Account, {
+    wrapper = shallowMount(TasksTeam, {
       localVue,
+      router,
       apolloProvider,
+      data() {
+        return {
+          
+        }
+      },
       stubs: ['router-link'],
       mocks: {
         $t: (msg) => {
@@ -43,11 +52,18 @@ describe("Users:", () => {
   }
   createComponent();
   it("Правильно инициализируется", () => {
-//    expect(wrapper.isVueInstance()).toBeTruthy();
-//    expect(wrapper.is(Account)).toBeTruthy();
-//    //expect(wrapper.vm.$apollo.queries.users).toBeTruthy()
-//    //expect(wrapper.vm.$apollo.queries.teams).toBeTruthy()
+    expect(wrapper.isVueInstance()).toBeTruthy();
+    expect(wrapper.is(TasksTeam)).toBeTruthy();
   });
-//  
+  it("Содержит запросы", () => {
+    expect(wrapper.vm.$apollo.queries.allTasksInOneTeam).toBeTruthy()
+  });
+  //it("Клик на редактирование.", () => {
+  //  const creditPoints = jest.fn()
+  //  wrapper.setMethods({ creditPoints })
+  //  wrapper.find(".btn").trigger('click');
+  //  expect(creditPoints).toHaveBeenCalled();
+  //});
+
 });
 

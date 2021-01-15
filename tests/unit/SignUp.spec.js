@@ -88,45 +88,57 @@ describe("SignUp:", () => {
     wrapper.find('[id="surname"]').setValue('')
     expect(wrapper.vm.$v.surname.$invalid).toBe(true)
     expect(wrapper.vm.$v.surname.$error).toBe(true)
+    expect(wrapper.find('.error').exists()).toBeTruthy()
     wrapper.find('[id="surname"]').setValue('123')
     expect(wrapper.vm.$v.surname.$invalid).toBe(true)
     expect(wrapper.vm.$v.surname.$error).toBe(true)
+    expect(wrapper.find('.error').exists()).toBeTruthy()
     wrapper.find('[id="surname"]').setValue('Иванов')
     expect(wrapper.vm.$v.surname.$invalid).toBe(false)
     expect(wrapper.vm.$v.surname.$error).toBe(false)
+    expect(wrapper.find('.error').exists()).not.toBe(false)
   });
-  it("Отечство", () => {
+  it("Отчство", () => {
     wrapper.find('[id="patricity"]').setValue('123')
     expect(wrapper.vm.$v.patricity.$invalid).toBe(true)
     expect(wrapper.vm.$v.patricity.$error).toBe(true)
+    expect(wrapper.find('.error').exists()).toBeTruthy()
     wrapper.find('[id="patricity"]').setValue('')
     expect(wrapper.vm.$v.patricity.$invalid).toBe(false)
     expect(wrapper.vm.$v.patricity.$error).toBe(false)
+    expect(wrapper.find('.error').exists()).not.toBe(false)
     wrapper.find('[id="patricity"]').setValue('Иванович')
     expect(wrapper.vm.$v.patricity.$invalid).toBe(false)
     expect(wrapper.vm.$v.patricity.$error).toBe(false)
+    expect(wrapper.find('.error').exists()).not.toBe(false)
   });
   it("Логин", () => {
     wrapper.find('[id="login"]').setValue('123')
     expect(wrapper.vm.$v.login.$invalid).toBe(false)
     expect(wrapper.vm.$v.login.$error).toBe(false)
+    expect(wrapper.find('.error').exists()).not.toBe(false)
     wrapper.find('[id="login"]').setValue('')
     expect(wrapper.vm.$v.login.$invalid).toBe(true)
     expect(wrapper.vm.$v.login.$error).toBe(true)
+    expect(wrapper.find('.error').exists()).toBeTruthy()
     wrapper.find('[id="login"]').setValue('qwerty')
     //wrapper.vm.checkLogin();
     expect(wrapper.vm.$v.login.$invalid).toBe(false)
     expect(wrapper.vm.$v.login.$error).toBe(false)
+    expect(wrapper.find('.error').exists()).not.toBe(false)
   });
   it("Пароль", () => {
     wrapper.find('[id="password"]').setValue('123')
     expect(wrapper.vm.$v.password.$invalid).toBe(true)
     expect(wrapper.vm.$v.password.$error).toBe(true)
+    expect(wrapper.find('.error').exists()).toBeTruthy()
     wrapper.find('[id="password"]').setValue('')
     expect(wrapper.vm.$v.password.$invalid).toBe(true)
     expect(wrapper.vm.$v.password.$invalid).toBe(true)
+    expect(wrapper.find('.error').exists()).toBeTruthy()
     wrapper.find('[id="password"]').setValue('qwerty')
     expect(wrapper.vm.$v.password.$invalid).toBe(false)
     expect(wrapper.vm.$v.password.$invalid).toBe(false)
+    expect(wrapper.find('.error').exists()).not.toBe(false)
   });
 });

@@ -43,7 +43,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.patricity") }}</label>
       <input
-        id="patricity"
+      id="patricity"
         :disabled="signUpLoading"
         type="text"
         v-model.trim="$v.patricity.$model"
@@ -77,6 +77,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.birthday") }}</label>
       <input
+        id="birthday"
         :disabled="signUpLoading"
         type="date"
         v-model="$v.birthday.$model"

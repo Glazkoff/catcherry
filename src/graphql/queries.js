@@ -399,9 +399,10 @@ export const REJECT_REQUEST = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
 
-export const ONE_POST_QUERY = gql`
-  query($id: ID!) {
-    post(id: $id) {
+// Получение одного поста
+export const POST_QUERY = gql`
+  query($id: ID!, $userId: ID!) {
+    post(id: $id, userId: $userId) {
       id
       body {
         header
@@ -415,9 +416,10 @@ export const ONE_POST_QUERY = gql`
   }
 `;
 
+// Получение всех постов для пользователя
 export const POSTS_QUERY = gql`
-  query {
-    posts {
+  query($userId: ID!) {
+    posts(userId: $userId) {
       id
       body {
         header
@@ -431,19 +433,17 @@ export const POSTS_QUERY = gql`
   }
 `;
 
+// Создание поста
 export const CREATE_POST = gql`
-  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
-    createPost(
-      body: $body
-      authorId: $authorId
-      organizationId: $organizationId
-    ) {
+  mutation($body: PostBody!, $authorId: Int!, $userId: [Int]!) {
+    createPost(body: $body, authorId: $authorId, userId: $userId) {
       id
       createdAt
     }
   }
 `;
 
+// Удаление поста
 export const DELETE_POST = gql`
   mutation($id: ID!) {
     deletePost(id: $id)

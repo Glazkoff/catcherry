@@ -71,12 +71,12 @@ export default {
       loginPasswordError: false
     };
   },
- async created() {
-   const fp = await this.$fingerprint.load();
-   const result = await fp.get();
-   const visitorId = result.visitorId;
-   this.fingerprint = visitorId;
- },
+  async created() {
+    const fp = await this.$fingerprint.load();
+    const result = await fp.get();
+    const visitorId = result.visitorId;
+    this.fingerprint = visitorId;
+  },
   validations: {
     login: {
       required

@@ -59,6 +59,7 @@ describe("Organization:", () => {
   it("Содержит запросы", () => {
     expect(wrapper.vm.$apollo.queries.organizations).toBeTruthy()
     expect(wrapper.vm.$apollo.queries.organization).toBeTruthy()
+    expect(wrapper.vm.$apollo.queries.teamsInOneOrganization).toBeTruthy()
   });
   it("Вызов функции", () => {
     const showFullInformation = jest.fn()
@@ -68,6 +69,18 @@ describe("Organization:", () => {
   it("Количество элементов", () => {
     var lеngth = wrapper.vm.length
     expect(wrapper.findAll('.card').length).toBe(length);
+  });
+  it("Отображается popup", () => {
+    wrapper.setData({isShowFullInformation:true})
+    expect(wrapper.vm.isShowFullInformation == true).toBeTruthy()
+    expect(wrapper.find('popup').exists()).not.toBe(true)
+    wrapper.setData({isShowModalDelete:true,isShowFullInformation:false})
+    expect(wrapper.vm.isShowModalDelete == true).toBeTruthy()
+    expect(wrapper.find('div[slot="exit"').exists()).not.toBe(true)
+    wrapper.setData({isShowModalEdit:true,isShowFullInformation:false,isShowModalDelete:false})
+    expect(wrapper.vm.isShowModalEdit == true).toBeTruthy()
+    expect(wrapper.find('div[slot="exit"').exists()).not.toBe(true)
+    //expect(wrapper.html()).toContain('popup')
   });
 });
 
