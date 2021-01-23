@@ -7,7 +7,7 @@
         </div>
       </div>
     </div>
-    <div class="container">
+    <div class="container" v-if="!isEmpty">
       <div class="row">
         <div
           class="col-12"
@@ -29,6 +29,13 @@
               $d(notification.createdAt, "number")
             }}</small>
           </div>
+        </div>
+      </div>
+    </div>
+    <div v-else class="container">
+      <div class="row">
+        <div class="col-12">
+          <h3>Оповещений не найдено</h3>
         </div>
       </div>
     </div>
@@ -112,6 +119,17 @@ export default {
         .catch(error => {
           console.error(error);
         });
+    }
+  },
+  computed: {
+    isEmpty() {
+      if (this.notificationsForUser == undefined) {
+        return true;
+      } else {
+        if (this.notificationsForUser.length == 0) {
+          return true;
+        } else return false;
+      }
     }
   }
 };
