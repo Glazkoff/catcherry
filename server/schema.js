@@ -212,7 +212,7 @@ type Comment {
 }
 
 type Query { 
-  isLoginUsed(login: String!): Boolean!
+  isLoginUsed(login: String!): Boolean! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -232,6 +232,9 @@ type Query {
   notificationsForUser(userId: ID!): [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   requests (teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getPointsUser(userId: ID!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(pointAccountId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  pointsLastWeek(id: ID!): [Int] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   getPointsUser(userId: ID!, limit: Int): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   pointsLastWeek(id: ID!): [Int]
@@ -251,6 +254,12 @@ type Query {
   tasks (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   backlog (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
+  roles: [Role]
+
+  allTasks(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  allTasksInOneTeam(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  allUserTasks(id:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+
   statisticsNewUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsNewOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsDeleteUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -260,15 +269,40 @@ type Query {
 
 }
 
+input signUpInput {
+  name: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  surname: String @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  patricity: String @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  birthday: String
+  login: String!
+  password: String! @constraint(minLength: 6)
+  fingerprint:String!
+}
+
+input loginInput {
+  login: String!
+  password: String! @constraint(minLength: 6)
+  fingerprint:String!
+}
+
+input updateUserInput {
+  name: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  surname: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  patricity: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  gender: String
+  birthday: String
+  login: String!
+}
+
 type Mutation {
-  signUp(name: String!, surname: String, patricity: String, login: String!, birthday:String, password: String!, fingerprint:String!): jwt
-  logIn(login: String!, password: String!, fingerprint:String!): jwt
+  signUp(input: signUpInput): jwt
+  logIn(input: loginInput): jwt
   updateTokens(fingerprint:String!): jwt!
   logOut(fingerprint:String!): Int
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String, birthday: String): [Int]!
+  updateUser(id: ID!, input: updateUserInput): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
   createNotification(body: NotificationBody!, typeId:Int!, authorId: Int!, userId: [Int], endTime: String! ): Notification!
