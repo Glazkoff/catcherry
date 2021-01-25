@@ -5,6 +5,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.name") }} *</label>
       <input
+        id="name"
         :disabled="signUpLoading"
         type="text"
         v-model.trim="$v.name.$model"
@@ -23,6 +24,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.surname") }} *</label>
       <input
+        id="surname"
         :disabled="signUpLoading"
         type="text"
         v-model.trim="$v.surname.$model"
@@ -41,6 +43,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.patricity") }}</label>
       <input
+      id="patricity"
         :disabled="signUpLoading"
         type="text"
         v-model.trim="$v.patricity.$model"
@@ -74,6 +77,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.birthday") }}</label>
       <input
+        id="birthday"
         :disabled="signUpLoading"
         type="date"
         v-model="$v.birthday.$model"
@@ -84,6 +88,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.login") }} *</label>
       <input
+        id="login"
         :disabled="signUpLoading"
         type="text"
         v-model.trim="$v.login.$model"
@@ -108,6 +113,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.password") }} *</label><br />
       <input
+        id="password"
         type="password"
         :disabled="signUpLoading"
         v-model.trim="$v.password.$model"
@@ -135,7 +141,7 @@
         />
         <span class="form-text box"></span>
         {{ $t("userAgreement.bySignUp") }}
-        <br /><a @click.prevent="openPrivacyPolicy()">{{
+        <br /><a id="PrivacyPolicy" @click.prevent="openPrivacyPolicy()">{{
           $t("userAgreement.termsOfPrivacy")
         }}</a></label
       >

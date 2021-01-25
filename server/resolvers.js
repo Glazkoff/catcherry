@@ -257,18 +257,37 @@ module.exports = {
 
     // Получаем все посты
     posts: async (parent, args, { db }) => {
-      let resultOfPosts = db.Posts.findAll({
+      let resultOfPosts = await db.Posts.findAll({
         order: [["id", "DESC"]],
-        include: [{ model: db.LikesOfPosts, as: "likesOfPost" }]
+        include: [
+          {
+            model: db.LikesOfPosts,
+            as: "likesOfPost"
+          }
+        ],
+        where: {
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        }
       });
+      // console.log("Hurray!!! ", JSON.stringify(resultOfPosts));
       return resultOfPosts;
     },
+
     // Получаем информацию о посте по id
-    post: (parent, args, { db }) => {
-      return db.Posts.findOne({
-        where: { id: args.id },
+    post: async (parent, args, { db }) => {
+      let resultOfPost = await db.Posts.findOne({
+        where: {
+          id: args.id,
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        },
         include: [{ model: db.LikesOfPosts, as: "likesOfPost" }]
       });
+      // console.log("Hurray!!! ", JSON.stringify(resultOfPost));
+      return resultOfPost;
     },
 
     // Получаем информацию о всех лайках постов пользователя
@@ -435,22 +454,22 @@ module.exports = {
     /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
-      { name, surname, patricity, birthday, login, password, fingerprint },
+      { input }, //{ name, surname, patricity, birthday, login, password, fingerprint },
       { res, db }
     ) => {
-      let hashPassword = bcrypt.hashSync(password, salt);
+      let hashPassword = bcrypt.hashSync(input.password, salt);
 
-      if ("" + birthday == "") {
-        birthday = null;
+      if ("" + input.birthday == "") {
+        input.birthday = null;
       }
 
       // Добавляем данные в БД
       let user = await db.Users.create({
-        login,
-        name,
-        surname,
-        patricity,
-        birthday,
+        login: input.login,
+        name: input.name,
+        surname: input.surname,
+        patricity: input.patricity,
+        birthday: input.birthday,
         password: hashPassword
       });
 
@@ -484,7 +503,7 @@ module.exports = {
         db,
         user.dataValues.id,
         tokens.refreshToken,
-        fingerprint
+        input.fingerprint
       );
 
       // Записать в Cookie HttpOnly рефреш-токен
@@ -494,11 +513,11 @@ module.exports = {
       });
       return tokens;
     },
-    logIn: async (parent, { login, password, fingerprint }, { res, db }) => {
+    logIn: async (parent, { input }, { res, db }) => {
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login
+          login: input.login,
         }
       });
       // Проверяем через bcrypt пароль, не совпадает - ошибка
@@ -509,7 +528,7 @@ module.exports = {
             message: "Incorrect login or password!"
           }
         };
-      } else if (bcrypt.compareSync(password, user.password)) {
+      } else if (bcrypt.compareSync(input.password, user.password)) {
         // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
         let tokens = generateTokens(user.dataValues);
         // Добавляем сессию в БД
@@ -517,7 +536,7 @@ module.exports = {
           db,
           user.dataValues.id,
           tokens.refreshToken,
-          fingerprint
+          input.fingerprint
         );
         // Записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
@@ -614,20 +633,20 @@ module.exports = {
     // Обновляем фамилию, имени, отчества, пола и логина пользователя
     updateUser: async (
       parent,
-      { surname, name, patricity, gender, login, id, birthday },
+      { input, id }, //{ surname, name, patricity, gender, login, id, birthday },
       { db }
     ) => {
-      if ("" + birthday == "") {
-        birthday = null;
+      if ("" + input.birthday == "") {
+        input.birthday = null;
       }
       let resUpdate = await db.Users.update(
         {
-          name,
-          surname,
-          patricity,
-          gender,
-          login,
-          birthday
+          name: input.name,
+          surname: input.surname,
+          patricity: input.patricity,
+          gender: input.gender,
+          login: input.login,
+          birthday: input.birthday,
         },
         {
           where: {
@@ -827,11 +846,11 @@ module.exports = {
     /*
       [Ниже] Мутации работы с постами (Posts)     
     */
-    createPost: (parent, { body, authorId, organizationId }, { db }) =>
+    createPost: (parent, { body, authorId, userId }, { db }) =>
       db.Posts.create({
         body: body,
         authorId: authorId,
-        organizationId: organizationId
+        userId: userId
       }),
     deletePost: (parent, args, { db }) =>
       db.Posts.destroy({

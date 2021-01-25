@@ -150,8 +150,7 @@ type Post {
   id: ID!
   body: BodyPost!
   authorId: Int!
-  organizationId: Int!
-  forAllTeam: Boolean
+  userId: [Int]
   likesOfPost: [LikeOfPost]
   createdAt: String!
   updatedAt: String!
@@ -213,73 +212,104 @@ type Comment {
 }
 
 type Query { 
-  isLoginUsed(login: String!): Boolean!
+  isLoginUsed(login: String!): Boolean! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   users: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  deletedUsers: [User!]
+  deletedUsers: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  teams: [Team!]
-  team(organizationId: Int): [Team]
+  teams: [Team!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  team(organizationId: Int): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
-  comments: [Comment]!
-  comment(id: ID!): Comment
+  comments: [Comment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  comment(id: ID!): Comment @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   organizations: [Organization!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   organization(id: ID!): Organization @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  organizationTypes: [OrganizationType!]
   userOrganization(id: ID!): Organization
+  organizationTypes: [OrganizationType!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   notificationsForUser(userId: ID!): [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   requests (teamId:ID!):[UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  getOperationPointsUser(pointAccountId: ID!): [PointOperations] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  pointsLastWeek(id: ID!): [Int] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   getPointsUser(userId: ID!, limit: Int): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  pointsLastWeek(id: ID!): [Int]
   
-  posts: [Post]!
-  post(id: ID!): Post
+  
+  posts: [Post]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  post(id: ID!): Post @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  
+  likesOfPostFromUser (userId:ID!): [LikeOfPost]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  likesOfCommentFromUser (userId:ID!): [LikeOfComment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+
+  usersInTeams (teamId:ID!):[UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  oneUserInTeams(userId: ID!): [UserInTeam!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  raitingInTeams (teamId:ID!): [UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  personalUserStatistics(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  teamsInOneOrganization(organizationId: ID!): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+
+  tasks (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  backlog (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   roles: [Role]
-  
-  likesOfPostFromUser (userId:ID!): [LikeOfPost]! 
-  likesOfCommentFromUser (userId:ID!): [LikeOfComment]!  
 
-  usersInTeams (teamId:ID!):[UserInTeam]!
-  oneUserInTeams(userId: ID): [UserInTeam!]
-  raitingInTeams (teamId:ID!): [UserInTeam]!
-  personalUserStatistics(userId: Int!): PointsUser
-  teamsInOneOrganization(organizationId: ID!): [Team]
+  allTasks(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  allTasksInOneTeam(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  allUserTasks(id:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  allTasksInOneTeam(teamId:ID!): [Task]!
-  allUserTasks(id:ID!): [Task]!
-
-  statisticsNewUsers: Int
-  statisticsNewOrgs: Int
-  statisticsDeleteUsers: Int
-  statisticsDeleteOrgs: Int
+  statisticsNewUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  statisticsNewOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  statisticsDeleteUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  statisticsDeleteOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   usersInNewTeams: Team
 
 }
 
+input signUpInput {
+  name: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  surname: String @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  patricity: String @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  birthday: String
+  login: String!
+  password: String! @constraint(minLength: 6)
+  fingerprint:String!
+}
+
+input loginInput {
+  login: String!
+  password: String! @constraint(minLength: 6)
+  fingerprint:String!
+}
+
+input updateUserInput {
+  name: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  surname: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  patricity: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  gender: String
+  birthday: String
+  login: String!
+}
+
 type Mutation {
-  signUp(name: String!, surname: String, patricity: String, login: String!, birthday:String, password: String!, fingerprint:String!): jwt
-  logIn(login: String!, password: String!, fingerprint:String!): jwt
+  signUp(input: signUpInput): jwt
+  logIn(input: loginInput): jwt
   updateTokens(fingerprint:String!): jwt!
   logOut(fingerprint:String!): Int
 
   createUser(name: String!): User!
   deleteUser(id: ID!): Int!
-  updateUser(id: ID!, surname: String, name: String, patricity: String, gender: String, login: String, birthday: String): [Int]!
+  updateUser(id: ID!, input: updateUserInput): [Int]!
   deleteUserFromTeam(id: ID!): [Int]!
 
   createNotification(body: NotificationBody!, typeId:Int!, authorId: Int!, userId: [Int], endTime: String! ): Notification!
   deleteNotification(id: ID!): Int!
   updateNotification(notificationId: ID!, userId: ID! checkNotification: Boolean): [Int]!
 
-  createPost(body: PostBody!, authorId: Int!, organizationId: Int!): Post!
+  createPost(body: PostBody!, authorId: Int!, userId: [Int]): Post!
   deletePost(id: ID!): Int!
  
   addLikeOfPost(userId: ID!, postId: ID!): LikeOfPost!

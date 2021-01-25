@@ -33,7 +33,7 @@
                   <div class="box">
                     <div class="display">
                       <div class="nothing">
-                        <div class="cent">Looks Like your all caught up!</div>
+                        <div class="cent">Оповещений нет! Ура!</div>
                       </div>
                       <div class="cont">
                         <div
@@ -417,8 +417,10 @@ export default {
 }
 
 .cent {
+  padding-top: 0.5em;
   text-align: center;
   display: block;
+  color: $dark_blue;
 }
 
 .sec {

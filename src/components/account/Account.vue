@@ -19,7 +19,7 @@
           <div class="card">
             <div class="container">
               <div class="row">
-                <div class="col-5  flex flex-center">
+                <div class="col-5 d-flex flex-center">
                   <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
                 </div>
                 <div class="col-5 ">
@@ -116,10 +116,12 @@
     <div>
       <div v-if="isEdit" class="container">
         <div class="row">
-          <div class="col-2 flex flex-center">
-            <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar" />
+          <div class="col-3 d-flex flex-center flex-column">
+            <img src="@/assets/avatar.jpg" alt="user" class="bigAvatar mb-3" />
+            <button @click="showModalDelete" class="btn btn-danger block">
+              {{ $t("delete") }}
+            </button>
           </div>
-          <div class="col-1"></div>
           <div class="col-5">
             <form @submit.prevent="saveUserOnPopup">
               <div class="form-group">
@@ -263,9 +265,6 @@
                 />
               </div> -->
             </form>
-            <button @click="showModalDelete" class="btn danger btnDelete">
-              {{ $t("delete") }}
-            </button>
           </div>
           <div class="col-1"></div>
           <div class="col-3">
@@ -403,7 +402,6 @@ export default {
   },
   beforeRouteEnter: (to, from, next) => {
     next(vm => {
-      // console.log("HUI ", vm.$refs.pOperation);
       if (vm.$refs.pOperation) {
         vm.$refs.pOperation.refreshQuery();
       }
@@ -420,7 +418,6 @@ export default {
       this.userEditData.patricity = this.user.patricity;
       this.userEditData.gender = this.user.gender;
       this.userEditData.login = this.user.login;
-      console.log("BIRTH!: ", this.user.birthday);
       if (this.user.birthday != null) {
         this.userEditData.birthday = new Date(+this.user.birthday)
           .toISOString()
@@ -587,9 +584,6 @@ export default {
 }
 .form-name {
   color: $white;
-}
-.form-group {
-  margin-bottom: 2.5rem;
 }
 .form-control {
   background: $violet;

@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="wrap">
     <div class="imageContainer" @click="onLink(post.id)">
       <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
     </div>
@@ -80,7 +80,7 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
 
-.container {
+.wrap {
   background: $violet;
   border-radius: 0.625rem;
   width: 100%;

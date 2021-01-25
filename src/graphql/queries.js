@@ -3,22 +3,24 @@ import gql from "graphql-tag";
 // (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 export const SIGN_UP = gql`
   mutation(
-    $name: String!
-    $surname: String
-    $patricity: String
+    $name: name_String_NotNull_pattern_azAZ!
+    $surname: surname_String_pattern_azAZ
+    $patricity: patricity_String_pattern_azAZ
     $birthday: String
     $login: String!
-    $password: String!
+    $password: password_String_NotNull_minLength_6!
     $fingerprint: String!
   ) {
     signUp(
-      name: $name
-      surname: $surname
-      patricity: $patricity
-      birthday: $birthday
-      login: $login
-      password: $password
-      fingerprint: $fingerprint
+      input:{
+        name: $name
+        surname: $surname
+        patricity: $patricity
+        birthday: $birthday
+        login: $login
+        password: $password
+        fingerprint: $fingerprint
+      }
     ) {
       accessToken
       error {
@@ -29,8 +31,8 @@ export const SIGN_UP = gql`
 `;
 
 export const LOG_IN = gql`
-  mutation($login: String!, $password: String!, $fingerprint: String!) {
-    logIn(login: $login, password: $password, fingerprint: $fingerprint) {
+  mutation($login: String!, $password: password_String_NotNull_minLength_6!, $fingerprint: String!) {
+    logIn(input: {login: $login, password: $password, fingerprint: $fingerprint}) {
       accessToken
       error {
         errorStatus
@@ -186,21 +188,23 @@ export const USERS_QUERY = gql`
 
 export const UPDATE_USER_QUERY = gql`
   mutation(
-    $name: String!
-    $surname: String
-    $patricity: String
+    $name: name_String_NotNull_pattern_azAZ!
+    $surname: surname_String_NotNull_pattern_azAZ!
+    $patricity: patricity_String_NotNull_pattern_azAZ!
     $gender: String
-    $login: String
+    $login: String!
     $birthday: String
     $id: ID!
   ) {
     updateUser(
-      name: $name
-      surname: $surname
-      patricity: $patricity
-      gender: $gender
-      login: $login
-      birthday: $birthday
+      input:{
+        name: $name
+        surname: $surname
+        patricity: $patricity
+        gender: $gender
+        login: $login
+        birthday: $birthday
+      }
       id: $id
     )
   }
@@ -407,9 +411,10 @@ export const REJECT_REQUEST = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
 
-export const ONE_POST_QUERY = gql`
-  query($id: ID!) {
-    post(id: $id) {
+// Получение одного поста
+export const POST_QUERY = gql`
+  query($id: ID!, $userId: ID!) {
+    post(id: $id, userId: $userId) {
       id
       body {
         header
@@ -423,9 +428,10 @@ export const ONE_POST_QUERY = gql`
   }
 `;
 
+// Получение всех постов для пользователя
 export const POSTS_QUERY = gql`
-  query {
-    posts {
+  query($userId: ID!) {
+    posts(userId: $userId) {
       id
       body {
         header
@@ -439,19 +445,17 @@ export const POSTS_QUERY = gql`
   }
 `;
 
+// Создание поста
 export const CREATE_POST = gql`
-  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
-    createPost(
-      body: $body
-      authorId: $authorId
-      organizationId: $organizationId
-    ) {
+  mutation($body: PostBody!, $authorId: Int!, $userId: [Int]!) {
+    createPost(body: $body, authorId: $authorId, userId: $userId) {
       id
       createdAt
     }
   }
 `;
 
+// Удаление поста
 export const DELETE_POST = gql`
   mutation($id: ID!) {
     deletePost(id: $id)
