@@ -46,7 +46,8 @@
                               <div class="profCont">
                                 <img
                                   class="profile"
-                                  src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
+                                  src="@/assets/avatar.jpg"
+                                  alt="user"
                                 />
                               </div>
                               <div class="txt">
@@ -166,10 +167,10 @@ export default {
       }
     },
     roleUser() {
-      if (this.role == undefined) {
+      if (this.oneUserInTeams == undefined) {
         return "-";
       } else {
-        return this.oneUserInTeams.role.name;
+        return this.oneUserInTeams[1].role.name;
       }
     },
     UserID() {
