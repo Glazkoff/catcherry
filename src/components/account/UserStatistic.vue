@@ -2,7 +2,13 @@
   <div class="main_stat">
     <breadcrumbs></breadcrumbs>
     <h3>Личная статистика</h3>
-    <div v-if="$apollo.queries.usersInTeams.loading" class="wrapOfLoader">
+    <div
+      v-if="
+        $apollo.queries.usersInTeams.loading &&
+          $apollo.queries.personalUserStatistics.loading
+      "
+      class="wrapOfLoader"
+    >
       <loader></loader>
     </div>
     <div v-else>
@@ -54,7 +60,7 @@
 
       <h3>История:</h3>
       <div
-        v-for="(statistic, index) in personalUserStatistics.pointsOperation"
+        v-for="(statistic, index) in personalUserStatistics.userPointsOperation"
         :key="index"
         class="card"
       >
@@ -92,16 +98,16 @@ export default {
   created: function() {
     for (
       let i = 0;
-      i < this.personalUserStatistics.pointsOperation.length;
+      i < this.personalUserStatistics.userPointsOperation.length;
       i++
     ) {
-      if (this.personalUserStatistics.pointsOperation[i].delta > 0)
-        this.positivePoints += this.personalUserStatistics.pointsOperation[
+      if (this.personalUserStatistics.userPointsOperation[i].delta > 0)
+        this.positivePoints += this.personalUserStatistics.userPointsOperation[
           i
         ].delta;
       else
         this.negativePoints += Math.abs(
-          this.personalUserStatistics.pointsOperation[i].delta
+          this.personalUserStatistics.userPointsOperation[i].delta
         );
     }
   },
