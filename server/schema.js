@@ -220,7 +220,7 @@ type Query {
 
   teams: [Team!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   team(organizationId: Int): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  oneTeam(id: ID): Team
+  oneTeam(id: ID): Team @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   comments: [Comment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   comment(id: ID!): Comment @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -255,8 +255,8 @@ type Query {
   tasks (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   backlog (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  roles: [Role]
-  role(id: ID!): Role
+  roles: [Role] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  role(id: ID!): Role @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   allTasks(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   allTasksInOneTeam(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -267,7 +267,7 @@ type Query {
   statisticsDeleteUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsDeleteOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
-  usersInNewTeams: Team
+  usersInNewTeams: Team @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
 }
 

@@ -16,7 +16,13 @@
           <p>Нет новых заявок</p>
         </div>
         <div v-if="requests.length != 0">
-          <div v-for="user in requests" :key="user.id" class="card row">
+          <input
+            v-model.trim="findString"
+            type="text"
+            :placeholder="$t('placeholderSearchByUsers')"
+            class="form-control block find dark"
+          />
+          <div v-for="user in filterUser" :key="user.id" class="card row">
             <div class="card_img">
               <img src="~@/assets/avatar.jpg" />
             </div>
@@ -54,7 +60,6 @@
 </template>
 
 <script>
-// import RequestsItem from "@/components/manager/RequestsItem";
 import Minialert from "@/components/MiniAlert.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import loader from "@/components/Loader.vue";
@@ -71,7 +76,8 @@ export default {
     return {
       isShowAlertError: false,
       isShowAlertAdd: false,
-      isShowAlertDelete: false
+      isShowAlertDelete: false,
+      findString: ""
     };
   },
 
@@ -85,6 +91,7 @@ export default {
         };
       }
     },
+    // Название команды
     oneTeam: {
       query: TEAM_NAME_QUERY,
       variables() {
@@ -100,6 +107,7 @@ export default {
     loader
   },
   methods: {
+    // Принять заявку на вступление в команду
     accept(user) {
       this.$apollo
         .mutate({
@@ -108,6 +116,7 @@ export default {
             id: user.id,
             status: "Принят"
           },
+          // Обновление кеша
           update: cache => {
             let data = cache.readQuery({
               query: REQUESTS_QUERY,
@@ -138,6 +147,7 @@ export default {
           }
         })
         .then(() => {
+          // Новое оповещение
           let notification = {
             body: {
               header: "Добавление в команду",
@@ -148,6 +158,7 @@ export default {
             typeId: 20,
             endTime: new Date(new Date() + 365 * 24 * 60 * 60 * 1000)
           };
+          // Создание нового оповещения о вступлении в команду
           this.$apollo
             .mutate({
               mutation: CREATE_NOTIFICATION,
@@ -182,6 +193,7 @@ export default {
           console.error(error);
         });
     },
+    // Отказать на вступление в команду
     reject(user) {
       this.$apollo
         .mutate({
@@ -190,6 +202,7 @@ export default {
             id: user.id,
             status: "Отклонен"
           },
+          // Обновление кеша
           update: cache => {
             let data = cache.readQuery({
               query: REQUESTS_QUERY,
@@ -207,6 +220,7 @@ export default {
           }
         })
         .then(() => {
+          // Новое оповещение
           let notification = {
             body: {
               header: "Отказ от добавления",
@@ -217,6 +231,7 @@ export default {
             typeId: 20,
             endTime: new Date(new Date() + 365 * 24 * 60 * 60 * 1000)
           };
+          // Создание оповещения об отказе о встеплении в команду
           this.$apollo
             .mutate({
               mutation: CREATE_NOTIFICATION,
@@ -250,6 +265,41 @@ export default {
           }, 3000);
           console.error(error);
         });
+    }
+  },
+  computed: {
+    // Фильтрация пользователей
+    filterUser() {
+      if (this.findString !== "") {
+        // Ищем по фамилии, имени и отчеству
+        return this.requests.filter(el => {
+          if (el.user.surname === undefined || el.user.surname === null) {
+            el.user.surname = " ";
+          }
+          if (el.user.name === undefined || el.user.name === null) {
+            el.name = " ";
+          }
+          if (el.user.patricity === undefined || el.user.patricity === null) {
+            el.user.patricity = " ";
+          }
+          return (
+            (el.user.surname
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.surname !== "") ||
+            (el.user.name
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.name !== "") ||
+            (el.user.patricity
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.patricity !== "")
+          );
+        });
+      } else {
+        return this.requests;
+      }
     }
   }
 };

@@ -10,7 +10,13 @@
         <breadcrumbs></breadcrumbs>
       </div>
       <div class="col-12">
-        <div v-for="user in usersInTeams" :key="user.id" class="card">
+        <input
+          v-model.trim="findString"
+          type="text"
+          :placeholder="$t('placeholderSearchByUsers')"
+          class="form-control block find dark"
+        />
+        <div v-for="user in filterUser" :key="user.id" class="card">
           <div class="card_img">
             <img src="~@/assets/avatar.jpg" />
           </div>
@@ -23,7 +29,7 @@
             class="btn btn-alternate col-3"
             @click="showFullInformation(user)"
           >
-            Подробнее
+            {{ $t("more") }}
           </button>
         </div>
       </div>
@@ -34,14 +40,14 @@
         </h3>
         <div slot="exit" @click="cancelModal()">×</div>
         <div slot="body" v-if="!$apollo.loading">
-          <p>Фамилия: {{ user.surname }}</p>
-          <p>Имя: {{ user.name }}</p>
-          <p>Отчество: {{ user.patricity }}</p>
-          <p>Пол: {{ user.gender }}</p>
-          <p>Дата рождения: {{ $d(user.birthday, "short") }}</p>
-          <p>Логин: {{ user.login }}</p>
+          <p>{{ $t("surname") }}: {{ user.surname }}</p>
+          <p>{{ $t("name") }}: {{ user.name }}</p>
+          <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
+          <p>{{ $t("gender") }}: {{ user.gender }}</p>
+          <p>{{ $t("birthday") }}: {{ $d(user.birthday, "short") }}</p>
+          <p>{{ $t("login") }}: {{ user.login }}</p>
           <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
-          <p>Роль: {{ role.name }}</p>
+          <p>{{ $t("role") }}: {{ role.name }}</p>
         </div>
         <div slot="footer" v-if="!$apollo.loading">
           <div class="btn-group">
@@ -53,7 +59,7 @@
               Исключить человека из команды
             </button>
             <button class="btn btn-alternate" @click="cancelModal()">
-              Отмена
+              {{ $t("cancel") }}
             </button>
           </div>
         </div>
@@ -95,12 +101,13 @@ export default {
       isShowModal: false,
       userId: -1,
       oneUser: {},
-      roleId: -1
+      roleId: -1,
+      findString: ""
     };
   },
 
   apollo: {
-    // Массив участников команды
+    // Название роли пользователя
     role: {
       query: ROLE_QUERY,
       variables() {
@@ -109,6 +116,7 @@ export default {
         };
       }
     },
+    // Название команды для оповещения
     oneTeam: {
       query: TEAM_NAME_QUERY,
       variables() {
@@ -117,6 +125,7 @@ export default {
         };
       }
     },
+    // Информация о пользователи в команде
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
@@ -125,6 +134,7 @@ export default {
         };
       }
     },
+    // Подробная информация о пользователи
     user: {
       query: ONE_USER_QUERY,
       error(error) {
@@ -136,6 +146,7 @@ export default {
         };
       }
     },
+    // Получение количества баллов
     getPointsUser: {
       query: GET_POINTS_USER_QUERY,
       error(error) {
@@ -148,7 +159,6 @@ export default {
       }
     }
   },
-
   components: {
     breadcrumbs,
     loader,
@@ -156,6 +166,7 @@ export default {
     Minialert
   },
   methods: {
+    // Показать попап с подробной информацией
     showFullInformation(user) {
       this.isShowModal = true;
       this.oneUser = Object.assign({}, user);
@@ -172,9 +183,11 @@ export default {
       this.fullName = `${this.oneUser.user.surname} ${this.oneUser.user.name} ${this.oneUser.user.patricity}`;
       this.roleId = this.oneUser.roleId;
     },
+    // Закрыть попап с поднобной информацией
     cancelModal() {
       this.isShowModal = false;
     },
+    // Исключить пользователя из команды
     exclude() {
       this.$apollo
         .mutate({
@@ -182,15 +195,14 @@ export default {
           variables: {
             id: this.userId
           },
+          // Обновляем кеш
           update: cache => {
-            // Записываем в переменную массив участников команды
             let data = cache.readQuery({
               query: USERS_IN_TEAMS_QUERY,
               variables: {
                 teamId: this.$route.params.id
               }
             });
-            // Зписываем в переменную участника команды по id
             let index = data.usersInTeams.findIndex(el => el.id == this.userId);
             // Удаляем участника команды из массива
             data.usersInTeams.splice(index, 1);
@@ -202,6 +214,7 @@ export default {
           }
         })
         .then(() => {
+          // Новое оповещение
           let notification = {
             body: {
               header: "Исключение из команды",
@@ -212,6 +225,7 @@ export default {
             typeId: 20,
             endTime: new Date(new Date() + 365 * 24 * 60 * 60 * 1000)
           };
+          // Создание нового оповещения в случае уисключения
           this.$apollo
             .mutate({
               mutation: CREATE_NOTIFICATION,
@@ -240,13 +254,47 @@ export default {
             });
         })
         .catch(error => {
-          // Записываем в переменную текст уведомления
           console.error(error);
           this.isShowAlertError = true;
           setTimeout(() => {
             this.isShowAlertError = false;
           }, 3000);
         });
+    }
+  },
+  computed: {
+    // Фильтрация пользователей
+    filterUser() {
+      if (this.findString !== "") {
+        // Ищем по фамилии, имени и отчеству
+        return this.usersInTeams.filter(el => {
+          if (el.user.surname === undefined || el.user.surname === null) {
+            el.user.surname = " ";
+          }
+          if (el.user.name === undefined || el.user.name === null) {
+            el.name = " ";
+          }
+          if (el.user.patricity === undefined || el.user.patricity === null) {
+            el.user.patricity = " ";
+          }
+          return (
+            (el.user.surname
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.surname !== "") ||
+            (el.user.name
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.name !== "") ||
+            (el.user.patricity
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.patricity !== "")
+          );
+        });
+      } else {
+        return this.usersInTeams;
+      }
     }
   }
 };

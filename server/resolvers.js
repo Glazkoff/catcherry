@@ -308,9 +308,11 @@ module.exports = {
         where: { userId: args.userId }
       });
     },
+    // Получение списка ролей
     roles: (parent, args, { db }) => {
       return db.Roles.findAll({});
     },
+    // Получение одной роли
     role: (parent, args, { db }) => {
       return db.Roles.findOne({
         where: { id: args.id }
@@ -330,6 +332,7 @@ module.exports = {
       }),
     comment: (parent, args, { db }) =>
       db.Comments.findOne({ where: { id: args.id } }),
+    // Получения списка всех участников команжы
     usersInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
@@ -360,6 +363,7 @@ module.exports = {
         where: { userId: userId },
         include: [{ model: db.PointsOperations, as: "pointsOperation" }]
       }),
+      // Получения всех заявок на вступление в команду
     requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
@@ -382,7 +386,7 @@ module.exports = {
 
       return resultPoints;
     },
-
+    // Получение количества баллов за прошлую неделю
     pointsLastWeek: async (parent, args, { db }) => {
       let operationLastWeek = await db.PointsOperations.findAll({
         where: {
@@ -411,6 +415,7 @@ module.exports = {
       }
       return [pointsLastWeek, points2LastWeek];
     },
+    // Получение списка всех задач команды
     allTasksInOneTeam: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId },
@@ -434,6 +439,7 @@ module.exports = {
           }
         ]
       }),
+      // Получение списка всех задач для пользователя
     allUserTasks: (parent, { id }, { db }) =>
       db.Tasks.findAll({
         where: {
