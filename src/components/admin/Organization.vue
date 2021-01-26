@@ -146,10 +146,10 @@
             <div
               v-for="team in teamsInOneOrganization"
               :key="team.id"
-              class="teams-list"
+              class="oneOrg"
             >
               <div>
-                <p>{{ $t("nameInanimate") }}: {{ team.name }}</p>
+                <h3>{{ $t("nameInanimate") }}: {{ team.name }}</h3>
                 <p>{{ team.description }}</p>
                 <p>
                   {{ $t("numberOfParticipants") }}: {{ team.maxUsersLimit }}
@@ -690,6 +690,14 @@ export default {
 .teams-list {
   border: 1px solid black;
   padding: 5px;
+}
+.oneOrg {
+  padding: 1%;
+  background: $violet;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: $white;
 }
 .wrapOfLoader {
   overflow: hidden;

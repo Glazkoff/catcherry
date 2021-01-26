@@ -25,8 +25,10 @@ const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
 const { createRateLimitDirective } = require("graphql-rate-limit");
+const { constraintDirective, constraintDirectiveTypeDefs } = require('graphql-constraint-directive')
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
+const timeout = require("connect-timeout");
 
 // Резолверы
 const resolvers = require("./resolvers");
@@ -42,11 +44,12 @@ const rateLimitDirective = createRateLimitDirective({
 
 // Соедняем всё в схему
 const schema = makeExecutableSchema({
-  typeDefs,
+  typeDefs: [constraintDirectiveTypeDefs, typeDefs],
   resolvers,
   context: { db },
+  schemaTransforms: [constraintDirective()],
   schemaDirectives: {
-    rateLimit: rateLimitDirective
+    rateLimit: rateLimitDirective,
   }
 });
 
@@ -59,6 +62,14 @@ app.use(compression());
 
 // Настройка парсинга Cookie
 app.use(cookieParser());
+
+// Настройка Timeout
+app.use(timeout('2s'));
+
+// Действие после таймаута
+function haltOnTimedout(req, res, next){
+  if (!req.timedout) next();
+}
 
 // Безопасность заголовков
 // Для доступа к /graphiql прописать в файле
@@ -95,13 +106,15 @@ app.use(express.static(path.join(__dirname, "../dist")));
 // Работа со статическими файлами
 app.use("/public", express.static(path.join(__dirname, "/public")));
 
+app.use(haltOnTimedout);
+
 db.sequelize
   // .sync({ force: true })
   // .sync({ alter: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
-      // addAllTables(false);
+      // addAllTables(true);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
@@ -150,7 +163,7 @@ async function addAllTables(destroyTable) {
     db.UsersInTeams.destroy({ where: {} });
   }
   //Можно менять количество заполнений в переменной quantity
-  let quantity = 1;
+  let quantity = 10;
   for (let index = 0; index < quantity; index++) {
     //Тип организации
     let type = await db.OrganizationsTypes.create({
@@ -244,8 +257,11 @@ async function addAllTables(destroyTable) {
         text: faker.lorem.paragraph()
       },
       authorId: user.dataValues.id,
-      organizationId: organization.dataValues.id,
-      forAllTeam: faker.random.boolean()
+      userId: [
+        user.dataValues.id,
+        user.dataValues.id + 1,
+        user.dataValues.id + 2
+      ]
     });
     let likesOfPost = await db.LikesOfPosts.create({
       userId: user.dataValues.id,
@@ -287,11 +303,6 @@ async function addAllTables(destroyTable) {
     //   userId: user.dataValues.id,
     //   commentId: comment.dataValues.id
     // });
-    //Лайки для постов
-    let likesofposts = await db.LikesOfPosts.create({
-      userId: user.dataValues.id,
-      postId: post.dataValues.id
-    });
   }
 }
 /* TODO: рекомендую использовать следующие библиотеки

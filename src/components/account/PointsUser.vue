@@ -7,10 +7,10 @@
         </div>
       </div>
     </div>
-    <PointQuantity></PointQuantity>
+    <PointQuantity class="sticky w-100"></PointQuantity>
     <PointOperation :limit="0" ref="pOperation"></PointOperation>
   </div>
-  <div v-else class="wrapOfLoader">
+  <div v-else>
     <Loader></Loader>
   </div>
 </template>
@@ -38,4 +38,15 @@ export default {
 };
 </script>
 
-<style lang="scss" scoped></style>
+<style lang="scss" scoped>
+@import "@/styles/_grid.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+
+.sticky {
+  position: sticky;
+  background-color: $dark_blue;
+  z-index: 7000;
+  top: $topBarHeight;
+}
+</style>
