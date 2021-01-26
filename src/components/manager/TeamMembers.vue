@@ -85,7 +85,7 @@ import popup from "@/components/Popup.vue";
 import Minialert from "@/components/MiniAlert.vue";
 import {
   USERS_IN_TEAMS_QUERY,
-  DELETE_IN_TEAMS_QUERY,
+  CHANGE_STATUS_REQUEST_QUERY,
   ONE_USER_QUERY,
   GET_POINTS_USER_QUERY,
   ROLE_QUERY,
@@ -189,11 +189,13 @@ export default {
     },
     // Исключить пользователя из команды
     exclude() {
+      console.log(this.oneUser);
       this.$apollo
         .mutate({
-          mutation: DELETE_IN_TEAMS_QUERY,
+          mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
-            id: this.userId
+            id: this.oneUser.id,
+            status: "Отклонен"
           },
           // Обновляем кеш
           update: cache => {
@@ -203,7 +205,9 @@ export default {
                 teamId: this.$route.params.id
               }
             });
-            let index = data.usersInTeams.findIndex(el => el.id == this.userId);
+            let index = data.usersInTeams.findIndex(
+              el => el.user.id == this.userId
+            );
             // Удаляем участника команды из массива
             data.usersInTeams.splice(index, 1);
             cache.writeQuery({

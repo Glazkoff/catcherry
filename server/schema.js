@@ -239,7 +239,6 @@ type Query {
   
   getPointsUser(userId: ID!, limit: Int): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
-  
   posts: [Post]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   post(id: ID!): Post @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
