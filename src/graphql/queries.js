@@ -12,7 +12,7 @@ export const SIGN_UP = gql`
     $fingerprint: String!
   ) {
     signUp(
-      input:{
+      input: {
         name: $name
         surname: $surname
         patricity: $patricity
@@ -31,8 +31,14 @@ export const SIGN_UP = gql`
 `;
 
 export const LOG_IN = gql`
-  mutation($login: String!, $password: password_String_NotNull_minLength_6!, $fingerprint: String!) {
-    logIn(input: {login: $login, password: $password, fingerprint: $fingerprint}) {
+  mutation(
+    $login: String!
+    $password: password_String_NotNull_minLength_6!
+    $fingerprint: String!
+  ) {
+    logIn(
+      input: { login: $login, password: $password, fingerprint: $fingerprint }
+    ) {
       accessToken
       error {
         errorStatus
@@ -197,7 +203,7 @@ export const UPDATE_USER_QUERY = gql`
     $id: ID!
   ) {
     updateUser(
-      input:{
+      input: {
         name: $name
         surname: $surname
         patricity: $patricity
@@ -578,7 +584,7 @@ export const PERSONAL_USER_STATISTIC_QUERY = gql`
     personalUserStatistics(userId: $userId) {
       id
       pointQuantity
-      pointsOperation {
+      userPointsOperation {
         delta
         operationDescription
         createdAt
