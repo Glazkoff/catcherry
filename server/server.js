@@ -210,13 +210,6 @@ async function addAllTables(destroyTable) {
       organizationTypeId: type.dataValues.id,
       maxTeamsLimit: faker.random.number()
     });
-    //Команды
-    let team = await db.Teams.create({
-      organizationId: organization.dataValues.id,
-      name: faker.name.findName(),
-      description: faker.lorem.paragraph(),
-      maxUsersLimit: faker.random.number()
-    });
 
     //Оповещения
     let notification = await db.Notifications.create({
@@ -238,18 +231,6 @@ async function addAllTables(destroyTable) {
       userId: user.dataValues.id,
       readOrNot: faker.random.boolean()
     });
-
-    //Задачи
-    let tasks = await db.Tasks.create({
-      teamId: team.dataValues.id,
-      userId: user.dataValues.id,
-      body: {
-        header: faker.random.word(),
-        text: faker.lorem.paragraph(),
-        points: faker.random.number()
-      },
-      status: faker.random.word()
-    });
     //Посты
     let post = await db.Posts.create({
       body: {
@@ -270,23 +251,11 @@ async function addAllTables(destroyTable) {
     let teamcustomization = await db.TeamCustomization.create({
       settings: faker.lorem.paragraph()
     });
-    //Пользователи в команде
-    let usersinteams = await db.UsersInTeams.create({
-      userId: user.dataValues.id,
-      teamId: team.dataValues.id,
-      status: faker.random.word(),
-      roleId: role.dataValues.id
-    });
+
     //Баллы
     let pointsuser = await db.Points.create({
       userId: user.dataValues.id,
-      pointQuantity: faker.random.number()
-    });
-    //Операции с баллами
-    let pointsoperations = await db.PointsOperations.create({
-      pointAccountId: pointsuser.dataValues.id,
-      delta: faker.random.number(),
-      operationDescription: faker.random.word()
+      pointQuantity: 0
     });
     //Комментарии
     // let comment = await db.Comments.create({
