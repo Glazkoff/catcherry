@@ -11,9 +11,13 @@
           <div class="col-12">
             <div v-for="t in team" :key="t.id" class="card">
               <div class="card_img">
-                <img src="../../assets/avatar.jpg" v-bind:alt="t.name" />
+                <img
+                  v-on:click="onLink(t.id)"
+                  src="../../assets/avatar.jpg"
+                  v-bind:alt="t.name"
+                />
               </div>
-              <div class="card_body">
+              <div v-on:click="onLink(t.id)" class="card_body">
                 <h3 v-on:click="onLink(t.id)">{{ t.name }}</h3>
               </div>
               <div class="card_action">
