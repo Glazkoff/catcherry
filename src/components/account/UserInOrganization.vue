@@ -158,6 +158,7 @@
             v-model.trim="$v.name.$model"
             placeholder="Организация 'Техностек'"
             class="form-control form-text"
+            :class="{ is_invalid: $v.name.$error }"
           />
           <div v-if="$v.name.$error" class="error">
             <span v-if="!$v.name.required">Organization name is required</span>
@@ -173,6 +174,7 @@
             v-model.trim="$v.ownerId.$model"
             placeholder="Owner ID"
             class="form-control form-text"
+            :class="{ is_invalid: $v.ownerId.$error }"
           />
           <div v-if="$v.ownerId.$error" class="error">
             <span v-if="!$v.ownerId.required">Owner is required</span>
@@ -186,6 +188,7 @@
             v-model.trim="$v.organizationTypeId.$model"
             placeholder="Organization type"
             class="form-control form-text"
+            :class="{ is_invalid: $v.organizationTypeId.$error }"
           />
           <div v-if="$v.organizationTypeId.$error" class="error">
             <span v-if="!$v.organizationTypeId.required"

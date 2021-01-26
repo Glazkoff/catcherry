@@ -11,6 +11,7 @@
         v-model.trim="$v.name.$model"
         :placeholder="$t('signUp.namePlaceholder')"
         class="form-control block"
+        :class="{ is_invalid: $v.name.$error }"
       />
       <div v-if="$v.name.$error" class="error">
         <span class="form-text danger" v-if="!$v.name.required">{{
@@ -30,6 +31,7 @@
         v-model.trim="$v.surname.$model"
         :placeholder="$t('signUp.surnamePlaceholder')"
         class="form-control block"
+        :class="{ is_invalid: $v.surname.$error }"
       />
       <div v-if="$v.surname.$error" class="error">
         <span class="form-text danger" v-if="!$v.surname.required">{{
@@ -43,12 +45,13 @@
     <div class="form-group">
       <label class="form-name">{{ $t("signUp.patricity") }}</label>
       <input
-      id="patricity"
+        id="patricity"
         :disabled="signUpLoading"
         type="text"
         v-model.trim="$v.patricity.$model"
         :placeholder="$t('signUp.patricityPlaceholder')"
         class="form-control block"
+        :class="{ is_invalid: $v.patricity.$error }"
       />
       <div v-if="$v.patricity.$error" class="error">
         <span class="form-text danger" v-if="!$v.patricity.alpha">{{
@@ -94,6 +97,7 @@
         v-model.trim="$v.login.$model"
         :placeholder="$t('signUp.loginPlaceholder')"
         class="form-control block"
+        :class="{ is_invalid: $v.login.$error }"
         @input="checkLogin()"
       />
       <div v-if="$v.login.$error" class="error">
@@ -119,6 +123,7 @@
         v-model.trim="$v.password.$model"
         :placeholder="$t('signUp.passwordPlaceholder')"
         class="form-control block"
+        :class="{ is_invalid: $v.password.$error }"
       />
       <div v-if="$v.password.$error" class="error">
         <span class="form-text danger" v-if="!$v.password.required">{{
@@ -304,4 +309,5 @@ export default {
 </script>
 <style lang="scss">
 @import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
 </style>

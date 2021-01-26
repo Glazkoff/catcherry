@@ -130,6 +130,7 @@
                 }}</label>
                 <input
                   class="form-control"
+                  :class="{ is_invalid: $v.userEditData.surname.$error }"
                   name="surname"
                   v-model.trim="$v.userEditData.surname.$model"
                   @blur="$v.userEditData.surname.$touch()"
@@ -152,6 +153,7 @@
                 <label for="name" class="form-name ">{{ $t("name") }}</label>
                 <input
                   class="form-control"
+                  :class="{ is_invalid: $v.userEditData.name.$error }"
                   name="name"
                   v-model.trim="$v.userEditData.name.$model"
                   :placeholder="$t('name')"
@@ -174,6 +176,7 @@
                 }}</label>
                 <input
                   class="form-control"
+                  :class="{ is_invalid: $v.userEditData.patricity.$error }"
                   name="patricity"
                   v-model.trim="$v.userEditData.patricity.$model"
                   :placeholder="$t('patricity')"
@@ -236,6 +239,7 @@
                 <label for="login" class="form-name ">{{ $t("login") }}</label>
                 <input
                   class="form-control"
+                  :class="{ is_invalid: $v.userEditData.login.$error }"
                   name="login"
                   v-model.trim="$v.userEditData.login.$model"
                   :placeholder="$t('login')"

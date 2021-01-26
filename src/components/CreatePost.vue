@@ -25,7 +25,8 @@ export default {
 };
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
 // div {
 //   width: 80%;
 //   margin: 0 auto;
