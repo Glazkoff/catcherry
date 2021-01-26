@@ -1,78 +1,185 @@
 <template>
-  <div class="flexCont" v-if="!this.$apollo.loading">
-    <breadcrumbs></breadcrumbs>
-    <h3>{{ $t("editTeam") }}</h3>
-    <div v-for="t in team" :key="t.id">
-      <div v-if="t.id == id">
-        <EditForm :t="t" @update="toSaveEditTeam" />
+  <div class="container">
+    <div class="row">
+      <div v-if="!this.$apollo.loading">
+        <div class="col-12">
+          <breadcrumbs></breadcrumbs>
+        </div>
+        <form @submit.prevent="editTeam()" class="col-12">
+          <p class="gray mb-4">
+            Последнее редактирование : {{ $d(oneTeam.updatedAt, "long") }}
+          </p>
+          <div class="form-group">
+            <label for="name">{{ $t("nameInanimate") }}</label>
+            <input
+              name="name"
+              v-model.trim="$v.oneTeam.name.$model"
+              @blur="$v.oneTeam.name.$touch()"
+              :placeholder="$t('nameInanimate')"
+              class="form-control col-8 dark"
+            />
+            <div v-if="$v.oneTeam.name.$error" class="error">
+              <span v-if="!$v.oneTeam.name.required" class="form-text danger">{{
+                $t("required")
+              }}</span>
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="description">{{ $t("description") }}</label>
+            <textarea
+              name="description"
+              v-model.trim="$v.oneTeam.description.$model"
+              @blur="$v.oneTeam.description.$touch()"
+              :placeholder="$t('description')"
+              class="form-control col-8 dark"
+            ></textarea>
+            <div v-if="$v.oneTeam.description.$error" class="error">
+              <span
+                v-if="!$v.oneTeam.description.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="maxUsersLimit"
+              >Максимальное количество участников в команде</label
+            >
+            <input
+              name="maxUsersLimit"
+              v-model.trim="$v.oneTeam.maxUsersLimit.$model"
+              @blur="$v.oneTeam.maxUsersLimit.$touch()"
+              :placeholder="$t('description')"
+              class="form-control col-8 dark"
+            />
+            <div v-if="$v.oneTeam.maxUsersLimit.$error" class="error">
+              <span
+                v-if="!$v.oneTeam.maxUsersLimit.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+              <span
+                v-if="!$v.oneTeam.maxUsersLimit.numeric"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
+          </div>
+          <button
+            class="btn btn-primary col-8 dark"
+            :disabled="$v.oneTeam.$invalid"
+            @click="editTeam()"
+          >
+            {{ $t("save") }}
+          </button>
+        </form>
+        <minialert v-if="isShowAlertEdit"
+          ><p slot="title">
+            Вы успешно изменили данные команды
+          </p></minialert
+        >
+        <minialert v-if="isError"
+          ><p slot="title">
+            {{ $t("minialertError") }}
+          </p></minialert
+        >
       </div>
+      <div v-else class="wrapOfLoader"><loader></loader></div>
     </div>
   </div>
-  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
-import { TEAM_IN_ORG_QUERY, UPDATE_TEAMS_QUERY } from "@/graphql/queries";
+import { UPDATE_TEAM_QUERY, TEAM_QUERY } from "@/graphql/queries";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
-import EditForm from "@/components/manager/EditForm";
 import loader from "@/components/Loader.vue";
+import { required, numeric } from "vuelidate/lib/validators";
+import minialert from "@/components/MiniAlert.vue";
 export default {
   apollo: {
     // Массив команд организации
-    team: {
-      query: TEAM_IN_ORG_QUERY,
+    oneTeam: {
+      query: TEAM_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
-          organizationId: +this.$route.params.id
+          id: this.$route.params.id
         };
       }
     }
   },
   data() {
     return {
-      id: this.$route.params.id // id команды
+      isShowAlertEdit: false,
+      isError: false
     };
   },
   components: {
-    EditForm,
     breadcrumbs,
-    loader
+    loader,
+    minialert
+  },
+  validations: {
+    // Редактирование данных про организацию
+    oneTeam: {
+      name: {
+        required
+      },
+      description: {
+        required
+      },
+      maxUsersLimit: {
+        required,
+        numeric
+      }
+    }
   },
   methods: {
     // Метод для редактирования команды; сохраняет внесенные пользователем изменения
-    toSaveEditTeam(name, description, maxUsersLimit) {
+    editTeam() {
+      this.isShowModalEditTeam = false;
       this.$apollo
         .mutate({
-          mutation: UPDATE_TEAMS_QUERY,
+          mutation: UPDATE_TEAM_QUERY, // Редактируем в БД
           variables: {
-            id: this.id,
-            name: name,
-            description: description,
-            maxUsersLimit: maxUsersLimit
+            id: this.oneTeam.id,
+            name: this.oneTeam.name,
+            description: this.oneTeam.description,
+            maxUsersLimit: parseInt(this.oneTeam.maxUsersLimit)
           },
+          // Редактируем кеш
           update: cache => {
-            // Записываем в переменную массив команд организации
             let data = cache.readQuery({
-              query: TEAM_IN_ORG_QUERY,
-              variables() {
-                return {
-                  organizationId: 1
-                };
-              }
+              query: TEAM_QUERY,
+              variables: { id: this.$route.params.id }
             });
-            // Меняем поля определенной команды
-            data.team.find(el => el.id === this.id).name = name;
-            data.team.find(el => el.id === this.id).description = description;
-            data.team.find(
-              el => el.id === this.id
-            ).maxUsersLimit = maxUsersLimit;
+            data.oneTeam.name = this.oneTeam.name;
+            data.oneTeam.description = this.oneTeam.description;
+            data.oneTeam.maxUsersLimit = this.oneTeam.maxUsersLimit;
+            data.oneTeam.updatedAt = new Date();
+            cache.writeQuery({
+              query: TEAM_QUERY,
+              variables: { id: this.$route.params.id },
+              data
+            });
           }
         })
-        .then(data => {
-          console.log(data);
+        // В случае успеха
+        .then(() => {
+          this.isShowAlertEdit = true;
+          setTimeout(() => {
+            this.isShowAlertEdit = false;
+          }, 3000);
         })
+        // В случае ошибки
         .catch(error => {
           console.error(error);
+          this.isError = true;
+          setTimeout(() => {
+            this.isError = false;
+          }, 3000);
         });
     }
   }
@@ -82,12 +189,18 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
-.flexCont {
-  display: flex;
-  padding: 3rem;
-  flex-direction: column;
+@import "@/styles/_grid.scss";
+textarea {
+  resize: none;
+  height: 10rem;
 }
-h3 {
-  margin-bottom: 0.5rem;
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>

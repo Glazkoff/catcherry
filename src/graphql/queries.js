@@ -313,6 +313,18 @@ export const TEAM_IN_ORG_QUERY = gql`
   }
 `;
 
+export const TEAM_QUERY = gql`
+  query($id: ID!) {
+    oneTeam(id: $id) {
+      id
+      name
+      description
+      maxUsersLimit
+      updatedAt
+    }
+  }
+`;
+
 export const UPDATE_TEAMS_QUERY = gql`
   mutation(
     $name: String!

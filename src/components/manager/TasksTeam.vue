@@ -7,6 +7,7 @@
     </div>
     <div class="wrapOfLoader" v-if="$apollo.loading"><loader></loader></div>
     <div v-if="!$apollo.loading">
+      <p>ОШИБКА: {{ allTasksInOneTeam }}</p>
       <div class="row">
         <div class="col-4">
           <h2 class="mb-4">{{ $t("task.backlogTask") }}</h2>
