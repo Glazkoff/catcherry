@@ -29,7 +29,7 @@ h4 {
 
 h5 {
   font-weight: 500;
-  font-size: 0.5rem;
+  font-size: 0.9rem;
   font-family: Lato;
 }
 
@@ -305,7 +305,8 @@ a {
 }
 
 // Классы для цветов
-.red {
+.red,
+.danger {
   color: $red;
 }
 .gray {
@@ -313,4 +314,7 @@ a {
 }
 .bright_violet {
   color: $bright_violet;
+}
+.white {
+  color: $white;
 }

@@ -8,6 +8,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("logIn.login") }} *</label><br />
       <input
+        id="login"
         :disabled="authLoading"
         type="text"
         v-model.trim="$v.login.$model"
@@ -24,6 +25,7 @@
     <div class="form-group">
       <label class="form-name">{{ $t("logIn.password") }} *</label><br />
       <input
+        id="password"
         :disabled="authLoading"
         type="password"
         v-model.trim="$v.password.$model"

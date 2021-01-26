@@ -257,7 +257,7 @@
               type="number"
               name="points"
               v-model.trim="points"
-              class="form-control"
+              class="form-control col-12"
             />
           </p>
           <div class="btn-group">
@@ -276,9 +276,9 @@
         </p>
         <p v-if="oneUserInTeams.length !== 0">{{ $t("userTeams") }}:</p>
         <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
-          <p v-if="team.team.name !== null">
+          <h3 v-if="team.team.name !== null">
             {{ $t("nameInanimate") }}: {{ team.team.name }}
-          </p>
+          </h3>
           <p v-if="team.team.organization !== null">
             {{ $t("organization") }}: {{ team.team.organization.name }}
           </p>
@@ -286,66 +286,57 @@
           <p v-if="team.role !== null">
             {{ $t("role") }}: {{ team.role.name }}
           </p>
-          <p v-if="oneUserInTeams.length !== 0">{{ $t("userTeams") }}:</p>
-          <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
-            <p>{{ $t("nameInanimate") }}: {{ team.team.name }}</p>
-            <p>{{ $t("organization") }}: {{ team.team.organization.name }}</p>
-            <p>{{ $t("status") }}: {{ team.status }}</p>
-            <p v-if="team.role !== null">
-              {{ $t("role") }}: {{ team.role.name }}
-            </p>
-            <div class="btn-group">
-              <button
-                v-if="team.status === 'Принят'"
-                @click="changeStatusInTeam(team, 'Не принят')"
-                class="btn btn-primary block"
-              >
-                {{ $t("deleteUserFromTeam") }}
-              </button>
-              <button
-                v-if="team.status !== 'Принят'"
-                @click="changeStatusInTeam(team, 'Принят')"
-                class="btn btn-primary block"
-              >
-                {{ $t("addUserToTeam") }}
-              </button>
-            </div>
-          </div>
-          <button
-            class="btn btn-primary block"
-            @click="addUserInTeam()"
-            v-if="!isShowAddUserInTeam"
-          >
-            {{ $t("addUserToTeam") }}
-          </button>
-          <div class="addToTeam" v-if="isShowAddUserInTeam">
-            <div class="form-group">
-              <label for="team" class="form-name">Название команды</label>
-              <select name="team" class="form-control" v-model="newTeam">
-                <option v-for="team in teams" :key="team.id" :value="team.id">{{
-                  team.name
-                }}</option>
-              </select>
-            </div>
-            <button class="btn btn-primary" @click="addOneUserInTeam()">
+          <div class="btn-group">
+            <button
+              v-if="team.status === 'Принят'"
+              @click="changeStatusInTeam(team, 'Не принят')"
+              class="btn btn-primary block"
+            >
+              {{ $t("deleteUserFromTeam") }}
+            </button>
+            <button
+              v-if="team.status !== 'Принят'"
+              @click="changeStatusInTeam(team, 'Принят')"
+              class="btn btn-primary block"
+            >
               {{ $t("addUserToTeam") }}
             </button>
           </div>
-          <div class="btn-group">
-            <button @click="showModalEdit()" class="btn btn-primary">
-              {{ $t("edit") }}
-            </button>
-            <button
-              @click="showModalDelete()"
-              class="btn btn-primary"
-              :disabled="$store.getters.decodedToken.id == userId"
-            >
-              {{ $t("delete") }}
-            </button>
-            <button @click="cancelFullInformation()" class="btn btn-alternate">
-              {{ $t("cancel") }}
-            </button>
+        </div>
+        <button
+          class="btn btn-primary block"
+          @click="addUserInTeam()"
+          v-if="!isShowAddUserInTeam"
+        >
+          {{ $t("addUserToTeam") }}
+        </button>
+        <div class="addToTeam" v-if="isShowAddUserInTeam">
+          <div class="form-group">
+            <label for="team" class="form-name">Название команды</label>
+            <select name="team" class="form-control col-12" v-model="newTeam">
+              <option v-for="team in teams" :key="team.id" :value="team.id">{{
+                team.name
+              }}</option>
+            </select>
           </div>
+          <button class="btn btn-primary col-12" @click="addOneUserInTeam()">
+            {{ $t("addUserToTeam") }}
+          </button>
+        </div>
+        <div class="btn-group">
+          <button @click="showModalEdit()" class="btn btn-primary">
+            {{ $t("edit") }}
+          </button>
+          <button
+            @click="showModalDelete()"
+            class="btn btn-primary"
+            :disabled="$store.getters.decodedToken.id == userId"
+          >
+            {{ $t("delete") }}
+          </button>
+          <button @click="cancelFullInformation()" class="btn btn-alternate">
+            {{ $t("cancel") }}
+          </button>
         </div>
       </div>
     </popup>
@@ -756,7 +747,7 @@ export default {
         .mutate({
           mutation: CREATE_POINTS_OPERATION, // Изменяем в БД
           variables: {
-            pointAccountId: parseInt(this.getPointsUser.id),
+            userId: this.userId,
             delta: parseInt(this.points - this.getPointsUser.pointQuantity),
             operationDescription: "Действия администратора"
           },
@@ -845,11 +836,12 @@ export default {
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_grid.scss";
 .oneTeam {
-  border: 1px solid black;
-  padding: 10px;
-  p {
-    display: block;
-  }
+  padding: 1%;
+  background: $violet;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: $white;
 }
 .wrapOfLoader {
   overflow: hidden;

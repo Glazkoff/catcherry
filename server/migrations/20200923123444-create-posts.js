@@ -14,11 +14,8 @@ module.exports = {
       authorId: {
         type: Sequelize.INTEGER
       },
-      organizationId: {
-        type: Sequelize.INTEGER
-      },
-      forAllTeam: {
-        type: Sequelize.BOOLEAN
+      userId: {
+        type: Sequelize.JSONB
       },
       createdAt: {
         allowNull: false,

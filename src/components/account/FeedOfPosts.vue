@@ -45,15 +45,23 @@ export default {
   name: "FeedOfPosts",
   apollo: {
     posts: {
-      query: POSTS_QUERY
+      query: POSTS_QUERY,
+      variables() {
+        return {
+          userId: this.userId
+        };
+      }
     }
   },
   computed: {
     isEmpty() {
-      if (!this.$apollo.queries.posts.loading) {
-        if (this.posts != undefined || this.posts.length != 0) return false;
-        else return true;
-      } else return false;
+      if (this.posts == undefined) {
+        return true;
+      } else {
+        if (this.posts.length == 0) {
+          return true;
+        } else return false;
+      }
     },
     userId() {
       if (this.$store.getters.decodedToken != null) {
@@ -81,9 +89,14 @@ export default {
               postId: object.id
             },
             update: cache => {
-              let data = cache.readQuery({ query: POSTS_QUERY });
+              let data = cache.readQuery({
+                query: POSTS_QUERY,
+                variables: {
+                  userId: this.userId
+                }
+              });
               let indexlikedPost = data.posts.findIndex(
-                el => el.id === object.id
+                el => el.id == object.id
               );
               if (data.posts[indexlikedPost] != null) {
                 let indexLike = data.posts[
@@ -91,12 +104,16 @@ export default {
                 ].likesOfPost.findIndex(el => el.userId == this.userId);
                 data.posts[indexlikedPost].likesOfPost.splice(indexLike, 1);
               }
-              cache.writeQuery({ query: POSTS_QUERY, data });
+              cache.writeQuery({
+                query: POSTS_QUERY,
+                variables: {
+                  userId: this.userId
+                },
+                data
+              });
             }
           })
-          .then(data => {
-            console.log(data);
-          })
+          .then()
           .catch(error => {
             console.error(error);
           });
@@ -109,7 +126,12 @@ export default {
               postId: object.id
             },
             update: cache => {
-              let data = cache.readQuery({ query: POSTS_QUERY });
+              let data = cache.readQuery({
+                query: POSTS_QUERY,
+                variables: {
+                  userId: this.userId
+                }
+              });
               let indexlikedPost = data.posts.findIndex(
                 el => el.id === object.id
               );
@@ -119,19 +141,20 @@ export default {
                   __typename: "LikeOfPost"
                 });
               }
-              cache.writeQuery({ query: POSTS_QUERY, data });
+              cache.writeQuery({
+                query: POSTS_QUERY,
+                variables: {
+                  userId: this.userId
+                },
+                data
+              });
             }
           })
-          .then(data => {
-            console.log(data);
-          })
+          .then()
           .catch(error => {
             console.error(error);
           });
       }
-    },
-    onComment(object) {
-      console.log("Нажата кнопка комментария для поста с id " + object.id);
     }
   }
 };

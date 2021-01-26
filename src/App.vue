@@ -37,19 +37,18 @@ export default {
 <style lang="scss">
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
+// @import "@/styles/_reset.scss";
 
 #app {
   width: 100vw;
   max-width: 100vw;
-}
-body {
-  margin: 0;
 }
 
 *,
 *::before,
 *::after {
   box-sizing: border-box;
+  margin: 0;
 }
 
 [v-cloak] {

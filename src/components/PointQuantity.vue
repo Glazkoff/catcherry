@@ -1,17 +1,26 @@
 <template>
-  <div class="container">
-    <div class="row">
-      <div class="col-12">
-        <h1>{{ $tc("pointsMsg", pointQuantity) }}</h1>
+  <div v-if="!this.$apollo.queries.getPointsUser.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <h1>{{ $tc("pointsMsg", pointQuantity) }}</h1>
+        </div>
       </div>
     </div>
+  </div>
+  <div v-else>
+    <Loader></Loader>
   </div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
 import { GET_POINTS_USER_QUERY } from "@/graphql/queries";
 export default {
   name: "PointsQuantity",
+  components: {
+    Loader
+  },
   apollo: {
     getPointsUser: {
       query: GET_POINTS_USER_QUERY,
