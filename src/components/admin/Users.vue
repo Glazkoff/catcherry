@@ -500,7 +500,6 @@ export default {
       this.isShowAddUserInTeam = false;
     },
     addUserInTeam() {
-      console.log(this.teams);
       this.teams = this.teams.filter(
         team => this.oneUserInTeams.findIndex(t => +t.teamId === +team.id) < 0
       );

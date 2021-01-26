@@ -256,6 +256,7 @@ type Query {
   backlog (teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
   roles: [Role]
+  role(id: ID!): Role
 
   allTasks(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   allTasksInOneTeam(teamId:ID!): [Task]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -338,6 +339,8 @@ type Mutation {
   acceptRequst(id: ID!): [Int]!
   revokeRequst(id: ID!): [Int]!
   rejectRequst(id: ID!): [Int]!
+
+  changeStatusRequest(id: ID!, status: String): [Int]
 
   createPointOperation(userId: ID!, delta: Int!, operationDescription: String!): PointOperations!
 

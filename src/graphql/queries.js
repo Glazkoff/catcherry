@@ -12,7 +12,7 @@ export const SIGN_UP = gql`
     $fingerprint: String!
   ) {
     signUp(
-      input:{
+      input: {
         name: $name
         surname: $surname
         patricity: $patricity
@@ -31,8 +31,14 @@ export const SIGN_UP = gql`
 `;
 
 export const LOG_IN = gql`
-  mutation($login: String!, $password: password_String_NotNull_minLength_6!, $fingerprint: String!) {
-    logIn(input: {login: $login, password: $password, fingerprint: $fingerprint}) {
+  mutation(
+    $login: String!
+    $password: password_String_NotNull_minLength_6!
+    $fingerprint: String!
+  ) {
+    logIn(
+      input: { login: $login, password: $password, fingerprint: $fingerprint }
+    ) {
       accessToken
       error {
         errorStatus
@@ -102,6 +108,12 @@ export const REQUESTS_QUERY = gql`
 export const ACCEPT_REQUEST_QUERY = gql`
   mutation($id: ID!) {
     acceptRequst(id: $id)
+  }
+`;
+
+export const CHANGE_STATUS_REQUEST_QUERY = gql`
+  mutation($id: ID!, $status: String) {
+    changeStatusRequest(id: $id, status: $status)
   }
 `;
 
@@ -197,7 +209,7 @@ export const UPDATE_USER_QUERY = gql`
     $id: ID!
   ) {
     updateUser(
-      input:{
+      input: {
         name: $name
         surname: $surname
         patricity: $patricity
@@ -325,6 +337,14 @@ export const TEAM_QUERY = gql`
   }
 `;
 
+export const TEAM_NAME_QUERY = gql`
+  query($id: ID!) {
+    oneTeam(id: $id) {
+      name
+    }
+  }
+`;
+
 export const UPDATE_TEAMS_QUERY = gql`
   mutation(
     $name: String!
@@ -362,7 +382,17 @@ export const USERS_IN_TEAMS_QUERY = gql`
         id
         name
         surname
+        patricity
       }
+    }
+  }
+`;
+
+export const ROLE_QUERY = gql`
+  query($id: ID!) {
+    role(id: $id) {
+      id
+      name
     }
   }
 `;

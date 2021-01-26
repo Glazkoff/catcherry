@@ -311,6 +311,11 @@ module.exports = {
     roles: (parent, args, { db }) => {
       return db.Roles.findAll({});
     },
+    role: (parent, args, { db }) => {
+      return db.Roles.findOne({
+        where: { id: args.id }
+      });
+    },
 
     comments: (parent, args, { db }) =>
       db.Comments.findAll({
@@ -922,7 +927,17 @@ module.exports = {
           }
         }
       ),
-
+    changeStatusRequest: (parent, args, { db }) =>
+      db.UsersInTeams.update(
+        {
+          status: args.status
+        },
+        {
+          where: {
+            id: args.id
+          }
+        }
+      ),
     revokeRequst: (parent, { id }, { db }) =>
       db.UsersInTeams.update(
         {
