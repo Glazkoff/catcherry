@@ -25,6 +25,7 @@
   "deleteOrgQuestion": "Вы действительно хотите удалить организацию",
   "placeholderSearchByUsers": "Поиск по пользователям",
   "placeholderSearchByOrgs": "Поиск по пользователям",
+  "languageInterface": "Выберите язык интерфейса:",
   "user": "Пользователь",
   "loading": "Загрузка",
   "createdAt": "Дата создания",

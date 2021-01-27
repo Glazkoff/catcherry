@@ -54,17 +54,6 @@ export default {
 [v-cloak] {
   display: none;
 }
-.locales {
-  display: flex;
-  a {
-    margin-right: 1rem;
-    display: block;
-    cursor: pointer;
-    &:hover {
-      transform: scale(1.1);
-    }
-  }
-}
 
 .side-bar__nav-list {
   a {
