@@ -2,13 +2,7 @@
   <div class="main_stat">
     <breadcrumbs></breadcrumbs>
     <h3>Личная статистика</h3>
-    <div
-      v-if="
-        $apollo.queries.usersInTeams.loading &&
-          $apollo.queries.personalUserStatistics.loading
-      "
-      class="wrapOfLoader"
-    >
+    <div v-if="$apollo.loading" class="wrapOfLoader">
       <loader></loader>
     </div>
     <div v-else>
@@ -45,7 +39,7 @@
             <small v-if="pointsLastWeek[0] == pointsLastWeek[1]">
               столько же, как на прошлой неделе
             </small>
-            <p>Заработанные баллы: {{ positivePoints }}</p>
+            <p>Заработанные баллы: {{ positive }}</p>
           </div>
           <div>
             <p>На прошлой неделе:</p>
@@ -53,7 +47,7 @@
               {{ pointsLastWeek[1] }} баллов
             </p>
             <br />
-            <p>Потраченные баллы: {{ negativePoints }}</p>
+            <p>Потраченные баллы: {{ negative }}</p>
           </div>
         </div>
       </div>
@@ -88,27 +82,35 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  data() {
-    return {
-      positivePoints: 0, // заработанные баллы
-      negativePoints: 0 // потраченные баллы
-    };
-  },
-  // Функция для отображения заработанных и потрченных баллов
-  created: function() {
-    for (
-      let i = 0;
-      i < this.personalUserStatistics.userPointsOperation.length;
-      i++
-    ) {
-      if (this.personalUserStatistics.userPointsOperation[i].delta > 0)
-        this.positivePoints += this.personalUserStatistics.userPointsOperation[
-          i
-        ].delta;
-      else
-        this.negativePoints += Math.abs(
-          this.personalUserStatistics.userPointsOperation[i].delta
-        );
+  computed: {
+    // Функция для отображения заработанных баллов
+    positive: function() {
+      var positivePoints = 0;
+      for (
+        let i = 0;
+        i < this.personalUserStatistics.userPointsOperation.length;
+        i++
+      ) {
+        if (this.personalUserStatistics.userPointsOperation[i].delta > 0)
+          positivePoints += this.personalUserStatistics.userPointsOperation[i]
+            .delta;
+      }
+      return positivePoints;
+    },
+    // Функция для отображения потраченных баллов
+    negative: function() {
+      var negativePoints = 0;
+      for (
+        let i = 0;
+        i < this.personalUserStatistics.userPointsOperation.length;
+        i++
+      ) {
+        if (this.personalUserStatistics.userPointsOperation[i].delta < 0)
+          negativePoints += Math.abs(
+            this.personalUserStatistics.userPointsOperation[i].delta
+          );
+      }
+      return negativePoints;
     }
   },
   components: {
