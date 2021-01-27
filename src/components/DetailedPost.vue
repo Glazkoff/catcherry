@@ -1,209 +1,233 @@
 <template>
-  <div class="container">
-    <div class="post">
-      <div class="imageContainer">
-        <img src="../assets/placeholder.png" v-bind:alt="post.body.header" />
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12 breadcrumbs">
+          <p><span>Здесь должны быть хлебные крошки</span></p>
+        </div>
       </div>
-      <div class="infoContainer">
-        <h1 class="heading">
-          {{ post.body.header }}
-        </h1>
-        <p class="infoDate">{{ $d(post.createdAt, "long") }}</p>
-        <p class="infoBody">
-          {{ post.body.text }}
-        </p>
-        <div class="iconContainer">
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onLike(post.id)">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-prefix="fas"
-                data-icon="heart"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                class="svg-inline--fa fa-heart fa-w-16 fa-3x"
-              >
-                <path
-                  fill="#C4C4C4"
-                  d="M462.3 62.6C407.5 15.9 326 24.3 275.7 76.2L256 96.5l-19.7-20.3C186.1 24.3 104.5 15.9 49.7 62.6c-62.8 53.6-66.1 149.8-9.9 207.9l193.5 199.8c12.5 12.9 32.8 12.9 45.3 0l193.5-199.8c56.3-58.1 53-154.3-9.8-207.9z"
-                ></path>
-              </svg>
-            </div>
-            <span class="numOfIcon">21</span>
-          </div>
+    </div>
+    <div v-if="!this.$apollo.queries.post.loading" class="container">
+      <div class="row">
+        <div class="col-10 wrap">
+          <div class="container m-0">
+            <div class="row">
+              <div class="col-5 m-0">
+                <img
+                  src="../assets/placeholder.png"
+                  v-bind:alt="post.body.header"
+                />
+              </div>
+              <div class="col-7 info-wrap">
+                <h2 class="heading">
+                  {{ post.body.header }}
+                </h2>
+                <small class="infoBody">
+                  {{ post.body.text }}
+                </small>
+                <small class="infoDate">
+                  {{ $d(post.createdAt, "number") }}
+                </small>
 
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onComment(post.id)">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-prefix="fas"
-                data-icon="comment"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                class="svg-inline--fa fa-comment fa-w-16 fa-3x"
-              >
-                <path
-                  fill="#C4C4C4"
-                  d="M256 32C114.6 32 0 125.1 0 240c0 49.6 21.4 95 57 130.7C44.5 421.1 2.7 466 2.2 466.5c-2.2 2.3-2.8 5.7-1.5 8.7S4.8 480 8 480c66.3 0 116-31.8 140.6-51.4 32.7 12.3 69 19.4 107.4 19.4 141.4 0 256-93.1 256-208S397.4 32 256 32z"
-                ></path>
-              </svg>
-            </div>
-            <span class="numOfIcon">3</span>
-          </div>
+                <div class="iconContainer">
+                  <div class="iconAndNumber" v-on:click="onLike(post.id)">
+                    <div class="icon">
+                      <EmptyLike v-if="!isLikedByUser"></EmptyLike>
+                      <FilledLike v-else></FilledLike>
+                    </div>
+                    <p class="numOfIcon">{{ post.likesOfPost.length }}</p>
+                  </div>
 
-          <div class="iconAndNumber">
-            <div class="icon" v-on:click="onShare(post.id)">
-              <svg
-                aria-hidden="true"
-                focusable="false"
-                data-prefix="fas"
-                data-icon="share"
-                role="img"
-                xmlns="http://www.w3.org/2000/svg"
-                viewBox="0 0 512 512"
-                class="svg-inline--fa fa-share fa-w-16 fa-3x"
-              >
-                <path
-                  fill="#C4C4C4"
-                  d="M503.691 189.836L327.687 37.851C312.281 24.546 288 35.347 288 56.015v80.053C127.371 137.907 0 170.1 0 322.326c0 61.441 39.581 122.309 83.333 154.132 13.653 9.931 33.111-2.533 28.077-18.631C66.066 312.814 132.917 274.316 288 272.085V360c0 20.7 24.3 31.453 39.687 18.164l176.004-152c11.071-9.562 11.086-26.753 0-36.328z"
-                ></path>
-              </svg>
+                  <div class="iconAndNumber">
+                    <div class="icon">
+                      <Comment></Comment>
+                    </div>
+                    <p class="numOfIcon">3</p>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="row">
+              <Comments></Comments>
             </div>
           </div>
         </div>
-        <comments></comments>
       </div>
     </div>
+    <div v-else><Loader></Loader></div>
   </div>
 </template>
 
 <script>
+import EmptyLike from "@/assets/empty_like.svg?inline";
+import FilledLike from "@/assets/filled_like.svg?inline";
+import Comment from "@/assets/comment.svg?inline";
 import Comments from "../components/Comments.vue";
-import { ONE_POST_QUERY } from "@/graphql/queries";
+import Loader from "@/components/Loader.vue";
+import {
+  POST_QUERY,
+  CREATE_LIKE_OF_POST,
+  DELETE_LIKE_OF_POST
+} from "@/graphql/queries";
 export default {
   name: "DetailedPost",
+  computed: {
+    userId() {
+      if (this.$store.getters.decodedToken != null) {
+        return this.$store.getters.decodedToken.id;
+      } else return null;
+    },
+    isLikedByUser() {
+      let likeIndex = this.post.likesOfPost.findIndex(el => {
+        return +el.userId === +this.userId;
+      });
+      return likeIndex !== -1;
+    }
+  },
   apollo: {
     post: {
-      query: ONE_POST_QUERY,
+      query: POST_QUERY,
       variables() {
         return {
-          id: this.$route.params.id
+          id: this.$route.params.id,
+          userId: this.userId
         };
       }
     }
   },
-  components: {
-    Comments
-  },
+  components: { Loader, EmptyLike, FilledLike, Comment, Comments },
   data() {
-    return {
-      message: null,
-      comments: [
-        {
-          id: 1,
-          author: "Олег Дубенский",
-          body:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?"
-        },
-        {
-          id: 2,
-          author: "Олег Недубенский",
-          body:
-            "Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam? Lorem ipsum dolor sit, amet consectetur adipisicing elit. Molestiae suscipit voluptate nemo. Perferendis, impedit! Quaerat nemo nulla soluta sunt accusamus in quae sed. Nam perferendis ratione totam autem minus quibusdam?"
-        }
-      ]
-    };
+    return {};
   },
   methods: {
-    onLike() {
-      console.log("Нажата кнопка лайка");
-    },
-    onComment() {
-      console.log("Нажата кнопка комментария");
-    },
-    onShare() {
-      console.log("Нажата кнопка репоста");
+    onLike(id) {
+      if (this.isLikedByUser) {
+        this.$apollo
+          .mutate({
+            mutation: DELETE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: id
+            },
+            update: cache => {
+              let data = cache.readQuery({
+                query: POST_QUERY,
+                variables: {
+                  id: this.$route.params.id,
+                  userId: this.userId
+                }
+              });
+              let indexLikePostByUser = data.post.likesOfPost.findIndex(
+                el => el.userId === this.userId
+              );
+              data.post.likesOfPost.splice(indexLikePostByUser, 1);
+              cache.writeQuery({
+                query: POST_QUERY,
+                variables: {
+                  id: this.$route.params.id,
+                  userId: this.userId
+                },
+                data
+              });
+            }
+          })
+          .then()
+          .catch(error => {
+            console.error(error);
+          });
+      } else {
+        this.$apollo
+          .mutate({
+            mutation: CREATE_LIKE_OF_POST,
+            variables: {
+              userId: this.userId,
+              postId: id
+            },
+            update: cache => {
+              let data = cache.readQuery({
+                query: POST_QUERY,
+                variables: {
+                  id: this.$route.params.id,
+                  userId: this.userId
+                }
+              });
+              data.post.likesOfPost.push({
+                userId: this.userId,
+                __typename: "LikeOfPost"
+              });
+              cache.writeQuery({
+                query: POST_QUERY,
+                variables: {
+                  id: this.$route.params.id,
+                  userId: this.userId
+                },
+                data
+              });
+            }
+          })
+          .then()
+          .catch(error => {
+            console.error(error);
+          });
+      }
     }
   }
 };
 </script>
 
-<style scoped>
-.container {
-  display: flex;
-  justify-content: center;
-}
-.post {
-  width: 56rem;
-  box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
-    0px 20px 32px rgba(96, 97, 112, 0.24);
-  border-radius: 0.5rem;
-  margin-bottom: 4rem;
-}
+<style scoped lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+@import "@/styles/_grid.scss";
 
-.imageContainer img {
-  width: 56rem;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  max-height: 25rem;
+.wrap {
+  background: $violet;
+  box-shadow: 0px 2px 10px rgba(0, 0, 0, 0.2);
+  border-radius: 0.7rem;
 }
-
-.infoContainer {
-  width: 44rem;
-  margin: 0 auto;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
+.col-5 img {
+  object-fit: cover;
+  height: 100%;
+  width: 100%;
+  max-width: 22rem;
 }
-
-.heading {
-  margin-top: 0;
-  font-weight: bold;
-  font-size: 1.5rem;
-  text-align: center;
-  line-height: 2rem;
-  color: #613490;
-  margin-bottom: 2rem;
+.col-7.info-wrap {
+  margin-top: 2rem;
+  margin-left: 1.5rem;
+  & h2 {
+    margin-bottom: 1rem;
+  }
+  & .infoBody,
+  & .infoDate {
+    display: block;
+    color: $light_grey;
+    margin-bottom: 0.5rem;
+  }
 }
-
-.infoDate {
-  font-size: 0.8rem;
-  line-height: 1rem;
-  color: #4c235b;
-}
-
-.infoBody {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  text-align: justify;
-  color: #4c235b;
-  margin-bottom: 1.5rem;
-}
-
 .iconContainer {
   display: flex;
-  margin-bottom: 2rem;
+  height: 20px;
 }
 
 .iconAndNumber {
   display: flex;
-  margin-right: 2rem;
+  cursor: pointer;
   align-items: center;
 }
 
+.iconAndNumber:first-child {
+  margin-right: 2.8rem;
+}
+
 .numOfIcon {
-  font-size: 0.8rem;
-  line-height: 0.8rem;
-  color: #000000;
+  display: inline;
+  color: $white;
 }
 
 .icon {
-  width: 1.8rem;
-  height: 1.8rem;
-  cursor: pointer;
-  margin-right: 0.7rem;
+  width: 1.25rem;
+  height: 1.25rem;
+  margin-left: 0;
+  margin-right: 0.3rem;
 }
 </style>

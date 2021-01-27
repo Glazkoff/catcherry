@@ -1,82 +1,128 @@
 <template>
-  <div class="list">
-    <notification
-      @delete="onDelete"
-      v-for="notification in notifications"
-      :key="notification.id"
-      :notification="notification"
-    ></notification>
+  <div class="wrapOfList">
+    <div class="list" v-if="!isEmpty">
+      <notification
+        v-for="notification in notificationsForUser"
+        :key="notification.id"
+        :notification="notification"
+        @check="onCheckNotification"
+      ></notification>
+    </div>
+    <div v-else class="list">
+      <h3>Оповещений не найдено</h3>
+    </div>
   </div>
 </template>
 
 <script>
-import Notification from "@/components/Notification.vue";
-import { NOTIFICATIONS_USER_QUERY } from "@/graphql/queries";
+import Notification from "@/components/NotificationCard.vue";
+import {
+  NOTIFICATIONS_FOR_USER_QUERY,
+  UPDATE_NOTIFICATION
+} from "@/graphql/queries";
 export default {
   name: "ListOfNotifications",
   components: {
     Notification
   },
-  data() {
-    return {
-      notifications: [
-        {
-          id: 22,
-          body: {
-            header: "Закрытие спринта",
-            text:
-              "В зум-конференции планируется к проведению закрытие спринта, в состав данного мероприятия войдут следующие части: очищение обзора, просмотр задач в работе ...",
-            button: "Zoom-link",
-            buttonLink:
-              "https://us04web.zoom.us/j/8118194172?pwd=UmpJTnAzbFZQUjZLYUJZU2VwN0pPUT09"
-          }
-        },
-
-        {
-          id: 23,
-          body: {
-            header: "Внимание!",
-            text:
-              "Важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация, важная информация...",
-            button: null
-          }
-        }
-      ]
-    };
-  },
   apollo: {
-    // массив пользователей команды с рейтиногм по баллам
-    notifications: {
-      query: NOTIFICATIONS_USER_QUERY,
+    notificationsForUser: {
+      query: NOTIFICATIONS_FOR_USER_QUERY,
       variables() {
         return {
-          teamId: this.$route.params.id
+          userId: this.$store.getters.decodedToken.id
         };
       }
     }
   },
   methods: {
-    onDelete(object) {
-      // console.log(object);
-      // console.log(object.id);
-      let index = this.notifications.findIndex(el => el.id === object.id);
-      // console.log(index);
-      this.notifications.splice(index, 1);
+    onCheckNotification(object) {
+      this.$apollo
+        .mutate({
+          mutation: UPDATE_NOTIFICATION,
+          variables: {
+            notificationId: object.id,
+            userId: this.$store.getters.decodedToken.id,
+            checkNotification: true
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: NOTIFICATIONS_FOR_USER_QUERY,
+              variables: {
+                userId: this.$store.getters.decodedToken.id
+              }
+            });
+            let index = data.notificationsForUser.findIndex(
+              el => el.id === object.id
+            );
+            data.notificationsForUser.splice(index, 1);
+            cache.writeQuery({
+              query: NOTIFICATIONS_FOR_USER_QUERY,
+              variables: {
+                userId: this.$store.getters.decodedToken.id
+              },
+              data
+            });
+          }
+        })
+        .then(() => {})
+        .catch(error => {
+          console.error(error);
+        });
+    }
+  },
+  computed: {
+    isEmpty() {
+      if (this.notificationsForUser == undefined) {
+        return true;
+      } else {
+        if (this.notificationsForUser.length == 0) {
+          return true;
+        } else return false;
+      }
     }
   }
 };
 </script>
 
-<style>
+<style lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_classes.scss";
+
+.wrapOfList {
+  width: 24rem;
+}
+
 .list {
-  height: 100%;
-  width: 18rem;
+  height: calc(100vh - #{$topBarHeight});
+  width: 24rem;
   display: flex;
   flex-direction: column;
   align-items: center;
-  float: right;
-  background: #f7f7f7;
+  top: $topBarHeight;
+  background: $violet;
+  position: sticky;
   overflow-x: hidden;
-  padding-top: 30px;
+  overflow-y: scroll;
+  right: 0;
+  padding-top: 1.4rem;
+  padding-bottom: 1.4rem;
+  padding-right: 1.6rem;
+  padding-left: 1.6rem;
+  box-shadow: -4px 0px 4px rgba(0, 0, 0, 0.1);
+  &::-webkit-scrollbar-track {
+    background-color: $white;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar {
+    width: 10px;
+    background-color: $white;
+    border-radius: 5px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background-color: $violet_3;
+    border-radius: 5px;
+  }
 }
 </style>

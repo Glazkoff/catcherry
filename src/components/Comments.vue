@@ -6,7 +6,7 @@
       v-model="newComment"
     />
     <button @click="toAddComment()">Добавить</button>
-    <div v-for="comment in post.commentsByPost" :key="comment.id">
+    <div v-for="comment in comments" :key="comment.id">
       <p>{{ comment.author.name }}</p>
       <p>{{ comment.createdAt }}</p>
       <!-- <p>{{ $d(comment.createdAt, "number") }}</p> -->
@@ -24,19 +24,17 @@
 <script>
 import {
   CREATE_COMMENT_QUERY,
-  POST_QUERY,
-  UPDATE_COMMENT_QUERY,
   DELETE_COMMENT_QUERY,
   COMMENTS_QUERY
 } from "@/graphql/queries";
 export default {
   name: "Comments",
-    apollo: {
-    post: {
-      query: POST_QUERY,
+  apollo: {
+    comments: {
+      query: COMMENTS_QUERY,
       variables() {
         return {
-          id: this.$route.params.id
+          postId: Number(this.$route.params.id)
         };
       }
     }
@@ -44,103 +42,38 @@ export default {
   props: ["DetailedPost"],
   data() {
     return {
-      newComment: "",
-      editComment: {
-        isEdit: false,
-        body: "",
-        authorId: "",
-        author: { name: "" },
-        postId: "",
-        id: -1
-      }
+      newComment: ""
     };
   },
   methods: {
-    toSaveEditComment() {
-      this.editComment.isEdit = false;
-      this.$apollo
-        .mutate({
-          mutation: UPDATE_COMMENT_QUERY,
-          variables: {
-            body: this.editComment.body,
-            authorId: this.editComment.authorId,
-            postId: this.editComment.postId,
-            author: this.editComment.author.name,
-            id: this.editComment.id
-          },
-          update: (cache, { data: { updateComment } }) => {
-            let data = cache.readQuery({ query: POST_QUERY });
-            console.log(data);
-            data.comments.find(
-              el => el.id === this.editComment.id
-            ).body = this.editComment.body;
-            cache.writeQuery({ query: POST_QUERY, data });
-            console.log(updateComment);
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createComment: {
-              __typename: "Comment",
-              id: -1,
-              body: this.editComment.body,
-              authorId: this.editCommentauthorId,
-              postId: this.editCommentpostId,
-              author: this.editComment.author
-            }
-          }
-        })
-        .then(data => {
-          console.log(data);
-        })
-        .catch(error => {
-          console.error(error);
-        });
-    },
-    toEditComment(id) {
-      let editComment = this.comments.find(el => el.id === id);
-      this.editComment.body = editComment.body;
-      this.editComment.authorId = editComment.authorId;
-      this.editComment.postId = editComment.postId;
-      this.editComment.author = { name: editComment.author.name };
-      this.editComment.id = editComment.id;
-      this.editComment.isEdit = true;
-    },
     toAddComment() {
       let bodyComment = this.newComment;
       let authorIdComment = this.$store.getters.decodedToken.id;
       let postIdComment = Number(this.$route.params.id);
-      let authorComment = { name: this.$store.getters.decodedToken.name };
-      this.newComment = "";
-
       this.$apollo
         .mutate({
           mutation: CREATE_COMMENT_QUERY,
           variables: {
             body: bodyComment,
             authorId: authorIdComment,
-            postId: postIdComment,
-            author: authorComment
+            postId: postIdComment
           },
           update: (cache, { data: { createComment } }) => {
-            let data = cache.readQuery({ query: COMMENTS_QUERY });
+            let data = cache.readQuery({
+              query: COMMENTS_QUERY,
+              variables: { postId: Number(this.$route.params.id) }
+            });
             data.comments.push(createComment);
-            cache.writeQuery({ query: COMMENTS_QUERY, data });
-          },
-          optimisticResponse: {
-            __typename: "Mutation",
-            createComment: {
-              __typename: "Comment",
-              id: -1,
-              body: bodyComment,
-              authorId: authorIdComment,
-              postId: postIdComment,
-              author: authorComment
-            }
+            cache.writeQuery({
+              query: COMMENTS_QUERY,
+              variables: { postId: Number(this.$route.params.id) },
+              data
+            });
           }
         })
         .then(data => {
+          this.newComment = "";
           console.log(data);
-          console.log(authorComment);
         })
         .catch(error => {
           // this.newComment = body;
@@ -155,10 +88,17 @@ export default {
             id
           },
           update: cache => {
-            let data = cache.readQuery({ query: POST_QUERY });
-            let index = data.post.commentsByPost.findIndex(el => el.id == id);
-            data.post.commentsByPost.splice(index, 1);
-            cache.writeQuery({ query: POST_QUERY, data });
+            let data = cache.readQuery({
+              query: COMMENTS_QUERY,
+              variables: { postId: Number(this.$route.params.id) }
+            });
+            let index = data.comments.findIndex(el => el.id == id);
+            data.comments.splice(index, 1);
+            cache.writeQuery({
+              query: COMMENTS_QUERY,
+              variables: { postId: Number(this.$route.params.id) },
+              data
+            });
           }
         })
         .then(data => {

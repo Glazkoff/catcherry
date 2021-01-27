@@ -3,16 +3,24 @@ import gql from "graphql-tag";
 // (НИЖЕ) ЗАПРОСЫ АВТОРИЗАЦИИ И РЕГИСТРАЦИИ
 export const SIGN_UP = gql`
   mutation(
-    $name: String!
+    $name: name_String_NotNull_pattern_azAZ!
+    $surname: surname_String_pattern_azAZ
+    $patricity: patricity_String_pattern_azAZ
+    $birthday: String
     $login: String!
-    $password: String!
+    $password: password_String_NotNull_minLength_6!
     $fingerprint: String!
   ) {
     signUp(
-      name: $name
-      login: $login
-      password: $password
-      fingerprint: $fingerprint
+      input: {
+        name: $name
+        surname: $surname
+        patricity: $patricity
+        birthday: $birthday
+        login: $login
+        password: $password
+        fingerprint: $fingerprint
+      }
     ) {
       accessToken
       error {
@@ -23,8 +31,14 @@ export const SIGN_UP = gql`
 `;
 
 export const LOG_IN = gql`
-  mutation($login: String!, $password: String!, $fingerprint: String!) {
-    logIn(login: $login, password: $password, fingerprint: $fingerprint) {
+  mutation(
+    $login: String!
+    $password: password_String_NotNull_minLength_6!
+    $fingerprint: String!
+  ) {
+    logIn(
+      input: { login: $login, password: $password, fingerprint: $fingerprint }
+    ) {
       accessToken
       error {
         errorStatus
@@ -82,6 +96,10 @@ export const REQUESTS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
+        gender
+        birthday
       }
     }
   }
@@ -133,6 +151,8 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
       user {
         id
         name
+        surname
+        patricity
       }
       team {
         id
@@ -174,19 +194,23 @@ export const USERS_QUERY = gql`
 
 export const UPDATE_USER_QUERY = gql`
   mutation(
-    $name: String!
-    $surname: String
-    $patricity: String
+    $name: name_String_NotNull_pattern_azAZ!
+    $surname: surname_String_NotNull_pattern_azAZ!
+    $patricity: patricity_String_NotNull_pattern_azAZ!
     $gender: String
-    $login: String
+    $login: String!
+    $birthday: String
     $id: ID!
   ) {
     updateUser(
-      name: $name
-      surname: $surname
-      patricity: $patricity
-      gender: $gender
-      login: $login
+      input: {
+        name: $name
+        surname: $surname
+        patricity: $patricity
+        gender: $gender
+        login: $login
+        birthday: $birthday
+      }
       id: $id
     )
   }
@@ -226,12 +250,6 @@ export const ORGS_QUERY = gql`
       ownerId
       organizationTypeId
       maxTeamsLimit
-      owner {
-        name
-      }
-      organizationType {
-        name
-      }
     }
   }
 `;
@@ -309,6 +327,14 @@ export const UPDATE_TEAMS_QUERY = gql`
   }
 `;
 
+export const ADD_USER_IN_TEAM_QUERY = gql`
+  mutation($id: ID!, $userId: ID!) {
+    addUserInNewTeam(id: $id, userId: $userId) {
+      id
+    }
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERSINTEAMS
 export const USERS_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {
@@ -383,18 +409,134 @@ export const REJECT_REQUEST = gql`
 
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
 
-export const ONE_POST_QUERY = gql`
-  query($id: ID!) {
-    post(id: $id) {
+// Получение одного поста
+export const POST_QUERY = gql`
+  query($id: ID!, $userId: ID!) {
+    post(id: $id, userId: $userId) {
       id
       body {
         header
         text
       }
+      likesOfPost {
+        userId
+      }
       createdAt
     }
   }
 `;
+
+// Получение всех постов для пользователя
+export const POSTS_QUERY = gql`
+  query($userId: [Int]!) {
+    posts(userId: $userId) {
+      id
+      body {
+        header
+        text
+      }
+      likesOfPost {
+        userId
+      }
+      createdAt
+    }
+  }
+`;
+// export const POST_QUERY = gql`
+//   query($id: ID!) {
+//     post(id: $id) {
+//       id
+//       body {
+//         header
+//         text
+//       }
+//       createdAt
+//       commentsByPost {
+//         id
+//         body
+//         author {
+//           name
+//         }
+//         authorId
+//         createdAt
+//       }
+//     }
+//   }
+// `;
+
+// Создание поста
+export const CREATE_POST = gql`
+  mutation($body: PostBody!, $authorId: Int!, $userId: [Int]!) {
+    createPost(body: $body, authorId: $authorId, userId: $userId) {
+      id
+      createdAt
+    }
+  }
+`;
+
+// Удаление поста
+export const DELETE_POST = gql`
+  mutation($id: ID!) {
+    deletePost(id: $id)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfPosts
+
+// Получаем информацию о всех лайках постов пользователя
+export const LIKES_OF_POST_FROM_USER = gql`
+  query($userId: ID!) {
+    likesOfPostFromUser(userId: $userId) {
+      postId
+    }
+  }
+`;
+
+// Лайкнуть данный пост данным пользователем
+export const CREATE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    addLikeOfPost(userId: $userId, postId: $postId) {
+      userId
+      postId
+    }
+  }
+`;
+
+// Удалить лайк с данного поста данным пользователем
+export const DELETE_LIKE_OF_POST = gql`
+  mutation($userId: ID!, $postId: ID!) {
+    deleteLikeOfPost(userId: $userId, postId: $postId)
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ LikesOfComments
+
+// Получаем информацию о всех лайках комментариев пользователя
+export const LIKES_OF_COMMENT_FROM_USER = gql`
+  query($userId: ID!) {
+    likesOfCommentFromUser(userId: $userId) {
+      commentId
+    }
+  }
+`;
+
+// Лайкнуть данный комментарий данным пользователем
+export const CREATE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    addLikeOfComment(userId: $userId, commentId: $commentId) {
+      userId
+      commentId
+    }
+  }
+`;
+// Удалить лайк с данного комментария данным пользователем
+export const DELETE_LIKE_OF_COMMENT = gql`
+  mutation($userId: ID!, $commentId: ID!) {
+    deleteLikeOfComment(userId: $userId, commentId: $commentId)
+  }
+`;
+
+// -- //
 
 export const REVOKE_REQUEST_QUERY = gql`
   mutation($id: ID!) {
@@ -402,90 +544,49 @@ export const REVOKE_REQUEST_QUERY = gql`
   }
 `;
 
-export const GET_POINTS_QUERY = gql`
-  query($userId: ID!) {
-    getPointsUser(userId: $userId) {
+// Получение баллов и информации о них для пользователя
+export const GET_POINTS_USER_QUERY = gql`
+  query($userId: ID!, $limit: Int) {
+    getPointsUser(userId: $userId, limit: $limit) {
       id
       userId
       pointQuantity
-    }
-  }
-`;
-
-export const POSTS_QUERY = gql`
-  query {
-    posts {
-      id
-      body {
-        header
-        text
-      }
-      createdAt
-    }
-  }
-`;
-export const POST_QUERY = gql`
-query($id: ID!) {
-    post(id:$id) {
-      id
-      body {
-        header
-        text
-      }
-      createdAt
-      commentsByPost{
+      userPointsOperation {
         id
-        body
-        author{
-          name
-        }
-        authorId
+        delta
+        operationDescription
         createdAt
       }
     }
   }
-    `;
-
-export const CREATE_POST = gql`
-  mutation($body: PostBody!, $authorId: Int!, $organizationId: Int!) {
-    createPost(
-      body: $body
-      authorId: $authorId
-      organizationId: $organizationId
-    ) {
-      id
-      createdAt
-    }
-  }
 `;
 
-export const DELETE_POST = gql`
-  mutation($id: ID!) {
-    deletePost(id: $id)
-  }
-`;
-
-export const CARGE_POINTS_QUERY = gql`
-  mutation(
-    $pointAccountId: Int!
-    $delta: Int!
-    $operationDescription: String!
-  ) {
+// Создание операции с баллами
+export const CREATE_POINTS_OPERATION = gql`
+  mutation($userId: ID!, $delta: Int!, $operationDescription: String!) {
     createPointOperation(
-      pointAccountId: $pointAccountId
+      userId: $userId
       delta: $delta
       operationDescription: $operationDescription
     ) {
-      id
+      delta
+      pointAccountId
+      operationDescription
     }
+  }
+`;
+
+export const GET_POINTS_LAST_WEEK_QUERY = gql`
+  query($id: ID!) {
+    pointsLastWeek(id: $id)
   }
 `;
 
 export const RAITING_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {
     raitingInTeams(teamId: $teamId) {
-      id
       user {
+        id
         name
         userPoints {
           pointQuantity
@@ -498,13 +599,28 @@ export const RAITING_IN_TEAMS_QUERY = gql`
     }
   }
 `;
+
+export const PERSONAL_USER_STATISTIC_QUERY = gql`
+  query($userId: Int!) {
+    personalUserStatistics(userId: $userId) {
+      id
+      pointQuantity
+      pointsOperation {
+        delta
+        operationDescription
+        createdAt
+      }
+    }
+  }
+`;
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ TASKS
-export const TASKS_QUERY = gql`
+export const ALL_TASKS_IN_TEAM_QUERY = gql`
   query($teamId: ID!) {
-    tasks(teamId: $teamId) {
+    allTasksInOneTeam(teamId: $teamId) {
       id
       userId
       teamId
+      status
       body {
         header
         text
@@ -514,6 +630,7 @@ export const TASKS_QUERY = gql`
       tasksUser {
         name
         surname
+        id
         userPoints {
           id
         }
@@ -521,6 +638,34 @@ export const TASKS_QUERY = gql`
     }
   }
 `;
+
+export const ALL_USER_TASK_QUERY = gql`
+  query($id: ID!) {
+    allUserTasks(id: $id) {
+      id
+      teamId
+      status
+      body {
+        header
+        text
+        points
+      }
+      tasksTeam {
+        name
+      }
+      tasksUser {
+        id
+      }
+    }
+  }
+`;
+
+export const DELETE_TASK_QUERY = gql`
+  mutation($id: ID!) {
+    deleteTask(id: $id)
+  }
+`;
+
 export const ADD_TASK_QUERY = gql`
   mutation(
     $teamId: ID
@@ -557,9 +702,9 @@ export const ADD_TASK_QUERY = gql`
     }
   }
 `;
-export const EDIT_TASK_QUERY = gql`
+export const CHANGE_STATUS_TASK_QUERY = gql`
   mutation($id: ID!, $status: String) {
-    updateTask(id: $id, status: $status) {
+    updateStatusTask(id: $id, status: $status) {
       status
     }
   }
@@ -573,63 +718,6 @@ export const ADD_USER_TO_TASK_QUERY = gql`
   }
 `;
 
-export const BACKLOG_QUERY = gql`
-  query($teamId: ID!) {
-    backlog(teamId: $teamId) {
-      id
-      userId
-      teamId
-      body {
-        header
-        text
-        points
-      }
-      status
-      tasksUser {
-        name
-        surname
-        userPoints {
-          id
-        }
-      }
-    }
-  }
-`;
-
-export const NOTIFICATIONS_USER_QUERY = gql`
-  query {
-    notifications {
-      id
-      body {
-        header
-        text
-        buttonLink
-      }
-      authorId
-      teamId
-      forAllUsers
-      createdAt
-    }
-  }
-`;
-
-export const ADD_NOTIFICATION_QUERY = gql`
-  mutation(
-    $body: NotificationBody!
-    $authorId: Int!
-    $teamId: Int!
-    $forAllUsers: Int
-  ) {
-    createNotification(
-      body: $body
-      authorId: $authorId
-      teamId: $teamId
-      forAllUsers: $forAllUsers
-    ) {
-      id
-    }
-  }
-`;
 export const STATISTICS_NEW_QUERY = gql`
   query statisticsNew {
     statisticsNewUsers
@@ -641,6 +729,96 @@ export const STATISTICS_DELETE_QUERY = gql`
   query {
     statisticsDeleteUsers
     statisticsDeleteOrgs
+  }
+`;
+
+// (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ NOTIFICATIONS
+
+// Получение всех оповещений
+export const NOTIFICATIONS_QUERY = gql`
+  query {
+    notifications {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      userId
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
+      createdAt
+    }
+  }
+`;
+
+// Получение всех непрочитанных оповещений для одного пользователя
+export const NOTIFICATIONS_FOR_USER_QUERY = gql`
+  query($userId: ID!) {
+    notificationsForUser(userId: $userId) {
+      id
+      body {
+        header
+        text
+      }
+      authorId
+      userId
+      notificationAuthor {
+        name
+        surname
+        patricity
+      }
+      ReadOrNot {
+        userId
+        notificationId
+        readOrNot
+      }
+      endTime
+      createdAt
+    }
+  }
+`;
+
+// Создание оповещений
+export const CREATE_NOTIFICATION = gql`
+  mutation(
+    $body: NotificationBody!
+    $typeId: Int!
+    $authorId: Int!
+    $userId: [Int]
+    $endTime: String!
+  ) {
+    createNotification(
+      body: $body
+      typeId: $typeId
+      authorId: $authorId
+      userId: $userId
+      endTime: $endTime
+    ) {
+      id
+    }
+  }
+`;
+
+// Поменять статус оповещения на "Прочитано"
+export const UPDATE_NOTIFICATION = gql`
+  mutation($notificationId: ID!, $userId: ID!, $checkNotification: Boolean) {
+    updateNotification(
+      notificationId: $notificationId
+      userId: $userId
+      checkNotification: $checkNotification
+    )
+  }
+`;
+
+//Удалить оповещение
+export const DELETE_NOTIFICATION = gql`
+  mutation($id: ID!) {
+    deleteNotification(id: $id)
   }
 `;
 
@@ -657,8 +835,8 @@ export const CREATE_COMMENT_QUERY = gql`
 `;
 
 export const COMMENTS_QUERY = gql`
-  query {
-    comments {
+  query($postId: Int!) {
+    comments(postId: $postId) {
       id
       body
       authorId
@@ -684,5 +862,11 @@ export const DELETE_COMMENT_QUERY = gql`
 export const LOG_OUT = gql`
   mutation($fingerprint: String!) {
     logOut(fingerprint: $fingerprint)
+  }
+`;
+
+export const IS_LOGIN_USED = gql`
+  query($login: String!) {
+    isLoginUsed(login: $login)
   }
 `;

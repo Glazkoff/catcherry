@@ -1,7 +1,14 @@
 <template>
   <div>
-    <router-link :to="{ name: 'TeamList' }">Панель менеджера</router-link>
     <h4>Тестовый Graphql компонент</h4>
+    <button class="btn btn-link">Удалить что-то</button>
+    <button class="btn btn-danger">Danger</button>
+    <input
+      type="text"
+      class="form-control is_invalid"
+      placeholder="Некоректная форма"
+    />
+    <input type="text" class="form-control find" placeholder="Поиск по всему" />
     <h5 v-if="queryError">{{ queryError }}</h5>
     <h4 v-if="this.$apollo.queries.users.loading">Загружается...</h4>
     <label class="box-label">

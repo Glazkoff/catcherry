@@ -1,4 +1,4 @@
-'use strict';
+"use strict";
 module.exports = {
   up: async (queryInterface, Sequelize) => {
     await queryInterface.createTable("Posts", {
@@ -14,11 +14,8 @@ module.exports = {
       authorId: {
         type: Sequelize.INTEGER
       },
-      organizationId: {
-        type: Sequelize.INTEGER
-      },
-      forAllTeam: {
-        type: Sequelize.BOOLEAN
+      userId: {
+        type: Sequelize.JSONB
       },
       createdAt: {
         allowNull: false,
@@ -31,6 +28,6 @@ module.exports = {
     });
   },
   down: async (queryInterface, Sequelize) => {
-    await queryInterface.dropTable('Posts');
+    await queryInterface.dropTable("Posts");
   }
 };

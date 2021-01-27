@@ -110,13 +110,23 @@ async function updateRefreshSession(
 
 module.exports = {
   Query: {
+    isLoginUsed: async (parent, { login }, { db }) => {
+      let usersCount = await db.Users.count({
+        where: {
+          login
+        },
+        paranoid: false
+      });
+      return usersCount != 0;
+    },
     statisticsNewUsers: (parent, args, { db }) => {
       return db.Users.count({
         where: {
           createdAt: {
             [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
           }
-        }
+        },
+        paranoid: false
       });
     },
     statisticsNewOrgs: (parent, args, { db }) => {
@@ -125,7 +135,8 @@ module.exports = {
           createdAt: {
             [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
           }
-        }
+        },
+        paranoid: false
       });
     },
     statisticsDeleteUsers: (parent, args, { db }) => {
@@ -151,6 +162,8 @@ module.exports = {
     // Получаем список всех пользователей
     users: (parent, args, { db }) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
+    usersInNewTeams: (parent, args, { db }) =>
+      db.UsersInTeams.findAll({ order: [["id", "ASC"]] }),
     // Получаем данные про одного пользователя
     user: (parent, args, { db }) => {
       return db.Users.findOne({
@@ -203,42 +216,96 @@ module.exports = {
         where: { organizationId: args.organizationId }
       });
     },
-    notifications: (parent, args, { db }, info) =>
-      db.Notifications.findAll({ order: [["id", "DESC"]] }),
-    notification: (parent, args, { db }, info) =>
-      db.Notifications.findOne({ where: { id: args.id } }),
-    posts: async (parent, args, { db }) => {
-      let resultOfPosts = db.Posts.findAll({
-        order: [["id", "ASC"]]
-        // include: [{ model: db.LikesOfPosts, as: "likesOfPost" }],
+
+    // Получение всех оповещений
+    notifications: async (parent, args, { db }) => {
+      let result = await db.Notifications.findAll({
+        order: [["id", "DESC"]],
+        include: [{ model: db.ReadNotification, as: "ReadOrNot" }]
       });
-      return resultOfPosts;
+      return result;
     },
-    post: async (parent, args, { db }) => {
-      let resultOfPost = await db.Posts.findOne({
-        where: { id: args.id },
+
+    // Получение непрочитанных оповещений для конкртеного пользователя
+    notificationsForUser: async (parent, args, { db }) => {
+      let result = await db.Notifications.findAll({
+        order: [["id", "DESC"]],
         include: [
           {
-            model: db.Comments,
-            as: "commentsByPost",
-            where: { postId: args.id },
-            include: [
-              {
-                model: db.Users,
-                as: "author",
-                attributes: ["name"]
-              }
-            ]
+            model: db.ReadNotification,
+            as: "ReadOrNot",
+            where: { userId: args.userId, readOrNot: false }
+          },
+          {
+            model: db.Users,
+            as: "notificationAuthor"
           }
-        ]
+        ],
+        where: {
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        }
       });
+      return result;
+    },
+
+    // Получаем все посты
+    posts: async (parent, args, { db }) => {
+      let resultOfPosts = await db.Posts.findAll({
+        order: [["id", "DESC"]],
+        include: [
+          {
+            model: db.LikesOfPosts,
+            as: "likesOfPost"
+          }
+        ],
+        where: {
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        }
+      });
+      // console.log("Hurray!!! ", JSON.stringify(resultOfPosts));
+      return resultOfPosts;
+    },
+
+    // Получаем информацию о посте по id
+    post: async (parent, args, { db }) => {
+      let resultOfPost = await db.Posts.findOne({
+        where: {
+          id: args.id,
+          userId: {
+            [Op.contains]: Number(args.userId)
+          }
+        },
+        include: [{ model: db.LikesOfPosts, as: "likesOfPost" }]
+      });
+      // console.log("Hurray!!! ", JSON.stringify(resultOfPost));
       return resultOfPost;
     },
-    getPointsUser: (parent, args, { db }, info) =>
-      db.Points.findOne({ where: { userId: args.userId } }),
-    comments: (parent, args, { db }, info) =>
+
+    // Получаем информацию о всех лайках постов пользователя
+    likesOfPostFromUser: (parent, args, { db }) => {
+      return db.LikesOfPosts.findAll({
+        where: { userId: args.userId }
+      });
+    },
+
+    // Получаем информацию о всех лайках комментариев пользователя
+    likesOfCommentFromUser: (parent, args, { db }) => {
+      return db.LikesOfComments.findAll({
+        where: { userId: args.userId }
+      });
+    },
+    roles: (parent, args, { db }) => {
+      return db.Roles.findAll({});
+    },
+
+    comments: (parent, { postId }, { db }) =>
       db.Comments.findAll({
         order: [["id", "ASC"]],
+        where: { postId: postId },
         include: [
           {
             model: db.Users,
@@ -247,29 +314,16 @@ module.exports = {
           }
         ]
       }),
-
-    comment: (parent, args, { db }, info) =>
+    comment: (parent, args, { db }) =>
       db.Comments.findOne({ where: { id: args.id } }),
-    usersInTeams: (parent, { teamId }, { db }, info) =>
+    usersInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
-    oneUserInTeams: (parent, args, { db }, info) =>
-      db.UsersInTeams.findAll({
-        where: { userId: args.userId },
-        order: [["id", "ASC"]],
-        include: [
-          { model: db.Users, as: "user" },
-          {
-            model: db.Teams,
-            as: "team",
-            include: [{ model: db.Organizations, as: "organization" }]
-          }
-        ]
-      }),
-    raitingInTeams: (parent, { teamId }, { db }, info) =>
+
+    raitingInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
         include: [
@@ -299,19 +353,53 @@ module.exports = {
         include: [{ model: db.Users, as: "user" }]
       }),
 
-    getPointsUser: (parent, args, { db }) =>
-      db.Points.findOne({
-        where: { userId: args.userId },
-        order: [["id", "ASC"]]
-      }),
-    getOperationPointsUser: (parent, args, { db }) =>
-      db.PointsOperations.findAll({
-        where: { pointAccountId: args.pointAccountId },
-        order: [["id", "ASC"]]
-      }),
-    tasks: (parent, { teamId }, { db }) =>
+    // Получение баллов и информации о них для пользователя по id
+    getPointsUser: async (parent, args, { db }) => {
+      let resultPoints = await db.Points.findOne({
+        where: { userId: args.userId }
+      });
+      let resultPointsOperation = await db.PointsOperations.findAll({
+        where: { pointAccountId: resultPoints.id },
+        order: [["id", "DESC"]],
+        limit: +args.limit == 0 ? undefined : args.limit
+      });
+
+      resultPoints.userPointsOperation = resultPointsOperation;
+
+      return resultPoints;
+    },
+
+    pointsLastWeek: async (parent, args, { db }) => {
+      let operationLastWeek = await db.PointsOperations.findAll({
+        where: {
+          pointAccountId: args.id,
+          createdAt: {
+            [Op.gte]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000)
+          }
+        }
+      });
+      let operation2LastWeek = await db.PointsOperations.findAll({
+        where: {
+          pointAccountId: args.id,
+          createdAt: {
+            [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
+            [Op.lt]: new Date(new Date() - 14 * 60 * 60 * 1000)
+          }
+        }
+      });
+      let pointsLastWeek = 0;
+      for (let i = 0; i < operationLastWeek.length; i++) {
+        pointsLastWeek = pointsLastWeek + operationLastWeek[i].delta;
+      }
+      let points2LastWeek = 0;
+      for (let i = 0; i < operation2LastWeek.length; i++) {
+        points2LastWeek = points2LastWeek + operation2LastWeek[i].delta;
+      }
+      return [pointsLastWeek, points2LastWeek];
+    },
+    allTasksInOneTeam: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
-        where: { teamId: teamId, userId: { [Op.ne]: null } },
+        where: { teamId: teamId },
         order: [["id", "DESC"]],
         include: [
           {
@@ -332,9 +420,11 @@ module.exports = {
           }
         ]
       }),
-    backlog: (parent, { teamId }, { db }, info) =>
+    allUserTasks: (parent, { id }, { db }) =>
       db.Tasks.findAll({
-        where: { teamId: teamId, userId: null },
+        where: {
+          [Op.or]: [{ userId: id }, { userId: null }]
+        },
         order: [["id", "DESC"]],
         include: [
           {
@@ -360,16 +450,45 @@ module.exports = {
     /* [Ниже] Мутации регистрации и авторизации */
     signUp: async (
       parent,
-      { name, login, password, fingerprint },
+      { input }, //{ name, surname, patricity, birthday, login, password, fingerprint },
       { res, db }
     ) => {
-      let hashPassword = bcrypt.hashSync(password, salt);
+      let hashPassword = bcrypt.hashSync(input.password, salt);
+
+      if ("" + input.birthday == "") {
+        input.birthday = null;
+      }
 
       // Добавляем данные в БД
       let user = await db.Users.create({
-        login,
-        name,
+        login: input.login,
+        name: input.name,
+        surname: input.surname,
+        patricity: input.patricity,
+        birthday: input.birthday,
         password: hashPassword
+      });
+
+      // Добавляем кошелёк для баллов
+      await db.Points.create({
+        userId: user.dataValues.id
+      });
+
+      // Добавляем оповещение новому пользователю
+      let result = await db.Notifications.create({
+        body: {
+          header: "Добро пожаловать в Catcherry!",
+          text: "Рады, что Вы с нами!"
+        },
+        typeId: 1,
+        authorId: user.dataValues.id,
+        userId: [user.dataValues.id],
+        endTime: user.dataValues.createdAt
+      });
+      await db.ReadNotification.create({
+        notificationId: result.id,
+        userId: user.dataValues.id,
+        readOrNot: false
       });
 
       // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
@@ -380,7 +499,7 @@ module.exports = {
         db,
         user.dataValues.id,
         tokens.refreshToken,
-        fingerprint
+        input.fingerprint
       );
 
       // Записать в Cookie HttpOnly рефреш-токен
@@ -390,16 +509,11 @@ module.exports = {
       });
       return tokens;
     },
-    logIn: async (
-      parent,
-      { login, password, fingerprint },
-      { res, db },
-      info
-    ) => {
+    logIn: async (parent, { input }, { res, db }) => {
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login
+          login: input.login
         }
       });
       // Проверяем через bcrypt пароль, не совпадает - ошибка
@@ -410,7 +524,7 @@ module.exports = {
             message: "Incorrect login or password!"
           }
         };
-      } else if (bcrypt.compareSync(password, user.password)) {
+      } else if (bcrypt.compareSync(input.password, user.password)) {
         // Вызываем функцию generateTokens(user) генерации токенов (возвращает объект с двумя токенами)
         let tokens = generateTokens(user.dataValues);
         // Добавляем сессию в БД
@@ -418,7 +532,7 @@ module.exports = {
           db,
           user.dataValues.id,
           tokens.refreshToken,
-          fingerprint
+          input.fingerprint
         );
         // Записать в Cookie HttpOnly рефреш-токен
         res.cookie("refreshToken", tokens.refreshToken, {
@@ -436,7 +550,7 @@ module.exports = {
         };
       }
     },
-    updateTokens: async (parent, { fingerprint }, { req, res, db }, info) => {
+    updateTokens: async (parent, { fingerprint }, { req, res, db }) => {
       // Получаем refresh-токен из cookie
       let refreshToken = req.cookies.refreshToken;
 
@@ -508,33 +622,38 @@ module.exports = {
     /*
       [Ниже] Мутации работы с пользователями (Users)     
     */
-    createUser: (parent, { name }, { db }, info) =>
+    createUser: (parent, { name }, { db }) =>
       db.Users.create({
         name: name
       }),
     // Обновляем фамилию, имени, отчества, пола и логина пользователя
-    updateUser: (
+    updateUser: async (
       parent,
-      { surname, name, patricity, gender, login, id },
-      { db },
-      info
-    ) =>
-      db.Users.update(
+      { input, id }, //{ surname, name, patricity, gender, login, id, birthday },
+      { db }
+    ) => {
+      if ("" + input.birthday == "") {
+        input.birthday = null;
+      }
+      let resUpdate = await db.Users.update(
         {
-          name: name,
-          surname: surname,
-          patricity: patricity,
-          gender: gender,
-          login: login
+          name: input.name,
+          surname: input.surname,
+          patricity: input.patricity,
+          gender: input.gender,
+          login: input.login,
+          birthday: input.birthday
         },
         {
           where: {
             id: id
           }
         }
-      ),
+      );
+      return resUpdate;
+    },
     // Меняем статус пользователя в команде (добавляем или удаляем)
-    addUserInTeam: (parent, { status, id }, { db }, info) =>
+    addUserInTeam: (parent, { status, id }, { db }) =>
       db.UsersInTeams.update(
         {
           status: status
@@ -545,20 +664,22 @@ module.exports = {
           }
         }
       ),
+    addUserInNewTeam: (parent, { id, userId }, { db }) =>
+      db.UsersInTeams.create({
+        userId: userId,
+        teamId: id,
+        status: "Принят",
+        roleId: 10
+      }),
     // Удаляем пользователя
-    deleteUser: (parent, args, { db }, info) =>
+    deleteUser: (parent, args, { db }) =>
       db.Users.destroy({
         where: {
           id: args.id
         }
       }),
     // Обновляем название, описание и максимальное количество пользователей команды
-    updateTeam: (
-      parent,
-      { name, description, maxUsersLimit, id },
-      { db },
-      info
-    ) =>
+    updateTeam: (parent, { name, description, maxUsersLimit, id }, { db }) =>
       db.Teams.update(
         {
           name: name,
@@ -577,8 +698,7 @@ module.exports = {
     createOrganization: (
       parent,
       { name, ownerId, organizationTypeId, maxTeamsLimit },
-      { db },
-      info
+      { db }
     ) =>
       db.Organizations.create({
         name: name,
@@ -587,7 +707,7 @@ module.exports = {
         maxTeamsLimit: maxTeamsLimit
       }),
     // Обновляем название и максимальное количество команд организации
-    updateOrganization: (parent, { name, maxTeamsLimit, id }, { db }, info) =>
+    updateOrganization: (parent, { name, maxTeamsLimit, id }, { db }) =>
       db.Organizations.update(
         {
           name: name,
@@ -600,13 +720,13 @@ module.exports = {
         }
       ),
     // Удаляем организацию
-    deleteOrganization: (parent, args, { db }, info) =>
+    deleteOrganization: (parent, args, { db }) =>
       db.Organizations.destroy({
         where: {
           id: args.id
         }
       }),
-    deleteTeam: (parent, args, { db }, info) =>
+    deleteTeam: (parent, args, { db }) =>
       db.Teams.destroy({
         where: {
           id: args.id
@@ -618,8 +738,7 @@ module.exports = {
     createTeam: (
       parent,
       { organizationId, name, description, maxUsersLimit },
-      { db },
-      info
+      { db }
     ) =>
       db.Teams.create({
         organizationId: organizationId,
@@ -631,59 +750,76 @@ module.exports = {
     /*
       [Ниже] Мутации работы с оповещениями (Notifications)     
     */
+
     //Создать оповещение
-    createNotification: (
+    createNotification: async (
       parent,
-      { body, authorId, teamId, forAllUsers },
-      { db },
-      info
-    ) =>
-      db.Notifications.create({
+      { body, typeId, authorId, userId, endTime },
+      { db }
+    ) => {
+      let result;
+      result = await db.Notifications.create({
         body: body,
+        typeId: typeId,
         authorId: authorId,
-        teamId: teamId,
-        forAllUsers: forAllUsers
-      }),
-    //Изменить оповещение
+        userId: userId,
+        endTime: endTime
+      });
+      userId.forEach(element => {
+        db.ReadNotification.create({
+          notificationId: result.id,
+          userId: element,
+          readOrNot: false
+        });
+      });
+      return result;
+    },
+
+    // Поменять статус оповещения на "Прочитано"
     updateNotification: (
       parent,
-      { body, teamId, forAllUsers, forAllOrganization, forAllTeam, id },
-      { db },
-      info
+      { notificationId, userId, checkNotification },
+      { db }
     ) =>
-      db.Notifications.update(
+      db.ReadNotification.update(
         {
-          body: body,
-          teamId: teamId,
-          forAllUsers: forAllUsers,
-          forAllOrganization: forAllOrganization,
-          forAllTeam: forAllTeam
+          readOrNot: checkNotification
         },
         {
           where: {
-            id: id
+            notificationId: notificationId,
+            userId: userId
           }
         }
       ),
+
     //Удалить оповещение
-    deleteNotification: (parent, args, { db }, info) =>
-      db.Notifications.destroy({
+    deleteNotification: (parent, args, { db }) => {
+      let result = db.Notifications.destroy({
         where: {
           id: args.id
         }
-      }),
+      });
+      db.ReadNotification.destroy({
+        where: {
+          notificationId: args.id
+        }
+      });
+      return result;
+    },
+
     /*
       [Ниже] Мутации работы с комментариями (Comments)     
     */
     //Создать комментарий
-    createComment: (parent, { body, authorId, postId }, { db }, info) =>
+    createComment: (parent, { body, authorId, postId }, { db }) =>
       db.Comments.create({
         body: body,
         authorId: authorId,
         postId: postId
       }),
     //Изменить комментарий
-    updateComment: (parent, { body, id }, { db }, info) =>
+    updateComment: (parent, { body, id }, { db }) =>
       db.Comments.update(
         {
           body: body
@@ -695,7 +831,7 @@ module.exports = {
         }
       ),
     //Удалить комментарий
-    deleteComment: (parent, args, { db }, info) =>
+    deleteComment: (parent, args, { db }) =>
       db.Comments.destroy({
         where: {
           id: args.id
@@ -705,89 +841,67 @@ module.exports = {
     /*
       [Ниже] Мутации работы с постами (Posts)     
     */
-    createPost: (parent, { body, authorId, organizationId }, { db }, info) =>
+    createPost: (parent, { body, authorId, userId }, { db }) =>
       db.Posts.create({
         body: body,
         authorId: authorId,
-        organizationId: organizationId
+        userId: userId
       }),
-    deletePost: (parent, args, { db }, info) =>
+    deletePost: (parent, args, { db }) =>
       db.Posts.destroy({
         where: {
           id: args.id
         }
       }),
 
+    /*
+      [Ниже] Мутации работы с лайками постов (LikesOfPosts)     
+    */
+    addLikeOfPost: (parent, { userId, postId }, { db }) =>
+      db.LikesOfPosts.create({
+        userId: userId,
+        postId: postId
+      }),
+
+    deleteLikeOfPost: (parent, { userId, postId }, { db }) =>
+      db.LikesOfPosts.destroy({
+        where: { userId, postId }
+      }),
+
+    /*
+      [Ниже] Мутации работы с лайками комментариев (LikesOfComments)     
+    */
+
+    addLikeOfComment: (parent, { userId, commentId }, { db }) =>
+      db.LikesOfComments.create({
+        userId: userId,
+        commentId: commentId
+      }),
+
+    deleteLikeOfComment: (parent, { userId, commentId }, { db }) =>
+      db.LikesOfComments.destroy({
+        where: { userId, commentId }
+      }),
+
     // ----- //
-    createUserInTeam: (
-      parent,
-      { userId, teamId, status, roleId },
-      { db },
-      info
-    ) =>
+    createUserInTeam: (parent, { userId, teamId, status, roleId }, { db }) =>
       db.UsersInTeams.create({
         userId: userId,
         teamId: teamId,
         status: status,
         roleId: roleId
       }),
-    deleteUserInTeam: (parent, args, { db }, info) =>
+    deleteUserInTeam: (parent, args, { db }) =>
       db.UsersInTeams.destroy({
         where: {
           id: args.id
         }
       }),
-    /*
-      [Ниже] Мутации работы с баллами (PointsOperstion)     
-    */
-    //Изменить операцию с баллами (если ввели неправильное число баллов, его можно исправить)
-    updatePointOperation: (
-      parent,
-      { pointAccountId, delta, id },
-      { db },
-      info
-    ) =>
-      db.PointsOperations.update(
-        {
-          pointAccountId: pointAccountId,
-          delta: delta
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    //Напрямую изменить количество баллов у конкретного пользователя
-    updatePoints: (parent, { pointQuantity, id }, { db }, info) =>
-      db.PointsOperations.update(
-        {
-          pointQuantity: pointQuantity
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    //Удалить операцию с баллами
-    deletePointOperation: (parent, args, { db }, info) =>
-      db.PointsOperations.destroy({
-        where: {
-          id: args.id
-        }
-      }),
-    //Удалить счет пользователя
-    deletePoints: (parent, args, { db }, info) =>
-      db.Points.destroy({
-        where: {
-          id: args.id
-        }
-      }),
+
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
-    acceptRequst: (parent, { id }, { db }, info) =>
+    acceptRequst: (parent, { id }, { db }) =>
       db.UsersInTeams.update(
         {
           status: "Принят"
@@ -799,7 +913,7 @@ module.exports = {
         }
       ),
 
-    revokeRequst: (parent, { id }, { db }, info) =>
+    revokeRequst: (parent, { id }, { db }) =>
       db.UsersInTeams.update(
         {
           status: "Не принят"
@@ -810,7 +924,7 @@ module.exports = {
           }
         }
       ),
-    rejectRequst: (parent, { id }, { db }, info) =>
+    rejectRequst: (parent, { id }, { db }) =>
       db.UsersInTeams.update(
         {
           status: "Отклонен"
@@ -824,31 +938,34 @@ module.exports = {
     /*
       [Ниже] Мутации работы с баллами     
     */
+
+    // Добавление  баллов
     createPointOperation: async (
       parent,
-      { pointAccountId, delta, operationDescription },
-      { db },
-      info
+      { userId, delta, operationDescription },
+      { db }
     ) => {
       let total = await db.Points.findOne({
-        where: { id: pointAccountId }
+        where: { userId: userId }
       });
-      db.Points.update(
+      await db.Points.update(
         {
-          pointQuantity: total.pointQuantity + delta
+          pointQuantity: +total.pointQuantity + delta
         },
         {
           where: {
-            id: pointAccountId
+            userId: userId
           }
         }
       );
-      return db.PointsOperations.create({
-        pointAccountId: pointAccountId,
+      let creation = await db.PointsOperations.create({
+        pointAccountId: total.id,
         delta: delta,
         operationDescription: operationDescription
       });
+      return creation;
     },
+
     /*
       [Ниже] Мутации работы с командами     
     */
@@ -859,8 +976,7 @@ module.exports = {
     createTask: (
       parent,
       { teamId, userId, header, text, points, status },
-      { db },
-      info
+      { db }
     ) =>
       db.Tasks.create({
         teamId: teamId,
@@ -868,7 +984,7 @@ module.exports = {
         body: { header: header, text: text, points: points },
         status: status
       }),
-    updateTask: (parent, { id, status }, { db }, info) =>
+    updateStatusTask: (parent, { id, status }, { db }) =>
       db.Tasks.update(
         {
           status: status
@@ -879,7 +995,7 @@ module.exports = {
           }
         }
       ),
-    addUserToTask: (parent, { id, userId }, { db }, info) =>
+    addUserToTask: (parent, { id, userId }, { db }) =>
       db.Tasks.update(
         {
           userId: userId
@@ -890,13 +1006,13 @@ module.exports = {
           }
         }
       ),
-    deleteTask: (parent, args, { db }, info) =>
+    deleteTask: (parent, args, { db }) =>
       db.Tasks.destroy({
         where: {
           id: args.id
         }
       }),
-    logOut: async (parent, { fingerprint }, { db, req, res }, info) => {
+    logOut: async (parent, { fingerprint }, { db, req, res }) => {
       // Получаем refresh-токен из cookie
       let refreshToken = req.cookies.refreshToken;
       if (refreshToken != null) {

@@ -8,10 +8,10 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      ReadNotification.belongsTo(models.Notifications, {
-        foreignKey: "notificationId",
-        as: "notification"
-      });
+      // ReadNotification.belongsTo(models.Notifications, {
+      //   foreignKey: "notificationId",
+      //   as: "ReadNotification"
+      // });
       ReadNotification.belongsTo(models.Users, {
         foreignKey: "userId",
         as: "userNotification"

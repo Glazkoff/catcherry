@@ -1,0 +1,22 @@
+            <svg
+              width="20"
+              height="18"
+              viewBox="0 0 20 18"
+              fill="none"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                d="M4.16675 4H10.0001V10H4.16675V4ZM10.9723 12H4.16675V14H15.8334V12H11.9445H10.9723ZM11.9445 8H15.8334V10H11.9445V8ZM11.9445 4H15.8334V6H11.9445V4Z"
+                fill="white"
+                class="fill"
+              />
+              <rect
+                x="0.5"
+                y="0.5"
+                width="19"
+                height="17"
+                rx="1.5"
+                stroke="white"
+                class="fill-stroke"
+              />
+            </svg>

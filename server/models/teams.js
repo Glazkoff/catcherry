@@ -15,10 +15,6 @@ module.exports = (sequelize, DataTypes) => {
       // FIXME: При запросе на добавление оповещения возникает ошибка
       //insert or update on table \"Notifications\" violates foreign key constraint \"Notifications_authorId_fkey\"
 
-      Teams.hasMany(models.Notifications, {
-        foreignKey: "teamId",
-        as: "notification"
-      });
       Teams.belongsTo(models.Organizations, {
         foreignKey: "organizationId",
         as: "teamOrganization"

@@ -12,10 +12,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "authorId",
         as: "postUser"
       });
-      Posts.belongsTo(models.Teams, {
-        foreignKey: "organizationId"
-        // as: "postOrganization"
-      });
       Posts.hasMany(models.Comments, {
         foreignKey: "postId",
         as: "commentsByPost"
@@ -36,13 +32,9 @@ module.exports = (sequelize, DataTypes) => {
         type: DataTypes.INTEGER,
         allowNull: false
       },
-      organizationId: {
-        type: DataTypes.INTEGER,
+      userId: {
+        type: DataTypes.JSONB,
         allowNull: false
-      },
-      forAllTeam: {
-        type: DataTypes.BOOLEAN,
-        allowNull: true
       }
     },
     {

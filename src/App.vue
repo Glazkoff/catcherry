@@ -1,11 +1,16 @@
 <template>
-  <div id="app">
+  <div id="app" v-if="!isAppLoading" v-cloak>
     <router-view></router-view>
   </div>
+  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
 export default {
+  components: {
+    Loader
+  },
   async mounted() {
     // Для глобального лоадера
     this.$store.commit("SET_AUTH_LOADING", true);
@@ -20,6 +25,11 @@ export default {
         console.warn(err);
       }
     );
+  },
+  computed: {
+    isAppLoading() {
+      return this.$store.getters.isAppLoading;
+    }
   }
 };
 </script>
@@ -27,44 +37,22 @@ export default {
 <style lang="scss">
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
+// @import "@/styles/_reset.scss";
 
 #app {
   width: 100vw;
   max-width: 100vw;
 }
 
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+  margin: 0;
+}
+
 [v-cloak] {
-  display: block;
-  padding: 50px 0;
-
-  @keyframes spinner {
-    to {
-      transform: rotate(360deg);
-    }
-  }
-
-  &:before {
-    content: "";
-    box-sizing: border-box;
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 20px;
-    height: 20px;
-    margin-top: -10px;
-    margin-left: -10px;
-    border-radius: 50%;
-    border: 2px solid #ccc;
-    border-top-color: #333;
-    animation: spinner 0.6s linear infinite;
-    text-indent: 100%;
-    white-space: nowrap;
-    overflow: hidden;
-  }
-
-  & > div {
-    display: none;
-  }
+  display: none;
 }
 .locales {
   display: flex;
@@ -121,6 +109,28 @@ export default {
   }
 }
 
+.wrapOfLoader {
+  position: fixed;
+  top: 0;
+  left: 0;
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100vw;
+  height: 100vh;
+  padding-top: calc(50vh - 100px);
+}
+
+.side-bar__nav-list__back-btn {
+  border-bottom: 2px solid $violet_3;
+  margin-bottom: 0.5rem;
+  & > * {
+    transition: transform 400ms ease;
+  }
+  &:hover > * {
+    transform: translateX(-4px);
+  }
+}
 // .btn {
 //   display: block;
 //   font-weight: 400;

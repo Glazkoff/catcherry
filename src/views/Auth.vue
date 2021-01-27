@@ -2,22 +2,27 @@
   <div id="auth-screen">
     <div class="bg-half">
       <div class="logo-block">
-        <img src="../assets/full_logo.svg" alt="Catcherry's logo" />
+        <!-- <img src="../assets/full_logo.svg" alt="Catcherry's logo" /> -->
+        <FullLogo class="logo-img"></FullLogo>
       </div>
     </div>
     <div class="form-half">
       <router-view name="form"></router-view>
-      <hr />
-      <TestGraphql></TestGraphql>
+      <!-- <hr /> -->
+      <!-- <TestGraphql></TestGraphql> -->
     </div>
   </div>
 </template>
 
 <script>
-import TestGraphql from "@/components/TestGraphql.vue";
+// import TestGraphql from "@/components/TestGraphql.vue";
+import FullLogo from "@/assets/full_logo.svg?inline";
 export default {
   name: "Auth",
-  components: { TestGraphql }
+  components: {
+    // TestGraphql,
+    FullLogo
+  }
 };
 </script>
 
@@ -35,7 +40,7 @@ export default {
   .bg-half {
     grid-area: 1/1/2/2;
     background: url("../assets/bg_auth.png") no-repeat, $dark_blue;
-    .logo-block img {
+    .logo-block .logo-img {
       width: 14rem;
       padding-left: 2rem;
       padding-top: 3rem;
@@ -49,7 +54,9 @@ export default {
     & .form-auth {
       padding-top: 3rem;
       margin: 0 auto;
-      width: 20rem;
+      max-width: 30rem;
+      width: 50%;
+      min-width: 20rem;
     }
   }
 

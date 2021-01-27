@@ -5,14 +5,9 @@ import Home from "@/views/Home.vue";
 import Main from "@/views/Main.vue";
 
 import Auth from "@/views/Auth.vue";
-import SignUp from "@/components/auth/SignUp.vue";
 import LogIn from "@/components/auth/LogIn.vue";
 
-import AdminPanel from "@/views/AdminPanel.vue";
-import Dashboard from "@/components/admin/Dashboard.vue";
-import Users from "@/components/admin/Users.vue";
 import User from "@/components/account/User.vue";
-import Organization from "@/components/admin/Organization.vue";
 
 import CreatePost from "@/components/CreatePost.vue";
 
@@ -20,22 +15,17 @@ import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
-import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
-import TeamMembers from "@/components/manager/TeamMembers.vue";
-import RaitingList from "@/components/manager/RaitingList.vue";
-import EditTeam from "@/components/manager/EditTeam.vue";
-import RequestsList from "@/components/manager/RequestsList.vue";
-import TasksTeam from "@/components/manager/TasksTeam.vue";
-import TeamList from "@/components/manager/TeamList.vue";
-import TeamSettings from "@/components/manager/TeamSettings.vue";
+import TeamsList from "@/components/manager/TeamsList.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
 import PointsUser from "@/components/account/PointsUser.vue";
+import UserStatistic from "@/components/account/UserStatistic.vue";
 
 import SideBarDefault from "@/components/sidebar/SideBarDefault.vue";
 
 import store from "@/store/index";
+import { i18n } from "@/i18n/i18n.js";
 
 Vue.use(VueRouter);
 
@@ -44,7 +34,8 @@ const routes = [
     path: "/",
     component: Main,
     meta: {
-      requiresAuth: true
+      requiresAuth: true,
+      breadCrumb: i18n.t("router.main")
     },
     children: [
       {
@@ -53,6 +44,9 @@ const routes = [
         components: {
           main: Home,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.home")
         }
       },
       {
@@ -61,54 +55,122 @@ const routes = [
         components: {
           main: FeedOfPosts,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.feed")
         }
       },
       {
-        path: "/manager/teams",
-        name: "TeamList",
+        path: "/teamslist",
+        name: "TeamsList",
         components: {
-          main: TeamList,
-          sidebar: SideBarDefault
-        }
-      },
-      {
-        path: "/manager/teams/:id",
-        name: "TeamSettings",
-        components: {
-          main: TeamSettings,
+          main: TeamsList,
           sidebar: SideBarDefault
         },
-        props: true,
+        meta: {
+          // TODO: проверка менеджер ли
+          breadCrumb: i18n.t("router.listTeams")
+        }
+      },
+      {
+        path: "/manager",
+        name: "Manager",
+        components: {
+          main: () =>
+            import(/* webpackChunkName: "manager" */ "../views/Manager.vue"),
+          sidebar: () =>
+            import(
+              /* webpackChunkName: "sideBarManager" */ "../components/sidebar/SideBarManager.vue"
+            )
+        },
+        meta: {
+          breadCrumb: i18n.t("router.manager")
+        },
         children: [
+          {
+            path: "teams",
+            name: "TeamSettings",
+            component: () =>
+              import(
+                /* webpackChunkName: "managerTeamSettings" */ "../components/manager/TeamSettings.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.teamsettings")
+            }
+          },
+          {
+            path: "new_task",
+            name: "NewTask",
+            component: () =>
+              import(
+                /* webpackChunkName: "managerNewTask" */ "../components/manager/NewTask.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.newtask")
+            }
+          },
           {
             path: "team_members",
             name: "TeamMembers",
-            component: TeamMembers
+            component: () =>
+              import(
+                /* webpackChunkName: "managerTeamMembers" */ "../components/manager/TeamMembers.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.teammembers")
+            }
           },
           {
             path: "raiting",
             name: "RaitingList",
-            component: RaitingList
+            component: () =>
+              import(
+                /* webpackChunkName: "managerRatingList" */ "../components/manager/RaitingList.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.rating")
+            }
           },
           {
             path: "team_edit",
             name: "EditTeam",
-            component: EditTeam
+            component: () =>
+              import(
+                /* webpackChunkName: "managerEditTeam" */ "../components/manager/EditTeam.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.editteam")
+            }
           },
           {
             path: "requests",
             name: "RequestsList",
-            component: RequestsList
+            component: () =>
+              import(
+                /* webpackChunkName: "managerRequestsList" */ "../components/manager/RequestsList.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.requestlist")
+            }
           },
           {
             path: "tasks",
             name: "TasksTeam",
-            component: TasksTeam
+            component: () =>
+              import(
+                /* webpackChunkName: "managerTasksTeam" */ "../components/manager/TasksTeam.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.tasks")
+            }
           }
         ]
       },
       {
-        path: "/user/:id",
+        path: "/user",
+        meta: {
+          breadCrumb: i18n.t("router.user")
+        },
         components: {
           main: User,
           sidebar: SideBarDefault
@@ -117,60 +179,86 @@ const routes = [
           {
             path: "",
             name: "Account",
-            component: Account
+            component: Account,
+            meta: {
+              breadCrumb: i18n.t("router.account")
+            }
           },
           {
             path: "user_org",
             name: "UserInOrganization",
-            component: UserInOrganization
+            component: UserInOrganization,
+            meta: {
+              breadCrumb: i18n.t("router.userInOrg")
+            }
           },
           {
             path: "list_req",
             name: "ListReguest",
-            component: ListRequest
+            component: ListRequest,
+            meta: {
+              breadCrumb: i18n.t("router.listRequest")
+            }
           },
           {
             path: "tasks",
             name: "Tasks",
-            component: Tasks
-          },
-          {
-            path: "points",
-            name: "PointsUser",
-            component: PointsUser
-          },
-          {
-            path: "/posts/:id",
-            name: "Posts",
-            component: DetailedPost
+            component: Tasks,
+            meta: {
+              breadCrumb: i18n.t("router.tasks")
+            }
           }
         ]
       },
       {
         path: "/admin",
-        name: "AdminPanel",
         components: {
-          main: AdminPanel,
-          sidebar: SideBarDefault
+          main: () =>
+            import(
+              /* webpackChunkName: "adminPanel" */ "../views/AdminPanel.vue"
+            ),
+          sidebar: () =>
+            import(
+              /* webpackChunkName: "sideBarAdmin" */ "../components/sidebar/SideBarAdmin.vue"
+            )
         },
         meta: {
-          requiresAuth: true
+          requiresAuth: true,
+          breadCrumb: i18n.t("router.adminpanel")
         },
         children: [
           {
             path: "",
             name: "Dashboard",
-            component: Dashboard
+            component: () =>
+              import(
+                /* webpackChunkName: "adminDashboard" */ "../components/admin/Dashboard.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.dashboard")
+            }
           },
           {
             path: "users",
             name: "Users",
-            component: Users
+            component: () =>
+              import(
+                /* webpackChunkName: "adminUsers" */ "../components/admin/Users.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.users")
+            }
           },
           {
             path: "organizations",
             name: "Organization",
-            component: Organization
+            component: () =>
+              import(
+                /* webpackChunkName: "adminOrganization" */ "../components/admin/Organization.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.organizations")
+            }
           }
         ]
       },
@@ -180,14 +268,23 @@ const routes = [
         components: {
           main: CreatePost,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.createpost")
         }
       },
       {
-        path: "/notification",
-        name: "ListOfNotifications",
+        path: "/notifications",
+        name: "Notifications",
         components: {
-          main: ListOfNotifications,
+          main: () =>
+            import(
+              /* webpackChunkName: "notifications" */ "../components/account/Notifications.vue"
+            ),
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.notifications")
         }
       },
       {
@@ -195,7 +292,10 @@ const routes = [
         name: "Posts",
         components: {
           main: DetailedPost,
-          sidebar: SideBarDefault
+          sidebar: SideBarDefault,
+          meta: {
+            breadCrumb: i18n.t("router.post")
+          }
         }
       },
       {
@@ -204,6 +304,20 @@ const routes = [
         components: {
           main: PointsUser,
           sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.points")
+        }
+      },
+      {
+        path: "/statistic",
+        name: "UserStatistic",
+        components: {
+          main: UserStatistic,
+          sidebar: SideBarDefault
+        },
+        meta: {
+          breadCrumb: i18n.t("router.statistic")
         }
       }
     ]
@@ -211,8 +325,7 @@ const routes = [
   {
     path: "/login",
     components: {
-      default: Auth,
-      form: LogIn
+      default: Auth
     },
     children: [
       {
@@ -229,24 +342,25 @@ const routes = [
   },
   {
     path: "/signup",
-    name: "SignUp",
     components: {
-      default: Auth,
-      form: SignUp
+      default: Auth
     },
+    children: [
+      {
+        path: "",
+        name: "SignUp",
+        components: {
+          form: () =>
+            import(
+              /* webpackChunkName: "signup" */ "../components/auth/SignUp.vue"
+            )
+        }
+      }
+    ],
     meta: {
       guest: true
     }
   }
-  // {
-  //   path: "/about",
-  //   name: "About",
-  //   // route level code-splitting
-  //   // this generates a separate chunk (about.[hash].js) for this route
-  //   // which is lazy-loaded when the route is visited.
-  //   component: () =>
-  //     import(/* webpackChunkName: "about" */ "../views/About.vue")
-  // }
 ];
 
 const router = new VueRouter({
@@ -256,6 +370,15 @@ const router = new VueRouter({
 });
 
 router.beforeEach((to, from, next) => {
+  if (to.name !== null && from.name === null && to.name !== "LogIn") {
+    localStorage.setItem("first-route", to.name);
+  }
+
+  let lang = localStorage.getItem("lang");
+  if (!lang) {
+    lang = process.env.VUE_APP_I18N_LOCALE;
+    localStorage.setItem("lang", lang);
+  }
   // Если авторизация обязательна
   if (to.matched.some(record => record.meta.requiresAuth)) {
     // Если присутствует токен, пропускаем
@@ -265,7 +388,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если отсутствует токен, редирект на страницу авторизации
     else {
-      next("/auth");
+      next("/login");
       return;
     }
   }
@@ -278,7 +401,7 @@ router.beforeEach((to, from, next) => {
     }
     // Если есть токен, редирект на главную
     else {
-      next("/");
+      next("/feed");
       return;
     }
   }

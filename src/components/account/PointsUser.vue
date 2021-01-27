@@ -1,103 +1,52 @@
 <template>
-  <div class="pointsUser account-view">
-    <p class="pointsName">Баллы</p>
-    <hr class="" />
-    <p class="pointsQan">322 балла</p>
-    <div class="pointsOperation">
-      <ul>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-        <li>
-          <span class="pointsDate">14.10.14</span
-          ><span class="pointsDelta">+10 баллов</span>
-          <hr />
-        </li>
-      </ul>
+  <div v-if="!this.$apollo.queries.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
     </div>
-    <button class="showAllPoints">Показать полностью</button>
+    <PointQuantity class="sticky w-100"></PointQuantity>
+    <PointOperation :limit="0" ref="pOperation"></PointOperation>
+  </div>
+  <div v-else>
+    <Loader></Loader>
   </div>
 </template>
 
 <script>
+import Loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import PointOperation from "@/components/PointOperation.vue";
+import PointQuantity from "@/components/PointQuantity.vue";
 export default {
-  name: "PointsUser"
+  name: "PointsUser",
+  components: {
+    Loader,
+    BreadCrumbs,
+    PointOperation,
+    PointQuantity
+  },
+  beforeRouteEnter: (to, from, next) => {
+    next(vm => {
+      vm.$refs.pOperation.refreshQuery();
+      next();
+    });
+  },
+  methods: {}
 };
 </script>
 
-<style>
-*,
-*::before,
-*::after {
-  box-sizing: border-box;
-}
+<style lang="scss" scoped>
+@import "@/styles/_grid.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
 
-body {
-  margin: 0;
-  font-size: 16px;
-  font-weight: 400;
-  line-height: 1.5;
-  color: #212529;
-  text-align: left;
-  background-color: #fff;
-}
-li {
-  list-style-type: none;
-}
-.showAllPoints {
-  margin-left: 40px;
-}
-.pointsQan {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: bold;
-  font-size: 48px;
-  line-height: 59px;
-  padding-left: 40px;
-}
-.pointsName {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 24px;
-  line-height: 29px;
-  padding-left: 40px;
-}
-.pointsOperation {
-  display: flex;
-}
-.pointsDate,
-.pointsDelta {
-  font-family: Montserrat;
-  font-style: normal;
-  font-weight: normal;
-  font-size: 18px;
-  line-height: 22px;
-}
-.pointsDelta {
-  float: right;
-  padding-left: 70px;
+.sticky {
+  position: sticky;
+  background-color: $dark_blue;
+  z-index: 7000;
+  top: $topBarHeight;
 }
 </style>

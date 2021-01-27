@@ -1,33 +1,40 @@
 <template>
   <div>
-    <h1>
-      <i18n path="adminPanel">{{ $t("adminPanel") }}</i18n>
-    </h1>
-    <h2>
-      <i18n path="systemStatistics">{{ $t("systemStatistics") }}</i18n>
-    </h2>
-    <div v-if="$apollo.loading">
-      <h3>
-        <i18n path="loading">{{ $t("loading") }}</i18n
-        >...
-      </h3>
-    </div>
-    <div class="graphs" v-if="!$apollo.loading">
-      <NewStatistics
-        v-if="!this.$apollo.loading"
-        :users="statisticsNew.statisticsNewUsers"
-        :orgs="statisticsNew.statisticsNewOrgs"
-      ></NewStatistics>
-      <DeleteStatistics
-        v-if="!this.$apollo.loading"
-        :users="statisticsDelete.statisticsDeleteUsers"
-        :orgs="statisticsDelete.statisticsDeleteOrgs"
-      ></DeleteStatistics>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+      <div class="row">
+        <div class="col-12">
+          <h2>{{ $t("systemStatistics") }}</h2>
+        </div>
+      </div>
+      <div class="wrapOfLoader" v-if="$apollo.loading">
+        <loader></loader>
+      </div>
+      <div class="row" v-if="!$apollo.loading">
+        <NewStatistics
+          class="col-6"
+          v-if="!this.$apollo.loading"
+          :users="statisticsNew.statisticsNewUsers"
+          :orgs="statisticsNew.statisticsNewOrgs"
+        ></NewStatistics>
+        <DeleteStatistics
+          class="col-6"
+          v-if="!this.$apollo.loading"
+          :users="statisticsDelete.statisticsDeleteUsers"
+          :orgs="statisticsDelete.statisticsDeleteOrgs"
+        ></DeleteStatistics>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import Loader from "@/components/Loader.vue";
 import NewStatistics from "@/components/admin/charts/NewStatistics.vue";
 import DeleteStatistics from "@/components/admin/charts/DeleteStatistics.vue";
 import {
@@ -36,7 +43,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { NewStatistics, DeleteStatistics },
+  components: { NewStatistics, DeleteStatistics, BreadCrumbs, Loader },
   apollo: {
     statisticsNew: {
       query: STATISTICS_NEW_QUERY,
@@ -55,10 +62,17 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.graphs {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  grid-template-rows: 1fr;
-  grid-gap: 3vw;
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_grid.scss";
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>

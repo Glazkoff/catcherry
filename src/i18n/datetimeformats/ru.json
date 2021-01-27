@@ -1,0 +1,24 @@
+{
+  "short": {
+    "year": "numeric",
+    "month": "short",
+    "day": "numeric"
+  },
+  "long": {
+    "year": "numeric",
+    "month": "long",
+    "day": "numeric",
+    "hour": "numeric",
+    "minute": "numeric",
+    "second": "numeric"
+  },
+  "number": {
+    "year": "numeric",
+    "month": "numeric",
+    "day": "numeric"
+  },
+  "time": {
+    "hour": "numeric",
+    "minute": "numeric"
+  }
+}

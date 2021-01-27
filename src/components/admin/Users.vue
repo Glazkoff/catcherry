@@ -1,104 +1,184 @@
 <template>
-  <div class="main">
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+      <!-- Вывод списка краткой информации пользователей -->
+      <div class="row">
+        <div class="col-12">
+          <h2>
+            {{ $t("listUser") }}
+          </h2>
+        </div>
+      </div>
+
+      <div v-if="$apollo.queries.users.loading" class="wrapOfLoader">
+        <loader></loader>
+      </div>
+      <div v-if="!$apollo.queries.users.loading" class="row">
+        <div class="col-12">
+          <h6 v-if="users.length == 0">
+            {{ $t("noUser") }}
+          </h6>
+        </div>
+
+        <div>
+          <div class="row">
+            <div class="col-12">
+              <input
+                v-model.trim="findString"
+                type="text"
+                :placeholder="$t('placeholderSearchByUsers')"
+                class="form-control block find dark"
+              />
+            </div>
+          </div>
+          <div class="row">
+            <div class="col-12">
+              <div
+                class="card"
+                v-for="user in filterUser"
+                :key="user.id"
+                @click="showFullInformation(user.id)"
+              >
+                <div class="card_img">
+                  <img src="~@/assets/avatar.jpg" />
+                </div>
+                <div class="card_body">
+                  <h3>
+                    {{ user.surname }} {{ user.name }} {{ user.patricity }}
+                  </h3>
+                  <p>{{ user.login }}</p>
+                  <small>№ {{ user.id }}</small>
+                </div>
+                <div class="card_action">
+                  <ArrowRight></ArrowRight>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <popup v-if="isShowFullInformation">
       <!-- Редактирование пользователя -->
       <h3 slot="header" v-if="isShowModalEdit">
-        <i18n path="editUser">{{ $t("editUser") }}</i18n>
+        {{ $t("editUser") }}
         {{ fullName }}
       </h3>
+      <div slot="exit" @click="cancelModal()" v-if="isShowModalEdit">×</div>
       <div slot="body" v-if="isShowModalEdit">
         <form @submit.prevent="editUser()">
-          <label for="surname"
-            ><i18n path="surname">{{ $t("surname") }}</i18n></label
-          >
-          <input
-            name="surname"
-            v-model.trim="$v.oneUser.surname.$model"
-            @blur="$v.oneUser.surname.$touch()"
-            placeholder="Фамилия"
-          />
-          <div v-if="$v.oneUser.surname.$error" class="error">
-            <span v-if="!$v.oneUser.surname.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
-            <span v-else-if="!$v.oneUser.surname.alpha"
-              ><i18n path="requiredLetters">{{
-                $t("requiredLetters")
-              }}</i18n></span
-            >
+          <div class="form-group">
+            <label for="surname">{{ $t("surname") }}</label>
+            <input
+              name="surname"
+              v-model.trim="$v.oneUser.surname.$model"
+              @blur="$v.oneUser.surname.$touch()"
+              :placeholder="$t('surname')"
+              class="form-control"
+            />
+            <div v-if="$v.oneUser.surname.$error" class="error">
+              <span
+                v-if="!$v.oneUser.surname.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+              <span
+                v-else-if="!$v.oneUser.surname.alpha"
+                class="form-text danger"
+                >{{ $t("requiredLetters") }}</span
+              >
+            </div>
           </div>
-          <label for="name"
-            ><i18n path="name">{{ $t("name") }}</i18n></label
-          >
-          <input
-            name="name"
-            v-model.trim="$v.oneUser.name.$model"
-            placeholder="Имя"
-            required
-          />
-          <div v-if="$v.oneUser.name.$error" class="error">
-            <span v-if="!$v.oneUser.name.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
-            <span v-else-if="!$v.oneUser.name.alpha"
-              ><i18n path="requiredLetters">{{
-                $t("requiredLetters")
-              }}</i18n></span
-            >
+          <div class="form-group">
+            <label for="name">{{ $t("name") }}</label>
+            <input
+              name="name"
+              v-model.trim="$v.oneUser.name.$model"
+              :placeholder="$t('name')"
+              class="form-control"
+            />
+            <div v-if="$v.oneUser.name.$error" class="error">
+              <span v-if="!$v.oneUser.name.required" class="form-text danger">{{
+                $t("required")
+              }}</span>
+              <span
+                v-else-if="!$v.oneUser.name.alpha"
+                class="form-text danger"
+                >{{ $t("requiredLetters") }}</span
+              >
+            </div>
           </div>
-          <label for="patricity"
-            ><i18n path="patricity">{{ $t("patricity") }}</i18n></label
-          >
-          <input
-            name="patricity"
-            v-model.trim="$v.oneUser.patricity.$model"
-            placeholder="Отчество"
-            required
-          />
-          <label for="gender"
-            ><i18n path="gender">{{ $t("gender") }}</i18n></label
-          >
-          <select
-            name="gender"
-            v-model.trim="$v.oneUser.gender.$model"
-            required
-          >
-            <option
-              ><i18n path="male">{{ $t("male") }}</i18n></option
-            >
-            <option
-              ><i18n path="female">{{ $t("female") }}</i18n></option
-            >
-          </select>
-          <div v-if="$v.oneUser.gender.$error" class="error">
-            <span v-if="!$v.oneUser.gender.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
+          <div class="form-group">
+            <label for="patricity">{{ $t("patricity") }}</label>
+            <input
+              name="patricity"
+              v-model.trim="$v.oneUser.patricity.$model"
+              :placeholder="$t('patricity')"
+              class="form-control"
+            />
           </div>
-          <label for="login"
-            ><i18n path="login">{{ $t("login") }}</i18n></label
-          >
-          <input
-            name="login"
-            v-model.trim="$v.oneUser.login.$model"
-            placeholder="Логин"
-            required
-          />
-          <div v-if="$v.oneUser.login.$error" class="error">
-            <span v-if="!$v.oneUser.login.required"
-              ><i18n path="required">{{ $t("required") }}</i18n></span
-            >
+          <div class="form-group">
+            <label for="gender">{{ $t("gender") }}</label>
+            <select name="gender" v-model.trim="$v.oneUser.gender.$model">
+              <option>{{ $t("male") }}</option>
+              <option>{{ $t("female") }}</option>
+            </select>
+            <div v-if="$v.oneUser.gender.$error" class="error">
+              <span
+                v-if="!$v.oneUser.gender.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="login">{{ $t("login") }}</label>
+            <input
+              name="login"
+              v-model.trim="$v.oneUser.login.$model"
+              :placeholder="$t('login')"
+              class="form-control"
+            />
+            <div v-if="$v.oneUser.login.$error" class="error">
+              <span
+                v-if="!$v.oneUser.login.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="birthday">{{ $t("birthday") }}</label>
+            <input
+              name="birthday"
+              type="date"
+              v-model.trim="$v.oneUser.birthday.$model"
+              :placeholder="$t('birthday')"
+              class="form-control"
+            />
+            <div v-if="$v.oneUser.birthday.$error" class="error">
+              <span
+                v-if="!$v.oneUser.birthday.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
+            </div>
           </div>
           <div class="btn-group">
             <button
-              class="modal-default-button"
+              class="btn btn-primary"
               :disabled="$v.oneUser.$invalid"
               @click="editUser()"
             >
-              <i18n path="save">{{ $t("save") }}</i18n>
+              {{ $t("save") }}
             </button>
-            <button @click="cancelModal()">
-              <i18n path="cancel">{{ $t("cancel") }}</i18n>
+            <button @click="cancelModal()" class="btn btn-alternate">
+              {{ $t("cancel") }}
             </button>
           </div>
         </form>
@@ -106,21 +186,16 @@
 
       <!-- Удаление пользователя -->
       <h3 slot="header" v-if="isShowModalDelete">
-        <i18n path="deleteQuestion"
-          ><span place="title">{{ $t("deleteQuestion") }}</span></i18n
-        >
+        {{ $t("deleteQuestion") }}
         {{ fullName }}?
       </h3>
+      <div slot="exit" @click="cancelModal()" v-if="isShowModalDelete">×</div>
       <div slot="body" v-if="isShowModalDelete" class="btn-group">
-        <button
-          @click="deleteUser()"
-          slot="action"
-          class="modal-default-button"
-        >
-          <i18n path="delete">{{ $t("delete") }}</i18n>
+        <button @click="deleteUser()" slot="action" class="btn btn-primary">
+          {{ $t("delete") }}
         </button>
-        <button @click="cancelModal()">
-          <i18n path="cancel">{{ $t("cancel") }}</i18n>
+        <button @click="cancelModal()" class="btn btn-alternate">
+          {{ $t("cancel") }}
         </button>
       </div>
 
@@ -134,12 +209,13 @@
             isShowFullInformation
         "
       >
-        <h3>
-          <i18n path="loading">{{ $t("loading") }}</i18n
-          >...
-        </h3>
-        <button @click="cancelFullInformation()">
-          <i18n path="cancel">{{ $t("cancel") }}</i18n>
+        <h3>{{ $t("loading") }}...</h3>
+        <h4 v-if="queryError">{{ queryError }}</h4>
+        <button
+          @click="cancelFullInformation()"
+          class="btn btn-alternate block"
+        >
+          {{ $t("cancel") }}
         </button>
       </div>
 
@@ -148,165 +224,135 @@
         slot="header"
         v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
       >
-        <i18n path="user">{{ $t("user") }}</i18n> {{ user.surname }}
-        {{ user.name }} {{ user.patricity }}
+        {{ $t("user") }} {{ user.surname }} {{ user.name }}
+        {{ user.patricity }}
       </h3>
+      <div
+        slot="exit"
+        @click="cancelFullInformation()"
+        v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
+      >
+        ×
+      </div>
       <div
         slot="body"
         v-if="!isShowModalDelete && !isShowModalEdit && !$apollo.loading"
       >
-        <p>
-          <i18n path="surname">{{ $t("surname") }}</i18n
-          >: {{ user.surname }}
-        </p>
-        <p>
-          <i18n path="name">{{ $t("name") }}</i18n
-          >: {{ user.name }}
-        </p>
-        <p>
-          <i18n path="patricity">{{ $t("patriciry") }}</i18n
-          >: {{ user.patricity }}
-        </p>
-        <p>
-          <i18n path="gender">{{ $t("gender") }}</i18n
-          >: {{ user.gender }}
-        </p>
-        <p>
-          <i18n path="birthday">{{ $t("birthday") }}</i18n
-          >: {{ $d(user.birthday, "long") }}
-        </p>
-        <p>
-          <i18n path="login">{{ $t("login") }}</i18n
-          >: {{ user.login }}
-        </p>
+        <p>{{ $t("surname") }}: {{ user.surname }}</p>
+        <p>{{ $t("name") }}: {{ user.name }}</p>
+        <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
+        <p>{{ $t("gender") }}: {{ user.gender }}</p>
+        <p>{{ $t("birthday") }}: {{ $d(user.birthday, "number") }}</p>
+        <p>{{ $t("login") }}: {{ user.login }}</p>
         <div v-if="!isEditPoints && getPointsUser !== null">
-          <p>
-            <i18n path="numberOfPoints">{{ $t("numberOfPoints") }}</i18n
-            >: {{ getPointsUser.pointQuantity }}
-          </p>
-          <button @click="editPoints()">
-            <i18n path="editNumberOfPoints">{{
-              $t("editNumberOfPoints")
-            }}</i18n>
+          <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
+          <button @click="editPoints()" class="btn btn-primary block">
+            {{ $t("editNumberOfPoints") }}
           </button>
         </div>
         <div v-if="isEditPoints">
           <p>
-            <i18n path="numberOfPoints">{{ $t("numberOfPoints") }}</i18n
-            >: <input type="number" name="points" v-model.trim="points" />
-          </p>
-          <button @click="savePoints()">
-            <i18n path="saveNumberOfPoints">{{
-              $t("saveNumberOfPoints")
-            }}</i18n>
-          </button>
-          <button @click="cancelPoints()">
-            <i18n path="cancel">{{ $t("cancel") }}</i18n>
-          </button>
-        </div>
-
-        <p>
-          <i18n path="createdAt">{{ $t("createdAt") }}</i18n
-          >: {{ $d(user.createdAt, "long") }}
-        </p>
-        <p v-if="oneUserInTeams.length === 0">
-          <i18n path="noTeam">{{ $t("noTeam") }}</i18n>
-        </p>
-        <p v-if="oneUserInTeams.length !== 0">
-          <i18n path="userTeams">{{ $t("userTeams") }}</i18n
-          >:
-        </p>
-        <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
-          <p>
-            <i18n path="nameInanimate">{{ $t("nameInanimate") }}</i18n
-            >: {{ team.team.name }}
-          </p>
-          <p>
-            <i18n path="organization">{{ $t("organization") }}</i18n
-            >: {{ team.team.organization.name }}
-          </p>
-          <p>
-            <i18n path="status">{{ $t("status") }}</i18n
-            >: {{ team.status }}
-          </p>
-          <p>
-            <i18n path="role">{{ $t("role") }}</i18n
-            >: {{ team.role.name }}
+            {{ $t("numberOfPoints") }}:
+            <input
+              type="number"
+              name="points"
+              v-model.trim="points"
+              class="form-control col-12"
+            />
           </p>
           <div class="btn-group">
-            <button
-              v-if="team.status === 'Принято'"
-              @click="changeStatusInTeam(team, 'Не принято')"
-            >
-              <i18n path="deleteUserFromTeam">{{
-                $t("deleteUserFromTeam")
-              }}</i18n>
+            <button @click="savePoints()" class="btn btn-primary">
+              {{ $t("saveNumberOfPoints") }}
             </button>
-            <button
-              v-if="team.status !== 'Принято'"
-              @click="changeStatusInTeam(team, 'Принято')"
-            >
-              <i18n path="addUserToTeam">{{ $t("addUserToTeam") }}</i18n>
+            <button @click="cancelPoints()" class="btn btn-alternate">
+              {{ $t("cancel") }}
             </button>
           </div>
         </div>
+
+        <p>{{ $t("createdAt") }}: {{ $d(user.createdAt, "long") }}</p>
+        <p v-if="oneUserInTeams.length === 0">
+          {{ $t("noTeam") }}
+        </p>
+        <p v-if="oneUserInTeams.length !== 0">{{ $t("userTeams") }}:</p>
+        <div v-for="team in oneUserInTeams" :key="team.id" class="oneTeam">
+          <h3 v-if="team.team.name !== null">
+            {{ $t("nameInanimate") }}: {{ team.team.name }}
+          </h3>
+          <p v-if="team.team.organization !== null">
+            {{ $t("organization") }}: {{ team.team.organization.name }}
+          </p>
+          <p>{{ $t("status") }}: {{ team.status }}</p>
+          <p v-if="team.role !== null">
+            {{ $t("role") }}: {{ team.role.name }}
+          </p>
+          <div class="btn-group">
+            <button
+              v-if="team.status === 'Принят'"
+              @click="changeStatusInTeam(team, 'Не принят')"
+              class="btn btn-primary block"
+            >
+              {{ $t("deleteUserFromTeam") }}
+            </button>
+            <button
+              v-if="team.status !== 'Принят'"
+              @click="changeStatusInTeam(team, 'Принят')"
+              class="btn btn-primary block"
+            >
+              {{ $t("addUserToTeam") }}
+            </button>
+          </div>
+        </div>
+        <button
+          class="btn btn-primary block"
+          @click="addUserInTeam()"
+          v-if="!isShowAddUserInTeam"
+        >
+          {{ $t("addUserToTeam") }}
+        </button>
+        <div class="addToTeam" v-if="isShowAddUserInTeam">
+          <div class="form-group">
+            <label for="team" class="form-name">Название команды</label>
+            <select name="team" class="form-control col-12" v-model="newTeam">
+              <option v-for="team in teams" :key="team.id" :value="team.id">{{
+                team.name
+              }}</option>
+            </select>
+          </div>
+          <button class="btn btn-primary col-12" @click="addOneUserInTeam()">
+            {{ $t("addUserToTeam") }}
+          </button>
+        </div>
         <div class="btn-group">
-          <button @click="showModalEdit()">
-            <i18n path="edit">{{ $t("edit") }}</i18n>
+          <button @click="showModalEdit()" class="btn btn-primary">
+            {{ $t("edit") }}
           </button>
-          <button @click="showModalDelete()">
-            <i18n path="delete">{{ $t("delete") }}</i18n>
+          <button
+            @click="showModalDelete()"
+            class="btn btn-primary"
+            :disabled="$store.getters.decodedToken.id == userId"
+          >
+            {{ $t("delete") }}
           </button>
-          <button @click="cancelFullInformation()">
-            <i18n path="cancel">{{ $t("cancel") }}</i18n>
+          <button @click="cancelFullInformation()" class="btn btn-alternate">
+            {{ $t("cancel") }}
           </button>
         </div>
       </div>
     </popup>
-
-    <!-- Вывод списка краткой информации пользователей -->
-    <h2>
-      <i18n path="listUser"
-        ><span place="title">{{ $t("listUser") }}</span></i18n
-      >
-    </h2>
-    <h3 v-if="$apollo.queries.users.loading">
-      <i18n path="loading">{{ $t("loading") }}</i18n
-      >...
-    </h3>
-    <div v-if="!$apollo.queries.users.loading">
-      <h6 v-if="users.length == 0">
-        <i18n path="noUser">{{ $t("noUser") }}</i18n>
-      </h6>
-      <div>
-        <input
-          v-model.trim="findString"
-          type="text"
-          placeholder="Поиск по пользователям"
-        />
-        <div class="oneUser" v-for="user in filterUser" :key="user.id">
-          <p>{{ user.id }}.</p>
-          <p>{{ user.surname }} {{ user.name }} {{ user.patricity }}</p>
-          <p>{{ user.login }}</p>
-          <button @click="showFullInformation(user.id)">
-            <i18n path="more">{{ $t("more") }}</i18n>
-          </button>
-        </div>
-      </div>
-    </div>
     <minialert v-if="isShowAlertEdit"
       ><p slot="title">
-        <i18n path="minialertEditUser">{{ $t("minialertEditUser") }}</i18n>
+        {{ $t("minialertEditUser") }}
       </p></minialert
     >
     <minialert v-if="isShowAlertDelete"
       ><p slot="title">
-        <i18n path="minialertDeleteUser">{{ $t("minialertDeleteUser") }}</i18n>
+        {{ $t("minialertDeleteUser") }}
       </p></minialert
     >
     <minialert v-if="isError || $apollo.error"
       ><p slot="title">
-        <i18n path="minialertError">{{ $t("minialertError") }}</i18n>
+        {{ $t("minialertError") }}
       </p></minialert
     >
   </div>
@@ -314,7 +360,10 @@
 
 <script>
 import popup from "@/components/Popup.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import minialert from "@/components/MiniAlert.vue";
+import Loader from "@/components/Loader.vue";
 import { required } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
@@ -323,20 +372,29 @@ import {
   ONE_USER_QUERY,
   ONE_USER_IN_TEAMS_QUERY,
   ADD_IN_TEAM_QUERY,
-  GET_POINTS_QUERY,
-  CARGE_POINTS_QUERY
+  GET_POINTS_USER_QUERY,
+  CREATE_POINTS_OPERATION,
+  TEAMS_QUERY,
+  ADD_USER_IN_TEAM_QUERY
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert, popup },
+  components: { minialert, popup, ArrowRight, BreadCrumbs, Loader },
   apollo: {
     // Получить список всех пользователей
     users: {
       query: USERS_QUERY
     },
+    // Получение списка всех команд
+    teams: {
+      query: TEAMS_QUERY
+    },
     // Получить всю информацию про одного пользователя
     user: {
       query: ONE_USER_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
           id: this.userId
@@ -346,6 +404,9 @@ export default {
     // Получить список всех команд пользователя
     oneUserInTeams: {
       query: ONE_USER_IN_TEAMS_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
           userId: this.userId
@@ -354,7 +415,10 @@ export default {
     },
     // Получить количество баллов пользователя
     getPointsUser: {
-      query: GET_POINTS_QUERY,
+      query: GET_POINTS_USER_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
       variables() {
         return {
           userId: this.userId
@@ -365,6 +429,7 @@ export default {
   data() {
     return {
       nameOfUser: "",
+      queryError: "",
       isError: false,
       isShowFullInformation: false,
       index: 0,
@@ -375,8 +440,11 @@ export default {
       isShowAlertEdit: false,
       isShowModalEdit: false,
       isShowModalDelete: false,
+      isShowAddUserInTeam: false,
+      nameTeam: "Название команды",
       findString: "",
       points: 0,
+      allTeams: [],
       isEditPoints: false,
       oneUser: {
         id: -1,
@@ -384,7 +452,8 @@ export default {
         name: "",
         patricity: "",
         gender: "",
-        login: ""
+        login: "",
+        birthday: new Date()
       }
     };
   },
@@ -407,6 +476,9 @@ export default {
       },
       login: {
         required
+      },
+      birthday: {
+        required
       }
     }
   },
@@ -419,11 +491,66 @@ export default {
     // Закрыть попап со всей информацией
     cancelFullInformation() {
       this.isShowFullInformation = false;
+      this.isShowAddUserInTeam = false;
     },
     // Закрыть попапы с редактированием или удалением
     cancelModal() {
       this.isShowModalEdit = false;
       this.isShowModalDelete = false;
+      this.isShowAddUserInTeam = false;
+    },
+    addUserInTeam() {
+      console.log(this.teams);
+      this.teams = this.teams.filter(
+        team => this.oneUserInTeams.findIndex(t => +t.teamId === +team.id) < 0
+      );
+      this.isShowAddUserInTeam = true;
+    },
+    addOneUserInTeam() {
+      console.log(this.newTeam);
+      this.$apollo
+        .mutate({
+          mutation: ADD_USER_IN_TEAM_QUERY, // Удаляем из БД
+          variables: {
+            id: this.newTeam,
+            userId: this.userId
+          }
+          // update: cache => {
+          //   let data = cache.readQuery({
+          //     query: ONE_USER_IN_TEAMS_QUERY,
+          //     variables: { userId: this.userId }
+          //   });
+          //   let newUserInTeam = {
+          //     status: "Принят",
+          //     team: {
+          //       name: this.teams.find(t => +t.id === +this.newTeam).name
+          //     }
+          //   };
+          //   data.oneUserInTeams.push(newUserInTeam);
+          //   cache.writeQuery({
+          //     query: ONE_USER_IN_TEAMS_QUERY,
+          //     variables: { userId: this.userId },
+          //     data
+          //   });
+          // }
+        })
+        // В случае успеха
+        .then(() => {
+          this.isShowAddUserInTeam = false;
+          this.isShowAlertEdit = true; // Показать окно с информацией об успехе
+          setTimeout(() => {
+            this.isShowAlertEdit = false; // Закрыть окно с информацией об успехе
+          }, 3000);
+        })
+        // В случае ошибки
+        .catch(error => {
+          console.error(error);
+          this.isShowAddUserInTeam = false;
+          this.isError = true; // Показать окно с ошибкой
+          setTimeout(() => {
+            this.isError = false; // Закрыть попап с ошибкой
+          }, 3000);
+        });
     },
     // Показать попап с удалением
     showModalDelete() {
@@ -479,12 +606,24 @@ export default {
     // Показать попап с редактированием
     showModalEdit() {
       this.oneUser = Object.assign({}, this.user); // Записываем данные о пользователе в другой объект, чтобы при редактировании данные в основном объекте не изменялись
+      this.oneUser.birthday = new Date(+this.oneUser.birthday);
+      this.oneUser.birthday =
+        this.oneUser.birthday.getFullYear() +
+        "-" +
+        (this.oneUser.birthday.getMonth() < 8
+          ? "0" + (this.oneUser.birthday.getMonth() + 1)
+          : this.oneUser.birthday.getMonth() + 1) +
+        "-" +
+        (this.oneUser.birthday.getDate() < 9
+          ? "0" + this.oneUser.birthday.getDate()
+          : this.oneUser.birthday.getDate());
       this.fullName = `${this.user.surname} ${this.user.name} ${this.user.patricity}`; // Записываем полное имя
       this.isShowModalEdit = true;
     },
     // Редактировать информацию про пользователя
     editUser() {
       this.isShowModalEdit = false;
+      console.log(new Date(this.oneUser.birthday));
       this.$apollo
         .mutate({
           mutation: UPDATE_USER_QUERY, // Изменяем в БД
@@ -494,6 +633,7 @@ export default {
             name: this.oneUser.name,
             patricity: this.oneUser.patricity,
             gender: this.oneUser.gender,
+            birthday: new Date(this.oneUser.birthday),
             login: this.oneUser.login
           },
           // Обновляем кеш
@@ -514,6 +654,9 @@ export default {
             data.users.find(
               el => el.id === this.oneUser.id
             ).login = this.oneUser.login;
+            data.users.find(
+              el => el.id === this.oneUser.id
+            ).birthday = new Date(this.oneUser.birthday);
             cache.writeQuery({ query: USERS_QUERY, data });
             console.log(updateUser);
           },
@@ -526,6 +669,7 @@ export default {
               surname: this.oneUser.surname,
               name: this.oneUser.name,
               patricity: this.oneUser.patricity,
+              birthday: new Date(this.oneUser.birthday),
               gender: this.oneUser.gender,
               login: this.oneUser.login
             }
@@ -601,21 +745,21 @@ export default {
       this.isEditPoints = false;
       this.$apollo
         .mutate({
-          mutation: CARGE_POINTS_QUERY, // Изменяем в БД
+          mutation: CREATE_POINTS_OPERATION, // Изменяем в БД
           variables: {
-            pointAccountId: parseInt(this.getPointsUser.id),
+            userId: this.userId,
             delta: parseInt(this.points - this.getPointsUser.pointQuantity),
             operationDescription: "Действия администратора"
           },
           // Обновляем кеш
           update: (cache, { data: { updatePoints } }) => {
             let data = cache.readQuery({
-              query: GET_POINTS_QUERY,
+              query: GET_POINTS_USER_QUERY,
               variables: { userId: this.userId }
             });
             data.getPointsUser.pointQuantity = this.points; // Редактируем количество баллов
             cache.writeQuery({
-              qquery: GET_POINTS_QUERY,
+              query: GET_POINTS_USER_QUERY,
               variables: { userId: this.userId },
               data
             });
@@ -659,6 +803,9 @@ export default {
           if (el.patricity === undefined || el.patricity === null) {
             el.patricity = " ";
           }
+          if (el.login === undefined || el.login === null) {
+            el.login = " ";
+          }
           return (
             (el.surname.toLowerCase().indexOf(this.findString.toLowerCase()) !==
               -1 &&
@@ -669,7 +816,10 @@ export default {
             (el.patricity
               .toLowerCase()
               .indexOf(this.findString.toLowerCase()) !== -1 &&
-              el.patricity !== "")
+              el.patricity !== "") ||
+            (el.login.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+              -1 &&
+              el.login !== "")
           );
         });
       } else {
@@ -681,30 +831,25 @@ export default {
 </script>
 
 <style lang="scss" scoped>
-.btn-group {
-  display: flex;
-  justify-content: space-between;
-  width: 100%;
-}
-button {
-  width: 100%;
-  margin: 0 2%;
-}
-.oneUser {
-  display: grid;
-  grid-template-columns: 5% 25% 10% 15% 15% 15% 15%;
-  grid-template-rows: 1fr;
-}
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_grid.scss";
 .oneTeam {
-  border: 1px solid black;
-  padding: 10px;
-  p {
-    display: block;
-  }
+  padding: 1%;
+  background: $violet;
+  margin-bottom: 1rem;
+  border-radius: 10px;
+  box-shadow: 0px 4px 4px rgba(0, 0, 0, 0.25);
+  color: $white;
 }
-
-input,
-select {
-  display: block;
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>
