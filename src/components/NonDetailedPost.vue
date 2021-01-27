@@ -92,14 +92,16 @@ export default {
   grid-template-columns: 4fr 5fr;
 }
 
-.imageContainer img {
-  width: 100%;
-  border-top-left-radius: 0.625rem;
-  border-bottom-left-radius: 0.625rem;
+.imageContainer {
   height: 19rem;
-  cursor: pointer;
+  & img {
+    width: 100%;
+    border-top-left-radius: 0.625rem;
+    border-bottom-left-radius: 0.625rem;
+    height: 19rem;
+    cursor: pointer;
+  }
 }
-
 .infoContainer {
   padding-top: 3rem;
   padding-right: 3rem;
