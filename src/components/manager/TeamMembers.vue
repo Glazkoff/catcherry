@@ -1,23 +1,40 @@
 <template>
-  <div class="main_users_in_teams" v-if="!this.$apollo.loading">
-    <breadcrumbs></breadcrumbs>
-    <h2>Список участников</h2>
-
-    <div v-for="userInTeam in usersInTeams" :key="userInTeam.id">
-      <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+  <div v-if="!this.$apollo.loading">
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
     </div>
+    <div class="container">
+      <div class="container">
+        <h2>Список участников</h2>
+        <div v-if="userInTeams">
+          <div v-for="userInTeam in usersInTeams" :key="userInTeam.id">
+            <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+          </div>
+        </div>
+        <div v-else>
+          <Stub>
+            <div slot="body">В команде пока нет участников!</div>
+          </Stub>
+        </div>
 
-    <Minialert v-if="isShowAlert">
-      <p slot="title">{{ message }}</p>
-    </Minialert>
+        <Minialert v-if="isShowAlert">
+          <p slot="title">{{ message }}</p>
+        </Minialert>
+      </div>
+    </div>
   </div>
   <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
-import breadcrumbs from "@/components/BreadCrumbs.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Minialert from "@/components/MiniAlert.vue";
+import Stub from "@/components/Stub.vue";
 import loader from "@/components/Loader.vue";
 
 import { USERS_IN_TEAMS_QUERY, DELETE_IN_TEAMS_QUERY } from "@/graphql/queries";
@@ -46,7 +63,8 @@ export default {
   components: {
     TeamMemberItem,
     Minialert,
-    breadcrumbs,
+    BreadCrumbs,
+    Stub,
     loader
   },
   methods: {
@@ -97,8 +115,5 @@ export default {
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
-
-.main_users_in_teams {
-  padding: 2%;
-}
+@import "@/styles/_grid.scss";
 </style>

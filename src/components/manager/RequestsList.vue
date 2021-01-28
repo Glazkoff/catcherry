@@ -4,12 +4,19 @@
     <div v-for="t in team" :key="t.id">
       <div v-if="t.id == teamId">
         <h2>Заявки на вхождение {{ (name = t.name) }}</h2>
-        <div v-for="request in requests" :key="request.id" class="request">
-          <RequestsItem
-            :request="request"
-            @accept="toAccept"
-            @reject="toReject"
-          />
+        <div v-if="requests">
+          <div v-for="request in requests" :key="request.id" class="request">
+            <RequestsItem
+              :request="request"
+              @accept="toAccept"
+              @reject="toReject"
+            />
+          </div>
+        </div>
+        <div v-else>
+          <Stub>
+            <div slot="body">В команде пока нет участников!</div>
+          </Stub>
         </div>
         <Minialert v-if="isShowAlert">
           <p slot="title">{{ message }}</p>
@@ -25,6 +32,8 @@ import RequestsItem from "@/components/manager/RequestsItem";
 import Minialert from "@/components/MiniAlert.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import loader from "@/components/Loader.vue";
+import Stub from "@/components/Stub.vue";
+
 import {
   REQUESTS_QUERY,
   ACCEPT_REQUEST_QUERY,
@@ -78,7 +87,8 @@ export default {
     RequestsItem,
     Minialert,
     breadcrumbs,
-    loader
+    loader,
+    Stub
   },
 
   methods: {
