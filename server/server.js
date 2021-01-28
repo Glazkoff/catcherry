@@ -25,7 +25,10 @@ const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
 const { createRateLimitDirective } = require("graphql-rate-limit");
-const { constraintDirective, constraintDirectiveTypeDefs } = require('graphql-constraint-directive')
+const {
+  constraintDirective,
+  constraintDirectiveTypeDefs
+} = require("graphql-constraint-directive");
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
 const timeout = require("connect-timeout");
@@ -49,7 +52,7 @@ const schema = makeExecutableSchema({
   context: { db },
   schemaTransforms: [constraintDirective()],
   schemaDirectives: {
-    rateLimit: rateLimitDirective,
+    rateLimit: rateLimitDirective
   }
 });
 
@@ -64,10 +67,10 @@ app.use(compression());
 app.use(cookieParser());
 
 // Настройка Timeout
-app.use(timeout('2s'));
+app.use(timeout("2s"));
 
 // Действие после таймаута
-function haltOnTimedout(req, res, next){
+function haltOnTimedout(req, res, next) {
   if (!req.timedout) next();
 }
 
@@ -198,10 +201,6 @@ async function addAllTables(destroyTable) {
     //Администраторы
     let administrators = await db.Administrators.create({
       userId: user.dataValues.id
-    });
-    let role = await db.Roles.create({
-      name: faker.name.findName(),
-      description: faker.lorem.paragraph()
     });
     //Организации
     let organization = await db.Organizations.create({
