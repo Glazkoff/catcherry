@@ -93,7 +93,32 @@
     "deleteTask": "Удалить задачу",
     "youHaveSuccessfullyCreditedPointsToTheUser": "Вы успешно зачислили баллы пользователю",
     "youHaveSuccessfullyDeletedTheTask": "Вы успешно удалили задачу",
-    "youHaveSuccessfullyReturnedTheTaskForRevision": "Вы успешно вернули задачу на доработку"
+    "youHaveSuccessfullyReturnedTheTaskForRevision": "Вы успешно вернули задачу на доработку",
+    "noTask": "Нет задач",
+    "scheduledTasks": "Запланированные задачи",
+    "tasksWithoutFPerformer": "Задачи без исполнителя",
+    "сompletedTasksForCheck": "Готовые задачи на проверке",
+    "team": "Команда",
+    "сompleteTask": "Завершить задачу",
+    "takeTask": "Взять задачу",
+    "youHaveSuccessfullyScceptedTheTask": "Вы успешно взяли задачу",
+    "youHaveCompletedTheTaskSuccessfully": "Вы успешно завершили задачу"
+  },
+  "noSearch": "По результатам поиска ничего не найдено",
+  "team": {
+    "createNewTeam": "Создать новую команду",
+    "teamName": "Название команды",
+    "teamDescription": "Описание команды",
+    "maximumNumberOfTeamMembers": "Максимальное количество участников в команде",
+    "accept": "Принять",
+    "reject": "Отклонить",
+    "removeUserFromTeam": "Удалить пользователя из команды",
+    "youHaveSuccessfullyRemovedPersonFromTheTeam": "Вы успешно исключили человека из команды",
+    "youHaveSuccessfullyAddedTheUserToTheTeam": "Вы успешно добавили пользователя в команду",
+    "youHaveSuccessfullyDeclinedYourRequestToBeAddedToTheTeam": "Вы успешно отклонили заявку на добавление в команду",
+    "noNewRequest": "Нет новых заявок",
+    "youHaveSuccessfullyChangedTheseTeam": "Вы успешно изменили данные команды",
+    "lastedited": "Последнее редактирование"
   },
   "taskConstructor": {
     "taskConstructor": "Конструктор заданий",
@@ -171,7 +196,8 @@
     "teammembers": "Участники",
     "rating": "Рейтинг",
     "editteam": "Редактирование",
-    "requestlist": "Заявки в команду"
+    "requestlist": "Заявки в команду",
+    "newTeam": "Новая команда"
   },
   "userAgreement": {
     "bySignUp": "Создавая аккаунт, принимаю",

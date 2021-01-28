@@ -71,7 +71,7 @@
             </label>
             <input
               type="number"
-              class="form-control"
+              class="form-control white"
               placeholder="0"
               v-model.trim="$v.newTask.points.$model"
               @blur="$v.newTask.points.$touch()"
@@ -119,7 +119,7 @@ import loader from "@/components/Loader.vue";
 import {
   USERS_IN_TEAMS_QUERY,
   ADD_TASK_QUERY,
-  ALL_TASKS_QUERY
+  ALL_TASKS_IN_TEAM_QUERY
 } from "@/graphql/queries";
 export default {
   components: { minialert, breadcrumbs, loader },
@@ -179,12 +179,12 @@ export default {
           },
           update: (cache, { data: { updateUser } }) => {
             let data = cache.readQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id }
             });
-            data.allTasks.push(this.newTask);
+            data.allTasksInOneTeam.push(this.newTask);
             cache.writeQuery({
-              query: ALL_TASKS_QUERY,
+              query: ALL_TASKS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id },
               data
             });

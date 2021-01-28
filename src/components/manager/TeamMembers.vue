@@ -1,111 +1,313 @@
 <template>
-  <div v-if="!this.$apollo.loading">
-    <div class="container">
-      <div class="row">
-        <div class="col-12">
-          <BreadCrumbs></BreadCrumbs>
-        </div>
+  <div class="container">
+    <div class="row" v-if="this.$apollo.queries.usersInTeams.loading">
+      <div class="col-12" wrapOfLoader>
+        <loader></loader>
       </div>
     </div>
-    <div class="container">
-      <div class="container">
-        <h2>Список участников</h2>
-        <div v-if="userInTeams">
-          <div v-for="userInTeam in usersInTeams" :key="userInTeam.id">
-            <TeamMemberItem :userInTeam="userInTeam" @delete="toDeleteUser" />
+    <div class="row" v-else>
+      <div class="col-12">
+        <breadcrumbs></breadcrumbs>
+      </div>
+      <div class="col-12">
+        <input
+          v-model.trim="findString"
+          type="text"
+          :placeholder="$t('placeholderSearchByUsers')"
+          class="form-control block find dark"
+        />
+        <div v-for="user in filterUser" :key="user.id" class="card">
+          <div class="card_img">
+            <img src="~@/assets/avatar.jpg" />
+          </div>
+          <div class="col-8">
+            <p>
+              {{ user.user.surname }} {{ user.user.name
+              }}{{ user.user.patricity }}
+            </p>
+            <p>{{ user.role.name }}</p>
+          </div>
+          <button
+            class="btn btn-alternate col-3"
+            @click="showFullInformation(user)"
+          >
+            {{ $t("more") }}
+          </button>
+        </div>
+        <div v-if="filterUser.length == 0">
+          <p>{{ $t("noSearch") }}</p>
+        </div>
+      </div>
+      <popup v-if="isShowModal">
+        <h3 v-if="$apollo.loading">{{ $t("loading") }}...</h3>
+        <h3 slot="header" v-if="!$apollo.loading">
+          {{ $t("user") }} {{ fullName }}
+        </h3>
+        <div slot="exit" @click="cancelModal()">×</div>
+        <div slot="body" v-if="!$apollo.loading">
+          <p>{{ $t("surname") }}: {{ user.surname }}</p>
+          <p>{{ $t("name") }}: {{ user.name }}</p>
+          <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
+          <p>{{ $t("gender") }}: {{ user.gender }}</p>
+          <p>{{ $t("birthday") }}: {{ $d(user.birthday, "short") }}</p>
+          <p>{{ $t("login") }}: {{ user.login }}</p>
+          <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
+          <p>{{ $t("role") }}: {{ oneUser.role.name }}</p>
+        </div>
+        <div slot="footer" v-if="!$apollo.loading">
+          <div class="btn-group">
+            <button
+              class="btn btn-danger"
+              @click="exclude()"
+              v-if="$store.getters.decodedToken.id != userId"
+            >
+              {{ $t("team.removeUserFromTeam") }}
+            </button>
+            <button class="btn btn-alternate" @click="cancelModal()">
+              {{ $t("cancel") }}
+            </button>
           </div>
         </div>
-        <div v-else>
-          <Stub>
-            <div slot="body">В команде пока нет участников!</div>
-          </Stub>
-        </div>
-
-        <Minialert v-if="isShowAlert">
-          <p slot="title">{{ message }}</p>
-        </Minialert>
-      </div>
+      </popup>
+      <minialert v-if="isShowAlertError">
+        <p slot="title">
+          {{ $t("minialertError") }}
+        </p>
+      </minialert>
+      <minialert v-if="isShowAlert">
+        <p slot="title">
+          {{ $t("team.youHaveSuccessfullyRemovedPersonFromTheTeam") }}
+        </p>
+      </minialert>
     </div>
   </div>
-  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
+<<<<<<< HEAD
 import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Minialert from "@/components/MiniAlert.vue";
 import Stub from "@/components/Stub.vue";
+=======
+import breadcrumbs from "@/components/BreadCrumbs.vue";
+>>>>>>> origin/new-team-feature
 import loader from "@/components/Loader.vue";
-
-import { USERS_IN_TEAMS_QUERY, DELETE_IN_TEAMS_QUERY } from "@/graphql/queries";
+import popup from "@/components/Popup.vue";
+import Minialert from "@/components/MiniAlert.vue";
+import {
+  USERS_IN_TEAMS_QUERY,
+  CHANGE_STATUS_REQUEST_QUERY,
+  ONE_USER_QUERY,
+  GET_POINTS_USER_QUERY,
+  CREATE_NOTIFICATION,
+  TEAM_NAME_QUERY
+} from "@/graphql/queries";
 
 export default {
   data() {
     return {
       isShowAlert: false, // Для показа уведомления об удалении
-      message: "", // Для текста сообщения в уведомлении
-      teamId: this.$route.params.id // id команды
+      isShowAlertError: false,
+      isShowModal: false,
+      userId: -1,
+      oneUser: {},
+      roleId: -1,
+      findString: ""
     };
   },
 
   apollo: {
-    // Массив участников команды
+    // Название команды для оповещения
+    oneTeam: {
+      query: TEAM_NAME_QUERY,
+      variables() {
+        return {
+          id: this.$route.params.id
+        };
+      }
+    },
+    // Информация о пользователи в команде
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
       variables() {
         return {
-          teamId: this.teamId
+          teamId: this.$route.params.id
+        };
+      }
+    },
+    // Подробная информация о пользователи
+    user: {
+      query: ONE_USER_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
+      variables() {
+        return {
+          id: this.userId
+        };
+      }
+    },
+    // Получение количества баллов
+    getPointsUser: {
+      query: GET_POINTS_USER_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
+      variables() {
+        return {
+          userId: this.userId
         };
       }
     }
   },
-
   components: {
+<<<<<<< HEAD
     TeamMemberItem,
     Minialert,
     BreadCrumbs,
     Stub,
     loader
+=======
+    breadcrumbs,
+    loader,
+    popup,
+    Minialert
+>>>>>>> origin/new-team-feature
   },
   methods: {
-    // Для удаления участника команды
-    toDeleteUser(id) {
+    // Показать попап с подробной информацией
+    showFullInformation(user) {
+      this.isShowModal = true;
+      this.oneUser = Object.assign({}, user);
+      if (this.oneUser.user.surname === null) {
+        this.oneUser.user.surname = "";
+      }
+      if (this.oneUser.user.name === null) {
+        this.oneUser.user.name = "";
+      }
+      if (this.oneUser.user.patricity === null) {
+        this.oneUser.user.patricity = "";
+      }
+      this.userId = this.oneUser.user.id;
+      this.fullName = `${this.oneUser.user.surname} ${this.oneUser.user.name} ${this.oneUser.user.patricity}`;
+    },
+    // Закрыть попап с поднобной информацией
+    cancelModal() {
+      this.isShowModal = false;
+    },
+    // Исключить пользователя из команды
+    exclude() {
+      console.log(this.oneUser);
       this.$apollo
         .mutate({
-          mutation: DELETE_IN_TEAMS_QUERY,
+          mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
-            id
+            id: this.oneUser.id,
+            status: "Отклонен"
           },
+          // Обновляем кеш
           update: cache => {
-            // Записываем в переменную массив участников команды
             let data = cache.readQuery({
               query: USERS_IN_TEAMS_QUERY,
               variables: {
-                teamId: this.teamId
+                teamId: this.$route.params.id
               }
             });
-            // Зписываем в переменную участника команды по id
-            let index = data.usersInTeams.findIndex(el => el.id == id);
+            let index = data.usersInTeams.findIndex(
+              el => el.user.id == this.userId
+            );
             // Удаляем участника команды из массива
             data.usersInTeams.splice(index, 1);
-            // Меняем значение переменной для отображения уведомления
-            this.isShowAlert = true;
-            // Задаем время показа уведомления
-            setTimeout(() => {
-              this.isShowAlert = false;
-            }, 3000);
+            cache.writeQuery({
+              query: USERS_IN_TEAMS_QUERY,
+              variables: { teamId: this.$route.params.id },
+              data
+            });
           }
         })
-        .then(data => {
-          // Записываем в переменную текст уведомления
-          this.message = "Участник удален";
-          console.log(data);
+        .then(() => {
+          // Новое оповещение
+          let notification = {
+            body: {
+              header: "Исключение из команды",
+              text: `Вы были исключены из команды ${this.oneTeam.name}`
+            },
+            authorId: this.$store.getters.decodedToken.id,
+            userId: [+this.oneUser.user.id],
+            typeId: 20,
+            endTime: new Date(new Date() + 365 * 24 * 60 * 60 * 1000)
+          };
+          // Создание нового оповещения в случае уисключения
+          this.$apollo
+            .mutate({
+              mutation: CREATE_NOTIFICATION,
+              variables: {
+                body: notification.body,
+                authorId: notification.authorId,
+                typeId: notification.typeId,
+                endTime: notification.endTime,
+                userId: notification.userId
+              }
+            })
+            .then(data => {
+              this.isShowModal = false;
+              console.log(data);
+              this.isShowAlert = true;
+              setTimeout(() => {
+                this.isShowAlert = false;
+              }, 3000);
+            })
+            .catch(error => {
+              console.error(error);
+              this.isShowAlertError = true;
+              setTimeout(() => {
+                this.isShowAlertError = false;
+              }, 3000);
+            });
         })
         .catch(error => {
-          // Записываем в переменную текст уведомления
-          this.message = "Ошибка " + error;
           console.error(error);
+          this.isShowAlertError = true;
+          setTimeout(() => {
+            this.isShowAlertError = false;
+          }, 3000);
         });
+    }
+  },
+  computed: {
+    // Фильтрация пользователей
+    filterUser() {
+      if (this.findString !== "") {
+        // Ищем по фамилии, имени и отчеству
+        return this.usersInTeams.filter(el => {
+          if (el.user.surname === undefined || el.user.surname === null) {
+            el.user.surname = " ";
+          }
+          if (el.user.name === undefined || el.user.name === null) {
+            el.name = " ";
+          }
+          if (el.user.patricity === undefined || el.user.patricity === null) {
+            el.user.patricity = " ";
+          }
+          return (
+            (el.user.surname
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.surname !== "") ||
+            (el.user.name
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.name !== "") ||
+            (el.user.patricity
+              .toLowerCase()
+              .indexOf(this.findString.toLowerCase()) !== -1 &&
+              el.user.patricity !== "")
+          );
+        });
+      } else {
+        return this.usersInTeams;
+      }
     }
   }
 };
@@ -114,6 +316,9 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
+<<<<<<< HEAD
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_grid.scss";
+=======
+>>>>>>> origin/new-team-feature
 </style>

@@ -170,6 +170,11 @@ module.exports = {
         where: { id: args.id }
       });
     },
+    userOrganization: (parent, args, { db }) => {
+      return db.Organizations.findOne({
+        where: { ownerId: args.id }
+      });
+    },
     // Получаем данные о командах пользователя + информация о команде (об организации)
     oneUserInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
@@ -205,6 +210,18 @@ module.exports = {
         where: { organizationId: args.organizationId }
       });
     },
+    managerTeams: (parent, args, { db }) =>
+      db.UsersInTeams.findAll({
+        where: { roleId: 2, userId: args.userId },
+        order: [["id", "ASC"]],
+        include: [
+          {
+            model: db.Teams,
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
+      }),
     // Получаем список всех типов организации
     organizationTypes: (parent, args, { db }) =>
       db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
@@ -214,6 +231,11 @@ module.exports = {
     team: (parent, args, { db }) => {
       return db.Teams.findAll({
         where: { organizationId: args.organizationId }
+      });
+    },
+    oneTeam: (parent, args, { db }) => {
+      return db.Teams.findOne({
+        where: { id: args.id }
       });
     },
 
@@ -298,8 +320,15 @@ module.exports = {
         where: { userId: args.userId }
       });
     },
+    // Получение списка ролей
     roles: (parent, args, { db }) => {
       return db.Roles.findAll({});
+    },
+    // Получение одной роли
+    role: (parent, args, { db }) => {
+      return db.Roles.findOne({
+        where: { id: args.id }
+      });
     },
 
     comments: (parent, args, { db }) =>
@@ -315,13 +344,16 @@ module.exports = {
       }),
     comment: (parent, args, { db }) =>
       db.Comments.findOne({ where: { id: args.id } }),
+    // Получения списка всех участников команжы
     usersInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
+        include: [
+          { model: db.Users, as: "user" },
+          { model: db.Roles, as: "role" }
+        ]
       }),
-
     raitingInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
@@ -333,7 +365,7 @@ module.exports = {
               model: db.Points,
               as: "userPoints",
               include: {
-                model: db.PointsOperations,
+                model: db.Operations,
                 as: "pointsOperation"
               }
             }
@@ -345,6 +377,7 @@ module.exports = {
         where: { userId: userId },
         include: [{ model: db.PointsOperations, as: "pointsOperation" }]
       }),
+    // Получения всех заявок на вступление в команду
     requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
@@ -367,7 +400,7 @@ module.exports = {
 
       return resultPoints;
     },
-
+    // Получение количества баллов за прошлую неделю
     pointsLastWeek: async (parent, args, { db }) => {
       let operationLastWeek = await db.PointsOperations.findAll({
         where: {
@@ -396,6 +429,7 @@ module.exports = {
       }
       return [pointsLastWeek, points2LastWeek];
     },
+    // Получение списка всех задач команды
     allTasksInOneTeam: (parent, { teamId }, { db }) =>
       db.Tasks.findAll({
         where: { teamId: teamId },
@@ -419,6 +453,7 @@ module.exports = {
           }
         ]
       }),
+    // Получение списка всех задач для пользователя
     allUserTasks: (parent, { id }, { db }) =>
       db.Tasks.findAll({
         where: {
@@ -912,7 +947,17 @@ module.exports = {
           }
         }
       ),
-
+    changeStatusRequest: (parent, args, { db }) =>
+      db.UsersInTeams.update(
+        {
+          status: args.status
+        },
+        {
+          where: {
+            id: args.id
+          }
+        }
+      ),
     revokeRequst: (parent, { id }, { db }) =>
       db.UsersInTeams.update(
         {
