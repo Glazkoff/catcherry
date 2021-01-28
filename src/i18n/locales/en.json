@@ -1,5 +1,7 @@
 {
   "projectTitle": "CATCHERRY",
+  "addMsg": "Add",
+  "addCommentMsg": "Add comment",
   "pointsMsg": "{n} point | {n} points| 0 points",
   "editUser": "Edit user",
   "editOrg": "Edit organization",

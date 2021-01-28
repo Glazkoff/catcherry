@@ -1,27 +1,66 @@
 <template>
-  <div class="postComments">
-    <textarea
-      type="text"
-      placeholder="Введите текст комментария"
-      v-model="newComment"
-    />
-    <button @click="toAddComment()">Добавить</button>
-    <div v-for="comment in comments" :key="comment.id">
-      <p>{{ comment.author.name }}</p>
-      <p>{{ comment.createdAt }}</p>
-      <!-- <p>{{ $d(comment.createdAt, "number") }}</p> -->
-      <p>{{ comment.body }}</p>
-      <button
-        v-if="comment.authorId == $store.getters.decodedToken.id"
-        @click="toDeleteComment(comment.id)"
-      >
-        Удалить
-      </button>
+  <div class="postComments container">
+    <div class="row">
+      <div class="col-12">
+        <form @submit.prevent="toAddComment()">
+          <div class="form-group">
+            <label for="text" class="form-name white">
+              {{ $t("addCommentMsg") }}
+            </label>
+            <textarea
+              type="text"
+              class="form-control col-12 dark"
+              :placeholder="$t('addCommentMsg')"
+              v-model.trim="$v.newComment.$model"
+              @blur="$v.newComment.$touch()"
+              :class="{ is_invalid: $v.newComment.$error }"
+            ></textarea>
+            <div v-if="$v.newComment.$error" class="error">
+              <span v-if="!$v.newComment.required" class="form-text red">{{
+                $t("required")
+              }}</span>
+            </div>
+          </div>
+
+          <button
+            class="btn btn-primary col-4"
+            :disabled="$v.newComment.$invalid"
+          >
+            {{ $t("addMsg") }}
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div class="row">
+      <div class="col-12" v-if="!this.isEmpty">
+        <div v-for="comment in comments" :key="comment.id" >
+          <div class="col-10">
+            <h3 class="red">{{ comment.author.name }}</h3>
+            <p>{{ comment.createdAt }}</p>
+            <!-- <p>{{ $d(comment.createdAt, "number") }}</p> -->
+            <p>{{ comment.body }}</p>
+          </div>
+          <div class="col-2">
+            <button
+              v-if="comment.authorId == $store.getters.decodedToken.id"
+              class="btn btn-link"
+              @click="toDeleteComment(comment.id)"
+            >
+              Удалить
+            </button>
+          </div>
+        </div>
+      </div>
+      <div v-else class="col-12">
+            <h3>Комментариев нет :(</h3>
+          </div>
     </div>
   </div>
 </template>
 
 <script>
+import { required } from "vuelidate/lib/validators";
 import {
   CREATE_COMMENT_QUERY,
   DELETE_COMMENT_QUERY,
@@ -39,17 +78,31 @@ export default {
       }
     }
   },
+  computed:{isEmpty() {
+      if (this.comments == undefined) {
+        return true;
+      } else {
+        if (this.comments.length == 0) {
+          return true;
+        } else return false;
+      }
+    },},
   props: ["DetailedPost"],
   data() {
     return {
       newComment: ""
     };
   },
+  validations: {
+    newComment: {
+      required
+    }
+  },
   methods: {
     toAddComment() {
       let bodyComment = this.newComment;
       let authorIdComment = this.$store.getters.decodedToken.id;
-      let postIdComment = Number(this.$route.params.id);
+      let postIdComment = +this.$route.params.id;
       this.$apollo
         .mutate({
           mutation: CREATE_COMMENT_QUERY,
@@ -61,14 +114,17 @@ export default {
           update: (cache, { data: { createComment } }) => {
             let data = cache.readQuery({
               query: COMMENTS_QUERY,
-              variables: { postId: Number(this.$route.params.id) }
+              variables: { postId: +this.$route.params.id }
             });
-            data.comments.push(createComment);
+            data.comments.push(this.newComment);
             cache.writeQuery({
               query: COMMENTS_QUERY,
-              variables: { postId: Number(this.$route.params.id) },
+              variables: {
+                postId: +this.$route.params.id
+              },
               data
             });
+            console.log(createComment);
           }
         })
         .then(data => {
@@ -112,42 +168,13 @@ export default {
 };
 </script>
 
-<style scoped>
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_grid.scss";
 textarea {
-  width: 100%;
-  background: #ffffff;
-  border: 1px solid #aa87ce;
-  box-sizing: border-box;
-  border-radius: 0.5rem;
   resize: none;
-  padding: 0.6rem;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  font-family: sans-serif;
-}
-
-textarea:focus,
-input.btn {
-  outline: none;
-}
-.heading {
-  font-weight: bold;
-  font-size: 1.5rem;
-  line-height: 2rem;
-  color: #613490;
-}
-
-.authorOfComment {
-  font-weight: bold;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  margin-bottom: 0;
-  color: #4c235b;
-}
-.bodyOfComment {
-  margin-top: 0.6rem;
-}
-.oneComment {
-  margin-bottom: 1.5px;
+  height: 5rem;
 }
 </style>
