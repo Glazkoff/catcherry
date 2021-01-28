@@ -6,7 +6,7 @@
     <div class="infoContainer">
       <router-link
         tag="h2"
-        :to="{ name: 'Posts', params: { id: post.id } }"
+        :to="{ name: 'Post', params: { id: post.id } }"
         class="heading"
         >{{ post.body.header }}</router-link
       >
@@ -70,7 +70,7 @@ export default {
       this.$emit("like", { id: id, isLikedByUser: this.isLikedByUser });
     },
     onLink(id) {
-      this.$router.push({ name: "Posts", params: { id: id } });
+      this.$router.push({ name: "Post", params: { id: id } });
     }
   }
 };

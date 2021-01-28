@@ -149,7 +149,9 @@ export default {
     routeTitle() {
       let matchedLength =
         this.$route.matched.length != 0 ? this.$route.matched.length : 0;
-      return this.$route.matched[matchedLength - 1].meta.breadCrumb;
+      if (this.$route.matched[matchedLength - 1].meta.breadCrumb == undefined) {
+        return this.$route.matched[matchedLength - 2].meta.breadCrumb;
+      } else return this.$route.matched[matchedLength - 1].meta.breadCrumb;
     },
     pointQuantity() {
       if (this.getPointsUser == undefined) {
