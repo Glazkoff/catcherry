@@ -19,7 +19,9 @@
             ></non-detailed-post>
           </div>
           <div v-else class="col-12">
-            <h3>Постов пока нет, мне очень жаль</h3>
+            <Stub>
+              <div slot="body">Постов пока нет, нам очень жаль!</div>
+            </Stub>
           </div>
         </div>
       </div>
@@ -36,6 +38,7 @@ import NonDetailedPost from "@/components/NonDetailedPost.vue";
 import ListOfNotifications from "@/components/account/ListOfNotifications.vue";
 import Loader from "@/components/Loader.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import Stub from "@/components/Stub.vue";
 import {
   POSTS_QUERY,
   CREATE_LIKE_OF_POST,
@@ -73,7 +76,8 @@ export default {
     NonDetailedPost,
     ListOfNotifications,
     Loader,
-    BreadCrumbs
+    BreadCrumbs,
+    Stub
   },
   data() {
     return {};

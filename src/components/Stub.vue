@@ -18,6 +18,8 @@ export default {
 .stub {
   display: flex;
   height: 75vh;
+  width: 50vw;
+  margin: auto;
   justify-content: center;
   align-items: center;
   flex-direction: column;
