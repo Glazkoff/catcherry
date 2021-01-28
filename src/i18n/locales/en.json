@@ -25,6 +25,7 @@
   "deleteOrgQuestion": "Are you sure you want to delete organization",
   "placeholderSearchByUsers": "Search by users",
   "placeholderSearchByOrgs": "Search by organizations",
+  "languageInterface": "Choose language of interface:",
   "user": "User",
   "organization": "Organization",
   "loading": "Loading",

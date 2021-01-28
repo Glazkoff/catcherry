@@ -69,13 +69,13 @@
             <div class="container">
               <div class="row">
                 <div class="col-12">
-                  <p>
-                    Lorem ipsum dolor sit amet, consectetur adipisicing elit.
-                    Quam provident cupiditate, a culpa adipisci laudantium
-                    repudiandae excepturi consequuntur architecto officiis ex,
-                    voluptatem est obcaecati odit ipsum? Necessitatibus placeat
-                    animi pariatur.
-                  </p>
+                  <div class="side-bar__locales">
+                    <h3>{{ $t("languageInterface") }}</h3>
+                    <div class="locales ">
+                      <a @click="setLocale('en')">eng</a>
+                      <a @click="setLocale('ru')">rus</a>
+                    </div>
+                  </div>
                 </div>
               </div>
             </div>
@@ -267,7 +267,7 @@
             </form>
           </div>
           <div class="col-1"></div>
-          <div class="col-3">
+          <div class="col-3 sticky">
             <button
               class="btn btn-alternate w-100 mb-2"
               @click="closeFullInformation"
@@ -317,6 +317,7 @@ import Edit from "@/assets/account_edit.svg?inline";
 import PointOperation from "@/components/PointOperation.vue";
 import PointQuantity from "@/components/PointQuantity.vue";
 import Loader from "@/components/Loader.vue";
+import { setI18nLanguage } from "@/i18n/i18n";
 import { required, minLength } from "vuelidate/lib/validators";
 import {
   USERS_QUERY,
@@ -409,6 +410,9 @@ export default {
     });
   },
   methods: {
+    setLocale(locale) {
+      setI18nLanguage(locale);
+    },
     showFullInformation(id) {
       this.userId = id;
       this.isEdit = true;
@@ -558,6 +562,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
+@import "@/styles/_dimensions.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_grid.scss";
 .flexCont {
@@ -582,6 +587,10 @@ export default {
   justify-content: center;
   border-radius: 16px;
 }
+.sticky {
+  position: sticky;
+  top: calc(#{$topBarHeight} + 1rem);
+}
 .form-name {
   color: $white;
 }
@@ -605,5 +614,25 @@ export default {
 }
 .container {
   position: relative;
+}
+.side-bar__locales {
+  & h3 {
+    text-align: center;
+  }
+  & .locales {
+    margin-top: 1rem;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    & a {
+      display: block;
+      margin-right: 0;
+      color: $white;
+      transition-duration: 0.3s;
+      &:hover {
+        transform: scale(1.3);
+      }
+    }
+  }
 }
 </style>

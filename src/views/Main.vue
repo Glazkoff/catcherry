@@ -125,4 +125,15 @@ export default {
     padding-left: 0.8rem;
   }
 }
+.locales {
+  display: flex;
+  a {
+    margin-right: 1rem;
+    display: block;
+    cursor: pointer;
+    &:hover {
+      transform: scale(1.1);
+    }
+  }
+}
 </style>
