@@ -238,8 +238,8 @@ type Query {
   getPointsUser(userId: ID!, limit: Int): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   
-  posts: [Post]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  post(id: ID!): Post @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  posts(userId: ID!): [Post]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  post(id: ID!, userId: ID!): Post @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   likesOfPostFromUser (userId:ID!): [LikeOfPost]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   likesOfCommentFromUser (userId:ID!): [LikeOfComment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")

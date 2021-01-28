@@ -512,7 +512,7 @@ module.exports = {
       // Сравниваем логин с БД, если нет - ошибка
       let user = await db.Users.findOne({
         where: {
-          login: input.login,
+          login: input.login
         }
       });
       // Проверяем через bcrypt пароль, не совпадает - ошибка
@@ -641,7 +641,7 @@ module.exports = {
           patricity: input.patricity,
           gender: input.gender,
           login: input.login,
-          birthday: input.birthday,
+          birthday: input.birthday
         },
         {
           where: {
