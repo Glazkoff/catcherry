@@ -221,6 +221,7 @@ type Query {
   teams: [Team!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   team(organizationId: Int): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   oneTeam(id: ID): Team @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  managerTeams(userId: ID!): [UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   comments: [Comment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   comment(id: ID!): Comment @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")

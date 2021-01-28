@@ -15,15 +15,15 @@
         <div class="col-4">
           <div>
             <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
-            <h3 class="sticky-header">Запланированные задачи</h3>
-            <p v-if="toDo.length === 0">Нет задач</p>
+            <h3 class="sticky-header">{{ $t("task.scheduledTasks") }}</h3>
+            <p v-if="toDo.length === 0">{{ $t("task.noTask") }}</p>
             <div v-for="task in toDo" :key="task.id" class="task">
               <div class="container">
                 <div class="row">
                   <div class="col-12">
                     <h3>{{ task.body.header }} ({{ task.id }})</h3>
                     <p>{{ task.body.text }}</p>
-                    <p>Команда: {{ task.tasksTeam.name }}</p>
+                    <p>{{ $t("task.team") }}: {{ task.tasksTeam.name }}</p>
                     <p>
                       {{ $t("task.reward") }}: +{{
                         $tc("pointsMsg", task.body.points)
@@ -33,21 +33,23 @@
                       class="btn btn-primary block"
                       @click="changeStatus(task.id)"
                     >
-                      Завершить задачу
+                      {{ $t("task.сompleteTask") }}
                     </button>
                   </div>
                 </div>
               </div>
             </div>
-            <h3 class="sticky-header">Задачи без исполнителя</h3>
-            <p v-if="backlog.length === 0">Нет задач</p>
+            <h3 class="sticky-header">
+              {{ $t("task.tasksWithoutFPerformer") }}
+            </h3>
+            <p v-if="backlog.length === 0">{{ $t("task.noTask") }}</p>
             <div v-for="task in backlog" :key="task.id" class="task">
               <div class="container">
                 <div class="row">
                   <div class="col-12">
                     <h3>{{ task.body.header }} ({{ task.id }})</h3>
                     <p>{{ task.body.text }}</p>
-                    <p>Команда: {{ task.tasksTeam.name }}</p>
+                    <p>{{ $t("task.team") }}: {{ task.tasksTeam.name }}</p>
                     <p>
                       {{ $t("task.reward") }}: +{{
                         $tc("pointsMsg", task.body.points)
@@ -57,7 +59,7 @@
                       class="btn btn-primary block"
                       @click="takeTask(task.id)"
                     >
-                      Взять задачу
+                      {{ $t("task.takeTask") }}
                     </button>
                   </div>
                 </div>
@@ -69,14 +71,14 @@
           <h3 class="sticky-header">
             {{ $t("task.completedTasksForReview") }}
           </h3>
-          <p v-if="toCheck.length === 0">Нет задач</p>
+          <p v-if="toCheck.length === 0">{{ $t("task.noTask") }}</p>
           <div v-for="task in toCheck" :key="task.id" class="task">
             <div class="container">
               <div class="row">
                 <div class="col-12">
                   <h3>{{ task.body.header }} ({{ task.id }})</h3>
                   <p>{{ task.body.text }}</p>
-                  <p>Команда: {{ task.tasksTeam.name }}</p>
+                  <p>{{ $t("task.team") }}: {{ task.tasksTeam.name }}</p>
                   <p>
                     {{ $t("task.reward") }}: +{{
                       $tc("pointsMsg", task.body.points)
@@ -90,14 +92,14 @@
         <div class="col-4">
           <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
           <h3 class="sticky-header">{{ $t("task.completedTasks") }}</h3>
-          <p v-if="done.length === 0">Нет задач</p>
+          <p v-if="done.length === 0">{{ $t("task.noTask") }}</p>
           <div v-for="task in done" :key="task.id" class="task">
             <div class="container">
               <div class="row">
                 <div class="col-12">
                   <h3>{{ task.body.header }} ({{ task.id }})</h3>
                   <p>{{ task.body.text }}</p>
-                  <p>Команда: {{ task.tasksTeam.name }}</p>
+                  <p>{{ $t("task.team") }}: {{ task.tasksTeam.name }}</p>
                   <p>
                     {{ $t("task.reward") }}: +{{
                       $tc("pointsMsg", task.body.points)
@@ -112,7 +114,7 @@
     </div>
     <minialert v-if="isShowAlertToTakeTask">
       <p slot="title">
-        Вы успешно взяли задачу
+        {{ $t("task.youHaveSuccessfullyScceptedTheTask") }}
       </p>
     </minialert>
     <minialert v-if="isShowAlertError">
@@ -122,7 +124,7 @@
     </minialert>
     <minialert v-if="isShowAlertDoneTask">
       <p slot="title">
-        Вы успешно завершили задачу
+        {{ $t("task.youHaveCompletedTheTaskSuccessfully") }}
       </p>
     </minialert>
   </div>

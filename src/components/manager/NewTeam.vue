@@ -2,17 +2,17 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <h2>Создать новую команду</h2>
+        <h2>{{ $t("team.createNewTeam") }}</h2>
         <form @submit.prevent="createTeam()">
           <div class="form-group">
-            <label class="form-name white">Название команды</label>
+            <label class="form-name white">{{ $t("team.teamName") }}</label>
             <input
               type="text"
               name="name"
               v-model.trim="newTeam.name"
               @blur="$v.newTeam.name.$touch()"
               class="form-control col-8 dark"
-              placeholder="Название команды"
+              :placeholder="$t('team.teamName')"
             />
             <div v-if="$v.newTeam.name.$error" class="error">
               <span v-if="!$v.newTeam.name.required" class="form-text danger">{{
@@ -21,13 +21,15 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-name white">Описание команды</label>
+            <label class="form-name white">{{
+              $t("team.teamDescription")
+            }}</label>
             <textarea
               class="form-control col-8 dark"
               name="description"
               v-model.trim="newTeam.description"
               @blur="$v.newTeam.description.$touch()"
-              placeholder="Описание команды"
+              :placeholder="$t('team.teamDescription')"
             ></textarea>
             <div v-if="$v.newTeam.description.$error" class="error">
               <span
@@ -38,13 +40,13 @@
             </div>
           </div>
           <div class="form-group">
-            <label class="form-name white"
-              >Максимальное количество участников в команде</label
-            >
+            <label class="form-name white">{{
+              $t("team.maximumNumberOfTeamMembers")
+            }}</label>
             <input
               type="number"
               class="form-control col-8 dark"
-              placeholder="Максимальное количество участников в команде"
+              :placeholder="$t('team.maximumNumberOfTeamMembers')"
               name="maxUsersLimit"
               v-model.trim="newTeam.maxUsersLimit"
               @blur="$v.newTeam.maxUsersLimit.$touch()"
@@ -66,7 +68,7 @@
             class="btn btn-primary col-8"
             :disabled="$v.newTeam.$invalid || loading"
           >
-            Создать новую команду
+            {{ $t("team.createNewTeam") }}
           </button>
         </form>
         <minialert v-if="isShowAlertError">
@@ -84,7 +86,8 @@ import { required, numeric } from "vuelidate/lib/validators";
 import {
   USER_ORG_QUERY,
   CREATE_TEAM,
-  CREATE_USER_IN_TEAM
+  CREATE_USER_IN_TEAM,
+  MANAGER_TEAMS_QUERY
 } from "@/graphql/queries";
 import minialert from "@/components/MiniAlert.vue";
 export default {
@@ -147,7 +150,27 @@ export default {
                 userId: this.$store.getters.decodedToken.id,
                 teamId: this.idTeam,
                 status: "Принят",
-                roleId: 1
+                roleId: 2
+              },
+              update: cache => {
+                let data = cache.readQuery({
+                  query: MANAGER_TEAMS_QUERY,
+                  variables: { userId: this.$store.getters.decodedToken.id }
+                });
+                console.log(data);
+                let team = {
+                  id: -1,
+                  team: {
+                    id: this.idTeam,
+                    name: this.newTeam.name
+                  }
+                };
+                data.managerTeams.push(team);
+                cache.writeQuery({
+                  query: MANAGER_TEAMS_QUERY,
+                  variables: { userId: this.$store.getters.decodedToken.id },
+                  data
+                });
               }
             })
             .then(() => {

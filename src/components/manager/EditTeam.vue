@@ -7,7 +7,7 @@
         </div>
         <form @submit.prevent="editTeam()" class="col-12">
           <p class="gray mb-4">
-            Последнее редактирование : {{ $d(oneTeam.updatedAt, "long") }}
+            {{ $t("team.lastedited") }}: {{ $d(oneTeam.updatedAt, "long") }}
           </p>
           <div class="form-group">
             <label for="name">{{ $t("nameInanimate") }}</label>
@@ -42,14 +42,14 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="maxUsersLimit"
-              >Максимальное количество участников в команде</label
-            >
+            <label for="maxUsersLimit">{{
+              $t("team.maximumNumberOfTeamMembers")
+            }}</label>
             <input
               name="maxUsersLimit"
               v-model.trim="$v.oneTeam.maxUsersLimit.$model"
               @blur="$v.oneTeam.maxUsersLimit.$touch()"
-              :placeholder="$t('description')"
+              :placeholder="$t('team.maximumNumberOfTeamMembers')"
               class="form-control col-8 dark"
             />
             <div v-if="$v.oneTeam.maxUsersLimit.$error" class="error">
@@ -75,7 +75,7 @@
         </form>
         <minialert v-if="isShowAlertEdit"
           ><p slot="title">
-            Вы успешно изменили данные команды
+            {{ $t("team.youHaveSuccessfullyChangedTheseTeam") }}
           </p></minialert
         >
         <minialert v-if="isError"

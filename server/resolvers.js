@@ -210,6 +210,18 @@ module.exports = {
         where: { organizationId: args.organizationId }
       });
     },
+    managerTeams: (parent, args, { db }) =>
+      db.UsersInTeams.findAll({
+        where: { roleId: 2, userId: args.userId },
+        order: [["id", "ASC"]],
+        include: [
+          {
+            model: db.Teams,
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
+      }),
     // Получаем список всех типов организации
     organizationTypes: (parent, args, { db }) =>
       db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
@@ -337,9 +349,11 @@ module.exports = {
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
         order: [["id", "ASC"]],
-        include: [{ model: db.Users, as: "user" }]
+        include: [
+          { model: db.Users, as: "user" },
+          { model: db.Roles, as: "role" }
+        ]
       }),
-
     raitingInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Принят", teamId: teamId },
@@ -351,7 +365,7 @@ module.exports = {
               model: db.Points,
               as: "userPoints",
               include: {
-                model: db.PointsOperations,
+                model: db.Operations,
                 as: "pointsOperation"
               }
             }
@@ -363,7 +377,7 @@ module.exports = {
         where: { userId: userId },
         include: [{ model: db.PointsOperations, as: "pointsOperation" }]
       }),
-      // Получения всех заявок на вступление в команду
+    // Получения всех заявок на вступление в команду
     requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
@@ -439,7 +453,7 @@ module.exports = {
           }
         ]
       }),
-      // Получение списка всех задач для пользователя
+    // Получение списка всех задач для пользователя
     allUserTasks: (parent, { id }, { db }) =>
       db.Tasks.findAll({
         where: {

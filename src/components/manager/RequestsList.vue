@@ -13,7 +13,7 @@
     <div class="row">
       <div class="col-12">
         <div v-if="requests.length == 0">
-          <p>Нет новых заявок</p>
+          <p>{{ $t("team.noNewRequest") }}</p>
         </div>
         <div v-if="requests.length != 0">
           <input
@@ -32,11 +32,14 @@
               }}
             </p>
             <button class="btn btn-alternate col-3" @click="accept(user)">
-              Принять
+              {{ $t("team.accept") }}
             </button>
             <button class="btn btn-danger col-3" @click="reject(user)">
-              Отклонить
+              {{ $t("team.reject") }}
             </button>
+          </div>
+          <div v-if="filterUser.length == 0">
+            <p>{{ $t("noSearch") }}</p>
           </div>
         </div>
       </div>
@@ -47,12 +50,14 @@
       </minialert>
       <minialert v-if="isShowAlertAdd">
         <p slot="title">
-          Вы успешно добавили пользователя в команду
+          {{ $t("team.youHaveSuccessfullyAddedTheUserToTheTeam") }}
         </p>
       </minialert>
       <minialert v-if="isShowAlertDelete">
         <p slot="title">
-          Вы успешно отклонили заявку на добавление в команду
+          {{
+            $t("team.youHaveSuccessfullyDeclinedYourRequestToBeAddedToTheTeam")
+          }}
         </p>
       </minialert>
     </div>

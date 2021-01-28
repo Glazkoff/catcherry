@@ -20,17 +20,22 @@
           <div class="card_img">
             <img src="~@/assets/avatar.jpg" />
           </div>
-          <p class="col-8">
-            {{ user.user.surname }} {{ user.user.name }}<br />{{
-              user.user.patricity
-            }}
-          </p>
+          <div class="col-8">
+            <p>
+              {{ user.user.surname }} {{ user.user.name
+              }}{{ user.user.patricity }}
+            </p>
+            <p>{{ user.role.name }}</p>
+          </div>
           <button
             class="btn btn-alternate col-3"
             @click="showFullInformation(user)"
           >
             {{ $t("more") }}
           </button>
+        </div>
+        <div v-if="filterUser.length == 0">
+          <p>{{ $t("noSearch") }}</p>
         </div>
       </div>
       <popup v-if="isShowModal">
@@ -47,7 +52,7 @@
           <p>{{ $t("birthday") }}: {{ $d(user.birthday, "short") }}</p>
           <p>{{ $t("login") }}: {{ user.login }}</p>
           <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
-          <p>{{ $t("role") }}: {{ role.name }}</p>
+          <p>{{ $t("role") }}: {{ oneUser.role.name }}</p>
         </div>
         <div slot="footer" v-if="!$apollo.loading">
           <div class="btn-group">
@@ -56,7 +61,7 @@
               @click="exclude()"
               v-if="$store.getters.decodedToken.id != userId"
             >
-              Исключить человека из команды
+              {{ $t("team.removeUserFromTeam") }}
             </button>
             <button class="btn btn-alternate" @click="cancelModal()">
               {{ $t("cancel") }}
@@ -71,7 +76,7 @@
       </minialert>
       <minialert v-if="isShowAlert">
         <p slot="title">
-          Вы успешно исключили человека из команды
+          {{ $t("team.youHaveSuccessfullyRemovedPersonFromTheTeam") }}
         </p>
       </minialert>
     </div>
@@ -88,7 +93,6 @@ import {
   CHANGE_STATUS_REQUEST_QUERY,
   ONE_USER_QUERY,
   GET_POINTS_USER_QUERY,
-  ROLE_QUERY,
   CREATE_NOTIFICATION,
   TEAM_NAME_QUERY
 } from "@/graphql/queries";
@@ -107,15 +111,6 @@ export default {
   },
 
   apollo: {
-    // Название роли пользователя
-    role: {
-      query: ROLE_QUERY,
-      variables() {
-        return {
-          id: this.roleId
-        };
-      }
-    },
     // Название команды для оповещения
     oneTeam: {
       query: TEAM_NAME_QUERY,
@@ -181,7 +176,6 @@ export default {
       }
       this.userId = this.oneUser.user.id;
       this.fullName = `${this.oneUser.user.surname} ${this.oneUser.user.name} ${this.oneUser.user.patricity}`;
-      this.roleId = this.oneUser.roleId;
     },
     // Закрыть попап с поднобной информацией
     cancelModal() {

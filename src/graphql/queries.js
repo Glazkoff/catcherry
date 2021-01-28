@@ -384,6 +384,21 @@ export const USERS_IN_TEAMS_QUERY = gql`
         surname
         patricity
       }
+      role {
+        name
+      }
+    }
+  }
+`;
+
+export const MANAGER_TEAMS_QUERY = gql`
+  query($userId: ID!) {
+    managerTeams(userId: $userId) {
+      id
+      team {
+        id
+        name
+      }
     }
   }
 `;
