@@ -8,19 +8,19 @@
     </div>
     <div class="form-half">
       <router-view name="form"></router-view>
-      <!-- <hr /> -->
-      <!-- <TestGraphql></TestGraphql> -->
+      <hr />
+      <TestGraphql></TestGraphql>
     </div>
   </div>
 </template>
 
 <script>
-// import TestGraphql from "@/components/TestGraphql.vue";
+import TestGraphql from "@/components/TestGraphql.vue";
 import FullLogo from "@/assets/full_logo.svg?inline";
 export default {
   name: "Auth",
   components: {
-    // TestGraphql,
+    TestGraphql,
     FullLogo
   }
 };

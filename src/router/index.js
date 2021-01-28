@@ -371,7 +371,8 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.name !== null && from.name === null && to.name !== "LogIn") {
-    localStorage.setItem("first-route", to.name);
+    console.log("ROUTE: ", to);
+    localStorage.setItem("first-route", to.path);
   }
 
   let lang = localStorage.getItem("lang");
