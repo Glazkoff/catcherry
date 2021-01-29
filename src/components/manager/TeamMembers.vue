@@ -35,7 +35,9 @@
           </button>
         </div>
         <div v-if="filterUser.length == 0">
-          <p>{{ $t("noSearch") }}</p>
+          <Stub>
+            <p slot="body">{{ $t("noSearch") }}</p>
+          </Stub>
         </div>
       </div>
       <popup v-if="isShowModal">
@@ -84,17 +86,12 @@
 </template>
 
 <script>
-<<<<<<< HEAD
-import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
-import BreadCrumbs from "@/components/BreadCrumbs.vue";
-import Minialert from "@/components/MiniAlert.vue";
-import Stub from "@/components/Stub.vue";
-=======
 import breadcrumbs from "@/components/BreadCrumbs.vue";
->>>>>>> origin/new-team-feature
 import loader from "@/components/Loader.vue";
 import popup from "@/components/Popup.vue";
 import Minialert from "@/components/MiniAlert.vue";
+import Stub from "@/components/Stub.vue";
+
 import {
   USERS_IN_TEAMS_QUERY,
   CHANGE_STATUS_REQUEST_QUERY,
@@ -162,18 +159,11 @@ export default {
     }
   },
   components: {
-<<<<<<< HEAD
-    TeamMemberItem,
-    Minialert,
-    BreadCrumbs,
-    Stub,
-    loader
-=======
     breadcrumbs,
     loader,
     popup,
-    Minialert
->>>>>>> origin/new-team-feature
+    Minialert,
+    Stub
   },
   methods: {
     // Показать попап с подробной информацией
@@ -316,9 +306,4 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
-<<<<<<< HEAD
-@import "@/styles/_dimensions.scss";
-@import "@/styles/_grid.scss";
-=======
->>>>>>> origin/new-team-feature
 </style>

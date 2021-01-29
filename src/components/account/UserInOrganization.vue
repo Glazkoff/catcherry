@@ -18,13 +18,11 @@
         <h3>Команды</h3>
         <!-- список команд в организации -->
         <div class="row d-flex">
-          <button class="formSearchIcon col-1-sm">
-            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
-          ><input
-            v-model="findTeam"
+          <input
+            v-model.trim="findString"
             type="text"
-            placeholder="Введите название организации, которую вы хотите найти"
-            class="formSearch col-12"
+            placeholder="Введите название команды, которую вы хотите найти"
+            class="form-control block find dark"
           />
         </div>
         <div v-if="!team">
@@ -59,13 +57,11 @@
       <div class="container">
         <!-- строка поиска организаций  -->
         <div class="row d-flex">
-          <button class="formSearchIcon col-1-sm">
-            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
-          ><input
-            v-model="findString"
+          <input
+            v-model.trim="findString"
             type="text"
             placeholder="Введите название организации, которую вы хотите найти"
-            class="formSearch col-12"
+            class="form-control block find dark"
           />
         </div>
         <!-- вывод массива всех организаций  -->
@@ -88,10 +84,14 @@
         </div>
         <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
         <div class="organizationNotSearch" v-if="filterOrganization == ''">
-          <h3>Организации не найдены</h3>
-          <button class="btn btn-primary" @click="isAddOrganization = true">
-            Создать
-          </button>
+          <Stub>
+            <div slot="body">
+              <h3 class="mb-4">Организации не найдены</h3>
+              <button class="btn btn-primary" @click="isAddOrganization = true">
+                Создать
+              </button>
+            </div>
+          </Stub>
         </div>
       </div>
     </div>
@@ -184,9 +184,9 @@
 <script>
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
-import SearchIcon from "@/assets/svg/organizations/search_organization.svg?inline";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
+import Stub from "@/components/Stub.vue";
 import {
   ORGS_QUERY,
   ONE_ORG_QUERY,
@@ -199,7 +199,7 @@ import { required } from "vuelidate/lib/validators";
 import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
-  components: { popup, minialert, SearchIcon, ArrowRight, BreadCrumbs },
+  components: { popup, minialert, ArrowRight, BreadCrumbs, Stub },
   data() {
     return {
       findString: "",
