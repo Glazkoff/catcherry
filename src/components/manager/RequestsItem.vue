@@ -1,5 +1,5 @@
 <template>
-  <div>
+  <div class="container">
     <div class="card" v-if="request.user">
       <img src="@/assets/avatar.jpg" alt="photo" class="big_avatar" />
       <h3>
@@ -78,7 +78,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
-
+@import "@/styles/_grid.scss";
 .card {
   padding-right: 20px;
   .btn-alternate {

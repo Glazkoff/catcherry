@@ -13,7 +13,9 @@
     <div class="row">
       <div class="col-12">
         <div v-if="requests.length == 0">
-          <p>{{ $t("team.noNewRequest") }}</p>
+          <Stub>
+            <p slot="body">{{ $t("team.noNewRequest") }}</p>
+          </Stub>
         </div>
         <div v-if="requests.length != 0">
           <input

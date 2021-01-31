@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row" v-if="this.$apollo.queries.usersInTeams.loading">
       <div class="col-12" wrapOfLoader>
-        <loader></loader>
+        <Loader></Loader>
       </div>
     </div>
     <div class="row" v-else>
       <div class="col-12">
-        <breadcrumbs></breadcrumbs>
+        <BreadCrumbs></BreadCrumbs>
       </div>
       <div class="col-12">
         <input
@@ -35,7 +35,9 @@
           </button>
         </div>
         <div v-if="filterUser.length == 0">
-          <p>{{ $t("noSearch") }}</p>
+          <Stub>
+            <p slot="body">{{ $t("noSearch") }}</p>
+          </Stub>
         </div>
       </div>
       <popup v-if="isShowModal">
@@ -84,11 +86,10 @@
 </template>
 
 <script>
-import TeamMemberItem from "@/components/manager/TeamMemberItem.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Minialert from "@/components/MiniAlert.vue";
 import Stub from "@/components/Stub.vue";
-import loader from "@/components/Loader.vue";
+import Loader from "@/components/Loader.vue";
 import {
   USERS_IN_TEAMS_QUERY,
   CHANGE_STATUS_REQUEST_QUERY,
@@ -156,11 +157,10 @@ export default {
     }
   },
   components: {
-    TeamMemberItem,
     Minialert,
     BreadCrumbs,
     Stub,
-    loader
+    Loader
   },
   methods: {
     // Показать попап с подробной информацией

@@ -86,7 +86,7 @@ const routes = [
         }
       },
       {
-        path: "/manager",
+        path: "/manager/:id",
         name: "Manager",
         components: {
           main: () =>
