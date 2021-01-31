@@ -68,7 +68,7 @@
 import Minialert from "@/components/MiniAlert.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import loader from "@/components/Loader.vue";
-import Stub from "@/components/Stub.vue";
+// import Stub from "@/components/Stub.vue";
 
 import {
   REQUESTS_QUERY,
@@ -112,7 +112,7 @@ export default {
     Minialert,
     breadcrumbs,
     loader,
-    Stub
+    // Stub
   },
   methods: {
     // Принять заявку на вступление в команду

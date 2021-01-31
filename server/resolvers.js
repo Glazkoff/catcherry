@@ -190,6 +190,22 @@ module.exports = {
           }
         ]
       }),
+    //Получаем данные пользователя в конкретной команде
+    oneUserInTeam: (parent, args, { db }) =>
+      db.UsersInTeams.findAll({
+        where: { userId: args.userId },
+        order: [["id", "ASC"]],
+        include: [
+          { model: db.Roles, as: "role" },
+          { model: db.Users, as: "user" },
+          {
+            model: db.Teams,
+            as: "team",
+            where: { id: args.teamId },
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
+      }),
     // Получаем список всех организаций
     organizations: (parent, args, { db }) =>
       db.Organizations.findAll({ order: [["id", "ASC"]] }),

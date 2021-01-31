@@ -171,6 +171,34 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
     }
   }
 `;
+export const ONE_USER_IN_TEAM_QUERY = gql`
+  query($userId: ID!, $teamId: ID!) {
+    oneUserInTeam(userId: $userId, teamId: $teamId) {
+      id
+      userId
+      teamId
+      status
+      roleId
+      role {
+        name
+      }
+      user {
+        id
+        name
+        surname
+        patricity
+      }
+      team {
+        id
+        name
+        organization {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
 
 export const TEAMS_IN_ONE_ORG_QUERY = gql`
   query($organizationId: ID!) {

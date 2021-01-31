@@ -8,7 +8,47 @@
       </div>
     </div>
     <!-- попап для просмотра информации об организации -->
-    <popup v-if="isShowInfoModal">
+    
+    <div class="container">
+      <div class="container">
+        <!-- строка поиска организаций  -->
+        <div class="row d-flex">
+          <button class="formSearchIcon col-1-sm">
+            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
+          ><input
+            v-model="findString"
+            type="text"
+            placeholder="Введите название организации, которую вы хотите найти"
+            class="formSearch col-12"
+          />
+        </div>
+        <!-- вывод массива всех организаций  -->
+
+        <div
+          class="card"
+          v-for="organization in filterOrganization"
+          :key="organization.id"
+        >
+          <a class="orgFoto"></a>
+          <div class="card_body">
+            <h3>{{ organization.name }}</h3>
+            <small>№ {{ organization.id }}</small>
+          </div>
+          <div class="card_action" @click="showFullInformation(organization)"
+              >
+            <ArrowRight
+            ></ArrowRight>
+          </div>
+          <div
+            @click="closeFullInformation()"
+            class="card_action"
+            v-if="isShowFullInformation"
+          >
+            <ArrowRight class="rotate"></ArrowRight>
+          </div>
+
+
+<div v-if="isShowFullInformation">
       <h2 slot="header">Организация "{{ nameOfOrganization }}"</h2>
       <div slot="body">
         {{ oneOrganization.name }}
@@ -27,65 +67,45 @@
             class="formSearch col-12"
           />
         </div>
-        <div v-if="!team">
+        <div v-if="team == null">
           <h5>В организации пока нет ни одной команды</h5>
         </div>
         <div v-else>
-          <div class="oneTeam" v-for="teamUs in filterTeam" :key="teamUs.id">
-            <p>№{{ teamUs.id }}</p>
-            <p>
-              <b>{{ teamUs.name }}</b>
-            </p>
-            <span>{{ teamUs.description }}</span>
-            <button class="btn btn-link" @click="requestInTeam(teamUs.id)">
-              Подать заявку
-            </button>
+          <div>
+            <div class="oneTeam" v-for="teamUs in filterTeam" :key="teamUs.id">
+              <p>№{{ teamUs.id }}</p>
+              <p>
+                <b>{{ teamUs.name }}</b>
+              </p>
+              <span>{{ teamUs.description }}</span>
+<button class="btn btn-link" @click="requestInTeam(teamUs.id)">
+                Подать заявку
+              </button>
+              
+            </div>
           </div>
         </div>
       </div>
-      <div slot="footer">
+      <!-- <div slot="footer">
         <button
           class="modal-default-button btn btn-secondary"
           @click="isShowInfoModal = false"
         >
           Закрыть
         </button>
-      </div>
-    </popup>
+      </div> -->
+    </div>
     <minialert v-if="isShowAlertAddReq"
       ><p slot="title">Заявка в команду успешно подана</p></minialert
     >
-    <div class="container">
-      <div class="container">
-        <!-- строка поиска организаций  -->
-        <div class="row d-flex">
-          <button class="formSearchIcon col-1-sm">
-            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
-          ><input
-            v-model="findString"
-            type="text"
-            placeholder="Введите название организации, которую вы хотите найти"
-            class="formSearch col-12"
-          />
+
+
+
+
+
+
         </div>
-        <!-- вывод массива всех организаций  -->
-        <div
-          class="card"
-          v-for="organization in filterOrganization"
-          :key="organization.id"
-        >
-          <a class="orgFoto"></a>
-          <div class="card_body">
-            <h3>{{ organization.name }}</h3>
-            <small>№ {{ organization.id }}</small>
-          </div>
-          <div class="card_action">
-            <ArrowRight
-              @click="showModalEdit(organization)"
-              class="btn-link"
-            ></ArrowRight>
-          </div>
-        </div>
+
         <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
         <div class="organizationNotSearch" v-if="filterOrganization == ''">
           <h3>Организации не найдены</h3>
@@ -202,13 +222,13 @@ export default {
   components: { popup, minialert, SearchIcon, ArrowRight, BreadCrumbs },
   data() {
     return {
+      isShowFullInformation: false,
       findString: "",
       findTeam: "",
       search: 0,
       oneOrganization: {},
       nameOfOrganization: "",
       tabFirst: true,
-      isShowInfoModal: false,
       isShowAlertAdd: false,
       isShowAlertAddReq: false,
       isAddOrganization: false,
@@ -247,6 +267,14 @@ export default {
           organizationId: this.organizationId
         };
       }
+    },
+    oneUserInTeams: {
+      query: ONE_USER_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          userId: this.$store.getters.decodedToken.id
+        };
+      }
     }
   },
   // валидация формы
@@ -267,14 +295,18 @@ export default {
   },
   methods: {
     // метод корректного отображения информации об организации в попапе
-    showModalEdit(organization) {
+    showFullInformation(organization) {
       (this.nameOfOrganization = organization.name),
-        (this.isShowInfoModal = true);
+        (this.isshowFullInformation = true);
       this.index = this.organizations.findIndex(
         el => el.id === organization.id
       );
       this.oneOrganization = Object.assign(this.oneOrganization, organization);
       this.organizationId = parseInt(organization.id);
+      console.log(this.isshowFullInformation)
+    },
+    closeFullInformation() {
+      this.isShowFullInformation = false;
     },
     submit() {
       // создание новой организации
