@@ -415,7 +415,7 @@ module.exports = {
           pointAccountId: args.id,
           createdAt: {
             [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-            [Op.lt]: new Date(new Date() - 14 * 60 * 60 * 1000)
+            [Op.lt]: new Date(new Date() - 14 * 24 * 60 * 60 * 1000)
           }
         }
       });
