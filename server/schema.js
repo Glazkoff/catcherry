@@ -273,9 +273,9 @@ type Query {
 }
 
 input signUpInput {
-  name: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
-  surname: String @constraint(pattern: "^[а-яёa-zA-Z ]*$")
-  patricity: String @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  name: String! @constraint(pattern: "^[а-яёА-ЯЁa-zA-Z ]*$")
+  surname: String @constraint(pattern: "^[а-яёА-ЯЁa-zA-Z ]*$")
+  patricity: String @constraint(pattern: "^[а-яёА-ЯЁa-zA-Z ]*$")
   birthday: String
   login: String!
   password: String! @constraint(minLength: 6)
@@ -289,9 +289,9 @@ input loginInput {
 }
 
 input updateUserInput {
-  name: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
-  surname: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
-  patricity: String! @constraint(pattern: "^[а-яёa-zA-Z ]*$")
+  name: String! @constraint(pattern: "^[а-яёА-ЯЁa-zA-Z ]*$")
+  surname: String! @constraint(pattern: "^[а-яёА-ЯЁa-zA-Z ]*$")
+  patricity: String! @constraint(pattern: "^[а-яёА-ЯЁa-zA-Z ]*$")
   gender: String
   birthday: String
   login: String!
