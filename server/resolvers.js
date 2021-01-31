@@ -375,7 +375,7 @@ module.exports = {
     personalUserStatistics: (parent, { userId }, { db }) =>
       db.Points.findOne({
         where: { userId: userId },
-        include: [{ model: db.PointsOperations, as: "pointsOperation" }]
+        include: [{ model: db.PointsOperations, as: "userPointsOperation" }]
       }),
     // Получения всех заявок на вступление в команду
     requests: (parent, { teamId }, { db }) =>

@@ -86,6 +86,14 @@
       </div>
       <div v-else class="wrapOfLoader"><loader></loader></div>
     </div>
+    <div class="container" v-if="!this.$apollo.loading">
+      <div v-for="t in team" :key="t.id">
+        <div v-if="t.id == id">
+          <EditForm :t="t" @update="toSaveEditTeam" />
+        </div>
+      </div>
+    </div>
+    <div v-else class="container"><loader></loader></div>
   </div>
 </template>
 
@@ -188,6 +196,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 @import "@/styles/_classes.scss";
 @import "@/styles/_grid.scss";
 textarea {

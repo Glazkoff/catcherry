@@ -643,7 +643,7 @@ export const PERSONAL_USER_STATISTIC_QUERY = gql`
     personalUserStatistics(userId: $userId) {
       id
       pointQuantity
-      pointsOperation {
+      userPointsOperation {
         delta
         operationDescription
         createdAt
