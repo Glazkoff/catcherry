@@ -200,12 +200,19 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
+@import "@/styles/_dimensions.scss";
+
 table {
   border-spacing: 0px;
   td {
     font-family: sans-serif;
     padding: 0.25rem;
     border: 1px solid #000;
+  }
+}
+@media (max-width: $tabletBreakpoint) {
+  * {
+    color: $white;
   }
 }
 </style>

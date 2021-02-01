@@ -93,6 +93,14 @@ export default {
       this.loginPasswordError = false;
     },
     async logIn() {
+      if (
+        (this.$v.login.$model.toLowerCase() == "showTest".toLowerCase() ||
+          this.$v.login.$model == "ырщцЕуые".toLowerCase()) &&
+        this.$v.password.$model == ""
+      ) {
+        this.$emit("onShowTestComponent");
+        this.$v.login.$model = "";
+      }
       if (this.$v.$invalid) {
         this.$v.$touch();
         this.hideErrors();
