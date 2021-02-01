@@ -500,7 +500,8 @@ module.exports = {
         surname: input.surname,
         patricity: input.patricity,
         birthday: input.birthday,
-        password: hashPassword
+        password: hashPassword,
+        roleInSystem: input.roleInSystem
       });
 
       // Добавляем кошелёк для баллов

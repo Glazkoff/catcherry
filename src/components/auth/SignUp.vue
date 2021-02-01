@@ -136,6 +136,27 @@
         </span>
       </div>
     </div>
+    <div class="form-group">
+      <label class="form-name">Роль *</label><br />
+      <select
+        class="form-control block"
+        :disabled="signUpLoading"
+        v-model.trim="$v.roleInSystem.$model"
+        :class="{ is_invalid: $v.roleInSystem.$error }"
+      >
+        <option>Владелец системы</option>
+        <option>Менеджер</option>
+        <option>Пользователь</option>
+      </select>
+      <div v-if="$v.roleInSystem.$error" class="error">
+        <span class="form-text danger" v-if="!$v.roleInSystem.required">{{
+          $t("required")
+        }}</span>
+      </div>
+    </div>
+    <div v-if="roleInSystem == 'Владелец системы'">
+      Создание новой команды
+    </div>
     <div>
       <label class="box-label">
         <input
@@ -194,6 +215,7 @@ export default {
       birthday: "",
       login: "",
       password: "",
+      roleInSystem: "",
       signUpLoading: false,
       fingerprint: "",
       privacyPolicyIsChecked: false,
@@ -223,6 +245,9 @@ export default {
     login: {
       required
       // email,
+    },
+    roleInSystem: {
+      required
     },
     password: {
       required,

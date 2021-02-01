@@ -119,7 +119,15 @@ export default {
                   "SET_ACCESS_TOKEN",
                   resp.data.logIn.accessToken
                 );
-                this.$router.push({ name: "FeedOfPosts" });
+                console.log(this.$store.getters.decodedToken.roleInSystem);
+                if (
+                  this.$store.getters.decodedToken.roleInSystem ===
+                  "Administration"
+                ) {
+                  this.$router.push({ name: "Dashboard" });
+                } else {
+                  this.$router.push({ name: "FeedOfPosts" });
+                }
               } else {
                 this.loginPasswordError = true;
               }

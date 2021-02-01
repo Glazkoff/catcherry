@@ -16,7 +16,10 @@
               <small v-if="roleUser != null">{{ roleUser }}</small>
             </a>
           </li>
-          <li class="right icon-notificationTopBar">
+          <li
+            class="right icon-notificationTopBar"
+            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+          >
             <div class="notificationTopBar">
               <router-link
                 to="/notifications"
@@ -67,12 +70,18 @@
               </router-link>
             </div>
           </li>
-          <li class="right">
+          <li
+            class="right"
+            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+          >
             <p class="emailCard centerAlignTopBar">
               <MailIcon></MailIcon>
             </p>
           </li>
-          <li class="right">
+          <li
+            class="right"
+            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+          >
             <router-link to="/points" class="centerAlignTopBar">
               <p class="nav-point">
                 {{ $tc("pointsMsg", pointQuantity) }}
