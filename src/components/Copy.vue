@@ -78,211 +78,212 @@
     <div v-else class="wrapOfLoader"><Loader></Loader></div>
   </div>
 
-<script>
-import Loader from "@/components/Loader.vue";
-import Comments from "../components/Comments.vue";
-import BreadCrumbs from "@/components/BreadCrumbs.vue";
-import {
-  POST_QUERY,
-  DELETE_LIKE_OF_POST,
-  CREATE_LIKE_OF_POST
-} from "@/graphql/queries";
-export default {
-  name: "DetailedPost",
-  computed: {
-    userId() {
-      if (this.$store.getters.decodedToken != null) {
-        return this.$store.getters.decodedToken.id;
-      } else return null;
-    },
-    isEmpty() {
-      if (this.post == null || this.post == undefined) {
-        return true;
-      } else return false;
-    },
-    isLikedByUser() {
-      let likeIndex = this.post.likesOfPost.findIndex(el => {
-        return +el.userId === +this.userId;
-      });
-      return likeIndex !== -1;
-    }
-  },
-  apollo: {
-    post: {
-      query: POST_QUERY,
-      variables() {
-        return {
-          id: this.$route.params.id,
-          userId: this.userId
-        };
-      }
-    }
-  },
-  components: {
-    Comments,
-    Loader,
-    BreadCrumbs
-  },
-  data() {
-    return {};
-  },
-  methods: {
-    onLike(id) {
-      if (this.isLikedByUser) {
-        this.$apollo
-          .mutate({
-            mutation: DELETE_LIKE_OF_POST,
-            variables: {
-              userId: this.userId,
-              postId: id
-            },
-            update: cache => {
-              let data = cache.readQuery({
-                query: POST_QUERY,
-                variables: {
-                  id: this.$route.params.id,
-                  userId: this.userId
-                }
-              });
-              let indexLikePostByUser = data.post.likesOfPost.findIndex(
-                el => el.userId === this.userId
-              );
-              data.post.likesOfPost.splice(indexLikePostByUser, 1);
-              cache.writeQuery({
-                query: POST_QUERY,
-                variables: {
-                  id: this.$route.params.id,
-                  userId: this.userId
-                },
-                data
-              });
-            }
-          })
-          .then(data => {
-            console.log(data);
-          })
-          .catch(error => {
-            console.error(error);
+  <script>
+    import Loader from "@/components/Loader.vue";
+    import Comments from "../components/Comments.vue";
+    import BreadCrumbs from "@/components/BreadCrumbs.vue";
+    import {
+      POST_QUERY,
+      DELETE_LIKE_OF_POST,
+      CREATE_LIKE_OF_POST
+    } from "@/graphql/queries";
+    export default {
+      name: "DetailedPost",
+      computed: {
+        userId() {
+          if (this.$store.getters.decodedToken != null) {
+            return this.$store.getters.decodedToken.id;
+          } else return null;
+        },
+        isEmpty() {
+          if (this.post == null || this.post == undefined) {
+            return true;
+          } else return false;
+        },
+        isLikedByUser() {
+          let likeIndex = this.post.likesOfPost.findIndex(el => {
+            return +el.userId === +this.userId;
           });
-      } else {
-        this.$apollo
-          .mutate({
-            mutation: CREATE_LIKE_OF_POST,
-            variables: {
-              userId: this.userId,
-              postId: id
-            },
-            update: cache => {
-              let data = cache.readQuery({
-                query: POST_QUERY,
+          return likeIndex !== -1;
+        }
+      },
+      apollo: {
+        post: {
+          query: POST_QUERY,
+          variables() {
+            return {
+              id: this.$route.params.id,
+              userId: this.userId
+            };
+          }
+        }
+      },
+      components: {
+        Comments,
+        Loader,
+        BreadCrumbs
+      },
+      data() {
+        return {};
+      },
+      methods: {
+        onLike(id) {
+          if (this.isLikedByUser) {
+            this.$apollo
+              .mutate({
+                mutation: DELETE_LIKE_OF_POST,
                 variables: {
-                  id: this.$route.params.id
-                }
-              });
-              data.post.likesOfPost.push({
-                userId: this.userId,
-                __typename: "LikeOfPost"
-              });
-              cache.writeQuery({
-                query: POST_QUERY,
-                variables: {
-                  id: this.$route.params.id
+                  userId: this.userId,
+                  postId: id
                 },
-                data
+                update: cache => {
+                  let data = cache.readQuery({
+                    query: POST_QUERY,
+                    variables: {
+                      id: this.$route.params.id,
+                      userId: this.userId
+                    }
+                  });
+                  let indexLikePostByUser = data.post.likesOfPost.findIndex(
+                    el => el.userId === this.userId
+                  );
+                  data.post.likesOfPost.splice(indexLikePostByUser, 1);
+                  cache.writeQuery({
+                    query: POST_QUERY,
+                    variables: {
+                      id: this.$route.params.id,
+                      userId: this.userId
+                    },
+                    data
+                  });
+                }
+              })
+              .then(data => {
+                console.log(data);
+              })
+              .catch(error => {
+                console.error(error);
               });
-            }
-          })
-          .then(data => {
-            console.log(data);
-          })
-          .catch(error => {
-            console.error(error);
-          });
+          } else {
+            this.$apollo
+              .mutate({
+                mutation: CREATE_LIKE_OF_POST,
+                variables: {
+                  userId: this.userId,
+                  postId: id
+                },
+                update: cache => {
+                  let data = cache.readQuery({
+                    query: POST_QUERY,
+                    variables: {
+                      id: this.$route.params.id
+                    }
+                  });
+                  data.post.likesOfPost.push({
+                    userId: this.userId,
+                    __typename: "LikeOfPost"
+                  });
+                  cache.writeQuery({
+                    query: POST_QUERY,
+                    variables: {
+                      id: this.$route.params.id
+                    },
+                    data
+                  });
+                }
+              })
+              .then(data => {
+                console.log(data);
+              })
+              .catch(error => {
+                console.error(error);
+              });
+          }
+        }
       }
+    };
+  </script>
+
+  <style scoped lang="scss">
+    @import "@/styles/_colors.scss";
+    @import "@/styles/_classes.scss";
+    @import "@/styles/_grid.scss";
+
+    .container {
+      display: flex;
+      justify-content: center;
     }
-  }
-};
-</script>
+    .post {
+      width: 56rem;
+      box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
+        0px 20px 32px rgba(96, 97, 112, 0.24);
+      border-radius: 0.5rem;
+      margin-bottom: 4rem;
+    }
 
-<style scoped lang="scss">
-@import "@/styles/_colors.scss";
-@import "@/styles/_classes.scss";
-@import "@/styles/_grid.scss";
+    .imageContainer img {
+      width: 56rem;
+      border-top-left-radius: 0.5rem;
+      border-top-right-radius: 0.5rem;
+      max-height: 25rem;
+    }
 
-.container {
-  display: flex;
-  justify-content: center;
-}
-.post {
-  width: 56rem;
-  box-shadow: 0px 2px 8px rgba(40, 41, 61, 0.08),
-    0px 20px 32px rgba(96, 97, 112, 0.24);
-  border-radius: 0.5rem;
-  margin-bottom: 4rem;
-}
+    .infoContainer {
+      width: 44rem;
+      margin: 0 auto;
+      padding-top: 2rem;
+      padding-bottom: 2rem;
+    }
 
-.imageContainer img {
-  width: 56rem;
-  border-top-left-radius: 0.5rem;
-  border-top-right-radius: 0.5rem;
-  max-height: 25rem;
-}
+    .heading {
+      margin-top: 0;
+      font-weight: bold;
+      font-size: 1.5rem;
+      text-align: center;
+      line-height: 2rem;
+      color: #613490;
+      margin-bottom: 2rem;
+    }
 
-.infoContainer {
-  width: 44rem;
-  margin: 0 auto;
-  padding-top: 2rem;
-  padding-bottom: 2rem;
-}
+    .infoDate {
+      font-size: 0.8rem;
+      line-height: 1rem;
+      color: #4c235b;
+    }
 
-.heading {
-  margin-top: 0;
-  font-weight: bold;
-  font-size: 1.5rem;
-  text-align: center;
-  line-height: 2rem;
-  color: #613490;
-  margin-bottom: 2rem;
-}
+    .infoBody {
+      font-size: 1rem;
+      line-height: 1.5rem;
+      text-align: justify;
+      color: #4c235b;
+      margin-bottom: 1.5rem;
+    }
 
-.infoDate {
-  font-size: 0.8rem;
-  line-height: 1rem;
-  color: #4c235b;
-}
+    .iconContainer {
+      display: flex;
+      margin-bottom: 2rem;
+    }
 
-.infoBody {
-  font-size: 1rem;
-  line-height: 1.5rem;
-  text-align: justify;
-  color: #4c235b;
-  margin-bottom: 1.5rem;
-}
+    .iconAndNumber {
+      display: flex;
+      cursor: pointer;
+      align-items: center;
+    }
 
-.iconContainer {
-  display: flex;
-  margin-bottom: 2rem;
-}
+    .iconAndNumber:first-child {
+      margin-right: 2.8rem;
+    }
 
-.iconAndNumber {
-  display: flex;
-  cursor: pointer;
-  align-items: center;
-}
+    .numOfIcon {
+      font-size: 0.8rem;
+      line-height: 0.8rem;
+      color: #000000;
+    }
 
-.iconAndNumber:first-child {
-  margin-right: 2.8rem;
-}
-
-.numOfIcon {
-  font-size: 0.8rem;
-  line-height: 0.8rem;
-  color: #000000;
-}
-
-.icon {
-  width: 1.8rem;
-  height: 1.8rem;
-  margin-right: 0.7rem;
-}
-</style>
+    .icon {
+      width: 1.8rem;
+      height: 1.8rem;
+      margin-right: 0.7rem;
+    }
+  </style>
+</template>

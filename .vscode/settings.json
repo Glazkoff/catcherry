@@ -25,9 +25,11 @@
   "diffEditor.ignoreTrimWhitespace": false,
   "prettier.trailingComma": "none",
   "prettier.arrowParens": "avoid",
-  "formattingToggle.affects": [
-    "formatOnPaste",
-    "formatOnSave",
-    "formatOnType"
-  ]
+  "formattingToggle.affects": ["formatOnPaste", "formatOnSave", "formatOnType"],
+  "eslint.validate": ["vue", "javascript", "javascriptreact"],
+  "vetur.validation.template": false,
+  "editor.codeActionsOnSave": {
+    "source.fixAll.eslint": true
+  },
+  "files.eol": "\n"
 }
