@@ -98,6 +98,7 @@
         </div>
       </router-link>
       <router-link
+        v-if="roleInSystem == 'Manager'"
         :to="{
           name: 'TeamsList',
           params: { id: $store.getters.decodedToken.id }
@@ -115,6 +116,7 @@
         </div>
       </router-link>
       <router-link
+        v-if="roleInSystem == 'Administrator'"
         :to="{
           name: 'Dashboard',
           params: { id: $store.getters.decodedToken.id }
@@ -135,6 +137,7 @@
 </template>
 
 <script>
+import { ROLE_IN_SYSTEM_QUERY } from "@/graphql/queries";
 import ProfileIcon from "@/assets/svg/sidebar/profile_icon.svg?inline";
 import OrganizationIcon from "@/assets/svg/sidebar/organization_icon.svg?inline";
 import FeedIcon from "@/assets/svg/sidebar/feed_icon.svg?inline";
@@ -144,6 +147,20 @@ import PointsIcon from "@/assets/svg/sidebar/points_icon.svg?inline";
 
 export default {
   name: "SideBarDefault",
+  apollo: {
+    // Массив команд организации
+    roleInSystem: {
+      query: ROLE_IN_SYSTEM_QUERY,
+      error(error) {
+        this.queryError = JSON.stringify(error.message);
+      },
+      variables() {
+        return {
+          id: this.$store.getters.decodedToken.id
+        };
+      }
+    }
+  },
   components: {
     ProfileIcon,
     OrganizationIcon,

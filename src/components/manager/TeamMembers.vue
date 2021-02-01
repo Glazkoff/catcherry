@@ -87,6 +87,7 @@
 
 <script>
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import popup from "@/components/Popup.vue";
 import Minialert from "@/components/MiniAlert.vue";
 import Stub from "@/components/Stub.vue";
 import Loader from "@/components/Loader.vue";
@@ -160,7 +161,8 @@ export default {
     Minialert,
     BreadCrumbs,
     Stub,
-    Loader
+    Loader,
+    popup
   },
   methods: {
     // Показать попап с подробной информацией

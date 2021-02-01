@@ -17,14 +17,15 @@ export default {
 <style>
 .stub {
   display: flex;
-  height: 75vh;
-  width: 50vw;
+  height: 25vh;
+  width: 100%;
   margin: auto;
   justify-content: center;
   align-items: center;
   flex-direction: column;
 }
 .stub p {
-  margin-top: 20px;
+  margin-top: 10px;
+  text-align: center;
 }
 </style>

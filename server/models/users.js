@@ -84,6 +84,10 @@ module.exports = (sequelize, DataTypes) => {
         // type: DataTypes.STRING.BINARY,
         type: DataTypes.STRING,
         allowNull: true
+      },
+      roleInSystem: {
+        type: DataTypes.STRING(255),
+        allowNull: true
       }
     },
     {

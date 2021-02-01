@@ -10,9 +10,11 @@
       <div class="row">
         <div class="col-4">
           <h2 class="mb-4">{{ $t("task.backlogTask") }}</h2>
-          <p v-if="backlog.length === 0">
-            {{ $t("task.noTasksInTheBacklog") }}
-          </p>
+          <div v-if="backlog.length === 0">
+            <Stub>
+              <p slot="body">{{ $t("task.noTasksInTheBacklog") }}</p>
+            </Stub>
+          </div>
           <div v-for="task in backlog" :key="task.id" class="task">
             <div class="container">
               <div class="row">
@@ -50,9 +52,13 @@
         </div>
         <div class="col-4">
           <h2 class="mb-4">{{ $t("task.completedTasksForReview") }}</h2>
-          <p v-if="toCheck.length === 0">
-            {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
-          </p>
+          <div v-if="toCheck.length === 0">
+            <Stub>
+              <p slot="body">
+                {{ $t("task.thereAreNoReadyMadeTasksToCheck") }}
+              </p>
+            </Stub>
+          </div>
           <div v-for="task in toCheck" :key="task.id" class="task">
             <div class="container">
               <div class="row mb-4">
@@ -94,7 +100,11 @@
         </div>
         <div class="col-4">
           <h2 class="mb-4">{{ $t("task.completedTasks") }}</h2>
-          <p v-if="done.length === 0">{{ $t("task.noCompletedTasks") }}</p>
+          <div v-if="done.length === 0">
+            <Stub>
+              <p slot="body">{{ $t("task.noCompletedTasks") }}</p>
+            </Stub>
+          </div>
           <div v-for="task in done" :key="task.id" class="task">
             <div class="container">
               <div class="row mb-4">
@@ -163,6 +173,7 @@
 <script>
 import minialert from "@/components/MiniAlert.vue";
 import Loader from "@/components/Loader.vue";
+import Stub from "@/components/Stub.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import {
   ALL_TASKS_IN_TEAM_QUERY,
@@ -173,7 +184,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert, Loader, breadcrumbs },
+  components: { minialert, Loader, breadcrumbs, Stub },
   apollo: {
     // массив задач с назначенными ответственными
     allTasksInOneTeam: {

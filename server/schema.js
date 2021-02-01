@@ -32,6 +32,7 @@ type User {
   updatedAt: String
   deletedAt: String
   userInTeam: UserInTeam
+  roleInSystem: String
 }
 
 type UserInNewTeam {

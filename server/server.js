@@ -112,12 +112,12 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 app.use(haltOnTimedout);
 
 db.sequelize
-  // .sync({ force: true })
+  //.sync({ force: true })
   // .sync({ alter: true })
   .sync()
   .then(async () => {
     app.listen(PORT, () => {
-      // addAllTables(true);
+      //addAllTables(true);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
       // for (let index = 0; index < 10; index++) {
@@ -196,7 +196,8 @@ async function addAllTables(destroyTable) {
       gender: faker.name.gender(),
       birthday: faker.date.past(),
       login: faker.random.word(),
-      password: bcrypt.hashSync("nikita", salt)
+      password: bcrypt.hashSync("nikita", salt),
+      roleInSystem: faker.random.word()
     });
     //Администраторы
     let administrators = await db.Administrators.create({
