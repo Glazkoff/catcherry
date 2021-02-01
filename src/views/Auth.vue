@@ -8,8 +8,8 @@
     </div>
     <div class="form-half">
       <router-view name="form"></router-view>
-      <!-- <hr /> -->
-      <!-- <TestGraphql></TestGraphql> -->
+      <!-- <hr />
+      <TestGraphql></TestGraphql> -->
     </div>
   </div>
 </template>

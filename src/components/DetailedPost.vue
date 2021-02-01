@@ -3,7 +3,7 @@
     <div class="container">
       <div class="row">
         <div class="col-12 breadcrumbs">
-          <p><span>Здесь должны быть хлебные крошки</span></p>
+          <BreadCrumbs></BreadCrumbs>
         </div>
       </div>
     </div>
@@ -64,6 +64,7 @@ import FilledLike from "@/assets/filled_like.svg?inline";
 import Comment from "@/assets/comment.svg?inline";
 import Comments from "../components/Comments.vue";
 import Loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import {
   POST_QUERY,
   CREATE_LIKE_OF_POST,
@@ -95,7 +96,14 @@ export default {
       }
     }
   },
-  components: { Loader, EmptyLike, FilledLike, Comment, Comments },
+  components: {
+    BreadCrumbs,
+    Loader,
+    EmptyLike,
+    FilledLike,
+    Comment,
+    Comments
+  },
   data() {
     return {};
   },

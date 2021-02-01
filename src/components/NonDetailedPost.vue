@@ -6,7 +6,7 @@
     <div class="infoContainer">
       <router-link
         tag="h2"
-        :to="{ name: 'Posts', params: { id: post.id } }"
+        :to="{ name: 'Post', params: { id: post.id } }"
         class="heading"
         >{{ post.body.header }}</router-link
       >
@@ -70,7 +70,7 @@ export default {
       this.$emit("like", { id: id, isLikedByUser: this.isLikedByUser });
     },
     onLink(id) {
-      this.$router.push({ name: "Posts", params: { id: id } });
+      this.$router.push({ name: "Post", params: { id: id } });
     }
   }
 };
@@ -92,14 +92,16 @@ export default {
   grid-template-columns: 4fr 5fr;
 }
 
-.imageContainer img {
-  width: 100%;
-  border-top-left-radius: 0.625rem;
-  border-bottom-left-radius: 0.625rem;
+.imageContainer {
   height: 19rem;
-  cursor: pointer;
+  & img {
+    width: 100%;
+    border-top-left-radius: 0.625rem;
+    border-bottom-left-radius: 0.625rem;
+    height: 19rem;
+    cursor: pointer;
+  }
 }
-
 .infoContainer {
   padding-top: 3rem;
   padding-right: 3rem;

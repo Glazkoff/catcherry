@@ -27,6 +27,7 @@
   "deleteOrgQuestion": "Are you sure you want to delete organization",
   "placeholderSearchByUsers": "Search by users",
   "placeholderSearchByOrgs": "Search by organizations",
+  "languageInterface": "Choose language of interface:",
   "user": "User",
   "organization": "Organization",
   "loading": "Loading",
@@ -94,7 +95,32 @@
     "deleteTask": "Delete task",
     "youHaveSuccessfullyCreditedPointsToTheUser": "You have successfully credited points to the user",
     "youHaveSuccessfullyDeletedTheTask": "You have successfully deleted the task",
-    "youHaveSuccessfullyReturnedTheTaskForRevision": "You have successfully returned the task for revision"
+    "youHaveSuccessfullyReturnedTheTaskForRevision": "You have successfully returned the task for revision",
+    "noTask": "No task",
+    "scheduledTasks": "Scheduled tasks",
+    "tasksWithoutFPerformer": "Tasks without a performer",
+    "сompletedTasksForCheck": "Completed tasks for check",
+    "team": "Team",
+    "сompleteTask": "Complete task",
+    "takeTask": "Take task",
+    "youHaveSuccessfullyScceptedTheTask": "You have successfully accepted the task",
+    "youHaveCompletedTheTaskSuccessfully": "You have completed the task successfully"
+  },
+  "noSearch": "No search results were found",
+  "team": {
+    "createNewTeam": "Create new team",
+    "teamName": "Team name",
+    "teamDescription": "Team Description",
+    "maximumNumberOfTeamMembers": "Maximum number of team members",
+    "accept": "Accept",
+    "reject": "Reject",
+    "removeUserFromTeam": "Remove user from team",
+    "youHaveSuccessfullyRemovedPersonFromTheTeam": "You have successfully removed a person from the team",
+    "youHaveSuccessfullyAddedTheUserToTheTeam": "You have successfully added the user to the team",
+    "youHaveSuccessfullyDeclinedYourRequestToBeAddedToTheTeam": "You have successfully declined your request to be added to the team",
+    "noNewRequest": "No new request",
+    "youHaveSuccessfullyChangedTheseTeam": "You have successfully changed these team",
+    "lastedited": "Last edited"
   },
   "taskConstructor": {
     "taskConstructor": "Task constructor",
@@ -172,6 +198,7 @@
     "rating": "Rating",
     "editteam": "Edit team",
     "requestlist": "Requests",
+    "newTeam": "Create team",
     "listTeams": ""
   },
   "userAgreement": {

@@ -4,19 +4,16 @@
       <div class="col-12">
         <form @submit.prevent="toAddComment()">
           <div class="form-group">
-            <label for="text" class="form-name white">
-              {{ $t("addCommentMsg") }}
-            </label>
             <textarea
               type="text"
               class="form-control col-12 dark"
               :placeholder="$t('addCommentMsg')"
-              v-model.trim="$v.newComment.$model"
-              @blur="$v.newComment.$touch()"
-              :class="{ is_invalid: $v.newComment.$error }"
+              v-model.trim="$v.newComment.body.$model"
+              @blur="$v.newComment.body.$touch()"
+              :class="{ is_invalid: $v.newComment.body.$error }"
             ></textarea>
-            <div v-if="$v.newComment.$error" class="error">
-              <span v-if="!$v.newComment.required" class="form-text red">{{
+            <div v-if="$v.newComment.body.$error" class="error">
+              <span v-if="!$v.newComment.body.required" class="form-text red">{{
                 $t("required")
               }}</span>
             </div>
@@ -24,7 +21,7 @@
 
           <button
             class="btn btn-primary col-4"
-            :disabled="$v.newComment.$invalid"
+            :disabled="$v.newComment.body.$invalid"
           >
             {{ $t("addMsg") }}
           </button>
@@ -34,7 +31,7 @@
 
     <div class="row">
       <div class="col-12" v-if="!this.isEmpty">
-        <div v-for="comment in comments" :key="comment.id" >
+        <div v-for="comment in comments" :key="comment.id">
           <div class="col-10">
             <h3 class="red">{{ comment.author.name }}</h3>
             <p>{{ comment.createdAt }}</p>
@@ -53,8 +50,8 @@
         </div>
       </div>
       <div v-else class="col-12">
-            <h3>Комментариев нет :(</h3>
-          </div>
+        <h3>Комментариев нет :(</h3>
+      </div>
     </div>
   </div>
 </template>
@@ -78,7 +75,8 @@ export default {
       }
     }
   },
-  computed:{isEmpty() {
+  computed: {
+    isEmpty() {
       if (this.comments == undefined) {
         return true;
       } else {
@@ -86,21 +84,31 @@ export default {
           return true;
         } else return false;
       }
-    },},
+    }
+  },
   props: ["DetailedPost"],
   data() {
     return {
-      newComment: ""
+      newComment: {
+        body: "",
+        authorId: this.$store.getters.decodedToken.id,
+        author: {
+          name: this.$store.getters.decodedToken.name
+        },
+        postId: +this.$route.params.id
+      }
     };
   },
   validations: {
     newComment: {
-      required
+      body: {
+        required
+      }
     }
   },
   methods: {
     toAddComment() {
-      let bodyComment = this.newComment;
+      let bodyComment = this.newComment.body;
       let authorIdComment = this.$store.getters.decodedToken.id;
       let postIdComment = +this.$route.params.id;
       this.$apollo
@@ -128,11 +136,17 @@ export default {
           }
         })
         .then(data => {
-          this.newComment = "";
+          this.newComment = {
+            body: "",
+            authorId: this.$store.getters.decodedToken.id,
+            author: {
+              name: this.$store.getters.decodedToken.name
+            },
+            postId: +this.$route.params.id
+          };
           console.log(data);
         })
         .catch(error => {
-          // this.newComment = body;
           console.error(error);
         });
     },

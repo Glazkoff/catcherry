@@ -7,6 +7,7 @@ import Main from "@/views/Main.vue";
 import Auth from "@/views/Auth.vue";
 import LogIn from "@/components/auth/LogIn.vue";
 
+import Feed from "@/views/Feed.vue";
 import User from "@/components/account/User.vue";
 
 import CreatePost from "@/components/CreatePost.vue";
@@ -16,6 +17,7 @@ import UserInOrganization from "@/components/account/UserInOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
 import TeamsList from "@/components/manager/TeamsList.vue";
+//import NewTeam from "@/components/manager/NewTeam.vue";
 
 import DetailedPost from "@/components/DetailedPost.vue";
 import FeedOfPosts from "@/components/account/FeedOfPosts.vue";
@@ -51,14 +53,25 @@ const routes = [
       },
       {
         path: "/feed",
-        name: "FeedOfPosts",
         components: {
-          main: FeedOfPosts,
+          main: Feed,
           sidebar: SideBarDefault
         },
         meta: {
           breadCrumb: i18n.t("router.feed")
-        }
+        },
+        children: [
+          {
+            path: "",
+            name: "FeedOfPosts",
+            component: FeedOfPosts
+          },
+          {
+            path: ":id",
+            name: "Post",
+            component: DetailedPost
+          }
+        ]
       },
       {
         path: "/teamslist",
@@ -73,7 +86,7 @@ const routes = [
         }
       },
       {
-        path: "/manager",
+        path: "/manager/:id",
         name: "Manager",
         components: {
           main: () =>
@@ -107,6 +120,17 @@ const routes = [
               ),
             meta: {
               breadCrumb: i18n.t("router.newtask")
+            }
+          },
+          {
+            path: "new_team",
+            name: "NewTeam",
+            component: () =>
+              import(
+                /* webpackChunkName: "managerNewTask" */ "../components/manager/NewTeam.vue"
+              ),
+            meta: {
+              breadCrumb: i18n.t("router.newTeam")
             }
           },
           {
@@ -288,17 +312,6 @@ const routes = [
         }
       },
       {
-        path: "/posts/:id",
-        name: "Posts",
-        components: {
-          main: DetailedPost,
-          sidebar: SideBarDefault,
-          meta: {
-            breadCrumb: i18n.t("router.post")
-          }
-        }
-      },
-      {
         path: "/points",
         name: "PointsUser",
         components: {
@@ -371,7 +384,7 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.name !== null && from.name === null && to.name !== "LogIn") {
-    localStorage.setItem("first-route", to.name);
+    localStorage.setItem("first-route", to.path);
   }
 
   let lang = localStorage.getItem("lang");

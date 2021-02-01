@@ -111,6 +111,12 @@ export const ACCEPT_REQUEST_QUERY = gql`
   }
 `;
 
+export const CHANGE_STATUS_REQUEST_QUERY = gql`
+  mutation($id: ID!, $status: String) {
+    changeStatusRequest(id: $id, status: $status)
+  }
+`;
+
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ USERS
 export const CREATE_USER_QUERY = gql`
   mutation($name: String!) {
@@ -254,6 +260,14 @@ export const ORGS_QUERY = gql`
   }
 `;
 
+export const USER_ORG_QUERY = gql`
+  query($id: ID!) {
+    userOrganization(id: $id) {
+      id
+    }
+  }
+`;
+
 export const ORG_TYPES_QUERY = gql`
   query {
     organizationTypes {
@@ -311,6 +325,26 @@ export const TEAM_IN_ORG_QUERY = gql`
   }
 `;
 
+export const TEAM_QUERY = gql`
+  query($id: ID!) {
+    oneTeam(id: $id) {
+      id
+      name
+      description
+      maxUsersLimit
+      updatedAt
+    }
+  }
+`;
+
+export const TEAM_NAME_QUERY = gql`
+  query($id: ID!) {
+    oneTeam(id: $id) {
+      name
+    }
+  }
+`;
+
 export const UPDATE_TEAMS_QUERY = gql`
   mutation(
     $name: String!
@@ -348,7 +382,32 @@ export const USERS_IN_TEAMS_QUERY = gql`
         id
         name
         surname
+        patricity
       }
+      role {
+        name
+      }
+    }
+  }
+`;
+
+export const MANAGER_TEAMS_QUERY = gql`
+  query($userId: ID!) {
+    managerTeams(userId: $userId) {
+      id
+      team {
+        id
+        name
+      }
+    }
+  }
+`;
+
+export const ROLE_QUERY = gql`
+  query($id: ID!) {
+    role(id: $id) {
+      id
+      name
     }
   }
 `;
@@ -428,7 +487,7 @@ export const POST_QUERY = gql`
 
 // Получение всех постов для пользователя
 export const POSTS_QUERY = gql`
-  query($userId: [Int]!) {
+  query($userId: ID!) {
     posts(userId: $userId) {
       id
       body {

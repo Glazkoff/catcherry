@@ -6,7 +6,10 @@
       <loader></loader>
     </div>
     <div v-if="usersInTeams == null">
-      <p>Нет пользователей в команде</p>
+      <div class="stub">
+          <Info></Info>
+          <p>В команде пока нет участников!</p>
+        </div>
     </div>
     <div>
       <div v-for="oneUser in usersInTeams" :key="oneUser.id">
@@ -119,6 +122,7 @@ import userStatisticsDown from "@/assets/svg/manager/userStatisticsDown.svg?inli
 import userStatisticsUp from "@/assets/svg/manager/userStatisticsUp.svg?inline";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import Loader from "@/components/Loader.vue";
+import Info from "@/assets/svg/manager/info.svg?inline";
 import {
   USERS_IN_TEAMS_QUERY,
   GET_POINTS_OPERATION_QUERY,
@@ -130,7 +134,8 @@ export default {
     userStatisticsDown,
     userStatisticsUp,
     breadcrumbs,
-    Loader
+    Loader,
+    Info
   },
   data() {
     return {
@@ -255,5 +260,16 @@ export default {
   height: 40vh;
   padding-top: calc(20vh - 100px);
   position: relative;
+}
+
+.stub {
+  display: flex;
+  height: 75vh;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+.stub p {
+  margin-top: 20px;
 }
 </style>
