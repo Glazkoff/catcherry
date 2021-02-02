@@ -194,7 +194,10 @@
                 <label for="gender" class="form-name ">{{
                   $t("gender")
                 }}</label>
-                <select v-model.trim="$v.userEditData.gender.$model">
+                <select
+                  class="form-control"
+                  v-model.trim="$v.userEditData.gender.$model"
+                >
                   <option> {{ $t("male") }} </option>
                   <option> {{ $t("female") }} </option>
                   <option> {{ $t("notIndicated") }} </option>
