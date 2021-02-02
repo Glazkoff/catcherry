@@ -194,34 +194,11 @@
                 <label for="gender" class="form-name ">{{
                   $t("gender")
                 }}</label>
-                <div class="form_radio">
-                  <input
-                    type="radio"
-                    name="male"
-                    :value="$t('male')"
-                    v-model.trim="$v.userEditData.gender.$model"
-                  />
-                  <label for="male">{{ $t("male") }}</label>
-                </div>
-
-                <div class="form_radio">
-                  <input
-                    type="radio"
-                    name="female"
-                    :value="$t('female')"
-                    v-model.trim="$v.userEditData.gender.$model"
-                  />
-                  <label for="female">{{ $t("female") }}</label>
-                </div>
-                <div class="form_radio">
-                  <input
-                    type="radio"
-                    name="nothing"
-                    :value="$t('notIndicated')"
-                    v-model.trim="$v.userEditData.gender.$model"
-                  />
-                  <label for="nothing">{{ $t("notIndicated") }}</label>
-                </div>
+                <select v-model.trim="$v.userEditData.gender.$model">
+                  <option> {{ $t("male") }} </option>
+                  <option> {{ $t("female") }} </option>
+                  <option> {{ $t("notIndicated") }} </option>
+                </select>
               </div>
               <div class="form-group">
                 <label for="birthday" class="form-name">{{
