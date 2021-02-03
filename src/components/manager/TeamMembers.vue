@@ -1,14 +1,14 @@
 <template>
   <div class="container">
-    <div class="row" v-if="this.$apollo.queries.usersInTeams.loading">
-      <div class="col-12" wrapOfLoader>
-        <Loader></Loader>
-      </div>
-    </div>
-    <div class="row" v-else>
+    <div class="row">
       <div class="col-12">
         <BreadCrumbs></BreadCrumbs>
       </div>
+    </div>
+    <div class="container" v-if="this.$apollo.queries.usersInTeams.loading">
+      <Loader></Loader>
+    </div>
+    <div class="row" v-else>
       <div class="col-12">
         <input
           v-model.trim="findString"

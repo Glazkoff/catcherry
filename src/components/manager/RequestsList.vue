@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row" v-if="this.$apollo.loading">
       <div class="col-12 wrapOfLoader">
-        <loader></loader>
+        <Loader></Loader>
       </div>
     </div>
     <div class="row" v-if="!this.$apollo.loading">
       <div class="col-12">
-        <breadcrumbs></breadcrumbs>
+        <BreadCrumbs></BreadCrumbs>
       </div>
     </div>
     <div class="row">
@@ -68,8 +68,8 @@
 
 <script>
 import Minialert from "@/components/MiniAlert.vue";
-import breadcrumbs from "@/components/BreadCrumbs.vue";
-import loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import Loader from "@/components/Loader.vue";
 import Stub from "@/components/Stub.vue";
 
 import {
@@ -112,8 +112,8 @@ export default {
   },
   components: {
     Minialert,
-    breadcrumbs,
-    loader,
+    BreadCrumbs,
+    Loader,
     Stub
   },
   methods: {

@@ -1,55 +1,53 @@
 <template>
   <div>
-    <div class="container">
-      <form
-        action=""
-        @submit="$emit('update', name, description, parseInt(maxUsersLimit))"
-      >
-        <div class="form-group col-5">
-          <div class="form-name">
-            <label for="name">{{ $t("nameInanimate") }}</label>
-          </div>
-          <input
-            type="text"
-            name="name"
-            class="form-control"
-            :placeholder="$t('nameInanimate')"
-            v-model="name"
-          />
+    <form
+      action=""
+      @submit="$emit('update', name, description, parseInt(maxUsersLimit))"
+    >
+      <div class="form-group">
+        <div class="form-name">
+          <label for="name">{{ $t("nameInanimate") }}</label>
         </div>
-        <div class="form-group col-8">
-          <div class="form-name">
-            <label for="description">{{ $t("description") }}</label>
-          </div>
-          <textarea
-            name="description"
-            class="form-control"
-            id=""
-            cols="10"
-            rows="5"
-            :placeholder="$t('description')"
-            v-model="description"
-          ></textarea>
-        </div>
-        <div class="form-group col-5">
-          <div class="form-name">
-            <label for="maxUsersLimit">{{ $t("numberOfParticipants") }}</label>
-          </div>
-          <input
-            type="number"
-            name="maxUsersLimit"
-            class="form-control"
-            :placeholder="$t('numberOfParticipants')"
-            v-model="maxUsersLimit"
-          />
-        </div>
-        <button type="submit" class="btn btn-alternate col-3 marginB">
-          {{ $t("save") }}
-        </button>
-      </form>
-      <div class="col-12">
-        <small>Последнее редактирование: {{ $d(t.updatedAt, "short") }} </small>
+        <input
+          type="text"
+          name="name"
+          class="form-control"
+          :placeholder="$t('nameInanimate')"
+          v-model="name"
+        />
       </div>
+      <div class="form-group">
+        <div class="form-name">
+          <label for="description">{{ $t("description") }}</label>
+        </div>
+        <textarea
+          name="description"
+          class="form-control"
+          id=""
+          cols="10"
+          rows="5"
+          :placeholder="$t('description')"
+          v-model="description"
+        ></textarea>
+      </div>
+      <div class="form-group">
+        <div class="form-name">
+          <label for="maxUsersLimit">{{ $t("numberOfParticipants") }}</label>
+        </div>
+        <input
+          type="number"
+          name="maxUsersLimit"
+          class="form-control"
+          :placeholder="$t('numberOfParticipants')"
+          v-model="maxUsersLimit"
+        />
+      </div>
+      <button type="submit" class="btn btn-alternate col-3 marginB">
+        {{ $t("save") }}
+      </button>
+    </form>
+    <div>
+      <small>Последнее редактирование: {{ $d(t.updatedAt, "short") }} </small>
     </div>
   </div>
 </template>

@@ -1,51 +1,61 @@
 <template>
-  <div class="main_rating">
-    <breadcrumbs></breadcrumbs>
-    <h2>{{ $t("ratingOfTeamMembers.ratingOfTeamMembers") }}</h2>
-    <div v-if="$apollo.queries.usersInTeams.loading" class="wrapOfLoader">
-      <loader></loader>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+          <h2>{{ $t("ratingOfTeamMembers.ratingOfTeamMembers") }}</h2>
+        </div>
+      </div>
     </div>
-    <div v-if="usersInTeams == null">
+    <div v-if="$apollo.queries.usersInTeams.loading" class="container">
+      <Loader></Loader>
+    </div>
+    <div v-if="usersInTeams == null" class="container">
       <div class="stub">
         <Info></Info>
         <p>В команде пока нет участников!</p>
       </div>
     </div>
-    <div>
-      <div v-for="oneUser in usersInTeams" :key="oneUser.id">
-        <div
-          class="card"
-          :class="{
-            bigCard: isShowFullInformation && oneUser.user.id === userId
-          }"
-        >
-          <div class="card_img">
-            <img src="~@/assets/avatar.jpg" />
-          </div>
-          <div class="card_body">
-            <p>
-              {{ oneUser.user.surname }} {{ oneUser.user.name }}
-              {{ oneUser.user.patricity }}
-            </p>
-            <p>Пользователь</p>
-          </div>
+    <div v-for="oneUser in usersInTeams" :key="oneUser.id" class="container">
+      <div class="container">
+        <div class="row">
           <div
-            @click="showFullInformation(oneUser)"
-            class="card_action"
-            v-if="oneUser.user.id !== userId"
+            class="card col-12"
+            :class="{
+              bigCard: isShowFullInformation && oneUser.user.id === userId
+            }"
           >
-            <ArrowRight></ArrowRight>
-          </div>
-          <div
-            @click="closeFullInformation()"
-            class="card_action"
-            v-if="isShowFullInformation && oneUser.user.id === userId"
-          >
-            <ArrowRight class="rotate"></ArrowRight>
+            <div class="card_img">
+              <img src="~@/assets/avatar.jpg" />
+            </div>
+            <div class="card_body">
+              <p>
+                {{ oneUser.user.surname }} {{ oneUser.user.name }}
+                {{ oneUser.user.patricity }}
+              </p>
+              <p>Пользователь</p>
+            </div>
+            <div
+              @click="showFullInformation(oneUser)"
+              class="card_action"
+              v-if="oneUser.user.id !== userId"
+            >
+              <ArrowRight></ArrowRight>
+            </div>
+            <div
+              @click="closeFullInformation()"
+              class="card_action"
+              v-if="isShowFullInformation && oneUser.user.id === userId"
+            >
+              <ArrowRight class="rotate"></ArrowRight>
+            </div>
           </div>
         </div>
+      </div>
+      <div class="container">
         <div
-          class="card_more"
+          class="col-12"
           v-if="
             $apollo.loading &&
               isShowFullInformation &&
@@ -55,7 +65,7 @@
           {{ $t("loading") }}...
         </div>
         <div
-          class="card_more"
+          class="card_more col-12"
           v-if="
             isShowFullInformation &&
               oneUser.user.id === userId &&
@@ -75,9 +85,11 @@
             </p>
           </div>
           <div>
-            <h3>{{ $t("ratingOfTeamMembers.statistics") }}</h3>
-            <div class="statistics">
-              <div>
+            <div class="row">
+              <h3 class="col-12">{{ $t("ratingOfTeamMembers.statistics") }}</h3>
+            </div>
+            <div class="row">
+              <div class="col-6">
                 <p>{{ $t("ratingOfTeamMembers.forTheCurrentWeek") }}:</p>
                 <p
                   class="points_now"
@@ -103,7 +115,7 @@
                   чем за предыдущую неделю
                 </small>
               </div>
-              <div>
+              <div class="col-6">
                 <p>{{ $t("ratingOfTeamMembers.lastWeek") }}:</p>
                 <p v-if="pointsLastWeek !== null" class="points_now">
                   {{ $tc("pointsMsg", pointsLastWeek[1]) }}
@@ -120,7 +132,7 @@
 import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import userStatisticsDown from "@/assets/svg/manager/userStatisticsDown.svg?inline";
 import userStatisticsUp from "@/assets/svg/manager/userStatisticsUp.svg?inline";
-import breadcrumbs from "@/components/BreadCrumbs.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Loader from "@/components/Loader.vue";
 import Info from "@/assets/svg/manager/info.svg?inline";
 import {
@@ -133,7 +145,7 @@ export default {
     ArrowRight,
     userStatisticsDown,
     userStatisticsUp,
-    breadcrumbs,
+    BreadCrumbs,
     Loader,
     Info
   },
@@ -185,6 +197,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 .form-control {
   display: inline-block;
 }
@@ -248,9 +261,6 @@ export default {
 }
 
 .statistics {
-  display: grid;
-  grid-template-columns: 47% 47%;
-  grid-column-gap: 6%;
 }
 .wrapOfLoader {
   overflow: hidden;

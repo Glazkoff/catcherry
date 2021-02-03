@@ -3,14 +3,16 @@
     <div class="row">
       <div v-if="!this.$apollo.loading">
         <div class="col-12">
-          <breadcrumbs></breadcrumbs>
+          <BreadCrumbs></BreadCrumbs>
         </div>
         <form @submit.prevent="editTeam()" class="col-12">
           <p class="gray mb-4">
             {{ $t("team.lastedited") }}: {{ $d(oneTeam.updatedAt, "long") }}
           </p>
           <div class="form-group">
-            <label for="name" class="form-name">{{ $t("nameInanimate") }}</label>
+            <label for="name" class="form-name">{{
+              $t("nameInanimate")
+            }}</label>
             <input
               name="name"
               v-model.trim="$v.oneTeam.name.$model"
@@ -25,7 +27,9 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="description" class="form-name">{{ $t("description") }}</label>
+            <label for="description" class="form-name">{{
+              $t("description")
+            }}</label>
             <textarea
               name="description"
               v-model.trim="$v.oneTeam.description.$model"
@@ -84,7 +88,7 @@
           </p></minialert
         >
       </div>
-      <div v-else class="wrapOfLoader"><loader></loader></div>
+      <div v-else class="container"><Loader></Loader></div>
     </div>
     <div class="container" v-if="!this.$apollo.loading">
       <div v-for="t in team" :key="t.id">
@@ -93,14 +97,14 @@
         </div>
       </div>
     </div>
-    <div v-else class="container"><loader></loader></div>
+    <div v-else class="container"><Loader></Loader></div>
   </div>
 </template>
 
 <script>
 import { UPDATE_TEAM_QUERY, TEAM_QUERY } from "@/graphql/queries";
-import breadcrumbs from "@/components/BreadCrumbs.vue";
-import loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import Loader from "@/components/Loader.vue";
 import { required, numeric } from "vuelidate/lib/validators";
 import minialert from "@/components/MiniAlert.vue";
 export default {
@@ -125,8 +129,8 @@ export default {
     };
   },
   components: {
-    breadcrumbs,
-    loader,
+    BreadCrumbs,
+    Loader,
     minialert
   },
   validations: {
