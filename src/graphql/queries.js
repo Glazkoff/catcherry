@@ -147,11 +147,9 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
   query($userId: ID!) {
     oneUserInTeams(userId: $userId) {
       id
-      userId
-      teamId
       status
-      roleId
       role {
+        id
         name
       }
       user {
@@ -160,35 +158,7 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
         surname
         patricity
       }
-      team {
-        id
-        name
-        organization {
-          id
-          name
-        }
-      }
-    }
-  }
-`;
-export const ONE_USER_IN_TEAM_QUERY = gql`
-  query($userId: ID!, $teamId: ID!) {
-    oneUserInTeam(userId: $userId, teamId: $teamId) {
-      id
-      userId
-      teamId
-      status
-      roleId
-      role {
-        name
-      }
-      user {
-        id
-        name
-        surname
-        patricity
-      }
-      team {
+      usersInTeam {
         id
         name
         organization {
@@ -281,9 +251,18 @@ export const ORGS_QUERY = gql`
     organizations {
       id
       name
-      ownerId
-      organizationTypeId
       maxTeamsLimit
+      createdAt
+      organizationType {
+        id
+        name
+      }
+      owner {
+        id
+        surname
+        name
+        patricity
+      }
     }
   }
 `;
@@ -296,28 +275,19 @@ export const USER_ORG_QUERY = gql`
   }
 `;
 
-export const ORG_TYPES_QUERY = gql`
-  query {
-    organizationTypes {
-      id
-      name
-    }
-  }
-`;
-
 export const ONE_ORG_QUERY = gql`
   query($id: ID!) {
     organization(id: $id) {
       id
       name
-      ownerId
-      organizationTypeId
       maxTeamsLimit
       createdAt
       organizationType {
+        id
         name
       }
       owner {
+        id
         surname
         name
         patricity
@@ -342,13 +312,17 @@ export const TEAMS_QUERY = gql`
 
 export const TEAM_IN_ORG_QUERY = gql`
   query($organizationId: Int) {
-    team(organizationId: $organizationId) {
+    teamsInOrganization(organizationId: $organizationId) {
       id
-      organizationId
       name
       description
       maxUsersLimit
-      updatedAt
+      usersInTeam {
+        status
+        user {
+          id
+        }
+      }
     }
   }
 `;
@@ -402,10 +376,7 @@ export const USERS_IN_TEAMS_QUERY = gql`
   query($teamId: ID!) {
     usersInTeams(teamId: $teamId) {
       id
-      userId
-      teamId
       status
-      roleId
       user {
         id
         name
@@ -423,7 +394,7 @@ export const MANAGER_TEAMS_QUERY = gql`
   query($userId: ID!) {
     managerTeams(userId: $userId) {
       id
-      team {
+      usersInTeam {
         id
         name
       }

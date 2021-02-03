@@ -8,47 +8,7 @@
       </div>
     </div>
     <!-- попап для просмотра информации об организации -->
-    
-    <div class="container">
-      <div class="container">
-        <!-- строка поиска организаций  -->
-        <div class="row d-flex">
-          <button class="formSearchIcon col-1-sm">
-            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
-          ><input
-            v-model="findString"
-            type="text"
-            placeholder="Введите название организации, которую вы хотите найти"
-            class="formSearch col-12"
-          />
-        </div>
-        <!-- вывод массива всех организаций  -->
-
-        <div
-          class="card"
-          v-for="organization in filterOrganization"
-          :key="organization.id"
-        >
-          <a class="orgFoto"></a>
-          <div class="card_body">
-            <h3>{{ organization.name }}</h3>
-            <small>№ {{ organization.id }}</small>
-          </div>
-          <div class="card_action" @click="showFullInformation(organization)"
-              >
-            <ArrowRight
-            ></ArrowRight>
-          </div>
-          <div
-            @click="closeFullInformation()"
-            class="card_action"
-            v-if="isShowFullInformation"
-          >
-            <ArrowRight class="rotate"></ArrowRight>
-          </div>
-
-
-<div v-if="isShowFullInformation">
+    <popup v-if="isShowInfoModal">
       <h2 slot="header">Организация "{{ nameOfOrganization }}"</h2>
       <div slot="body">
         {{ oneOrganization.name }}
@@ -58,60 +18,85 @@
         <h3>Команды</h3>
         <!-- список команд в организации -->
         <div class="row d-flex">
-          <button class="formSearchIcon col-1-sm">
-            <SearchIcon class="formSearchIconSvg"></SearchIcon></button
-          ><input
-            v-model="findTeam"
+          <input
+            v-model.trim="findTeam"
             type="text"
-            placeholder="Введите название организации, которую вы хотите найти"
-            class="formSearch col-12"
+            placeholder="Введите название команды, которую вы хотите найти"
+            class="form-control block find dark"
           />
         </div>
-        <div v-if="team == null">
+        <div v-if="!teamsInOrganization">
           <h5>В организации пока нет ни одной команды</h5>
         </div>
         <div v-else>
-          <div>
-            <div class="oneTeam" v-for="teamUs in filterTeam" :key="teamUs.id">
-              <p>№{{ teamUs.id }}</p>
-              <p>
-                <b>{{ teamUs.name }}</b>
-              </p>
-              <span>{{ teamUs.description }}</span>
-<button class="btn btn-link" @click="requestInTeam(teamUs.id)">
+          <div class="oneTeam" v-for="team in filterTeam" :key="team.id">
+            <p>
+              <b>{{ team.name }}</b>
+            </p>
+            <span>{{ team.description }}</span>
+            <div v-if="checkStatusUser(team) == -1">
+              <button class="btn btn-link" @click="requestInTeam(team.id)">
                 Подать заявку
               </button>
-              
             </div>
           </div>
         </div>
       </div>
-      <!-- <div slot="footer">
+      <div slot="footer">
         <button
           class="modal-default-button btn btn-secondary"
           @click="isShowInfoModal = false"
         >
           Закрыть
         </button>
-      </div> -->
-    </div>
+      </div>
+    </popup>
     <minialert v-if="isShowAlertAddReq"
       ><p slot="title">Заявка в команду успешно подана</p></minialert
     >
-
-
-
-
-
-
+    <div class="container">
+      <div class="container">
+        <!-- строка поиска организаций  -->
+        <div class="row d-flex">
+          <input
+            v-model.trim="findString"
+            type="text"
+            placeholder="Введите название организации, которую вы хотите найти"
+            class="form-control block find dark"
+          />
         </div>
-
+        <!-- вывод массива всех организаций  -->
+        <div
+          class="card"
+          v-for="organization in filterOrganization"
+          :key="organization.id"
+        >
+          <a class="orgFoto"></a>
+          <div class="card_body">
+            <h3>{{ organization.name }}</h3>
+            <small
+              >Владелец: {{ organization.owner.surname }}
+              {{ organization.owner.name }}
+              {{ organization.owner.patricity }}</small
+            >
+          </div>
+          <div class="card_action">
+            <ArrowRight
+              @click="showModalEdit(organization)"
+              class="btn-link"
+            ></ArrowRight>
+          </div>
+        </div>
         <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
         <div class="organizationNotSearch" v-if="filterOrganization == ''">
-          <h3>Организации не найдены</h3>
-          <button class="btn btn-primary" @click="isAddOrganization = true">
-            Создать
-          </button>
+          <Stub>
+            <div slot="body">
+              <h3 class="mb-4">Организации не найдены</h3>
+              <button class="btn btn-primary" @click="isAddOrganization = true">
+                Создать
+              </button>
+            </div>
+          </Stub>
         </div>
       </div>
     </div>
@@ -131,6 +116,7 @@
             v-model.trim="$v.name.$model"
             placeholder="Организация 'Техностек'"
             class="form-control form-text"
+            :class="{ is_invalid: $v.name.$error }"
           />
           <div v-if="$v.name.$error" class="error">
             <span v-if="!$v.name.required">Organization name is required</span>
@@ -138,19 +124,6 @@
               >Organization name accepts only alphabet characters.</span
             >
           </div>
-          <br />
-          <label>Руководитель организации</label><br />
-          <input
-            :disabled="signUpLoading"
-            type="number"
-            v-model.trim="$v.ownerId.$model"
-            placeholder="Owner ID"
-            class="form-control form-text"
-          />
-          <div v-if="$v.ownerId.$error" class="error">
-            <span v-if="!$v.ownerId.required">Owner is required</span>
-          </div>
-          <br />
           <!-- тип орагизации должен выводиться из таблицы organizationTypes -->
           <label>Тип организации</label><br />
           <input
@@ -159,6 +132,7 @@
             v-model.trim="$v.organizationTypeId.$model"
             placeholder="Organization type"
             class="form-control form-text"
+            :class="{ is_invalid: $v.organizationTypeId.$error }"
           />
           <div v-if="$v.organizationTypeId.$error" class="error">
             <span v-if="!$v.organizationTypeId.required"
@@ -204,14 +178,12 @@
 <script>
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
-import SearchIcon from "@/assets/svg/organizations/search_organization.svg?inline";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
+import Stub from "@/components/Stub.vue";
 import {
   ORGS_QUERY,
-  ONE_ORG_QUERY,
   CREATE_ORGANIZATION,
-  TEAMS_QUERY,
   TEAM_IN_ORG_QUERY,
   CREATE_USER_IN_TEAM
 } from "@/graphql/queries";
@@ -219,21 +191,20 @@ import { required } from "vuelidate/lib/validators";
 import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
-  components: { popup, minialert, SearchIcon, ArrowRight, BreadCrumbs },
+  components: { popup, minialert, ArrowRight, BreadCrumbs, Stub },
   data() {
     return {
-      isShowFullInformation: false,
       findString: "",
       findTeam: "",
       search: 0,
       oneOrganization: {},
       nameOfOrganization: "",
       tabFirst: true,
+      isShowInfoModal: false,
       isShowAlertAdd: false,
       isShowAlertAddReq: false,
       isAddOrganization: false,
       name: "",
-      ownerId: 124,
       organizationId: 7,
       organizationTypeId: 1,
       maxTeamsLimit: 1,
@@ -245,34 +216,12 @@ export default {
     organizations: {
       query: ORGS_QUERY
     },
-    // TODO: ПЕРЕДЕЛАТЬ!
-    // массив информации об одной организации
-    organization: {
-      query: ONE_ORG_QUERY,
-      variables() {
-        return {
-          id: this.$store.getters.decodedToken.id
-        };
-      }
-    },
-    // массив всех команд
-    teams: {
-      query: TEAMS_QUERY
-    },
     // массив команд, находящихся в организации
-    team: {
+    teamsInOrganization: {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
           organizationId: this.organizationId
-        };
-      }
-    },
-    oneUserInTeams: {
-      query: ONE_USER_IN_TEAMS_QUERY,
-      variables() {
-        return {
-          userId: this.$store.getters.decodedToken.id
         };
       }
     }
@@ -295,18 +244,30 @@ export default {
   },
   methods: {
     // метод корректного отображения информации об организации в попапе
-    showFullInformation(organization) {
+    showModalEdit(organization) {
       (this.nameOfOrganization = organization.name),
-        (this.isshowFullInformation = true);
+        (this.isShowInfoModal = true);
       this.index = this.organizations.findIndex(
         el => el.id === organization.id
       );
       this.oneOrganization = Object.assign(this.oneOrganization, organization);
       this.organizationId = parseInt(organization.id);
-      console.log(this.isshowFullInformation)
     },
-    closeFullInformation() {
-      this.isShowFullInformation = false;
+    checkStatusUser(team) {
+      console.log(
+        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
+      );
+      console.log(team.usersInTeam);
+      if (team.usersInTeam != null || team.usersInTeam != undefined) {
+        return team.usersInTeam.findIndex(el => {
+          console.log(el + "AAAAAAAAAAA");
+          if (el != null || el != undefined) {
+            if (el.user != null || el.user != undefined) {
+              return el.user.id == this.idUser;
+            } else return false;
+          } else return false;
+        });
+      } else return -1;
     },
     submit() {
       // создание новой организации
@@ -315,7 +276,7 @@ export default {
           mutation: CREATE_ORGANIZATION,
           variables: {
             name: this.name,
-            ownerId: parseInt(this.ownerId),
+            ownerId: this.$store.getters.decodedToken.id,
             organizationTypeId: this.organizationTypeId,
             maxTeamsLimit: this.maxTeamsLimit
           },
@@ -356,20 +317,45 @@ export default {
       this.$apollo.mutate({
         mutation: CREATE_USER_IN_TEAM,
         variables: {
-          userId: this.$route.params.id,
+          userId: this.idUser,
           teamId: teamId,
-          status: "Не принят",
-          roleId: this.$route.params.id //FIXME: определить начальную роль при подаче заявки
+          status: "На рассмотрении",
+          roleId: 1 //FIXME: определить начальную роль при подаче заявки
         },
-        update: (cache, { data: { createUserInTeam } }) => {
+        // update: (cache, { data: { createUserInTeam } }) => {
+        //   let data = cache.readQuery({
+        //     query: ONE_USER_IN_TEAMS_QUERY,
+        //     variables: { userId: this.idUser }
+        //   });
+        //   this.teamsInOrganization.push(createUserInTeam);
+        //   cache.writeQuery({
+        //     query: ONE_USER_IN_TEAMS_QUERY,
+        //     variables: { userId: this.idUser },
+        //     data
+        //   });
+        // }
+        update: cache => {
           let data = cache.readQuery({
             query: ONE_USER_IN_TEAMS_QUERY,
-            variables: { userId: this.$route.params.id }
+            variables: {
+              userId: this.idUser
+            }
           });
-          data.oneUserInTeams.push(createUserInTeam);
+          data.oneUserInTeams.push({
+            userId: this.idUser,
+            usersInTeam: {
+              id: teamId
+            },
+            status: "На рассмотрении",
+            role: {
+              id: 1
+            }
+          });
           cache.writeQuery({
             query: ONE_USER_IN_TEAMS_QUERY,
-            variables: { userId: this.$route.params.id },
+            variables: {
+              userId: this.idUser
+            },
             data
           });
         }
@@ -396,17 +382,19 @@ export default {
         return this.organizations;
       }
     },
-    // поиск организации по ее номеру
+    idUser() {
+      return this.$store.getters.decodedToken.id;
+    },
     filterTeam() {
       if (this.findTeam !== "") {
-        return this.team.filter(el => {
+        return this.teamsInOrganization.filter(el => {
           return (
             el.name.toLowerCase().indexOf(this.findTeam.toLowerCase()) !== -1 &&
             el.name !== ""
           );
         });
       } else {
-        return this.team;
+        return this.teamsInOrganization;
       }
     }
   }

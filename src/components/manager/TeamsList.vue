@@ -13,13 +13,13 @@
               v-for="team in managerTeams"
               :key="team.id"
               class="card"
-              @click="onLink(team.team.id)"
+              @click="onLink(team.usersInTeam.id)"
             >
               <div class="card_img">
                 <img src="../../assets/avatar.jpg" />
               </div>
               <div class="card_body">
-                <h3>{{ team.team.name }}</h3>
+                <h3>{{ team.usersInTeam.name }}</h3>
               </div>
               <div class="card_action">
                 <ArrowRight></ArrowRight>

@@ -185,30 +185,20 @@ module.exports = {
           { model: db.Users, as: "user" },
           {
             model: db.Teams,
-            as: "team",
-            include: [{ model: db.Organizations, as: "organization" }]
-          }
-        ]
-      }),
-    //Получаем данные пользователя в конкретной команде
-    oneUserInTeam: (parent, args, { db }) =>
-      db.UsersInTeams.findAll({
-        where: { userId: args.userId },
-        order: [["id", "ASC"]],
-        include: [
-          { model: db.Roles, as: "role" },
-          { model: db.Users, as: "user" },
-          {
-            model: db.Teams,
-            as: "team",
-            where: { id: args.teamId },
+            as: "usersInTeam",
             include: [{ model: db.Organizations, as: "organization" }]
           }
         ]
       }),
     // Получаем список всех организаций
     organizations: (parent, args, { db }) =>
-      db.Organizations.findAll({ order: [["id", "ASC"]] }),
+      db.Organizations.findAll({
+        order: [["id", "ASC"]],
+        include: [
+          { model: db.OrganizationsTypes, as: "organizationType" },
+          { model: db.Users, as: "owner" }
+        ]
+      }),
     // Получаем информацию про одну организацию + тип организации + владелец организации
     organization: (parent, args, { db }) => {
       return db.Organizations.findOne({
@@ -233,20 +223,28 @@ module.exports = {
         include: [
           {
             model: db.Teams,
-            as: "team",
+            as: "usersInTeam",
             include: [{ model: db.Organizations, as: "organization" }]
           }
         ]
       }),
-    // Получаем список всех типов организации
-    organizationTypes: (parent, args, { db }) =>
-      db.OrganizationsTypes.findAll({ order: [["id", "ASC"]] }),
     teams: (parent, args, { db }) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
     // Команды в организации
-    team: (parent, args, { db }) => {
+    teamsInOrganization: (parent, args, { db }) => {
       return db.Teams.findAll({
-        where: { organizationId: args.organizationId }
+        where: { organizationId: args.organizationId },
+        include: [
+          { model: db.Organizations, as: "organization" },
+          {
+            model: db.UsersInTeams,
+            as: "usersInTeam",
+            include: [
+              { model: db.Users, as: "user" },
+              { model: db.Roles, as: "role" }
+            ]
+          }
+        ]
       });
     },
     oneTeam: (parent, args, { db }) => {
@@ -361,14 +359,21 @@ module.exports = {
     comment: (parent, args, { db }) =>
       db.Comments.findOne({ where: { id: args.id } }),
     // Получения списка всех участников команжы
-    usersInTeams: (parent, { teamId }, { db }) =>
+    usersInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
-        where: { status: "Принят", teamId: teamId },
-        order: [["id", "ASC"]],
+        where: {
+          status: "Принят",
+          "$team.id$": +args.teamId
+        },
         include: [
+          {
+            model: db.Teams,
+            as: "team"
+          },
           { model: db.Users, as: "user" },
           { model: db.Roles, as: "role" }
-        ]
+        ],
+        order: [["id", "ASC"]]
       }),
     raitingInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
