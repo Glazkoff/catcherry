@@ -48,6 +48,8 @@
             <label for="text" class="form-name white">
               {{ $t("taskConstructor.responsible") }}
             </label>
+
+            <v-select multiple :options="usersInTeams"></v-select>
             <select
               class="form-control dark col-8"
               v-model="$v.newTask.userId.$model"
@@ -115,13 +117,14 @@ import { required, numeric } from "vuelidate/lib/validators";
 import minialert from "@/components/MiniAlert.vue";
 import breadcrumbs from "@/components/BreadCrumbs.vue";
 import loader from "@/components/Loader.vue";
+import vSelect from 'vue-select';
 import {
   USERS_IN_TEAMS_QUERY,
   ADD_TASK_QUERY,
   ALL_TASKS_IN_TEAM_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, breadcrumbs, loader },
+  components: { minialert, breadcrumbs, loader,vSelect},
   apollo: {
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
@@ -142,6 +145,14 @@ export default {
         userId: null,
         teamId: this.$route.params.id
       },
+      usersInTeams: {
+      query: USERS_IN_TEAMS_QUERY,
+      variables() {
+        return {
+          teamId: this.$route.params.id
+        };
+      }
+    },
       isShowAlert: false,
       isShowAlertError: false,
       loading: false
@@ -225,6 +236,7 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_grid.scss";
+@import "vue-select/src/scss/vue-select.scss";
 textarea {
   resize: none;
   height: 10rem;
