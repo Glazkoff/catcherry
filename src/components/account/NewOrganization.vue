@@ -32,28 +32,31 @@
             <!-- тип орагизации должен выводиться из таблицы organizationTypes -->
             <div class="form-group">
               <label class="form-name white">Тип организации</label><br />
-              <input
+              <select
                 type="number"
                 :disabled="signUpLoading"
                 v-model.trim="$v.organizationTypeId.$model"
                 placeholder="Organization type"
                 class="form-control col-8 dark"
                 :class="{ is_invalid: $v.organizationTypeId.$error }"
-              />
+              >
+                <option value="1">ИТ-компания</option>
+                <option value="2">Образовательная организация</option></select
+              >
               <div v-if="$v.organizationTypeId.$error" class="error">
                 <span v-if="!$v.organizationTypeId.required"
                   >Type of organization is required</span
                 >
               </div>
             </div>
-            <div class="form-group">
+            <div class="form-group points_task">
               <label class="form-name white">Количество команд</label><br />
               <input
                 :disabled="signUpLoading"
                 type="number"
                 v-model.trim="$v.maxTeamsLimit.$model"
                 placeholder="Limit"
-                class="form-control col-8 dark"
+                class="form-control white"
               />
               <div v-if="$v.maxTeamsLimit.$error" class="error">
                 <span v-if="!$v.maxTeamsLimit.required"
@@ -61,12 +64,14 @@
                 >
               </div>
             </div>
-            <input
-              :disabled="signUpLoading"
-              type="submit"
-              class="btn btn-primary col-8"
-              value="Зарегистрировать организацию"
-            /><br />
+            <div class="form-group">
+              <input
+                :disabled="signUpLoading"
+                type="submit"
+                class="btn btn-primary col-8"
+                value="Зарегистрировать организацию"
+              />
+            </div>
           </form>
         </div>
       </div>
@@ -125,8 +130,8 @@ export default {
           variables: {
             name: this.name,
             ownerId: this.$store.getters.decodedToken.id,
-            organizationTypeId: this.organizationTypeId,
-            maxTeamsLimit: this.maxTeamsLimit
+            organizationTypeId: +this.organizationTypeId,
+            maxTeamsLimit: +this.maxTeamsLimit
           },
           update: (cache, { data: { createOrganization } }) => {
             let data = cache.readQuery({ query: ORGS_QUERY });
@@ -164,4 +169,28 @@ export default {
 };
 </script>
 
-<style></style>
+<style lang="scss" scoped>
+@import "@/styles/_classes.scss";
+@import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_grid.scss";
+textarea {
+  resize: none;
+  height: 10rem;
+}
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  /* display: none; <- Crashes Chrome on hover */
+  -webkit-appearance: none;
+  margin: 0; /* <-- Apparently some margin are still there even though it's hidden */
+}
+.points_task input {
+  width: 10rem;
+  height: 55px;
+  background: $dark_blue !important;
+  border: 0px solid $violet_2 !important;
+  border-bottom: 1px solid $bright_violet !important;
+  box-shadow: 0px 0px 0px 0px !important;
+  border-radius: 0px !important;
+}
+</style>
