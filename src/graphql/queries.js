@@ -158,7 +158,22 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
         surname
         patricity
       }
-      usersInTeam {
+      team {
+        id
+        name
+        organization {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+export const USER_IN_ONE_ORGANIZATION_QUERY = gql`
+  query($userId: ID!) {
+    userInOneOrganization(userId: $userId) {
+      id
+      team {
         id
         name
         organization {
@@ -394,7 +409,7 @@ export const MANAGER_TEAMS_QUERY = gql`
   query($userId: ID!) {
     managerTeams(userId: $userId) {
       id
-      usersInTeam {
+      team {
         id
         name
       }

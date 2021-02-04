@@ -185,7 +185,19 @@ module.exports = {
           { model: db.Users, as: "user" },
           {
             model: db.Teams,
-            as: "usersInTeam",
+            as: "team",
+            include: [{ model: db.Organizations, as: "organization" }]
+          }
+        ]
+      }),
+    // Получаем данные об организации, в которой состоит пользователь
+    userInOneOrganization: (parent, args, { db }) =>
+      db.UsersInTeams.findOne({
+        where: { userId: args.userId },
+        include: [
+          {
+            model: db.Teams,
+            as: "team",
             include: [{ model: db.Organizations, as: "organization" }]
           }
         ]
@@ -223,7 +235,7 @@ module.exports = {
         include: [
           {
             model: db.Teams,
-            as: "usersInTeam",
+            as: "team",
             include: [{ model: db.Organizations, as: "organization" }]
           }
         ]

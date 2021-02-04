@@ -61,7 +61,7 @@
           <input
             v-model.trim="findString"
             type="text"
-            placeholder="Введите название организации, которую вы хотите найти"
+            placeholder="Введите название организации, которую вы хотите найти, или имя ее владельца"
             class="form-control block find dark"
           />
         </div>
@@ -192,10 +192,10 @@ import {
   ORGS_QUERY,
   CREATE_ORGANIZATION,
   TEAM_IN_ORG_QUERY,
-  CREATE_USER_IN_TEAM
+  CREATE_USER_IN_TEAM,
+  USER_IN_ONE_ORGANIZATION_QUERY
 } from "@/graphql/queries";
 import { required } from "vuelidate/lib/validators";
-import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
   components: { popup, minialert, ArrowRight, BreadCrumbs, Stub },
@@ -212,10 +212,11 @@ export default {
       isShowAlertAddReq: false,
       isAddOrganization: false,
       name: "",
-      organizationId: 7,
+      organizationId: 0,
       organizationTypeId: 1,
       maxTeamsLimit: 1,
-      signUpLoading: false
+      signUpLoading: false,
+      consistOrganization: -1
     };
   },
   apollo: {
@@ -229,6 +230,14 @@ export default {
       variables() {
         return {
           organizationId: this.organizationId
+        };
+      }
+    },
+    userInOneOrganization: {
+      query: USER_IN_ONE_ORGANIZATION_QUERY,
+      variables() {
+        return {
+          userId: this.idUser
         };
       }
     }
@@ -261,13 +270,8 @@ export default {
       this.organizationId = parseInt(organization.id);
     },
     checkStatusUser(team) {
-      console.log(
-        "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA"
-      );
-      console.log(team.usersInTeam);
       if (team.usersInTeam != null || team.usersInTeam != undefined) {
         return team.usersInTeam.findIndex(el => {
-          console.log(el + "AAAAAAAAAAA");
           if (el != null || el != undefined) {
             if (el.user != null || el.user != undefined) {
               return el.user.id == this.idUser;
@@ -321,6 +325,7 @@ export default {
     },
     // метод создания заявки в команду
     requestInTeam(teamId) {
+      this.consistOrganization = this.organizationId;
       this.$apollo.mutate({
         mutation: CREATE_USER_IN_TEAM,
         variables: {
@@ -329,39 +334,30 @@ export default {
           status: "На рассмотрении",
           roleId: 1 //FIXME: определить начальную роль при подаче заявки
         },
-        // update: (cache, { data: { createUserInTeam } }) => {
-        //   let data = cache.readQuery({
-        //     query: ONE_USER_IN_TEAMS_QUERY,
-        //     variables: { userId: this.idUser }
-        //   });
-        //   this.teamsInOrganization.push(createUserInTeam);
-        //   cache.writeQuery({
-        //     query: ONE_USER_IN_TEAMS_QUERY,
-        //     variables: { userId: this.idUser },
-        //     data
-        //   });
-        // }
         update: cache => {
           let data = cache.readQuery({
-            query: ONE_USER_IN_TEAMS_QUERY,
+            query: TEAM_IN_ORG_QUERY,
             variables: {
-              userId: this.idUser
+              organizationId: this.organizationId
             }
           });
-          data.oneUserInTeams.push({
-            userId: this.idUser,
-            usersInTeam: {
-              id: teamId
-            },
-            status: "На рассмотрении",
-            role: {
-              id: 1
-            }
-          });
+          let indexTeam = data.teamsInOrganization.findIndex(
+            el => el.id === teamId
+          );
+          if (data.teamsInOrganization[indexTeam] != null) {
+            data.teamsInOrganization[indexTeam].usersInTeam.push({
+              status: "На рассмотрении",
+              user: {
+                id: this.idUser,
+                __typename: "User"
+              },
+              __typename: "UserInTeam"
+            });
+          }
           cache.writeQuery({
-            query: ONE_USER_IN_TEAMS_QUERY,
+            query: TEAM_IN_ORG_QUERY,
             variables: {
-              userId: this.idUser
+              organizationId: this.organizationId
             },
             data
           });
@@ -378,15 +374,74 @@ export default {
   computed: {
     // фильтрация организаций поиском по названию
     filterOrganization() {
-      if (this.findString !== "") {
-        return this.organizations.filter(el => {
-          return (
-            el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
-              -1 && el.name !== ""
-          );
-        });
+      if (
+        this.consistOrganization == -1 &&
+        (this.userInOneOrganization == null ||
+          this.userInOneOrganization == undefined)
+      ) {
+        if (
+          this.findString !== "" &&
+          this.organizations != null &&
+          this.organizations != undefined
+        ) {
+          return this.organizations.filter(el => {
+            if (el.name === undefined || el.name === null) {
+              el.name = " ";
+            }
+            if (el.owner.surname === undefined || el.owner.surname === null) {
+              el.owner.surname = " ";
+            }
+            if (el.owner.name === undefined || el.owner.name === null) {
+              el.owner.name = " ";
+            }
+            if (
+              el.owner.patricity === undefined ||
+              el.owner.patricity === null
+            ) {
+              el.owner.patricity = " ";
+            }
+            return (
+              (el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+                -1 &&
+                el.name !== "") ||
+              (el.owner.surname
+                .toLowerCase()
+                .indexOf(this.findString.toLowerCase()) !== -1 &&
+                el.owner.surname !== "") ||
+              (el.owner.name
+                .toLowerCase()
+                .indexOf(this.findString.toLowerCase()) !== -1 &&
+                el.owner.name !== "") ||
+              (el.owner.patricity
+                .toLowerCase()
+                .indexOf(this.findString.toLowerCase()) !== -1 &&
+                el.owner.patricity !== "")
+            );
+          });
+        } else {
+          return this.organizations;
+        }
       } else {
-        return this.organizations;
+        if (
+          this.consistOrganization != -1 &&
+          this.organizations != null &&
+          this.organizations != undefined
+        ) {
+          return this.organizations.filter(el => {
+            return el.id == this.consistOrganization;
+          });
+        } else {
+          if (
+            this.userInOneOrganization != null &&
+            this.userInOneOrganization != undefined &&
+            this.organizations != null &&
+            this.organizations != undefined
+          ) {
+            return this.organizations.filter(el => {
+              return el.id == this.userInOneOrganization.team.organization.id;
+            });
+          } else return this.organizations;
+        }
       }
     },
     idUser() {
