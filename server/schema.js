@@ -245,6 +245,7 @@ type Query {
 
   usersInTeams (teamId:ID!):[UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   oneUserInTeams(userId: ID!): [UserInTeam!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  userInOneOrganization(userId: ID!): UserInTeam @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   raitingInTeams (teamId:ID!): [UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   personalUserStatistics(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   teamsInOneOrganization(organizationId: ID!): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
