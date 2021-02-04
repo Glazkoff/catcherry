@@ -92,8 +92,15 @@
           <Stub>
             <div slot="body">
               <h3 class="mb-4">Организации не найдены</h3>
-              <button class="btn btn-primary" @click="isAddOrganization = true">
-                Создать
+              <button class="btn btn-primary">
+                <router-link
+                  :to="{
+                    name: 'NewOrganization'
+                  }"
+                  active-class="nav-checked"
+                >
+                  Создать
+                </router-link>
               </button>
             </div>
           </Stub>

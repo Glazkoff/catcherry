@@ -197,7 +197,8 @@
     "editteam": "Edit team",
     "requestlist": "Requests",
     "newTeam": "Create team",
-    "listTeams": ""
+    "listTeams": "",
+    "newOrg": "Registration of organization"
   },
   "userAgreement": {
     "bySignUp": "By creating an account, I accept",
