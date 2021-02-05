@@ -189,7 +189,7 @@ export default {
           mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
             id: this.oneUser.id,
-            status: "Отклонен"
+            status: "Reject"
           },
           // Обновляем кеш
           update: cache => {

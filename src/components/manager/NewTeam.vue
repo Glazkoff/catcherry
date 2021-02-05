@@ -149,7 +149,7 @@ export default {
               variables: {
                 userId: this.$store.getters.decodedToken.id,
                 teamId: this.idTeam,
-                status: "Принят",
+                status: "Accept",
                 roleId: 2
               },
               update: cache => {

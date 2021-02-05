@@ -374,7 +374,7 @@ module.exports = {
     usersInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
         where: {
-          status: "Принят",
+          status: "Accept",
           "$team.id$": +args.teamId
         },
         include: [
@@ -389,7 +389,7 @@ module.exports = {
       }),
     raitingInTeams: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
-        where: { status: "Принят", teamId: teamId },
+        where: { status: "Accept", teamId: teamId },
         include: [
           {
             model: db.Users,
@@ -413,7 +413,7 @@ module.exports = {
     // Получения всех заявок на вступление в команду
     requests: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
-        where: { status: "Не принят", teamId: teamId },
+        where: { status: "Do not accept", teamId: teamId },
         order: [["id", "ASC"]],
         include: [{ model: db.Users, as: "user" }]
       }),
@@ -732,11 +732,12 @@ module.exports = {
           }
         }
       ),
+    // Добавление пользователя в команду менеджером
     addUserInNewTeam: (parent, { id, userId }, { db }) =>
       db.UsersInTeams.create({
         userId: userId,
         teamId: id,
-        status: "Принят",
+        status: "Accept",
         roleId: 10
       }),
     // Удаляем пользователя
@@ -794,6 +795,19 @@ module.exports = {
           id: args.id
         }
       }),
+    // Добавляем id организации в информацию о пользователе
+    addUsertoOrganization: (parent, args, { db }) =>
+      db.Users.update(
+        {
+          organizationId: args.organizationId
+        },
+        {
+          where: {
+            id: args.id
+          }
+        }
+      ),
+
     deleteTeam: (parent, args, { db }) =>
       db.Teams.destroy({
         where: {

@@ -89,7 +89,7 @@ import breadcrumbs from "@/components/BreadCrumbs.vue";
 import { ORGS_QUERY, CREATE_ORGANIZATION } from "@/graphql/queries";
 import { required } from "vuelidate/lib/validators";
 export default {
-  name: "UserInOrganization",
+  name: "NewOrganization",
   components: { minialert, breadcrumbs },
   data() {
     return {

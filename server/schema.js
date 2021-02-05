@@ -28,6 +28,7 @@ type User {
   login: String
   userPoints: PointsUser
   password: String
+  organizationId: Int
   createdAt: String
   updatedAt: String
   deletedAt: String
@@ -326,6 +327,8 @@ type Mutation {
   deleteOrganization(id: ID!): Int!
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   
+  addUsertoOrganization(id: ID!, organizationId: Int): [Int]
+
   addUserInTeam(status: String!, id: ID!): [Int]!
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
   createUserInTeam(userId: ID!, teamId: ID!, status: String!, roleId: ID!): UserInTeam!

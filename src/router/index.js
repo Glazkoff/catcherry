@@ -14,7 +14,7 @@ import CreatePost from "@/components/CreatePost.vue";
 
 import Account from "@/components/account/Account.vue";
 import UserInOrganization from "@/components/account/UserInOrganization.vue";
-import NewOrganization from "@/components/account/NewOrganization.vue";
+import NewOrganization from "@/components/NewOrganization.vue";
 import ListRequest from "@/components/account/ListRequest.vue";
 import Tasks from "@/components/account/Tasks.vue";
 import TeamsList from "@/components/manager/TeamsList.vue";
@@ -210,20 +210,22 @@ const routes = [
             }
           },
           {
-            path: "user_org",
+            path: "organizations",
             name: "UserInOrganization",
             component: UserInOrganization,
             meta: {
               breadCrumb: i18n.t("router.userInOrg")
-            }
-          },
-          {
-            path: "new_org",
-            name: "NewOrganization",
-            component: NewOrganization,
-            meta: {
-              breadCrumb: i18n.t("router.newOrg")
-            }
+            },
+            children: [
+              {
+                path: "create",
+                name: "NewOrganization",
+                component: NewOrganization,
+                meta: {
+                  breadCrumb: i18n.t("router.newOrg")
+                }
+              }
+            ]
           },
           {
             path: "list_req",

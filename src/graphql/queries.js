@@ -331,6 +331,7 @@ export const TEAM_IN_ORG_QUERY = gql`
         user {
           id
         }
+        createdAt
       }
     }
   }
@@ -442,6 +443,12 @@ export const DELETE_ORG_QUERY = gql`
 export const UPDATE_ORG_QUERY = gql`
   mutation($name: String, $maxTeamsLimit: Int, $id: ID!) {
     updateOrganization(name: $name, maxTeamsLimit: $maxTeamsLimit, id: $id)
+  }
+`;
+
+export const ADD_USER_TO_ORGANIZATION = gql`
+  mutation($id: ID!, $organizationId: Int) {
+    addUsertoOrganization(id: $id, organizationId: $organizationId)
   }
 `;
 

@@ -7,9 +7,9 @@
     </div>
     <div v-if="usersInTeams == null">
       <div class="stub">
-          <Info></Info>
-          <p>В команде пока нет участников!</p>
-        </div>
+        <Info></Info>
+        <p>В команде пока нет участников!</p>
+      </div>
     </div>
     <div>
       <div v-for="oneUser in usersInTeams" :key="oneUser.id">

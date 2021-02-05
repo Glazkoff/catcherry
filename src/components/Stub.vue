@@ -1,7 +1,7 @@
 <template>
   <div class="stub">
-    <Info></Info>
-    <p><slot name="body"></slot></p>
+    <Info class="mb-4"></Info>
+    <slot name="body"></slot>
   </div>
 </template>
 
@@ -14,7 +14,9 @@ export default {
 };
 </script>
 
-<style>
+<style lang="scss" scoped>
+@import "@/styles/_grid.scss";
+
 .stub {
   display: flex;
   height: 75vh;
@@ -23,8 +25,10 @@ export default {
   justify-content: center;
   align-items: center;
   flex-direction: column;
-}
-.stub p {
-  margin-top: 20px;
+  & * {
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+  }
 }
 </style>
