@@ -35,10 +35,6 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: "authorId",
         as: "author"
       });
-      // Users.hasMany(models.UsersInTeams, {
-      //   foreignKey: "id",
-      //   as: "userInTeam"
-      // });
       Users.hasOne(models.Administrators, {
         foreignKey: "userId",
         as: "users"
@@ -83,6 +79,10 @@ module.exports = (sequelize, DataTypes) => {
         // TODO: вспомнить, почему binary
         // type: DataTypes.STRING.BINARY,
         type: DataTypes.STRING,
+        allowNull: true
+      },
+      organizationId: {
+        type: DataTypes.INTEGER,
         allowNull: true
       }
     },

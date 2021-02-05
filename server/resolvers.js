@@ -533,7 +533,8 @@ module.exports = {
         surname: input.surname,
         patricity: input.patricity,
         birthday: input.birthday,
-        password: hashPassword
+        password: hashPassword,
+        organizationId: input.organizationId
       });
 
       // Добавляем кошелёк для баллов
@@ -969,17 +970,6 @@ module.exports = {
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
-    acceptRequst: (parent, { id }, { db }) =>
-      db.UsersInTeams.update(
-        {
-          status: "Принят"
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
     changeStatusRequest: (parent, args, { db }) =>
       db.UsersInTeams.update(
         {
@@ -988,28 +978,6 @@ module.exports = {
         {
           where: {
             id: args.id
-          }
-        }
-      ),
-    revokeRequst: (parent, { id }, { db }) =>
-      db.UsersInTeams.update(
-        {
-          status: "Не принят"
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    rejectRequst: (parent, { id }, { db }) =>
-      db.UsersInTeams.update(
-        {
-          status: "Отклонен"
-        },
-        {
-          where: {
-            id: id
           }
         }
       ),

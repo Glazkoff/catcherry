@@ -333,10 +333,6 @@ type Mutation {
   deleteUserInTeam(id: ID!): Int!
   updateTeam(id:ID!, name: String, description:String, maxUsersLimit: Int):[Int]!
   
-  acceptRequst(id: ID!): [Int]!
-  revokeRequst(id: ID!): [Int]!
-  rejectRequst(id: ID!): [Int]!
-
   changeStatusRequest(id: ID!, status: String): [Int]
 
   createPointOperation(userId: ID!, delta: Int!, operationDescription: String!): PointOperations!
