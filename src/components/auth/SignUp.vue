@@ -138,15 +138,10 @@
     </div>
     <div class="form-group">
       <label class="form-name">Роль *</label><br />
-      <select
-        class="form-control block"
-        :disabled="signUpLoading"
-        v-model.trim="$v.roleInSystem.$model"
-        :class="{ is_invalid: $v.roleInSystem.$error }"
-      >
-        <option>Владелец системы</option>
-        <option>Менеджер</option>
-        <option>Пользователь</option>
+      <select class="form-control block" v-model="$v.roleInSystem.$model">
+        <option :value="Owner">Владелец системы</option>
+        <option :value="Manager">Менеджер</option>
+        <option :value="User">Пользователь</option>
       </select>
       <div v-if="$v.roleInSystem.$error" class="error">
         <span class="form-text danger" v-if="!$v.roleInSystem.required">{{
@@ -154,9 +149,9 @@
         }}</span>
       </div>
     </div>
-    <div v-if="roleInSystem == 'Владелец системы'">
-      Создание новой команды
-    </div>
+    <!-- <div v-if="roleInSystem == 'Owner'">
+      Создание новой организации
+    </div> -->
     <div>
       <label class="box-label">
         <input

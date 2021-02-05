@@ -19,25 +19,26 @@
         <!-- список команд в организации -->
         <div class="row d-flex">
           <input
-            v-model.trim="findString"
+            v-model.trim="findTeam"
             type="text"
             placeholder="Введите название команды, которую вы хотите найти"
             class="form-control block find dark"
           />
         </div>
-        <div v-if="!team">
+        <div v-if="!teamsInOrganization">
           <h5>В организации пока нет ни одной команды</h5>
         </div>
         <div v-else>
-          <div class="oneTeam" v-for="teamUs in filterTeam" :key="teamUs.id">
-            <p>№{{ teamUs.id }}</p>
+          <div class="oneTeam" v-for="team in filterTeam" :key="team.id">
             <p>
-              <b>{{ teamUs.name }}</b>
+              <b>{{ team.name }}</b>
             </p>
-            <span>{{ teamUs.description }}</span>
-            <button class="btn btn-link" @click="requestInTeam(teamUs.id)">
-              Подать заявку
-            </button>
+            <span>{{ team.description }}</span>
+            <div v-if="checkStatusUser(team) == -1">
+              <button class="btn btn-link" @click="requestInTeam(team.id)">
+                Подать заявку
+              </button>
+            </div>
           </div>
         </div>
       </div>
@@ -60,7 +61,7 @@
           <input
             v-model.trim="findString"
             type="text"
-            placeholder="Введите название организации, которую вы хотите найти"
+            placeholder="Введите название организации, которую вы хотите найти, или имя ее владельца"
             class="form-control block find dark"
           />
         </div>
@@ -73,7 +74,11 @@
           <a class="orgFoto"></a>
           <div class="card_body">
             <h3>{{ organization.name }}</h3>
-            <small>№ {{ organization.id }}</small>
+            <small
+              >Владелец: {{ organization.owner.surname }}
+              {{ organization.owner.name }}
+              {{ organization.owner.patricity }}</small
+            >
           </div>
           <div class="card_action">
             <ArrowRight
@@ -87,8 +92,15 @@
           <Stub>
             <div slot="body">
               <h3 class="mb-4">Организации не найдены</h3>
-              <button class="btn btn-primary" @click="isAddOrganization = true">
-                Создать
+              <button class="btn btn-primary">
+                <router-link
+                  :to="{
+                    name: 'NewOrganization'
+                  }"
+                  active-class="nav-checked"
+                >
+                  Создать
+                </router-link>
               </button>
             </div>
           </Stub>
@@ -119,20 +131,6 @@
               >Organization name accepts only alphabet characters.</span
             >
           </div>
-          <br />
-          <label>Руководитель организации</label><br />
-          <input
-            :disabled="signUpLoading"
-            type="number"
-            v-model.trim="$v.ownerId.$model"
-            placeholder="Owner ID"
-            class="form-control form-text"
-            :class="{ is_invalid: $v.ownerId.$error }"
-          />
-          <div v-if="$v.ownerId.$error" class="error">
-            <span v-if="!$v.ownerId.required">Owner is required</span>
-          </div>
-          <br />
           <!-- тип орагизации должен выводиться из таблицы organizationTypes -->
           <label>Тип организации</label><br />
           <input
@@ -192,14 +190,12 @@ import minialert from "@/components/MiniAlert.vue";
 import Stub from "@/components/Stub.vue";
 import {
   ORGS_QUERY,
-  ONE_ORG_QUERY,
   CREATE_ORGANIZATION,
-  TEAMS_QUERY,
   TEAM_IN_ORG_QUERY,
-  CREATE_USER_IN_TEAM
+  CREATE_USER_IN_TEAM,
+  USER_IN_ONE_ORGANIZATION_QUERY
 } from "@/graphql/queries";
 import { required } from "vuelidate/lib/validators";
-import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
   components: { popup, minialert, ArrowRight, BreadCrumbs, Stub },
@@ -216,11 +212,11 @@ export default {
       isShowAlertAddReq: false,
       isAddOrganization: false,
       name: "",
-      ownerId: 124,
-      organizationId: 7,
+      organizationId: 0,
       organizationTypeId: 1,
       maxTeamsLimit: 1,
-      signUpLoading: false
+      signUpLoading: false,
+      consistOrganization: -1
     };
   },
   apollo: {
@@ -228,26 +224,20 @@ export default {
     organizations: {
       query: ORGS_QUERY
     },
-    // TODO: ПЕРЕДЕЛАТЬ!
-    // массив информации об одной организации
-    organization: {
-      query: ONE_ORG_QUERY,
-      variables() {
-        return {
-          id: this.$store.getters.decodedToken.id
-        };
-      }
-    },
-    // массив всех команд
-    teams: {
-      query: TEAMS_QUERY
-    },
     // массив команд, находящихся в организации
-    team: {
+    teamsInOrganization: {
       query: TEAM_IN_ORG_QUERY,
       variables() {
         return {
           organizationId: this.organizationId
+        };
+      }
+    },
+    userInOneOrganization: {
+      query: USER_IN_ONE_ORGANIZATION_QUERY,
+      variables() {
+        return {
+          userId: this.idUser
         };
       }
     }
@@ -279,6 +269,17 @@ export default {
       this.oneOrganization = Object.assign(this.oneOrganization, organization);
       this.organizationId = parseInt(organization.id);
     },
+    checkStatusUser(team) {
+      if (team.usersInTeam != null || team.usersInTeam != undefined) {
+        return team.usersInTeam.findIndex(el => {
+          if (el != null || el != undefined) {
+            if (el.user != null || el.user != undefined) {
+              return el.user.id == this.idUser;
+            } else return false;
+          } else return false;
+        });
+      } else return -1;
+    },
     submit() {
       // создание новой организации
       this.$apollo
@@ -286,7 +287,7 @@ export default {
           mutation: CREATE_ORGANIZATION,
           variables: {
             name: this.name,
-            ownerId: parseInt(this.ownerId),
+            ownerId: this.$store.getters.decodedToken.id,
             organizationTypeId: this.organizationTypeId,
             maxTeamsLimit: this.maxTeamsLimit
           },
@@ -324,23 +325,40 @@ export default {
     },
     // метод создания заявки в команду
     requestInTeam(teamId) {
+      this.consistOrganization = this.organizationId;
       this.$apollo.mutate({
         mutation: CREATE_USER_IN_TEAM,
         variables: {
-          userId: this.$route.params.id,
+          userId: this.idUser,
           teamId: teamId,
-          status: "Не принят",
-          roleId: this.$route.params.id //FIXME: определить начальную роль при подаче заявки
+          status: "На рассмотрении",
+          roleId: 1 //FIXME: определить начальную роль при подаче заявки
         },
-        update: (cache, { data: { createUserInTeam } }) => {
+        update: cache => {
           let data = cache.readQuery({
-            query: ONE_USER_IN_TEAMS_QUERY,
-            variables: { userId: this.$route.params.id }
+            query: TEAM_IN_ORG_QUERY,
+            variables: {
+              organizationId: this.organizationId
+            }
           });
-          data.oneUserInTeams.push(createUserInTeam);
+          let indexTeam = data.teamsInOrganization.findIndex(
+            el => el.id === teamId
+          );
+          if (data.teamsInOrganization[indexTeam] != null) {
+            data.teamsInOrganization[indexTeam].usersInTeam.push({
+              status: "На рассмотрении",
+              user: {
+                id: this.idUser,
+                __typename: "User"
+              },
+              __typename: "UserInTeam"
+            });
+          }
           cache.writeQuery({
-            query: ONE_USER_IN_TEAMS_QUERY,
-            variables: { userId: this.$route.params.id },
+            query: TEAM_IN_ORG_QUERY,
+            variables: {
+              organizationId: this.organizationId
+            },
             data
           });
         }
@@ -356,28 +374,89 @@ export default {
   computed: {
     // фильтрация организаций поиском по названию
     filterOrganization() {
-      if (this.findString !== "") {
-        return this.organizations.filter(el => {
-          return (
-            el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
-              -1 && el.name !== ""
-          );
-        });
+      if (
+        this.consistOrganization == -1 &&
+        (this.userInOneOrganization == null ||
+          this.userInOneOrganization == undefined)
+      ) {
+        if (
+          this.findString !== "" &&
+          this.organizations != null &&
+          this.organizations != undefined
+        ) {
+          return this.organizations.filter(el => {
+            if (el.name === undefined || el.name === null) {
+              el.name = " ";
+            }
+            if (el.owner.surname === undefined || el.owner.surname === null) {
+              el.owner.surname = " ";
+            }
+            if (el.owner.name === undefined || el.owner.name === null) {
+              el.owner.name = " ";
+            }
+            if (
+              el.owner.patricity === undefined ||
+              el.owner.patricity === null
+            ) {
+              el.owner.patricity = " ";
+            }
+            return (
+              (el.name.toLowerCase().indexOf(this.findString.toLowerCase()) !==
+                -1 &&
+                el.name !== "") ||
+              (el.owner.surname
+                .toLowerCase()
+                .indexOf(this.findString.toLowerCase()) !== -1 &&
+                el.owner.surname !== "") ||
+              (el.owner.name
+                .toLowerCase()
+                .indexOf(this.findString.toLowerCase()) !== -1 &&
+                el.owner.name !== "") ||
+              (el.owner.patricity
+                .toLowerCase()
+                .indexOf(this.findString.toLowerCase()) !== -1 &&
+                el.owner.patricity !== "")
+            );
+          });
+        } else {
+          return this.organizations;
+        }
       } else {
-        return this.organizations;
+        if (
+          this.consistOrganization != -1 &&
+          this.organizations != null &&
+          this.organizations != undefined
+        ) {
+          return this.organizations.filter(el => {
+            return el.id == this.consistOrganization;
+          });
+        } else {
+          if (
+            this.userInOneOrganization != null &&
+            this.userInOneOrganization != undefined &&
+            this.organizations != null &&
+            this.organizations != undefined
+          ) {
+            return this.organizations.filter(el => {
+              return el.id == this.userInOneOrganization.team.organization.id;
+            });
+          } else return this.organizations;
+        }
       }
     },
-    // поиск организации по ее номеру
+    idUser() {
+      return this.$store.getters.decodedToken.id;
+    },
     filterTeam() {
       if (this.findTeam !== "") {
-        return this.team.filter(el => {
+        return this.teamsInOrganization.filter(el => {
           return (
             el.name.toLowerCase().indexOf(this.findTeam.toLowerCase()) !== -1 &&
             el.name !== ""
           );
         });
       } else {
-        return this.team;
+        return this.teamsInOrganization;
       }
     }
   }

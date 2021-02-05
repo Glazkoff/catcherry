@@ -43,14 +43,11 @@ type UserInNewTeam {
 type Organization {
   id: ID!
   name: String!
-  ownerId: Int
   owner: User
-  organizationTypeId: Int
   maxTeamsLimit: Int
   organizationType: OrganizationType
   createdAt: String! 
   updatedAt: String!
-  teams: [Team]
 }
 
 type OrganizationType {
@@ -60,24 +57,20 @@ type OrganizationType {
 
 type Team {
   id: ID!
-  organizationId: Int
   name: String!
   description: String
   maxUsersLimit: Int
   organization: Organization
-  team: [UserInTeam]
+  usersInTeam: [UserInTeam]
   createdAt: String!
   updatedAt: String!
 }
 
 type UserInTeam {
   id: ID!
-  userId: ID!
-  teamId: ID!
   status: String!
   user: User
   team: Team!
-  roleId: ID!
   role: Role
   createdAt: String!
   updatedAt: String!
@@ -219,8 +212,10 @@ type Query {
   user(id: ID!): User @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   deletedUsers: [User!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
+  """Убрать запрос Teams, Дубинскому использовать вместо Teams -- oneUserInTeams"""
+
   teams: [Team!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  team(organizationId: Int): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  teamsInOrganization(organizationId: Int): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   oneTeam(id: ID): Team @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   managerTeams(userId: ID!): [UserInTeam] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
@@ -230,7 +225,6 @@ type Query {
   organizations: [Organization!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   organization(id: ID!): Organization @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   userOrganization(id: ID!): Organization
-  organizationTypes: [OrganizationType!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   notificationsForUser(userId: ID!): [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -248,8 +242,11 @@ type Query {
   likesOfPostFromUser (userId:ID!): [LikeOfPost]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   likesOfCommentFromUser (userId:ID!): [LikeOfComment]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
+
+
   usersInTeams (teamId:ID!):[UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   oneUserInTeams(userId: ID!): [UserInTeam!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
+  userInOneOrganization(userId: ID!): UserInTeam @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   raitingInTeams (teamId:ID!): [UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   personalUserStatistics(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   teamsInOneOrganization(organizationId: ID!): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -328,10 +325,9 @@ type Mutation {
   
   updateOrganization(id: ID, name: String, maxTeamsLimit: Int): [Int]!
   deleteOrganization(id: ID!): Int!
-
-  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int, id: ID!): Organization!
+  createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
+  
   addUserInTeam(status: String!, id: ID!): [Int]!
-
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
   createUserInTeam(userId: ID!, teamId: ID!, status: String!, roleId: ID!): UserInTeam!
   deleteTeam(id: ID!): Int!
