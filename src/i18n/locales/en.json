@@ -181,6 +181,7 @@
     "placeholderInSearchTeam": "Enter the name of the team",
     "CreateOrganization": "Create",
     "Owner": "Owner",
+    "leaveTeam": "Leave team",
     "noOrganizations": "Organizations not found"
   },
   "markRequiredField": "* - required field",

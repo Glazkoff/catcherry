@@ -181,6 +181,7 @@
     "placeholderInSearchTeam": "Введите название команды",
     "CreateOrganization": "Создать",
     "Owner": "Владелец",
+    "leaveTeam": "Покинуть команду",
     "noOrganizations": "Организации не найдены"
   },
   "markRequiredField": "* - обязательное поле",

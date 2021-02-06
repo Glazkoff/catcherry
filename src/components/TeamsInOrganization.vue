@@ -71,6 +71,14 @@
               >
                 <p>{{ $t("Organizations.noSeatsInTeam") }}</p>
               </div>
+              <div v-else-if="onCheckUserStatus(team.usersInTeam) == 'Accept'">
+                <button
+                  class="btn btn-link red"
+                  @click="RemoveRequestUser(team.id)"
+                >
+                  {{ $t("Organizations.leaveTeam") }}
+                </button>
+              </div>
               <div v-else>
                 <button
                   class="btn btn-link red"
