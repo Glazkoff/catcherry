@@ -172,7 +172,7 @@
     "noTeamsInOrganization": "The organization does not have a teams",
     "nameTeam": "Name team",
     "statusUserInTeam": "Status",
-    "usersLimitInTeam": "Limit",
+    "usersLimitInTeam": "Participants",
     "requestInTeam": "Submit the request",
     "removeRequestInTeam": "Remove the request",
     "noSeatsInTeam": "No seats",

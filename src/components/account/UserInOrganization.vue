@@ -35,9 +35,8 @@
         class="row"
         v-for="organization in filterOrganization"
         :key="organization.id"
-        @click="onShowTeams(organization.id)"
       >
-        <div class="col-12">
+        <div class="col-12" @click="onShowTeams(organization.id)">
           <div class="card">
             <div class="orgFoto"></div>
             <div class="card_body">
@@ -61,10 +60,12 @@
             </div>
           </div>
         </div>
-        <teams-in-organization
-          v-if="onFindIndex(organization.id) != -1"
-          :organizationId="organization.id"
-        ></teams-in-organization>
+        <transition name="fade">
+          <teams-in-organization
+            v-if="onFindIndex(organization.id) != -1"
+            :organizationId="organization.id"
+          ></teams-in-organization>
+        </transition>
       </div>
 
       <!-- Вывод сообщения об отсутствии организаций  -->
@@ -87,7 +88,6 @@
       </div>
     </div>
 
-    <!-- v-if="onFindIndex(organization.id) != -1" -->
     <!-- Вывод компонента команд в организации -->
   </div>
 </template>
@@ -253,6 +253,14 @@ export default {
   transition: 0.25s;
 }
 
+.fade-enter-active,
+.fade-leave-active {
+  transition: opacity 0.25s;
+}
+.fade-enter,
+.fade-leave-to {
+  opacity: 0;
+}
 small {
   color: $gray;
 }

@@ -331,7 +331,6 @@ export const TEAM_IN_ORG_QUERY = gql`
         user {
           id
         }
-        createdAt
       }
     }
   }

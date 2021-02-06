@@ -12,67 +12,83 @@
       </div>
     </div>
 
+    <!-- FIXME: Сделать красивый вывод, что команд нет -->
     <div v-if="!teamsInOrganization">
       <h5>{{ $t("Organizations.noTeamsInOrganization") }}</h5>
     </div>
 
+    <!-- Вывод информации о командах -->
     <div v-else>
       <div class="row">
-        <div class="col-4">
-          <p>{{ $t("Organizations.nameTeam") }}</p>
+        <div class="col-12 mt-0 mb-0">
+          <div class="row table-border headtable">
+            <div class="col-4">
+              <p>{{ $t("Organizations.nameTeam") }}</p>
+            </div>
+            <div class="col-3">
+              <p>{{ $t("Organizations.statusUserInTeam") }}</p>
+            </div>
+            <div class="col-3">
+              <p>{{ $t("Organizations.usersLimitInTeam") }}</p>
+            </div>
+            <div class="col-2"></div>
+          </div>
         </div>
-        <div class="col-3">
-          <p>{{ $t("Organizations.statusUserInTeam") }}</p>
-        </div>
-        <div class="col-2">
-          <p>{{ $t("Organizations.usersLimitInTeam") }}</p>
-        </div>
-        <div class="col-3"></div>
       </div>
 
       <div class="row" v-for="team in filterTeam" :key="team.id">
-        <div class="col-4">
-          <p>{{ team.name }}</p>
-        </div>
-        <div class="col-3">
-          <p>{{ onCheckUserStatus(team.usersInTeam) }}</p>
-        </div>
-        <div class="col-2">
-          <p>{{ team.usersInTeam.length }}/{{ team.maxUsersLimit }}</p>
-        </div>
-        <div class="col-3">
-          <div
-            v-if="
-              checkStatusUser(team) == -1 &&
-                team.usersInTeam.length < team.maxUsersLimit
-            "
-          >
-            <button class="btn btn-link" @click="requestInTeam(team.id)">
-              {{ $t("Organizations.requestInTeam") }}
-            </button>
-          </div>
-          <div
-            v-else-if="
-              checkStatusUser(team) == -1 &&
-                team.usersInTeam.length == team.maxUsersLimit
-            "
-          >
-            <p>{{ $t("Organizations.noSeatsInTeam") }}</p>
-          </div>
-          <div v-else>
-            <button
-              class="btn btn-link red"
-              @click="RemoveRequestUser(team.id)"
-            >
-              {{ $t("Organizations.removeRequestInTeam") }}
-            </button>
+        <div class="col-12 mt-0 mb-0">
+          <div class="row table-border">
+            <div class="col-4">
+              <small class="white">{{ team.name }}</small>
+            </div>
+            <div class="col-3">
+              <small>{{ onCheckUserStatus(team.usersInTeam) }}</small>
+            </div>
+            <div class="col-3">
+              <small>
+                {{ onCountTeamMember(team.usersInTeam) }}/{{
+                  team.maxUsersLimit
+                }}
+              </small>
+            </div>
+            <div class="col-2">
+              <div
+                v-if="
+                  checkStatusUser(team) == -1 &&
+                    team.usersInTeam.length < team.maxUsersLimit
+                "
+              >
+                <button class="btn btn-link" @click="requestInTeam(team.id)">
+                  {{ $t("Organizations.requestInTeam") }}
+                </button>
+              </div>
+              <div
+                v-else-if="
+                  checkStatusUser(team) == -1 &&
+                    team.usersInTeam.length == team.maxUsersLimit
+                "
+              >
+                <p>{{ $t("Organizations.noSeatsInTeam") }}</p>
+              </div>
+              <div v-else>
+                <button
+                  class="btn btn-link red"
+                  @click="RemoveRequestUser(team.id)"
+                >
+                  {{ $t("Organizations.removeRequestInTeam") }}
+                </button>
+              </div>
+            </div>
           </div>
         </div>
       </div>
     </div>
 
     <minialert v-if="isShowAlertAddReq"
-      ><p slot="title">{{ $t("Organizations.goodRequestInTeam") }}</p></minialert
+      ><p slot="title">
+        {{ $t("Organizations.goodRequestInTeam") }}
+      </p></minialert
     >
   </div>
 </template>
@@ -150,11 +166,10 @@ export default {
         });
       } else return -1;
     },
+
     // метод создания заявки в команду
     requestInTeam(teamId) {
-      console.log(this.consistOrganization)
       this.consistOrganization = this.organizationId;
-      console.log(this.consistOrganization)
       this.$apollo.mutate({
         mutation: CREATE_USER_IN_TEAM,
         variables: {
@@ -175,12 +190,13 @@ export default {
           );
           if (data.teamsInOrganization[indexTeam] != null) {
             data.teamsInOrganization[indexTeam].usersInTeam.push({
-              status: "На рассмотрении",
+              status: "Do not accept",
               user: {
                 id: this.idUser,
                 __typename: "User"
               },
-              __typename: "UserInTeam"
+              __typename: "UserInTeam",
+              createdAt: new Date()
             });
           }
           cache.writeQuery({
@@ -194,14 +210,13 @@ export default {
       });
       // появление окошка информации о создании заявки
       this.isShowInfoModal = false;
-      this.isShowAlertAddReq = true;
-      setTimeout(() => {
-        this.isShowAlertAddReq = false;
-      }, 3000);
+      // this.isShowAlertAddReq = true;
+      // setTimeout(() => {
+      //   this.isShowAlertAddReq = false;
+      // }, 3000);
     },
     //Метод удаления заявки пользователя
     RemoveRequestUser(teamId) {
-      console.log(this.consistOrganization)
       this.$apollo
         .mutate({
           mutation: DELETE_USER_FROM_TEAM,
@@ -251,6 +266,13 @@ export default {
           organizationId: organizationId
         }
       });
+    },
+    onCountTeamMember(usersInTeam) {
+      let count = 0;
+      usersInTeam.forEach(el => {
+        if (el.status == "Accept") count++;
+      });
+      return count;
     }
   },
   computed: {
@@ -278,6 +300,35 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_grid.scss";
+
+.white {
+  color: $white;
+}
+
+.table-border {
+  &.headtable {
+    padding-top: 0.5rem;
+    padding-bottom: 0.5rem;
+  }
+  border-bottom: 1px solid $bright_violet;
+  margin: 0;
+  & .col-3,
+  & .col-4,
+  & .col-2,
+  & .col-1,
+  & .col-5 {
+    margin-left: 0 !important;
+  }
+  & button {
+    padding: 0;
+    font-style: normal;
+    font-weight: normal;
+    font-size: 0.75rem;
+    &.red:hover {
+      color: $dark_red;
+    }
+  }
+}
 
 .organizationNotSearch {
   text-align: center;
