@@ -168,6 +168,21 @@
     "surnamePlaceholder": "Enter surname",
     "surname": "Surname"
   },
+  "Organizations": {
+    "noTeamsInOrganization": "The organization does not have a teams",
+    "nameTeam": "Name team",
+    "statusUserInTeam": "Status",
+    "usersLimitInTeam": "Limit",
+    "requestInTeam": "Submit the request",
+    "removeRequestInTeam": "Remove the request",
+    "noSeatsInTeam": "No seats",
+    "goodRequestInTeam": "The request to the team was successfully submitted",
+    "placeholderInSearchOrganization": "Enter the name of the organization or the name of its owner",
+    "placeholderInSearchTeam": "Enter the name of the team",
+    "CreateOrganization": "Create",
+    "Owner": "Owner",
+    "noOrganizations": "Organizations not found"
+  },
   "markRequiredField": "* - required field",
   "startMsg": "Hello, Polyweb!",
   "router": {

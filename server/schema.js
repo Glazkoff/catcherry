@@ -333,7 +333,7 @@ type Mutation {
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
   createUserInTeam(userId: ID!, teamId: ID!, status: String!, roleId: ID!): UserInTeam!
   deleteTeam(id: ID!): Int!
-  deleteUserInTeam(id: ID!): Int!
+  deleteUserInTeam(teamId: ID!,userId: ID!): Int!
   updateTeam(id:ID!, name: String, description:String, maxUsersLimit: Int):[Int]!
   
   changeStatusRequest(id: ID!, status: String): [Int]

@@ -337,6 +337,11 @@ export const TEAM_IN_ORG_QUERY = gql`
   }
 `;
 
+export const DELETE_USER_FROM_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!) {
+    deleteUserInTeam(userId: $userId, teamId: $teamId)
+  }
+`;
 export const TEAM_QUERY = gql`
   query($id: ID!) {
     oneTeam(id: $id) {

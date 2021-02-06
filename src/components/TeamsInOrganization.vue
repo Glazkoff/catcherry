@@ -13,19 +13,19 @@
     </div>
 
     <div v-if="!teamsInOrganization">
-      <h5>В организации пока нет ни одной команды</h5>
+      <h5>{{ $t("Organizations.noTeamsInOrganization") }}</h5>
     </div>
 
     <div v-else>
       <div class="row">
         <div class="col-4">
-          <p>Название</p>
+          <p>{{ $t("Organizations.nameTeam") }}</p>
         </div>
         <div class="col-3">
-          <p>Статус</p>
+          <p>{{ $t("Organizations.statusUserInTeam") }}</p>
         </div>
         <div class="col-2">
-          <p>Лимит</p>
+          <p>{{ $t("Organizations.usersLimitInTeam") }}</p>
         </div>
         <div class="col-3"></div>
       </div>
@@ -41,9 +41,30 @@
           <p>{{ team.usersInTeam.length }}/{{ team.maxUsersLimit }}</p>
         </div>
         <div class="col-3">
-          <div v-if="checkStatusUser(team) == -1">
+          <div
+            v-if="
+              checkStatusUser(team) == -1 &&
+                team.usersInTeam.length < team.maxUsersLimit
+            "
+          >
             <button class="btn btn-link" @click="requestInTeam(team.id)">
-              Подать заявку
+              {{ $t("Organizations.requestInTeam") }}
+            </button>
+          </div>
+          <div
+            v-else-if="
+              checkStatusUser(team) == -1 &&
+                team.usersInTeam.length == team.maxUsersLimit
+            "
+          >
+            <p>{{ $t("Organizations.noSeatsInTeam") }}</p>
+          </div>
+          <div v-else>
+            <button
+              class="btn btn-link red"
+              @click="RemoveRequestUser(team.id)"
+            >
+              {{ $t("Organizations.removeRequestInTeam") }}
             </button>
           </div>
         </div>
@@ -51,7 +72,7 @@
     </div>
 
     <minialert v-if="isShowAlertAddReq"
-      ><p slot="title">Заявка в команду успешно подана</p></minialert
+      ><p slot="title">{{ $t("Organizations.goodRequestInTeam") }}</p></minialert
     >
   </div>
 </template>
@@ -62,7 +83,8 @@ import {
   TEAM_IN_ORG_QUERY,
   CREATE_USER_IN_TEAM,
   USER_IN_ONE_ORGANIZATION_QUERY,
-  ADD_USER_TO_ORGANIZATION
+  ADD_USER_TO_ORGANIZATION,
+  DELETE_USER_FROM_TEAM
 } from "@/graphql/queries";
 export default {
   name: "TeamsInOrganization",
@@ -130,12 +152,14 @@ export default {
     },
     // метод создания заявки в команду
     requestInTeam(teamId) {
+      console.log(this.consistOrganization)
       this.consistOrganization = this.organizationId;
+      console.log(this.consistOrganization)
       this.$apollo.mutate({
         mutation: CREATE_USER_IN_TEAM,
         variables: {
           userId: this.idUser,
-          teamId: teamId,
+          teamId: +teamId,
           status: "Do not accept",
           roleId: 1 //FIXME: определить начальную роль при подаче заявки
         },
@@ -143,7 +167,7 @@ export default {
           let data = cache.readQuery({
             query: TEAM_IN_ORG_QUERY,
             variables: {
-              organizationId: this.organizationId
+              organizationId: +this.organizationId
             }
           });
           let indexTeam = data.teamsInOrganization.findIndex(
@@ -162,7 +186,7 @@ export default {
           cache.writeQuery({
             query: TEAM_IN_ORG_QUERY,
             variables: {
-              organizationId: this.organizationId
+              organizationId: +this.organizationId
             },
             data
           });
@@ -174,6 +198,49 @@ export default {
       setTimeout(() => {
         this.isShowAlertAddReq = false;
       }, 3000);
+    },
+    //Метод удаления заявки пользователя
+    RemoveRequestUser(teamId) {
+      console.log(this.consistOrganization)
+      this.$apollo
+        .mutate({
+          mutation: DELETE_USER_FROM_TEAM,
+          variables: {
+            userId: this.idUser,
+            teamId: +teamId
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: TEAM_IN_ORG_QUERY,
+              variables: {
+                organizationId: +this.organizationId
+              }
+            });
+            let indexTeam = data.teamsInOrganization.findIndex(
+              el => el.id == teamId
+            );
+            if (data.teamsInOrganization[indexTeam] != null) {
+              let indexUser = data.teamsInOrganization[
+                indexTeam
+              ].usersInTeam.findIndex(el => el.user.id == this.idUser);
+              data.teamsInOrganization[indexTeam].usersInTeam.splice(
+                indexUser,
+                1
+              );
+            }
+            cache.writeQuery({
+              query: TEAM_IN_ORG_QUERY,
+              variables: {
+                organizationId: +this.organizationId
+              },
+              data
+            });
+          }
+        })
+        .then()
+        .catch(error => {
+          console.error(error);
+        });
     },
     // Метод добавления id организации в сведения о пользователе
     addUsertoOrganization(organizationId) {

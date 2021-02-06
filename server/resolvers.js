@@ -974,10 +974,12 @@ module.exports = {
         status: status,
         roleId: roleId
       }),
+    //Удаление пользователя из команды (используется и для удаления заявки пользователя)
     deleteUserInTeam: (parent, args, { db }) =>
       db.UsersInTeams.destroy({
         where: {
-          id: args.id
+          userId: args.userId,
+          teamId: args.teamId
         }
       }),
 

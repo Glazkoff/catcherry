@@ -25,7 +25,7 @@
         <!-- FIXME -->
         <div class="col-3">
           <button class="btn btn-primary w-100">
-            Создать
+            {{ $t("Organizations.CreateOrganization") }}
           </button>
         </div>
       </div>
@@ -43,7 +43,8 @@
             <div class="card_body">
               <h3>{{ organization.name }}</h3>
               <small
-                >Владелец: {{ organization.owner.surname }}
+                >{{ $t("Organizations.Owner") }}:
+                {{ organization.owner.surname }}
                 {{ organization.owner.name }}
                 {{ organization.owner.patricity }}</small
               >
@@ -70,7 +71,7 @@
       <div class="organizationNotSearch" v-if="filterOrganization == ''">
         <Stub>
           <div slot="body">
-            <h3 class="mb-4">Организации не найдены</h3>
+            <h3 class="mb-4">{{ $t("Organizations.noOrganizations") }}</h3>
             <button class="btn btn-primary">
               <router-link
                 :to="{
@@ -78,7 +79,7 @@
                 }"
                 active-class="nav-checked"
               >
-                Создать
+                {{ $t("Organizations.CreateOrganization") }}
               </router-link>
             </button>
           </div>
