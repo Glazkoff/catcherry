@@ -2,12 +2,12 @@
   <div class="container">
     <div class="row" v-if="this.$apollo.queries.usersInTeams.loading">
       <div class="col-12" wrapOfLoader>
-        <loader></loader>
+        <Loader></Loader>
       </div>
     </div>
     <div class="row" v-else>
       <div class="col-12">
-        <breadcrumbs></breadcrumbs>
+        <BreadCrumbs></BreadCrumbs>
       </div>
       <div class="col-12">
         <input
@@ -35,7 +35,9 @@
           </button>
         </div>
         <div v-if="filterUser.length == 0">
-          <p>{{ $t("noSearch") }}</p>
+          <Stub>
+            <p slot="body">{{ $t("noSearch") }}</p>
+          </Stub>
         </div>
       </div>
       <popup v-if="isShowModal">
@@ -84,10 +86,11 @@
 </template>
 
 <script>
-import breadcrumbs from "@/components/BreadCrumbs.vue";
-import loader from "@/components/Loader.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import popup from "@/components/Popup.vue";
 import Minialert from "@/components/MiniAlert.vue";
+import Stub from "@/components/Stub.vue";
+import Loader from "@/components/Loader.vue";
 import {
   USERS_IN_TEAMS_QUERY,
   CHANGE_STATUS_REQUEST_QUERY,
@@ -155,10 +158,11 @@ export default {
     }
   },
   components: {
-    breadcrumbs,
-    loader,
-    popup,
-    Minialert
+    Minialert,
+    BreadCrumbs,
+    Stub,
+    Loader,
+    popup
   },
   methods: {
     // Показать попап с подробной информацией
@@ -301,4 +305,6 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_classes.scss";
 @import "@/styles/_colors.scss";
+@import "@/styles/_dimensions.scss";
+@import "@/styles/_grid.scss";
 </style>

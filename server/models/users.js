@@ -84,6 +84,10 @@ module.exports = (sequelize, DataTypes) => {
       organizationId: {
         type: DataTypes.INTEGER,
         allowNull: true
+      },
+      roleInSystem: {
+        type: DataTypes.STRING(255),
+        allowNull: true
       }
     },
     {

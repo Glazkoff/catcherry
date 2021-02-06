@@ -98,6 +98,7 @@
         </div>
       </router-link>
       <router-link
+        v-if="$store.getters.decodedToken.roleInSystem == 'Manager'"
         :to="{
           name: 'TeamsList',
           params: { id: $store.getters.decodedToken.id }
@@ -115,6 +116,7 @@
         </div>
       </router-link>
       <router-link
+        v-if="$store.getters.decodedToken.roleInSystem == 'Administration'"
         :to="{
           name: 'Dashboard',
           params: { id: $store.getters.decodedToken.id }

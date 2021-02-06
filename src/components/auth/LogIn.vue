@@ -14,6 +14,7 @@
         v-model.trim="$v.login.$model"
         :placeholder="$t('logIn.loginInputPlaceholder')"
         class="form-control block"
+        :class="{ is_invalid: $v.login.$error }"
         @input="hideErrors()"
       />
       <div v-if="$v.login.$error" class="error">
@@ -31,6 +32,7 @@
         v-model.trim="$v.password.$model"
         :placeholder="$t('logIn.passwordInputPlaceholder')"
         class="form-control block"
+        :class="{ is_invalid: $v.password.$error }"
         @input="hideErrors()"
       />
       <div v-if="$v.password.$error" class="error">
@@ -117,7 +119,15 @@ export default {
                   "SET_ACCESS_TOKEN",
                   resp.data.logIn.accessToken
                 );
-                this.$router.push({ name: "FeedOfPosts" });
+                console.log(this.$store.getters.decodedToken.roleInSystem);
+                if (
+                  this.$store.getters.decodedToken.roleInSystem ===
+                  "Administration"
+                ) {
+                  this.$router.push({ name: "Dashboard" });
+                } else {
+                  this.$router.push({ name: "FeedOfPosts" });
+                }
               } else {
                 this.loginPasswordError = true;
               }

@@ -16,7 +16,11 @@
           <div>
             <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
             <h3 class="sticky-header">{{ $t("task.scheduledTasks") }}</h3>
-            <p v-if="toDo.length === 0">{{ $t("task.noTask") }}</p>
+            <div v-if="toDo.length === 0">
+              <Stub>
+                <p slot="body">{{ $t("task.noTask") }}</p>
+              </Stub>
+            </div>
             <div v-for="task in toDo" :key="task.id" class="task">
               <div class="container">
                 <div class="row">
@@ -42,7 +46,11 @@
             <h3 class="sticky-header">
               {{ $t("task.tasksWithoutFPerformer") }}
             </h3>
-            <p v-if="backlog.length === 0">{{ $t("task.noTask") }}</p>
+            <div v-if="backlog.length === 0">
+              <Stub>
+                <p slot="body">{{ $t("task.noTask") }}</p>
+              </Stub>
+            </div>
             <div v-for="task in backlog" :key="task.id" class="task">
               <div class="container">
                 <div class="row">
@@ -71,7 +79,11 @@
           <h3 class="sticky-header">
             {{ $t("task.completedTasksForReview") }}
           </h3>
-          <p v-if="toCheck.length === 0">{{ $t("task.noTask") }}</p>
+          <div v-if="toCheck.length === 0">
+            <Stub>
+              <p slot="body">{{ $t("task.noTask") }}</p>
+            </Stub>
+          </div>
           <div v-for="task in toCheck" :key="task.id" class="task">
             <div class="container">
               <div class="row">
@@ -92,7 +104,11 @@
         <div class="col-4">
           <!-- TODO: СООБЩЕНИЕ О ПУСТОТЕ СПИСКА -->
           <h3 class="sticky-header">{{ $t("task.completedTasks") }}</h3>
-          <p v-if="done.length === 0">{{ $t("task.noTask") }}</p>
+          <div v-if="done.length === 0">
+            <Stub>
+              <p slot="body">{{ $t("task.noTask") }}</p>
+            </Stub>
+          </div>
           <div v-for="task in done" :key="task.id" class="task">
             <div class="container">
               <div class="row">
@@ -139,9 +155,10 @@ import {
 import minialert from "@/components/MiniAlert.vue";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Loader from "@/components/Loader.vue";
+import Stub from "@/components/Stub.vue";
 
 export default {
-  components: { BreadCrumbs, Loader, minialert },
+  components: { BreadCrumbs, Loader, minialert, Stub },
   apollo: {
     allUserTasks: {
       query: ALL_USER_TASK_QUERY,

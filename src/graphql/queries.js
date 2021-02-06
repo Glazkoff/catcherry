@@ -137,6 +137,14 @@ export const ONE_USER_QUERY = gql`
   }
 `;
 
+export const ROLE_IN_SYSTEM_QUERY = gql`
+  query($id: ID!) {
+    roleInSystem(id: $id) {
+      roleInSystem
+    }
+  }
+`;
+
 export const ONE_USER_IN_TEAMS_QUERY = gql`
   query($userId: ID!) {
     oneUserInTeams(userId: $userId) {
@@ -648,7 +656,7 @@ export const PERSONAL_USER_STATISTIC_QUERY = gql`
     personalUserStatistics(userId: $userId) {
       id
       pointQuantity
-      pointsOperation {
+      userPointsOperation {
         delta
         operationDescription
         createdAt

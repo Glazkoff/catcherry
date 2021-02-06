@@ -7,7 +7,6 @@
     </div>
     <div class="row">
       <div class="col-12">
-        <h2>{{ $t("taskConstructor.taskConstructor") }}</h2>
         <form @submit.prevent="createTask()">
           <div class="form-group">
             <label for="header" class="form-name white">

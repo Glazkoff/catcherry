@@ -16,7 +16,10 @@
               <small v-if="roleUser != null">{{ roleUser }}</small>
             </a>
           </li>
-          <li class="right icon-notificationTopBar">
+          <li
+            class="right icon-notificationTopBar"
+            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+          >
             <div class="notificationTopBar">
               <router-link
                 to="/notifications"
@@ -46,7 +49,8 @@
                               <div class="profCont">
                                 <img
                                   class="profile"
-                                  src="https://c1.staticflickr.com/5/4007/4626436851_5629a97f30_b.jpg"
+                                  src="@/assets/avatar.jpg"
+                                  alt="user"
                                 />
                               </div>
                               <div class="txt">
@@ -66,12 +70,18 @@
               </router-link>
             </div>
           </li>
-          <li class="right">
+          <li
+            class="right"
+            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+          >
             <p class="emailCard centerAlignTopBar">
               <MailIcon></MailIcon>
             </p>
           </li>
-          <li class="right">
+          <li
+            class="right"
+            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+          >
             <router-link to="/points" class="centerAlignTopBar">
               <p class="nav-point">
                 {{ $tc("pointsMsg", pointQuantity) }}
@@ -168,10 +178,10 @@ export default {
       }
     },
     roleUser() {
-      if (this.role == undefined) {
+      if (this.oneUserInTeams == undefined) {
         return "-";
       } else {
-        return this.oneUserInTeams.role.name;
+        return this.oneUserInTeams[1].role.name;
       }
     },
     UserID() {

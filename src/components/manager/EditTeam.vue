@@ -10,7 +10,7 @@
             {{ $t("team.lastedited") }}: {{ $d(oneTeam.updatedAt, "long") }}
           </p>
           <div class="form-group">
-            <label for="name">{{ $t("nameInanimate") }}</label>
+            <label for="name" class="form-name">{{ $t("nameInanimate") }}</label>
             <input
               name="name"
               v-model.trim="$v.oneTeam.name.$model"
@@ -25,7 +25,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="description">{{ $t("description") }}</label>
+            <label for="description" class="form-name">{{ $t("description") }}</label>
             <textarea
               name="description"
               v-model.trim="$v.oneTeam.description.$model"
@@ -42,7 +42,7 @@
             </div>
           </div>
           <div class="form-group">
-            <label for="maxUsersLimit">{{
+            <label for="maxUsersLimit" class="form-name">{{
               $t("team.maximumNumberOfTeamMembers")
             }}</label>
             <input
@@ -86,6 +86,14 @@
       </div>
       <div v-else class="wrapOfLoader"><loader></loader></div>
     </div>
+    <div class="container" v-if="!this.$apollo.loading">
+      <div v-for="t in team" :key="t.id">
+        <div v-if="t.id == id">
+          <EditForm :t="t" @update="toSaveEditTeam" />
+        </div>
+      </div>
+    </div>
+    <div v-else class="container"><loader></loader></div>
   </div>
 </template>
 
@@ -188,6 +196,7 @@ export default {
 
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 @import "@/styles/_classes.scss";
 @import "@/styles/_grid.scss";
 textarea {
@@ -202,5 +211,8 @@ textarea {
   height: 40vh;
   padding-top: calc(20vh - 100px);
   position: relative;
+}
+.form-name {
+  color: $white;
 }
 </style>

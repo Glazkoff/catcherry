@@ -216,6 +216,7 @@
               v-model.trim="$v.oneOrganization.name.$model"
               @blur="$v.oneOrganization.name.$touch()"
               class="form-control"
+              :class="{ is_invalid: $v.oneOrganization.name.$error }"
             />
             <div v-if="$v.oneOrganization.name.$error" class="error">
               <span
@@ -284,6 +285,7 @@
               v-model.trim="$v.oneTeam.name.$model"
               @blur="$v.oneTeam.name.$touch()"
               class="form-control"
+              :class="{ is_invalid: $v.oneTeam.name.$error }"
             />
             <div v-if="$v.oneTeam.name.$error" class="error">
               <span v-if="!$v.oneTeam.name.required" class="form-text danger">{{
@@ -687,6 +689,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
 @import "@/styles/_grid.scss";
+@import "@/styles/_classes.scss";
 .teams-list {
   border: 1px solid black;
   padding: 5px;

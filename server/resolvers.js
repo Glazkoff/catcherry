@@ -408,7 +408,7 @@ module.exports = {
     personalUserStatistics: (parent, { userId }, { db }) =>
       db.Points.findOne({
         where: { userId: userId },
-        include: [{ model: db.PointsOperations, as: "pointsOperation" }]
+        include: [{ model: db.PointsOperations, as: "userPointsOperation" }]
       }),
     // Получения всех заявок на вступление в команду
     requests: (parent, { teamId }, { db }) =>
@@ -448,7 +448,7 @@ module.exports = {
           pointAccountId: args.id,
           createdAt: {
             [Op.gt]: new Date(new Date() - 7 * 24 * 60 * 60 * 1000),
-            [Op.lt]: new Date(new Date() - 14 * 60 * 60 * 1000)
+            [Op.lt]: new Date(new Date() - 14 * 24 * 60 * 60 * 1000)
           }
         }
       });
@@ -534,7 +534,8 @@ module.exports = {
         patricity: input.patricity,
         birthday: input.birthday,
         password: hashPassword,
-        organizationId: input.organizationId
+        organizationId: input.organizationId,
+        roleInSystem: input.roleInSystem
       });
 
       // Добавляем кошелёк для баллов

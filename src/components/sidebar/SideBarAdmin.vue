@@ -1,18 +1,6 @@
 <template>
   <div>
     <div class="side-bar__nav-list">
-      <router-link to="/feed" :exact="true" active-class="nav-checked">
-        <div
-          class="side-bar__nav-list__nav-element side-bar__nav-list__back-btn"
-        >
-          <div class="side-bar__nav-list__nav-element__icon">
-            <BackIcon></BackIcon>
-          </div>
-          <div class="side-bar__nav-list__nav-element__text">
-            {{ $t("back") }}
-          </div>
-        </div>
-      </router-link>
       <router-link
         :to="{
           name: 'Dashboard'
@@ -65,15 +53,13 @@
 <script>
 import ProfileIcon from "@/assets/svg/sidebar/profile_icon.svg?inline";
 import PersonalStatisticsIcon from "@/assets/svg/sidebar/personal_statistics_icon.svg?inline";
-import BackIcon from "@/assets/svg/sidebar/back.svg?inline";
 import OrganizationIcon from "@/assets/svg/sidebar/organization_icon.svg?inline";
 export default {
   name: "SideBarAdmin",
   components: {
     ProfileIcon,
     PersonalStatisticsIcon,
-    OrganizationIcon,
-    BackIcon
+    OrganizationIcon
   }
 };
 </script>

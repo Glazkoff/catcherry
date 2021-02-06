@@ -80,6 +80,7 @@
               @blur="$v.oneUser.surname.$touch()"
               :placeholder="$t('surname')"
               class="form-control"
+              :class="{ is_invalid: $v.oneUser.surname.$error }"
             />
             <div v-if="$v.oneUser.surname.$error" class="error">
               <span
@@ -101,6 +102,7 @@
               v-model.trim="$v.oneUser.name.$model"
               :placeholder="$t('name')"
               class="form-control"
+              :class="{ is_invalid: $v.oneUser.surname.$error }"
             />
             <div v-if="$v.oneUser.name.$error" class="error">
               <span v-if="!$v.oneUser.name.required" class="form-text danger">{{
@@ -143,6 +145,7 @@
               v-model.trim="$v.oneUser.login.$model"
               :placeholder="$t('login')"
               class="form-control"
+              :class="{ is_invalid: $v.oneUser.login.$error }"
             />
             <div v-if="$v.oneUser.login.$error" class="error">
               <span
