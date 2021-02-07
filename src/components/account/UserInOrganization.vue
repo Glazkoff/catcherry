@@ -7,176 +7,186 @@
         </div>
       </div>
     </div>
-    <!-- попап для просмотра информации об организации -->
-    <popup v-if="isShowInfoModal">
-      <h2 slot="header">Организация "{{ nameOfOrganization }}"</h2>
-      <div slot="body">
-        {{ oneOrganization.name }}
-        <span
-          >Вы можете вступить в организацию или сразу вступить в команду</span
-        >
-        <h3>Команды</h3>
-        <!-- список команд в организации -->
-        <div class="row d-flex">
-          <input
-            v-model.trim="findString"
-            type="text"
-            placeholder="Введите название команды, которую вы хотите найти"
-            class="form-control block find dark"
-          />
-        </div>
-        <div v-if="!team">
-          <h5>В организации пока нет ни одной команды</h5>
-        </div>
-        <div v-else>
-          <div class="oneTeam" v-for="teamUs in filterTeam" :key="teamUs.id">
-            <p>№{{ teamUs.id }}</p>
-            <p>
-              <b>{{ teamUs.name }}</b>
-            </p>
-            <span>{{ teamUs.description }}</span>
-            <button class="btn btn-link" @click="requestInTeam(teamUs.id)">
-              Подать заявку
-            </button>
+    <div v-if="!this.$apollo.loading">
+      <!-- попап для просмотра информации об организации -->
+      <popup v-if="isShowInfoModal">
+        <h2 slot="header">Организация "{{ nameOfOrganization }}"</h2>
+        <div slot="body">
+          {{ oneOrganization.name }}
+          <span
+            >Вы можете вступить в организацию или сразу вступить в команду</span
+          >
+          <h3>Команды</h3>
+          <!-- список команд в организации -->
+          <div class="row d-flex">
+            <input
+              v-model.trim="findString"
+              type="text"
+              placeholder="Введите название команды, которую вы хотите найти"
+              class="form-control block find dark"
+            />
           </div>
-        </div>
-      </div>
-      <div slot="footer">
-        <button
-          class="modal-default-button btn btn-secondary"
-          @click="isShowInfoModal = false"
-        >
-          Закрыть
-        </button>
-      </div>
-    </popup>
-    <minialert v-if="isShowAlertAddReq"
-      ><p slot="title">Заявка в команду успешно подана</p></minialert
-    >
-    <div class="container">
-      <div class="container">
-        <!-- строка поиска организаций  -->
-        <div class="row d-flex">
-          <input
-            v-model.trim="findString"
-            type="text"
-            placeholder="Введите название организации, которую вы хотите найти"
-            class="form-control block find dark"
-          />
-        </div>
-        <!-- вывод массива всех организаций  -->
-        <div
-          class="card"
-          v-for="organization in filterOrganization"
-          :key="organization.id"
-        >
-          <a class="orgFoto"></a>
-          <div class="card_body">
-            <h3>{{ organization.name }}</h3>
-            <small>№ {{ organization.id }}</small>
+          <div v-if="!team">
+            <h5>В организации пока нет ни одной команды</h5>
           </div>
-          <div class="card_action">
-            <ArrowRight
-              @click="showModalEdit(organization)"
-              class="btn-link"
-            ></ArrowRight>
-          </div>
-        </div>
-        <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
-        <div class="organizationNotSearch" v-if="filterOrganization == ''">
-          <Stub>
-            <div slot="body">
-              <h3 class="mb-4">Организации не найдены</h3>
-              <button class="btn btn-primary" @click="isAddOrganization = true">
-                Создать
+          <div v-else>
+            <div class="oneTeam" v-for="teamUs in filterTeam" :key="teamUs.id">
+              <p>№{{ teamUs.id }}</p>
+              <p>
+                <b>{{ teamUs.name }}</b>
+              </p>
+              <span>{{ teamUs.description }}</span>
+              <button class="btn btn-link" @click="requestInTeam(teamUs.id)">
+                Подать заявку
               </button>
             </div>
-          </Stub>
+          </div>
+        </div>
+        <div slot="footer">
+          <button
+            class="modal-default-button btn btn-secondary"
+            @click="isShowInfoModal = false"
+          >
+            Закрыть
+          </button>
+        </div>
+      </popup>
+      <minialert v-if="isShowAlertAddReq"
+        ><p slot="title">Заявка в команду успешно подана</p></minialert
+      >
+      <div class="container">
+        <div class="container">
+          <!-- строка поиска организаций  -->
+          <div class="row d-flex">
+            <input
+              v-model.trim="findString"
+              type="text"
+              placeholder="Введите название организации, которую вы хотите найти"
+              class="form-control block find dark"
+            />
+          </div>
+          <!-- вывод массива всех организаций  -->
+          <div
+            class="card"
+            v-for="organization in filterOrganization"
+            :key="organization.id"
+          >
+            <a class="orgFoto"></a>
+            <div class="card_body">
+              <h3>{{ organization.name }}</h3>
+              <small>№ {{ organization.id }}</small>
+            </div>
+            <div class="card_action">
+              <ArrowRight
+                @click="showModalEdit(organization)"
+                class="btn-link"
+              ></ArrowRight>
+            </div>
+          </div>
+          <!-- если оранизаций нет или они не найдены по запросу, то можно создать новую  -->
+          <div class="organizationNotSearch" v-if="filterOrganization == ''">
+            <Stub>
+              <div slot="body">
+                <h3 class="mb-4">Организации не найдены</h3>
+                <button
+                  class="btn btn-primary"
+                  @click="isAddOrganization = true"
+                >
+                  Создать
+                </button>
+              </div>
+            </Stub>
+          </div>
         </div>
       </div>
+      <!-- попап для создания новой организации  -->
+      <popup v-if="isAddOrganization">
+        <h3 slot="header">
+          Регистрация организации
+        </h3>
+        <div slot="body">
+          <!-- форма добавления новой организации  -->
+          <form @submit.prevent="submit">
+            <p>* - обязательное поле</p>
+            <label>Название организации</label><br />
+            <input
+              :disabled="signUpLoading"
+              type="text"
+              v-model.trim="$v.name.$model"
+              placeholder="Организация 'Техностек'"
+              class="form-control form-text"
+              :class="{ is_invalid: $v.name.$error }"
+            />
+            <div v-if="$v.name.$error" class="error">
+              <span v-if="!$v.name.required"
+                >Organization name is required</span
+              >
+              <span v-else-if="!$v.name.alpha"
+                >Organization name accepts only alphabet characters.</span
+              >
+            </div>
+            <br />
+            <label>Руководитель организации</label><br />
+            <input
+              :disabled="signUpLoading"
+              type="number"
+              v-model.trim="$v.ownerId.$model"
+              placeholder="Owner ID"
+              class="form-control form-text"
+              :class="{ is_invalid: $v.ownerId.$error }"
+            />
+            <div v-if="$v.ownerId.$error" class="error">
+              <span v-if="!$v.ownerId.required">Owner is required</span>
+            </div>
+            <br />
+            <!-- тип орагизации должен выводиться из таблицы organizationTypes -->
+            <label>Тип организации</label><br />
+            <input
+              type="number"
+              :disabled="signUpLoading"
+              v-model.trim="$v.organizationTypeId.$model"
+              placeholder="Organization type"
+              class="form-control form-text"
+              :class="{ is_invalid: $v.organizationTypeId.$error }"
+            />
+            <div v-if="$v.organizationTypeId.$error" class="error">
+              <span v-if="!$v.organizationTypeId.required"
+                >Type of organization is required</span
+              >
+            </div>
+            <br />
+            <label>Количество команд</label><br />
+            <input
+              :disabled="signUpLoading"
+              type="number"
+              v-model.trim="$v.maxTeamsLimit.$model"
+              placeholder="Limit"
+              class="form-control form-text"
+            />
+            <div v-if="$v.maxTeamsLimit.$error" class="error">
+              <span v-if="!$v.maxTeamsLimit.required"
+                >Limit of teams is required</span
+              >
+            </div>
+            <br />
+            <input
+              :disabled="signUpLoading"
+              type="submit"
+              class="btn btn-primary"
+              value="Зарегистрировать организацию"
+            /><br />
+          </form>
+          <button class="btn btn-secondary" @click="isAddOrganization = false">
+            <i18n path="cancel"
+              ><span place="title">{{ $t("cancel") }}</span></i18n
+            >
+          </button>
+        </div>
+      </popup>
     </div>
-    <!-- попап для создания новой организации  -->
-    <popup v-if="isAddOrganization">
-      <h3 slot="header">
-        Регистрация организации
-      </h3>
-      <div slot="body">
-        <!-- форма добавления новой организации  -->
-        <form @submit.prevent="submit">
-          <p>* - обязательное поле</p>
-          <label>Название организации</label><br />
-          <input
-            :disabled="signUpLoading"
-            type="text"
-            v-model.trim="$v.name.$model"
-            placeholder="Организация 'Техностек'"
-            class="form-control form-text"
-            :class="{ is_invalid: $v.name.$error }"
-          />
-          <div v-if="$v.name.$error" class="error">
-            <span v-if="!$v.name.required">Organization name is required</span>
-            <span v-else-if="!$v.name.alpha"
-              >Organization name accepts only alphabet characters.</span
-            >
-          </div>
-          <br />
-          <label>Руководитель организации</label><br />
-          <input
-            :disabled="signUpLoading"
-            type="number"
-            v-model.trim="$v.ownerId.$model"
-            placeholder="Owner ID"
-            class="form-control form-text"
-            :class="{ is_invalid: $v.ownerId.$error }"
-          />
-          <div v-if="$v.ownerId.$error" class="error">
-            <span v-if="!$v.ownerId.required">Owner is required</span>
-          </div>
-          <br />
-          <!-- тип орагизации должен выводиться из таблицы organizationTypes -->
-          <label>Тип организации</label><br />
-          <input
-            type="number"
-            :disabled="signUpLoading"
-            v-model.trim="$v.organizationTypeId.$model"
-            placeholder="Organization type"
-            class="form-control form-text"
-            :class="{ is_invalid: $v.organizationTypeId.$error }"
-          />
-          <div v-if="$v.organizationTypeId.$error" class="error">
-            <span v-if="!$v.organizationTypeId.required"
-              >Type of organization is required</span
-            >
-          </div>
-          <br />
-          <label>Количество команд</label><br />
-          <input
-            :disabled="signUpLoading"
-            type="number"
-            v-model.trim="$v.maxTeamsLimit.$model"
-            placeholder="Limit"
-            class="form-control form-text"
-          />
-          <div v-if="$v.maxTeamsLimit.$error" class="error">
-            <span v-if="!$v.maxTeamsLimit.required"
-              >Limit of teams is required</span
-            >
-          </div>
-          <br />
-          <input
-            :disabled="signUpLoading"
-            type="submit"
-            class="btn btn-primary"
-            value="Зарегистрировать организацию"
-          /><br />
-        </form>
-        <button class="btn btn-secondary" @click="isAddOrganization = false">
-          <i18n path="cancel"
-            ><span place="title">{{ $t("cancel") }}</span></i18n
-          >
-        </button>
-      </div>
-    </popup>
+    <div v-else class="wrapOfLoader">
+      <Loader></Loader>
+    </div>
     <!-- окошко информации о добавлении организации  -->
     <minialert v-if="isShowAlertAdd"
       ><p slot="title">Вы успешно добавили организацию</p></minialert
@@ -190,6 +200,7 @@ import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import popup from "@/components/Popup.vue";
 import minialert from "@/components/MiniAlert.vue";
 import Stub from "@/components/Stub.vue";
+import Loader from "@/components/Loader.vue";
 import {
   ORGS_QUERY,
   ONE_ORG_QUERY,
@@ -202,7 +213,7 @@ import { required } from "vuelidate/lib/validators";
 import { ONE_USER_IN_TEAMS_QUERY } from "../../graphql/queries";
 export default {
   name: "UserInOrganization",
-  components: { popup, minialert, ArrowRight, BreadCrumbs, Stub },
+  components: { popup, minialert, ArrowRight, BreadCrumbs, Stub, Loader },
   data() {
     return {
       findString: "",
@@ -458,5 +469,14 @@ h3 {
 }
 small {
   color: $gray;
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>

@@ -54,7 +54,7 @@
         </div>
       </div>
     </div>
-    <div v-else><Loader></Loader></div>
+    <div v-else class="wrapOfLoader"><Loader></Loader></div>
   </div>
 </template>
 
@@ -237,5 +237,14 @@ export default {
   height: 1.25rem;
   margin-left: 0;
   margin-right: 0.3rem;
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>

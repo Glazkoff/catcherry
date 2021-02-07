@@ -4,11 +4,10 @@
       <div class="row">
         <div class="col-12">
           <BreadCrumbs></BreadCrumbs>
-          <h3>Личная статистика</h3>
         </div>
       </div>
     </div>
-    <div v-if="$apollo.loading" class="container">
+    <div v-if="$apollo.loading" class="wrapOfLoader">
       <Loader></Loader>
     </div>
     <div v-else>
