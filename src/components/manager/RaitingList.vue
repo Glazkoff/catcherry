@@ -4,20 +4,18 @@
       <div class="row">
         <div class="col-12">
           <BreadCrumbs></BreadCrumbs>
-          <h2>{{ $t("ratingOfTeamMembers.ratingOfTeamMembers") }}</h2>
         </div>
       </div>
     </div>
-    <div v-if="$apollo.queries.usersInTeams.loading" class="container">
+    <div v-if="$apollo.queries.usersInTeams.loading" class="wrapOfLoader">
       <Loader></Loader>
     </div>
-    <div v-if="usersInTeams == null" class="container">
-      <div class="stub">
-        <Info></Info>
-        <p>В команде пока нет участников!</p>
-      </div>
-    </div>
-    <div v-for="oneUser in usersInTeams" :key="oneUser.id" class="container">
+    <div
+      v-else
+      v-for="oneUser in usersInTeams"
+      :key="oneUser.id"
+      class="container"
+    >
       <div class="container">
         <div class="row">
           <div
@@ -124,6 +122,12 @@
             </div>
           </div>
         </div>
+      </div>
+    </div>
+    <div v-if="usersInTeams == null" class="container">
+      <div class="stub">
+        <Info></Info>
+        <p>В команде пока нет участников!</p>
       </div>
     </div>
   </div>

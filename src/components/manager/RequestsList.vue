@@ -1,16 +1,14 @@
 <template>
   <div class="container">
-    <div class="row" v-if="this.$apollo.loading">
-      <div class="col-12 wrapOfLoader">
-        <Loader></Loader>
-      </div>
-    </div>
-    <div class="row" v-if="!this.$apollo.loading">
+    <div class="row">
       <div class="col-12">
         <BreadCrumbs></BreadCrumbs>
       </div>
     </div>
-    <div class="row">
+    <div v-if="this.$apollo.loading" class="wrapOfLoader">
+      <Loader></Loader>
+    </div>
+    <div class="row" v-else>
       <div class="col-12">
         <div v-if="requests.length == 0">
           <Stub>
@@ -45,23 +43,23 @@
           </div>
         </div>
       </div>
-      <minialert v-if="isShowAlertError">
+      <Minialert v-if="isShowAlertError">
         <p slot="title">
           {{ $t("minialertError") }}
         </p>
-      </minialert>
-      <minialert v-if="isShowAlertAdd">
+      </Minialert>
+      <Minialert v-if="isShowAlertAdd">
         <p slot="title">
           {{ $t("team.youHaveSuccessfullyAddedTheUserToTheTeam") }}
         </p>
-      </minialert>
-      <minialert v-if="isShowAlertDelete">
+      </Minialert>
+      <Minialert v-if="isShowAlertDelete">
         <p slot="title">
           {{
             $t("team.youHaveSuccessfullyDeclinedYourRequestToBeAddedToTheTeam")
           }}
         </p>
-      </minialert>
+      </Minialert>
     </div>
   </div>
 </template>

@@ -1,10 +1,10 @@
 <template>
   <div class="container">
     <div class="row">
+      <div class="col-12">
+        <BreadCrumbs></BreadCrumbs>
+      </div>
       <div v-if="!this.$apollo.loading">
-        <div class="col-12">
-          <BreadCrumbs></BreadCrumbs>
-        </div>
         <form @submit.prevent="editTeam()" class="col-12">
           <p class="gray mb-4">
             {{ $t("team.lastedited") }}: {{ $d(oneTeam.updatedAt, "long") }}
@@ -77,27 +77,21 @@
             {{ $t("save") }}
           </button>
         </form>
-        <minialert v-if="isShowAlertEdit"
+        <Minialert v-if="isShowAlertEdit"
           ><p slot="title">
             {{ $t("team.youHaveSuccessfullyChangedTheseTeam") }}
-          </p></minialert
+          </p></Minialert
         >
-        <minialert v-if="isError"
+        <Minialert v-if="isError"
           ><p slot="title">
             {{ $t("minialertError") }}
-          </p></minialert
+          </p></Minialert
         >
       </div>
-      <div v-else class="container"><Loader></Loader></div>
-    </div>
-    <div class="container" v-if="!this.$apollo.loading">
-      <div v-for="t in team" :key="t.id">
-        <div v-if="t.id == id">
-          <EditForm :t="t" @update="toSaveEditTeam" />
-        </div>
+      <div v-else class="wrapOfLoader">
+        <Loader></Loader>
       </div>
     </div>
-    <div v-else class="container"><Loader></Loader></div>
   </div>
 </template>
 
@@ -106,7 +100,7 @@ import { UPDATE_TEAM_QUERY, TEAM_QUERY } from "@/graphql/queries";
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Loader from "@/components/Loader.vue";
 import { required, numeric } from "vuelidate/lib/validators";
-import minialert from "@/components/MiniAlert.vue";
+import Minialert from "@/components/MiniAlert.vue";
 export default {
   apollo: {
     // Массив команд организации
@@ -131,7 +125,7 @@ export default {
   components: {
     BreadCrumbs,
     Loader,
-    minialert
+    Minialert
   },
   validations: {
     // Редактирование данных про организацию
@@ -202,7 +196,6 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_grid.scss";
 @import "@/styles/_classes.scss";
-@import "@/styles/_grid.scss";
 textarea {
   resize: none;
   height: 10rem;
