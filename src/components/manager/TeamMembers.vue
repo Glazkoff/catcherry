@@ -1,5 +1,6 @@
 <template>
   <div class="container">
+    <p>ihgjbhlbhib {{ $route.params.id }}</p>
     <div class="row" v-if="this.$apollo.queries.usersInTeams.loading">
       <div class="col-12" wrapOfLoader>
         <Loader></Loader>

@@ -102,12 +102,6 @@ export const REQUESTS_QUERY = gql`
   }
 `;
 
-export const ACCEPT_REQUEST_QUERY = gql`
-  mutation($id: ID!) {
-    acceptRequst(id: $id)
-  }
-`;
-
 export const CHANGE_STATUS_REQUEST_QUERY = gql`
   mutation($id: ID!, $status: String) {
     changeStatusRequest(id: $id, status: $status)
@@ -479,12 +473,6 @@ export const ADD_IN_TEAM_QUERY = gql`
   }
 `;
 
-export const REJECT_REQUEST = gql`
-  mutation($id: ID!) {
-    rejectRequst(id: $id)
-  }
-`;
-
 // (НИЖЕ) ЗАПРОСЫ К ТАБЛИЦЕ POSTS
 
 // Получение одного поста
@@ -590,14 +578,6 @@ export const CREATE_LIKE_OF_COMMENT = gql`
 export const DELETE_LIKE_OF_COMMENT = gql`
   mutation($userId: ID!, $commentId: ID!) {
     deleteLikeOfComment(userId: $userId, commentId: $commentId)
-  }
-`;
-
-// -- //
-
-export const REVOKE_REQUEST_QUERY = gql`
-  mutation($id: ID!) {
-    revokeRequst(id: $id)
   }
 `;
 

@@ -185,7 +185,7 @@ module.exports = {
           { model: db.Users, as: "user" },
           {
             model: db.Teams,
-            as: "usersInTeam",
+            as: "team",
             include: [{ model: db.Organizations, as: "organization" }]
           }
         ]
@@ -197,7 +197,7 @@ module.exports = {
         include: [
           {
             model: db.Teams,
-            as: "team",
+            as: "usersInTeam",
             include: [{ model: db.Organizations, as: "organization" }]
           }
         ]
@@ -370,12 +370,12 @@ module.exports = {
       }),
     comment: (parent, args, { db }) =>
       db.Comments.findOne({ where: { id: args.id } }),
-    // Получения списка всех участников команжы
+    // Получения списка всех участников команды
     usersInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
         where: {
           status: "Принят",
-          "$team.id$": +args.teamId
+          teamId: args.teamId
         },
         include: [
           {
@@ -507,7 +507,7 @@ module.exports = {
             as: "tasksTeam",
             include: {
               model: db.UsersInTeams,
-              as: "team"
+              as: "usersInTeam"
             }
           }
         ]
@@ -534,7 +534,8 @@ module.exports = {
         patricity: input.patricity,
         birthday: input.birthday,
         password: hashPassword,
-        roleInSystem: input.roleInSystem
+        roleInSystem: input.roleInSystem,
+        organizationId: input.organizationId
       });
 
       // Добавляем кошелёк для баллов
@@ -970,17 +971,6 @@ module.exports = {
     /*
       [Ниже] Мутации работы с заявками на вхождение в команду     
     */
-    acceptRequst: (parent, { id }, { db }) =>
-      db.UsersInTeams.update(
-        {
-          status: "Принят"
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
     changeStatusRequest: (parent, args, { db }) =>
       db.UsersInTeams.update(
         {
@@ -989,28 +979,6 @@ module.exports = {
         {
           where: {
             id: args.id
-          }
-        }
-      ),
-    revokeRequst: (parent, { id }, { db }) =>
-      db.UsersInTeams.update(
-        {
-          status: "Не принят"
-        },
-        {
-          where: {
-            id: id
-          }
-        }
-      ),
-    rejectRequst: (parent, { id }, { db }) =>
-      db.UsersInTeams.update(
-        {
-          status: "Отклонен"
-        },
-        {
-          where: {
-            id: id
           }
         }
       ),
