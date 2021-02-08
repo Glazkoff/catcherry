@@ -29,9 +29,15 @@ const {
   constraintDirective,
   constraintDirectiveTypeDefs
 } = require("graphql-constraint-directive");
+const timeout = require("connect-timeout");
+
+const { PubSub } = require("graphql-subscriptions");
+const { execute, subscribe } = require("graphql");
+const { createServer } = require("http");
+const { SubscriptionServer } = require("subscriptions-transport-ws");
+
 // Схема GraphQL в форме строки
 const typeDefs = require("./schema");
-const timeout = require("connect-timeout");
 
 // Резолверы
 const resolvers = require("./resolvers");
@@ -116,7 +122,7 @@ db.sequelize
   // .sync({ alter: true })
   .sync()
   .then(async () => {
-    app.listen(PORT, () => {
+    let server = app.listen(PORT, () => {
       // addAllTables(true);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
@@ -128,6 +134,20 @@ db.sequelize
       //   });
       // }
       // addAllTables();
+
+      // Установка WebSocket для обслуживани GraphQL Subscriptions
+      new SubscriptionServer(
+        {
+          execute,
+          subscribe,
+          schema
+        },
+        {
+          server,
+          path: "/subscriptions"
+        }
+      );
+
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
         chalk.cyan(`http://localhost:${PORT}/graphiql`)
@@ -187,6 +207,7 @@ async function addAllTables(destroyTable) {
         typeName: faker.name.findName()
       });
     }
+
     //Пользователи
     const salt = bcrypt.genSaltSync(10);
     let user = await db.Users.create({
@@ -198,10 +219,12 @@ async function addAllTables(destroyTable) {
       login: faker.random.word(),
       password: bcrypt.hashSync("nikita", salt)
     });
+
     //Администраторы
     let administrators = await db.Administrators.create({
       userId: user.dataValues.id
     });
+
     //Организации
     let organization = await db.Organizations.create({
       name: faker.name.findName(),
@@ -230,6 +253,7 @@ async function addAllTables(destroyTable) {
       userId: user.dataValues.id,
       readOrNot: faker.random.boolean()
     });
+
     //Посты
     let post = await db.Posts.create({
       body: {
