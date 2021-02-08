@@ -7,7 +7,7 @@
         </div>
       </div>
     </div>
-    <div class="container" v-if="$apollo.loading">
+    <div class="wrapOfLoader" v-if="$apollo.loading">
       <Loader></Loader>
     </div>
     <div class="container" v-else>
@@ -342,5 +342,14 @@ export default {
   img {
     border-radius: 100%;
   }
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>

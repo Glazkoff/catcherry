@@ -1,14 +1,19 @@
 <template>
-  <div class="main_stat">
-    <breadcrumbs></breadcrumbs>
-    <h3>Личная статистика</h3>
+  <div>
+    <div class="container">
+      <div class="row">
+        <div class="col-12">
+          <BreadCrumbs></BreadCrumbs>
+        </div>
+      </div>
+    </div>
     <div v-if="$apollo.loading" class="wrapOfLoader">
-      <loader></loader>
+      <Loader></Loader>
     </div>
     <div v-else>
-      <div>
-        <div class="statistics">
-          <div>
+      <div class="container">
+        <div class="row">
+          <div class="col-6">
             <p>За текущую неделю:</p>
             <p
               class="points_now"
@@ -41,7 +46,7 @@
             </small>
             <p>Заработанные баллы: {{ positive }}</p>
           </div>
-          <div>
+          <div class="col-6">
             <p>На прошлой неделе:</p>
             <p v-if="pointsLastWeek !== null" class="points_now">
               {{ pointsLastWeek[1] }} баллов
@@ -52,16 +57,23 @@
         </div>
       </div>
 
-      <h3>История:</h3>
-      <div
-        v-for="(statistic, index) in personalUserStatistics.userPointsOperation"
-        :key="index"
-        class="card"
-      >
-        <div>
-          <p>Дата: {{ $d(statistic.createdAt, "long") }}</p>
-          Баллов:
-          {{ statistic.delta }} за "{{ statistic.operationDescription }}"
+      <div class="container">
+        <div class="row">
+          <div class="col-12">
+            <h3>История:</h3>
+            <div
+              v-for="(statistic,
+              index) in personalUserStatistics.userPointsOperation"
+              :key="index"
+              class="card"
+            >
+              <div>
+                <p>Дата: {{ $d(statistic.createdAt, "long") }}</p>
+                Баллов:
+                {{ statistic.delta }} за "{{ statistic.operationDescription }}"
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -72,7 +84,7 @@
 import userStatisticsDown from "@/assets/svg/manager/userStatisticsDown.svg?inline";
 import userStatisticsUp from "@/assets/svg/manager/userStatisticsUp.svg?inline";
 import userStatisticsStable from "@/assets/svg/manager/userStatisticsStable.svg?inline";
-import breadcrumbs from "@/components/BreadCrumbs.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Loader from "@/components/Loader.vue";
 import {
   PERSONAL_USER_STATISTIC_QUERY,
@@ -117,7 +129,7 @@ export default {
     userStatisticsDown,
     userStatisticsUp,
     userStatisticsStable,
-    breadcrumbs,
+    BreadCrumbs,
     Loader
   },
   apollo: {
@@ -160,13 +172,7 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
-
-.main_stat {
-  padding: 0 50px;
-}
-
-@import "@/styles/_classes.scss";
-@import "@/styles/_colors.scss";
+@import "@/styles/_grid.scss";
 .form-control {
   display: inline-block;
 }

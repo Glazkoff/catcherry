@@ -2,11 +2,11 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
-        <breadcrumbs></breadcrumbs>
+        <BreadCrumbs></BreadCrumbs>
       </div>
     </div>
-    <div class="wrapOfLoader" v-if="$apollo.loading"><loader></loader></div>
-    <div v-if="!$apollo.loading">
+    <div v-if="$apollo.loading" class="wrapOfLoader"><Loader></Loader></div>
+    <div v-else>
       <div class="row">
         <div class="col-4">
           <h2 class="mb-4">{{ $t("task.backlogTask") }}</h2>
@@ -134,36 +134,36 @@
         </div>
       </div>
     </div>
-    <minialert v-if="isShowAlert">
+    <Minialert v-if="isShowAlert">
       <p slot="title">
         {{ $t("task.youHaveSuccessfullyCreditedPointsToTheUser") }}
       </p>
-    </minialert>
-    <minialert v-if="isShowAlertError">
+    </Minialert>
+    <Minialert v-if="isShowAlertError">
       <p slot="title">
         {{ $t("minialertError") }}
       </p>
-    </minialert>
-    <minialert v-if="isShowAlertDelete">
+    </Minialert>
+    <Minialert v-if="isShowAlertDelete">
       <p slot="title">
         {{ $t("task.youHaveSuccessfullyDeletedTheTask") }}
       </p>
-    </minialert>
-    <minialert v-if="isShowAlertSendForRevision">
+    </Minialert>
+    <Minialert v-if="isShowAlertSendForRevision">
       <p slot="title">
         {{ $t("task.youHaveSuccessfullyReturnedTheTaskForRevision") }}
       </p>
-    </minialert>
-    <minialert v-if="queryError">
+    </Minialert>
+    <Minialert v-if="queryError">
       <p slot="title">{{ queryError }}</p>
-    </minialert>
+    </Minialert>
   </div>
 </template>
 
 <script>
-import minialert from "@/components/MiniAlert.vue";
+import Minialert from "@/components/MiniAlert.vue";
 import Loader from "@/components/Loader.vue";
-import breadcrumbs from "@/components/BreadCrumbs.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import {
   ALL_TASKS_IN_TEAM_QUERY,
   CHANGE_STATUS_TASK_QUERY,
@@ -173,7 +173,7 @@ import {
 } from "@/graphql/queries";
 
 export default {
-  components: { minialert, Loader, breadcrumbs },
+  components: { Minialert, Loader, BreadCrumbs },
   apollo: {
     // массив задач с назначенными ответственными
     allTasksInOneTeam: {

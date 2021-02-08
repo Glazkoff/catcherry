@@ -12,7 +12,7 @@
         </div>
       </div>
       <div class="wrapOfLoader" v-if="$apollo.loading">
-        <loader></loader>
+        <Loader></Loader>
       </div>
       <div class="row" v-if="!$apollo.loading">
         <NewStatistics

@@ -14,7 +14,7 @@
         </div>
       </div>
       <div v-if="$apollo.queries.organizations.loading" class="wrapOfLoader">
-        <loader></loader>
+        <Loader></Loader>
       </div>
       <div v-if="!$apollo.queries.organizations.loading">
         <div class="row">
