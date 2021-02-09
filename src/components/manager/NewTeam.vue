@@ -2,6 +2,9 @@
   <div class="container">
     <div class="row">
       <div class="col-12">
+        <BreadCrumbs></BreadCrumbs>
+      </div>
+      <div class="col-12">
         <h2>{{ $t("team.createNewTeam") }}</h2>
         <form @submit.prevent="createTeam()">
           <div class="form-group">
@@ -90,8 +93,9 @@ import {
   MANAGER_TEAMS_QUERY
 } from "@/graphql/queries";
 import minialert from "@/components/MiniAlert.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
 export default {
-  components: { minialert },
+  components: { minialert, BreadCrumbs },
   apollo: {
     userOrganization: {
       query: USER_ORG_QUERY,
