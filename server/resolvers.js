@@ -8,6 +8,10 @@ const Op = Sequelize.Op;
 // Соль для шифрования bcrypt
 const salt = bcrypt.genSaltSync(10);
 
+const { PubSub } = require("apollo-server-express");
+const pubsub = new PubSub();
+const NOTIFICATION_ADDED = "notificationAdded";
+
 // Функция генерации токенов (принмает данные, которые мы заносим в токен )
 function generateTokens(user) {
   // Генерируем рефреш-токен
@@ -85,7 +89,7 @@ async function addRefreshSession(db, userId, refreshToken, fingerprint) {
   }
 }
 
-// ФУНКЦИЯ: создание записи о новой сессии
+// ФУНКЦИЯ: обновление записи о новой сессии
 async function updateRefreshSession(
   db,
   userId,
@@ -806,6 +810,11 @@ module.exports = {
           readOrNot: false
         });
       });
+
+      // Отправляем событие для Graphql Subscriptions
+      pubsub.publish(NOTIFICATION_ADDED, {
+        notificationAdded: result
+      });
       return result;
     },
 
@@ -1076,6 +1085,11 @@ module.exports = {
       } else {
         return 0;
       }
+    }
+  },
+  Subscription: {
+    notificationAdded: {
+      subscribe: () => pubsub.asyncIterator([NOTIFICATION_ADDED])
     }
   }
 };
