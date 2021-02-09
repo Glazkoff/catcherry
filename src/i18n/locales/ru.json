@@ -169,11 +169,12 @@
     "surname": "Фамилия"
   },
   "Organizations": {
-    "noTeamsInOrganization": "В организации пока нет ни одной команды",
+    "noTeamsInOrganization": "Команды не были найдены",
     "nameTeam": "Название",
     "statusUserInTeam": "Статус",
     "usersLimitInTeam": "Участники",
     "requestInTeam": "Подать заявку",
+    "addRequestAgain": "Подать заявку повторно",
     "removeRequestInTeam": "Удалить заявку",
     "noSeatsInTeam": "Нет мест",
     "goodRequestInTeam": "Заявка в команду успешно подана",

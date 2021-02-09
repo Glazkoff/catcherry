@@ -162,19 +162,20 @@ module.exports = {
     // Получаем список всех пользователей
     users: (parent, args, { db }) =>
       db.Users.findAll({ order: [["id", "ASC"]] }),
-    usersInNewTeams: (parent, args, { db }) =>
-      db.UsersInTeams.findAll({ order: [["id", "ASC"]] }),
+
     // Получаем данные про одного пользователя
     user: (parent, args, { db }) => {
       return db.Users.findOne({
         where: { id: args.id }
       });
     },
+
     userOrganization: (parent, args, { db }) => {
       return db.Organizations.findOne({
         where: { ownerId: args.id }
       });
     },
+
     // Получаем данные о командах пользователя + информация о команде (об организации)
     oneUserInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
@@ -190,18 +191,7 @@ module.exports = {
           }
         ]
       }),
-    // Получаем данные об организации, в которой состоит пользователь
-    userInOneOrganization: (parent, args, { db }) =>
-      db.UsersInTeams.findOne({
-        where: { userId: args.userId },
-        include: [
-          {
-            model: db.Teams,
-            as: "team",
-            include: [{ model: db.Organizations, as: "organization" }]
-          }
-        ]
-      }),
+
     // Получаем список всех организаций
     organizations: (parent, args, { db }) =>
       db.Organizations.findAll({
@@ -228,6 +218,7 @@ module.exports = {
         where: { organizationId: args.organizationId }
       });
     },
+
     managerTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
         where: { roleId: 2, userId: args.userId },
@@ -240,8 +231,10 @@ module.exports = {
           }
         ]
       }),
+
     teams: (parent, args, { db }) =>
       db.Teams.findAll({ order: [["id", "ASC"]] }),
+
     // Команды в организации
     teamsInOrganization: (parent, args, { db }) => {
       return db.Teams.findAll({
@@ -370,6 +363,7 @@ module.exports = {
       }),
     comment: (parent, args, { db }) =>
       db.Comments.findOne({ where: { id: args.id } }),
+
     // Получения списка всех участников команжы
     usersInTeams: (parent, args, { db }) =>
       db.UsersInTeams.findAll({
@@ -733,6 +727,21 @@ module.exports = {
           }
         }
       ),
+
+    // Меняем статус пользователя в команде
+    updateUserInTeam: (parent, args, { db }) =>
+      db.UsersInTeams.update(
+        {
+          status: args.status
+        },
+        {
+          where: {
+            userId: args.userId,
+            teamId: args.teamId
+          }
+        }
+      ),
+
     // Добавление пользователя в команду менеджером
     addUserInNewTeam: (parent, { id, userId }, { db }) =>
       db.UsersInTeams.create({
@@ -797,7 +806,7 @@ module.exports = {
         }
       }),
     // Добавляем id организации в информацию о пользователе
-    addUsertoOrganization: (parent, args, { db }) =>
+    addUsertoOrganization: (parent, args, { db }) => {
       db.Users.update(
         {
           organizationId: args.organizationId
@@ -807,7 +816,9 @@ module.exports = {
             id: args.id
           }
         }
-      ),
+      );
+      console.log("КАПЕЦЦ");
+    },
 
     deleteTeam: (parent, args, { db }) =>
       db.Teams.destroy({
@@ -967,7 +978,7 @@ module.exports = {
         where: { userId, commentId }
       }),
 
-    // ----- //
+    // Создание пользователя в команде с передачей статуса и роли
     createUserInTeam: (parent, { userId, teamId, status, roleId }, { db }) =>
       db.UsersInTeams.create({
         userId: userId,

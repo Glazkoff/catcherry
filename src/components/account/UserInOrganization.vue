@@ -97,35 +97,26 @@ import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import TeamsInOrganization from "@/components/TeamsInOrganization.vue";
 import ArrowRight from "@/assets/svg/admin/arrow_right.svg?inline";
 import Stub from "@/components/Stub.vue";
-import { ORGS_QUERY, USER_IN_ONE_ORGANIZATION_QUERY } from "@/graphql/queries";
+import { ORGS_QUERY } from "@/graphql/queries";
 export default {
   name: "UserInOrganization",
   components: { ArrowRight, BreadCrumbs, Stub, TeamsInOrganization },
+
   data() {
     return {
       findOrganization: "",
-      showTeams: [],
-      // FIXME: fix to computed
-      consistOrganization: -1
+      showTeams: []
     };
   },
   apollo: {
     // Массив всех организаций
     organizations: {
       query: ORGS_QUERY
-    },
-    // Получение id организации пользователя
-    userInOneOrganization: {
-      query: USER_IN_ONE_ORGANIZATION_QUERY,
-      variables() {
-        return {
-          userId: this.idUser
-        };
-      }
     }
   },
+
   methods: {
-    // Метод отображения команд в ораганизации
+    // Метод отображения команд по клику на них
     onShowTeams(id) {
       let index = this.onFindIndex(id);
       if (index == -1) {
@@ -144,17 +135,14 @@ export default {
       }
     }
   },
+
   computed: {
     // Фильтрация организаций
     filterOrganization() {
-      if (
-        this.consistOrganization == -1 &&
-        (this.userInOneOrganization == null ||
-          this.userInOneOrganization == undefined)
-      ) {
+      if (this.idOrganization == null || this.idOrganization == 0) {
         if (
           this.findOrganization !== "" &&
-          this.organizations != null &&
+          this.organizations.length != 0 &&
           this.organizations != undefined
         ) {
           return this.organizations.filter(el => {
@@ -196,34 +184,23 @@ export default {
           return this.organizations;
         }
       } else {
-        if (
-          this.consistOrganization != -1 &&
-          this.organizations != null &&
-          this.organizations != undefined
-        ) {
+        if (this.organizations != undefined) {
           return this.organizations.filter(el => {
-            return el.id == this.consistOrganization;
+            return el.id == this.idOrganization;
           });
-        } else {
-          if (
-            this.userInOneOrganization != null &&
-            this.userInOneOrganization != undefined &&
-            this.organizations != null &&
-            this.organizations != undefined
-          ) {
-            return this.organizations.filter(el => {
-              return el.id == this.userInOneOrganization.team.organization.id;
-            });
-          } else return this.organizations;
-        }
+        } else return this.organizations;
       }
     },
+
     // Получение id пользователя из токена
     idUser() {
       return this.$store.getters.decodedToken.id;
-    }
+    },
+
     // Получение id организации пользователя из токена
-    // ... //
+    idOrganization() {
+      return this.$store.getters.decodedToken.organizationId;
+    }
   }
 };
 </script>

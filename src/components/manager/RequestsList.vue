@@ -202,7 +202,6 @@ export default {
           }, 3000);
           console.error(error);
         });
-        
     },
     // Отказать на вступление в команду
     reject(user) {

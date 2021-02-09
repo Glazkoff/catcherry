@@ -1,6 +1,9 @@
 <template>
   <div class="col-12">
-    <div class="row">
+    <div
+      class="row"
+      v-if="teamsInOrganization != undefined && teamsInOrganization.length != 0"
+    >
       <!-- Поиск по названию команды -->
       <div class="col-12">
         <input
@@ -12,12 +15,16 @@
       </div>
     </div>
 
-    <!-- FIXME: Сделать красивый вывод, что команд нет -->
-    <div v-if="!teamsInOrganization">
-      <h5>{{ $t("Organizations.noTeamsInOrganization") }}</h5>
+    <!-- Вывод сообщения, что команд не найдено -->
+    <div v-if="filterTeam != undefined && filterTeam.length == 0">
+      <div class="row">
+        <div class="col-12">
+          <h5>{{ $t("Organizations.noTeamsInOrganization") }}</h5>
+        </div>
+      </div>
     </div>
 
-    <!-- Вывод информации о командах -->
+    <!-- Вывод заголовков для информации о командах -->
     <div v-else>
       <div class="row">
         <div class="col-12 mt-0 mb-0">
@@ -36,26 +43,30 @@
         </div>
       </div>
 
+      <!-- Вывод информации о командах -->
       <div class="row" v-for="team in filterTeam" :key="team.id">
         <div class="col-12 mt-0 mb-0">
           <div class="row table-border">
             <div class="col-4">
-              <small class="white">{{ team.name }}</small>
+              <small>{{ team.name }}</small>
             </div>
             <div class="col-3">
-              <small>{{ onCheckUserStatus(team.usersInTeam) }}</small>
+              <small class="gray">{{
+                onCheckUserStatus(team.usersInTeam)
+              }}</small>
             </div>
             <div class="col-3">
-              <small>
+              <small class="gray">
                 {{ onCountTeamMember(team.usersInTeam) }}/{{
                   team.maxUsersLimit
                 }}
               </small>
             </div>
+
             <div class="col-2">
               <div
                 v-if="
-                  checkStatusUser(team) == -1 &&
+                  onCheckUserStatus(team.usersInTeam) == '-' &&
                     team.usersInTeam.length < team.maxUsersLimit
                 "
               >
@@ -65,8 +76,8 @@
               </div>
               <div
                 v-else-if="
-                  checkStatusUser(team) == -1 &&
-                    team.usersInTeam.length == team.maxUsersLimit
+                  onCheckUserStatus(team.usersInTeam) == '-' &&
+                    onCountTeamMember(team.usersInTeam) == team.maxUsersLimit
                 "
               >
                 <p>{{ $t("Organizations.noSeatsInTeam") }}</p>
@@ -74,15 +85,23 @@
               <div v-else-if="onCheckUserStatus(team.usersInTeam) == 'Accept'">
                 <button
                   class="btn btn-link red"
-                  @click="RemoveRequestUser(team.id)"
+                  @click="RemoveRequestUser(team)"
                 >
                   {{ $t("Organizations.leaveTeam") }}
+                </button>
+              </div>
+              <div v-else-if="onCheckUserStatus(team.usersInTeam) == 'Reject'">
+                <button
+                  class="btn btn-link white"
+                  @click="updateRequestInTeam(team.id)"
+                >
+                  {{ $t("Organizations.addRequestAgain") }}
                 </button>
               </div>
               <div v-else>
                 <button
                   class="btn btn-link red"
-                  @click="RemoveRequestUser(team.id)"
+                  @click="RemoveRequestUser(team)"
                 >
                   {{ $t("Organizations.removeRequestInTeam") }}
                 </button>
@@ -93,7 +112,8 @@
       </div>
     </div>
 
-    <minialert v-if="isShowAlertAddReq"
+    <!-- Появление окошка с информацией о создании заявки -->
+    <minialert v-if="showAlertAddRequest"
       ><p slot="title">
         {{ $t("Organizations.goodRequestInTeam") }}
       </p></minialert
@@ -106,9 +126,10 @@ import minialert from "@/components/MiniAlert.vue";
 import {
   TEAM_IN_ORG_QUERY,
   CREATE_USER_IN_TEAM,
-  USER_IN_ONE_ORGANIZATION_QUERY,
+  UPDATE_USER_IN_TEAM,
   ADD_USER_TO_ORGANIZATION,
-  DELETE_USER_FROM_TEAM
+  DELETE_USER_FROM_TEAM,
+  STATUS_USER_IN_TEAMS_QUERY
 } from "@/graphql/queries";
 export default {
   name: "TeamsInOrganization",
@@ -117,16 +138,12 @@ export default {
   data() {
     return {
       findTeam: "",
-      search: 0,
-      nameOfOrganization: "",
-      isShowInfoModal: false,
-      isShowAlertAddReq: false,
-      // organizationId: 0,
-      consistOrganization: -1
+      showAlertAddRequest: false
     };
   },
+
   apollo: {
-    // массив команд, находящихся в организации
+    // Массив команд, находящихся в организации
     teamsInOrganization: {
       query: TEAM_IN_ORG_QUERY,
       variables() {
@@ -135,16 +152,20 @@ export default {
         };
       }
     },
-    userInOneOrganization: {
-      query: USER_IN_ONE_ORGANIZATION_QUERY,
+
+    // Массив статусов участия в командах для пользователя
+    oneUserInTeams: {
+      query: STATUS_USER_IN_TEAMS_QUERY,
       variables() {
         return {
-          userId: this.idUser
+          userId: +this.idUser
         };
       }
     }
   },
+
   methods: {
+    // Проверка статуса пользователя в команде
     onCheckUserStatus(usersInTeam) {
       let index;
       if (usersInTeam.length != 0) {
@@ -163,28 +184,99 @@ export default {
       } else return "-";
     },
 
-    checkStatusUser(team) {
-      if (team.usersInTeam != null || team.usersInTeam != undefined) {
-        return team.usersInTeam.findIndex(el => {
-          if (el != null || el != undefined) {
-            if (el.user != null || el.user != undefined) {
-              return el.user.id == this.idUser;
-            } else return false;
-          } else return false;
-        });
-      } else return -1;
+    // Метод обновления токена
+    async updateTokens() {
+      this.$store.dispatch("GET_TOKENS").then(
+        () => {},
+        err => {
+          console.warn(err);
+        }
+      );
     },
 
-    // метод создания заявки в команду
+    // Переподача отклоненной заявки
+    updateRequestInTeam(teamId) {
+      // Изменить статус заявки в локальном массиве статусов
+      if (this.oneUserInTeams != undefined) {
+        this.oneUserInTeams.forEach(el => {
+          if (el.status == "Reject" && el.team.id == teamId)
+            el.status == "Do not accept";
+        });
+      }
+
+      // Добавление id организации в информацию о пользователе, если организация еще не добавлена
+      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+        this.addUsertoOrganization(this.organizationId);
+      }
+
+      // Выполнение запроса об изменении статуса
+      this.$apollo.mutate({
+        mutation: UPDATE_USER_IN_TEAM,
+        variables: {
+          userId: this.idUser,
+          teamId: +teamId,
+          status: "Do not accept"
+        },
+        update: cache => {
+          let data = cache.readQuery({
+            query: TEAM_IN_ORG_QUERY,
+            variables: {
+              organizationId: +this.organizationId
+            }
+          });
+          console.log(data.teamsInOrganization);
+          let indexTeam = data.teamsInOrganization.findIndex(
+            el => el.id == teamId
+          );
+          let indexUserInTeam = data.teamsInOrganization[
+            indexTeam
+          ].usersInTeam.findIndex(el => el.user.id == this.idUser);
+          if (
+            data.teamsInOrganization[indexTeam] != null &&
+            data.teamsInOrganization[indexTeam].usersInTeam[indexUserInTeam] !=
+              null
+          ) {
+            data.teamsInOrganization[indexTeam].usersInTeam[
+              indexUserInTeam
+            ].status = "Do not accept";
+          }
+          cache.writeQuery({
+            query: TEAM_IN_ORG_QUERY,
+            variables: {
+              organizationId: +this.organizationId
+            },
+            data
+          });
+        }
+      });
+
+      // Обновление токена, если организации у пользователя еще не существует
+      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+        this.updateTokens();
+      }
+
+      // Появление окошка с информацией о создании заявки
+      this.showAlertAddRequest = true;
+      setTimeout(() => {
+        this.showAlertAddRequest = false;
+      }, 3000);
+    },
+
+    // Обработка добавление заявки в команду
     requestInTeam(teamId) {
-      this.consistOrganization = this.organizationId;
+      // Добавление id организации в информацию о пользователе, если организация еще не добавлена
+      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+        this.addUsertoOrganization(this.organizationId);
+      }
+
+      // Выполнение запроса по добавлению заявки в команду
       this.$apollo.mutate({
         mutation: CREATE_USER_IN_TEAM,
         variables: {
           userId: this.idUser,
           teamId: +teamId,
           status: "Do not accept",
-          roleId: 1 //FIXME: определить начальную роль при подаче заявки
+          roleId: 1 //FIXME: определить роли в командах
         },
         update: cache => {
           let data = cache.readQuery({
@@ -216,21 +308,59 @@ export default {
           });
         }
       });
-      // появление окошка информации о создании заявки
-      this.isShowInfoModal = false;
-      // this.isShowAlertAddReq = true;
-      // setTimeout(() => {
-      //   this.isShowAlertAddReq = false;
-      // }, 3000);
+
+      // Добавление информации о статусе заявки в локальный массив статусов пользователя
+      if (this.oneUserInTeams != undefined) {
+        this.oneUserInTeams.push({
+          status: "Do not accept",
+          team: {
+            id: teamId
+          }
+        });
+      }
+
+      // Обновление токена, если организации у пользователя еще не существует
+      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+        this.updateTokens();
+      }
+
+      // Появление окошка с информацией о создании заявки
+      this.showAlertAddRequest = true;
+      setTimeout(() => {
+        this.showAlertAddRequest = false;
+      }, 3000);
     },
-    //Метод удаления заявки пользователя
-    RemoveRequestUser(teamId) {
+
+    // Обработка удаления заявки пользователя из команды
+    async RemoveRequestUser(team) {
+      // Удаление информации о статусе заявки из локального массива статусов пользователя
+      if (this.oneUserInTeams != undefined) {
+        let index = this.oneUserInTeams.findIndex(el => el.id == team.id);
+        this.oneUserInTeams.splice(index, 1);
+      }
+
+      // Проверка на наличие отклоненных заявок у пользователя
+      let numOfReject = 0;
+      this.oneUserInTeams.forEach(el => {
+        if (el.status == "Reject") numOfReject++;
+      });
+      if (
+        this.oneUserInTeams.length == 0 ||
+        this.oneUserInTeams.length == numOfReject
+      ) {
+        // Удаление id организации из информации о пользователе
+        await this.addUsertoOrganization(null);
+        // Обновление токена
+        this.updateTokens();
+      }
+
+      // Обработка запроса удаления заявки из команды
       this.$apollo
         .mutate({
           mutation: DELETE_USER_FROM_TEAM,
           variables: {
             userId: this.idUser,
-            teamId: +teamId
+            teamId: +team.id
           },
           update: cache => {
             let data = cache.readQuery({
@@ -240,7 +370,7 @@ export default {
               }
             });
             let indexTeam = data.teamsInOrganization.findIndex(
-              el => el.id == teamId
+              el => el.id == team.id
             );
             if (data.teamsInOrganization[indexTeam] != null) {
               let indexUser = data.teamsInOrganization[
@@ -265,16 +395,19 @@ export default {
           console.error(error);
         });
     },
+
     // Метод добавления id организации в сведения о пользователе
     addUsertoOrganization(organizationId) {
       this.$apollo.mutate({
         mutation: ADD_USER_TO_ORGANIZATION,
         variables: {
           id: this.idUser,
-          organizationId: organizationId
+          organizationId: +organizationId
         }
       });
     },
+
+    // Счет количества людей уже принятых в команду
     onCountTeamMember(usersInTeam) {
       let count = 0;
       usersInTeam.forEach(el => {
@@ -283,10 +416,19 @@ export default {
       return count;
     }
   },
+
   computed: {
+    // Получение id пользователя из токена
     idUser() {
       return this.$store.getters.decodedToken.id;
     },
+
+    // Получение id организации пользователя из токена
+    idUserOrganization() {
+      return this.$store.getters.decodedToken.organizationId;
+    },
+
+    // Поиск по командам
     filterTeam() {
       if (this.findTeam !== "") {
         return this.teamsInOrganization.filter(el => {
@@ -309,10 +451,6 @@ export default {
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_grid.scss";
 
-.white {
-  color: $white;
-}
-
 .table-border {
   &.headtable {
     padding-top: 0.5rem;
@@ -329,78 +467,16 @@ export default {
   }
   & button {
     padding: 0;
+    text-align: left;
     font-style: normal;
     font-weight: normal;
     font-size: 0.75rem;
     &.red:hover {
       color: $dark_red;
     }
+    &.white:hover {
+      color: $light_grey;
+    }
   }
-}
-
-.organizationNotSearch {
-  text-align: center;
-}
-.organizationNotSearch button {
-  text-align: center;
-  margin-left: auto;
-  margin-right: auto;
-}
-.orgFoto {
-  height: 48px;
-  width: 48px;
-  background-color: $gray;
-  border-radius: 25px;
-  border: 2px solid $bright_violet;
-  color: $gray;
-  margin-right: 1em;
-}
-.formSearch {
-  background: $violet_2;
-  border: 1px solid $violet_2;
-  box-sizing: border-box;
-  border-radius: 0px 15px 15px 0px;
-  color: $gray;
-  padding-top: 3px;
-  padding-bottom: 3px;
-  height: 50px;
-  outline: none;
-  margin: 20px 0;
-}
-.formSearchIcon {
-  background: $violet_2;
-  border: 1px solid $violet_2;
-  border-radius: 15px 0px 0px 15px;
-  color: $gray;
-  padding-top: 13px;
-  padding-left: 11px;
-  padding-bottom: 10px;
-  outline: none;
-  margin: 20px 0;
-}
-.formSearchIconSvg {
-  margin-left: 2px;
-  margin-top: 3px;
-  margin-right: 4px;
-}
-.oneTeam p {
-  display: inline-block;
-  margin-right: 10px;
-}
-.oneOrganization {
-  padding: 20px;
-  margin: 10px;
-  border-radius: 8px;
-  box-shadow: 0 2px 5px #868686;
-}
-p {
-  line-height: 2px !important;
-}
-h3 {
-  margin-block-start: 0em;
-  margin-block-end: 0.1em;
-}
-small {
-  color: $gray;
 }
 </style>

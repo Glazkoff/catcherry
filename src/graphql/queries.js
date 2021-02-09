@@ -171,17 +171,13 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
     }
   }
 `;
-export const USER_IN_ONE_ORGANIZATION_QUERY = gql`
+
+export const STATUS_USER_IN_TEAMS_QUERY = gql`
   query($userId: ID!) {
-    userInOneOrganization(userId: $userId) {
-      id
+    oneUserInTeams(userId: $userId) {
+      status
       team {
         id
-        name
-        organization {
-          id
-          name
-        }
       }
     }
   }
@@ -484,6 +480,12 @@ export const UPDATE_TEAM_QUERY = gql`
 export const ADD_IN_TEAM_QUERY = gql`
   mutation($status: String!, $id: ID!) {
     addUserInTeam(status: $status, id: $id)
+  }
+`;
+
+export const UPDATE_USER_IN_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!, $status: String!) {
+    updateUserInTeam(status: $status, teamId: $teamId, userId: $userId)
   }
 `;
 

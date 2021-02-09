@@ -169,11 +169,12 @@
     "surname": "Surname"
   },
   "Organizations": {
-    "noTeamsInOrganization": "The organization does not have a teams",
+    "noTeamsInOrganization": "Teams was not found",
     "nameTeam": "Name team",
     "statusUserInTeam": "Status",
     "usersLimitInTeam": "Participants",
     "requestInTeam": "Submit the request",
+    "addRequestAgain": "Submit the request again",
     "removeRequestInTeam": "Remove the request",
     "noSeatsInTeam": "No seats",
     "goodRequestInTeam": "The request to the team was successfully submitted",
