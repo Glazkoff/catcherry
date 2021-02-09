@@ -19,8 +19,12 @@ const faker = require("faker");
 const bcrypt = require("bcrypt");
 const chalk = require("chalk");
 const cookieParser = require("cookie-parser");
-const { graphqlExpress, graphiqlExpress } = require("apollo-server-express");
-const { makeExecutableSchema } = require("graphql-tools");
+const {
+  ApolloServer,
+  gql,
+  makeExecutableSchema
+} = require("apollo-server-express");
+// const { makeExecutableSchema } = require("graphql-tools");
 const history = require("connect-history-api-fallback");
 const compression = require("compression");
 const helmet = require("helmet");
@@ -31,20 +35,21 @@ const {
 } = require("graphql-constraint-directive");
 const timeout = require("connect-timeout");
 
-const { PubSub } = require("graphql-subscriptions");
 const { execute, subscribe } = require("graphql");
 const { createServer } = require("http");
 const { SubscriptionServer } = require("subscriptions-transport-ws");
 
 // Схема GraphQL в форме строки
-const typeDefs = require("./schema");
+const typeDefsString = require("./schema");
+const typeDefs = gql`
+  ${typeDefsString}
+`;
 
 // Резолверы
 const resolvers = require("./resolvers");
 
 // База данных
 const db = require("./models/index");
-const { log } = require("debug");
 
 // Rate Limit
 const rateLimitDirective = createRateLimitDirective({
@@ -64,7 +69,9 @@ const schema = makeExecutableSchema({
 
 // Инициализация express-приложения
 const app = express();
+const ws_app = express();
 const PORT = process.env.PORT || 3000;
+const WS_PORT = process.env.WS_PORT || 3001;
 
 // Использование сжатия gzip
 app.use(compression());
@@ -92,23 +99,6 @@ if (
   app.use(helmet());
 }
 
-// Точка входа GraphQL
-app.use(
-  "/graphql",
-  bodyParser.json(),
-  graphqlExpress((req, res) => ({
-    schema,
-    context: { req, res, db }
-  }))
-);
-
-// GraphiQL, визуальный редактор для запросов
-app.use("/graphiql", graphiqlExpress({ endpointURL: "/graphql" }));
-
-// Поддержка режима HTML5 History для SPA
-// Все указанные выше запросы обрабатываются без history
-app.use(history());
-
 // Работа со статическими файлами
 app.use(express.static(path.join(__dirname, "../dist")));
 
@@ -117,12 +107,42 @@ app.use("/public", express.static(path.join(__dirname, "/public")));
 
 app.use(haltOnTimedout);
 
+const server = new ApolloServer({
+  schema,
+  playground: true,
+  context: {
+    req: express.Request,
+    res: express.Response,
+    db
+  },
+  subscriptions: {
+    onConnect: () => {
+      // TODO: добавить проверку токена авторизации
+      console.log("Подключено к WebSocket");
+    },
+    onDisconnect: (webSocket, context) => {
+      console.log("Отключено от WebSocket");
+    }
+  }
+});
+server.applyMiddleware({ app });
+
+const httpServer = createServer(app);
+server.installSubscriptionHandlers(httpServer);
+
+// const wsServer = createServer(ws_app);
+// server.installSubscriptionHandlers(wsServer);
+
+// Поддержка режима HTML5 History для SPA
+// Все указанные выше запросы обрабатываются без history
+app.use(history());
+
 db.sequelize
   // .sync({ force: true })
   // .sync({ alter: true })
   .sync()
   .then(async () => {
-    let server = app.listen(PORT, () => {
+    httpServer.listen(PORT, () => {
       // addAllTables(true);
       // db.Users.destroy({ where: {} });
       // const salt = bcrypt.genSaltSync(10);
@@ -135,22 +155,9 @@ db.sequelize
       // }
       // addAllTables();
 
-      // Установка WebSocket для обслуживани GraphQL Subscriptions
-      new SubscriptionServer(
-        {
-          execute,
-          subscribe,
-          schema
-        },
-        {
-          server,
-          path: "/subscriptions"
-        }
-      );
-
       console.log(
         chalk.yellow(`Сервер (Graphiql) запущен на`),
-        chalk.cyan(`http://localhost:${PORT}/graphiql`)
+        chalk.cyan(`http://localhost:${PORT}${server.graphqlPath}`)
       );
       console.log(
         chalk.green(`Клиентская часть запущена на`),
@@ -160,7 +167,28 @@ db.sequelize
         chalk.blueBright(`Статические файлы доступны на`),
         chalk.cyan(`http://localhost:${PORT}/public/...`)
       );
+      console.log(
+        `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
+      );
     });
+    // const ws = createServer(ws_app);
+    // ws.listen(WS_PORT, () => {
+    //   console.log(
+    //     `Apollo Server is now running on http://localhost:${WS_PORT}`
+    //   );
+    //   // Set up the WebSocket for handling GraphQL subscriptions
+    //   new SubscriptionServer(
+    //     {
+    //       execute,
+    //       subscribe,
+    //       schema
+    //     },
+    //     {
+    //       server: ws,
+    //       path: "/subscriptions"
+    //     }
+    //   );
+    // });
   });
 
 let destroyTable;
