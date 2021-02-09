@@ -94,6 +94,13 @@ export default {
   width: 24rem;
 }
 
+@media screen and (max-device-width: 420px) {
+  .wrapOfList {
+    width: 0;
+    visibility: hidden !important;
+  }
+}
+
 .list {
   height: calc(100vh - #{$topBarHeight});
   width: 24rem;

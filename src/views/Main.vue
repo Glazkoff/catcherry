@@ -66,6 +66,23 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_dimensions.scss";
 
+@media screen and (max-device-width: 420px) {
+  #side-bar {
+    position: absolute;
+    top: 0;
+    left: 0;
+  }
+
+  #main-view {
+    display: grid;
+    grid-template-columns: 1fr !important;
+  }
+  #main-content {
+    grid-area: 1/1/3/3 !important;
+    width: 100vw !important;
+    max-width: 100vw !important;
+  }
+}
 #main-view {
   display: grid;
   grid-template-columns: $sideBarWidth 5fr;
