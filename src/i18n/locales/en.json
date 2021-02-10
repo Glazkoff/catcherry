@@ -170,6 +170,8 @@
   },
   "Organizations": {
     "noTeamsInOrganization": "Teams was not found",
+    "userHasNotTeam": "You don't consist in organization",
+    "informationAboutTeams": "Information about teams",
     "nameTeam": "Name team",
     "statusUserInTeam": "Status",
     "usersLimitInTeam": "Participants",
