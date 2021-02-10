@@ -31,10 +31,10 @@
                 user.user.patricity
               }}
             </p>
-            <button class="btn btn-alternate col-3" @click="accept(user)">
+            <button class="btn btn-alternate col-3" @click="accept(user, filterUser.id)">
               {{ $t("team.accept") }}
             </button>
-            <button class="btn btn-danger col-3" @click="reject(user)">
+            <button class="btn btn-danger col-3" @click="reject(user, filterUser.id)">
               {{ $t("team.reject") }}
             </button>
           </div>
@@ -116,12 +116,12 @@ export default {
   },
   methods: {
     // Принять заявку на вступление в команду
-    accept(user) {
+    accept(user, id) {
       this.$apollo
         .mutate({
           mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
-            id: user.id,
+            id: id,
             status: "Принят"
           },
           // Обновление кеша
@@ -202,12 +202,12 @@ export default {
         });
     },
     // Отказать на вступление в команду
-    reject(user) {
+    reject(user, id) {
       this.$apollo
         .mutate({
           mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
-            id: user.id,
+            id: id,
             status: "Отклонен"
           },
           // Обновление кеша

@@ -1,14 +1,15 @@
 <template>
   <div class="container">
+    uoghvgug{{ usersInTeams }} uvyuv
     <div class="row">
       <div class="col-12">
         <BreadCrumbs></BreadCrumbs>
       </div>
     </div>
-    <!-- <div class="wrapOfLoader" v-if="$apollo.queries.loading">
+    <div class="wrapOfLoader" v-if="$apollo.queries.loading">
       <Loader></Loader>
-    </div> -->
-    <div class="row">
+    </div>
+    <div class="row" v-else>
       <div class="col-12">
         <input
           v-model.trim="findString"
@@ -34,56 +35,56 @@
             {{ $t("more") }}
           </button>
         </div>
-        <div v-if="filterUser.length == 0">
+        <div>
           <Stub>
             <p slot="body">{{ $t("noSearch") }}</p>
           </Stub>
         </div>
       </div>
-      <Popup v-if="isShowModal">
-        <div v-if="$apollo.queries.user.loading">
-          <p>Загрузка...</p>
-        </div>
-        <div v-else>
-          <h3 slot="header">{{ $t("user") }} {{ fullName }}</h3>
-          <div slot="exit" @click="cancelModal()">×</div>
-          <div slot="body">
-            <p>{{ $t("surname") }}: {{ user.surname }}</p>
-            <p>{{ $t("name") }}: {{ user.name }}</p>
-            <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
-            <p>{{ $t("gender") }}: {{ user.gender }}</p>
-            <p>{{ $t("birthday") }}: {{ $d(user.birthday, "short") }}</p>
-            <p>{{ $t("login") }}: {{ user.login }}</p>
-            <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
-            <p>{{ $t("role") }}: {{ oneUser.role.name }}</p>
-          </div>
-          <div slot="footer">
-            <div class="btn-group">
-              <button
-                class="btn btn-danger"
-                @click="exclude()"
-                v-if="$store.getters.decodedToken.id != userId"
-              >
-                {{ $t("team.removeUserFromTeam") }}
-              </button>
-              <button class="btn btn-alternate" @click="cancelModal()">
-                {{ $t("cancel") }}
-              </button>
-            </div>
-          </div>
-        </div>
-      </Popup>
-      <Minialert v-if="isShowAlertError">
-        <p slot="title">
-          {{ $t("minialertError") }}
-        </p>
-      </Minialert>
-      <Minialert v-if="isShowAlert">
-        <p slot="title">
-          {{ $t("team.youHaveSuccessfullyRemovedPersonFromTheTeam") }}
-        </p>
-      </Minialert>
     </div>
+    <Popup v-if="isShowModal">
+      <div v-if="$apollo.queries.user.loading">
+        <p>Загрузка...</p>
+      </div>
+      <div v-else>
+        <h3 slot="header">{{ $t("user") }} {{ fullName }}</h3>
+        <div slot="exit" @click="cancelModal()">×</div>
+        <div slot="body">
+          <p>{{ $t("surname") }}: {{ user.surname }}</p>
+          <p>{{ $t("name") }}: {{ user.name }}</p>
+          <p>{{ $t("patricity") }}: {{ user.patricity }}</p>
+          <p>{{ $t("gender") }}: {{ user.gender }}</p>
+          <p>{{ $t("birthday") }}: {{ $d(user.birthday, "short") }}</p>
+          <p>{{ $t("login") }}: {{ user.login }}</p>
+          <p>{{ $t("numberOfPoints") }}: {{ getPointsUser.pointQuantity }}</p>
+          <p>{{ $t("role") }}: {{ oneUser.role.name }}</p>
+        </div>
+        <div slot="footer">
+          <div class="btn-group">
+            <button
+              class="btn btn-danger"
+              @click="exclude()"
+              v-if="$store.getters.decodedToken.id != userId"
+            >
+              {{ $t("team.removeUserFromTeam") }}
+            </button>
+            <button class="btn btn-alternate" @click="cancelModal()">
+              {{ $t("cancel") }}
+            </button>
+          </div>
+        </div>
+      </div>
+    </Popup>
+    <Minialert v-if="isShowAlertError">
+      <p slot="title">
+        {{ $t("minialertError") }}
+      </p>
+    </Minialert>
+    <Minialert v-if="isShowAlert">
+      <p slot="title">
+        {{ $t("team.youHaveSuccessfullyRemovedPersonFromTheTeam") }}
+      </p>
+    </Minialert>
   </div>
 </template>
 
@@ -91,7 +92,7 @@
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
 import Minialert from "@/components/MiniAlert.vue";
 import Stub from "@/components/Stub.vue";
-// import Loader from "@/components/Loader.vue";
+import Loader from "@/components/Loader.vue";
 import Popup from "@/components/Popup.vue";
 import {
   USERS_IN_TEAMS_QUERY,
@@ -166,7 +167,7 @@ export default {
     Minialert,
     BreadCrumbs,
     Stub,
-    // Loader,
+    Loader,
     Popup
   },
   methods: {
