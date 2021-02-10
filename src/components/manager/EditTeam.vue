@@ -15,15 +15,17 @@
             }}</label>
             <input
               name="name"
-              v-model.trim="$v.oneTeam.name.$model"
-              @blur="$v.oneTeam.name.$touch()"
+              v-model.trim="$v.teamEditData.name.$model"
+              @blur="$v.teamEditData.name.$touch()"
               :placeholder="$t('nameInanimate')"
               class="form-control col-8 dark"
             />
-            <div v-if="$v.oneTeam.name.$error" class="error">
-              <span v-if="!$v.oneTeam.name.required" class="form-text danger">{{
-                $t("required")
-              }}</span>
+            <div v-if="$v.teamEditData.name.$error" class="error">
+              <span
+                v-if="!$v.teamEditData.name.required"
+                class="form-text danger"
+                >{{ $t("required") }}</span
+              >
             </div>
           </div>
           <div class="form-group">
@@ -32,14 +34,14 @@
             }}</label>
             <textarea
               name="description"
-              v-model.trim="$v.oneTeam.description.$model"
-              @blur="$v.oneTeam.description.$touch()"
+              v-model.trim="$v.teamEditData.description.$model"
+              @blur="$v.teamEditData.description.$touch()"
               :placeholder="$t('description')"
               class="form-control col-8 dark"
             ></textarea>
-            <div v-if="$v.oneTeam.description.$error" class="error">
+            <div v-if="$v.teamEditData.description.$error" class="error">
               <span
-                v-if="!$v.oneTeam.description.required"
+                v-if="!$v.teamEditData.description.required"
                 class="form-text danger"
                 >{{ $t("required") }}</span
               >
@@ -51,19 +53,19 @@
             }}</label>
             <input
               name="maxUsersLimit"
-              v-model.trim="$v.oneTeam.maxUsersLimit.$model"
-              @blur="$v.oneTeam.maxUsersLimit.$touch()"
+              v-model.trim="$v.teamEditData.maxUsersLimit.$model"
+              @blur="$v.teamEditData.maxUsersLimit.$touch()"
               :placeholder="$t('team.maximumNumberOfTeamMembers')"
               class="form-control col-8 dark"
             />
-            <div v-if="$v.oneTeam.maxUsersLimit.$error" class="error">
+            <div v-if="$v.teamEditData.maxUsersLimit.$error" class="error">
               <span
-                v-if="!$v.oneTeam.maxUsersLimit.required"
+                v-if="!$v.teamEditData.maxUsersLimit.required"
                 class="form-text danger"
                 >{{ $t("required") }}</span
               >
               <span
-                v-if="!$v.oneTeam.maxUsersLimit.numeric"
+                v-if="!$v.teamEditData.maxUsersLimit.numeric"
                 class="form-text danger"
                 >{{ $t("required") }}</span
               >
@@ -71,7 +73,7 @@
           </div>
           <button
             class="btn btn-primary col-8 dark"
-            :disabled="$v.oneTeam.$invalid"
+            :disabled="$v.teamEditData.$invalid"
             @click="editTeam()"
           >
             {{ $t("save") }}
@@ -119,8 +121,16 @@ export default {
   data() {
     return {
       isShowAlertEdit: false,
-      isError: false
+      isError: false,
+      teamEditData: {
+        name: "",
+        description: "",
+        maxUsersLimit: ""
+      }
     };
+  },
+  mounted() {
+    this.setValues();
   },
   components: {
     BreadCrumbs,
@@ -129,7 +139,7 @@ export default {
   },
   validations: {
     // Редактирование данных про организацию
-    oneTeam: {
+    teamEditData: {
       name: {
         required
       },
@@ -143,6 +153,13 @@ export default {
     }
   },
   methods: {
+    // Метод для установки значений
+    setValues() {
+      this.teamEditData.name = this.oneTeam.name;
+      this.teamEditData.description = this.oneTeam.description;
+      this.teamEditData.maxUsersLimit = this.oneTeam.maxUsersLimit;
+    },
+
     // Метод для редактирования команды; сохраняет внесенные пользователем изменения
     editTeam() {
       this.isShowModalEditTeam = false;
@@ -151,9 +168,9 @@ export default {
           mutation: UPDATE_TEAM_QUERY, // Редактируем в БД
           variables: {
             id: this.oneTeam.id,
-            name: this.oneTeam.name,
-            description: this.oneTeam.description,
-            maxUsersLimit: parseInt(this.oneTeam.maxUsersLimit)
+            name: this.teamEditData.name,
+            description: this.teamEditData.description,
+            maxUsersLimit: parseInt(this.teamEditData.maxUsersLimit)
           },
           // Редактируем кеш
           update: cache => {
@@ -161,9 +178,9 @@ export default {
               query: TEAM_QUERY,
               variables: { id: this.$route.params.id }
             });
-            data.oneTeam.name = this.oneTeam.name;
-            data.oneTeam.description = this.oneTeam.description;
-            data.oneTeam.maxUsersLimit = this.oneTeam.maxUsersLimit;
+            data.oneTeam.name = this.teamEditData.name;
+            data.oneTeam.description = this.teamEditData.description;
+            data.oneTeam.maxUsersLimit = this.teamEditData.maxUsersLimit;
             data.oneTeam.updatedAt = new Date();
             cache.writeQuery({
               query: TEAM_QUERY,
