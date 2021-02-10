@@ -378,7 +378,7 @@ module.exports = {
         include: [{ model: db.PointsOperations, as: "userPointsOperation" }]
       }),
     // Получения всех заявок на вступление в команду
-    requests: (parent, { teamId }, { db }) =>
+    requestsInTeam: (parent, { teamId }, { db }) =>
       db.UsersInTeams.findAll({
         where: { status: "Не принят", teamId: teamId },
         order: [["id", "ASC"]],

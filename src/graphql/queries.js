@@ -85,9 +85,9 @@ export const DELETE_IN_TEAMS_QUERY = gql`
   }
 `;
 
-export const REQUESTS_QUERY = gql`
+export const REQUESTS_IN_TEAM_QUERY = gql`
   query($teamId: ID!) {
-    requests(teamId: $teamId) {
+    requestsInTeam(teamId: $teamId) {
       id
       userId
       teamId

@@ -10,12 +10,12 @@
     </div>
     <div class="row" v-else>
       <div class="col-12">
-        <div v-if="requests.length == 0">
+        <div v-if="requestsInTeam.length == 0">
           <Stub>
             <p slot="body">{{ $t("team.noNewRequest") }}</p>
           </Stub>
         </div>
-        <div v-if="requests.length != 0">
+        <div v-if="requestsInTeam.length != 0">
           <input
             v-model.trim="findString"
             type="text"
@@ -71,7 +71,7 @@ import Loader from "@/components/Loader.vue";
 import Stub from "@/components/Stub.vue";
 
 import {
-  REQUESTS_QUERY,
+  REQUESTS_IN_TEAM_QUERY,
   CHANGE_STATUS_REQUEST_QUERY,
   USERS_IN_TEAMS_QUERY,
   CREATE_NOTIFICATION,
@@ -90,8 +90,8 @@ export default {
 
   apollo: {
     // Массив заявок команды
-    requests: {
-      query: REQUESTS_QUERY,
+    requestsInTeam: {
+      query: REQUESTS_IN_TEAM_QUERY,
       variables() {
         return {
           teamId: this.$route.params.id
@@ -127,7 +127,7 @@ export default {
           // Обновление кеша
           update: cache => {
             let data = cache.readQuery({
-              query: REQUESTS_QUERY,
+              query: REQUESTS_IN_TEAM_QUERY,
               variables: {
                 teamId: this.$route.params.id
               }
@@ -135,7 +135,7 @@ export default {
             let index = data.requests.findIndex(el => el.id === user.id);
             data.requests.splice(index, 1);
             cache.writeQuery({
-              query: REQUESTS_QUERY,
+              query: REQUESTS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id },
               data
             });
@@ -213,7 +213,7 @@ export default {
           // Обновление кеша
           update: cache => {
             let data = cache.readQuery({
-              query: REQUESTS_QUERY,
+              query: REQUESTS_IN_TEAM_QUERY,
               variables: {
                 teamId: this.$route.params.id
               }
@@ -221,7 +221,7 @@ export default {
             let index = data.requests.findIndex(el => el.id === user.id);
             data.requests.splice(index, 1);
             cache.writeQuery({
-              query: REQUESTS_QUERY,
+              query: REQUESTS_IN_TEAM_QUERY,
               variables: { teamId: this.$route.params.id },
               data
             });
