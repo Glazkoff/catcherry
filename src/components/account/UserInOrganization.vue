@@ -139,12 +139,15 @@ export default {
   computed: {
     // Фильтрация организаций
     filterOrganization() {
+      // Если пользователь еще не прикреплен к организации...
       if (this.idOrganization == null || this.idOrganization == 0) {
+        // Если строка поиска и массив организаций не пусты
         if (
           this.findOrganization !== "" &&
           this.organizations.length != 0 &&
           this.organizations != undefined
         ) {
+          // Фильтровать организации по названию и ФИО владельца
           return this.organizations.filter(el => {
             if (el.name === undefined || el.name === null) {
               el.name = " ";
@@ -180,15 +183,57 @@ export default {
                 el.owner.patricity !== "")
             );
           });
-        } else {
+        }
+        // Иначе (если строка поиска или массив организаций пусты)...
+        else {
+          // Выводить все организации
           return this.organizations;
         }
-      } else {
+      }
+      // Иначе (если пользователь прикреплен к оргназации)...
+      else {
+        // Если организации не пусты ...
         if (this.organizations != undefined) {
+          // Фитровать организации по прикрепленной к данному пользователю, а также  по названию и ФИО владельца
           return this.organizations.filter(el => {
-            return el.id == this.idOrganization;
+            if (el.name === undefined || el.name === null) {
+              el.name = " ";
+            }
+            if (el.owner.surname === undefined || el.owner.surname === null) {
+              el.owner.surname = " ";
+            }
+            if (el.owner.name === undefined || el.owner.name === null) {
+              el.owner.name = " ";
+            }
+            if (
+              el.owner.patricity === undefined ||
+              el.owner.patricity === null
+            ) {
+              el.owner.patricity = " ";
+            }
+            return (
+              el.id == this.idOrganization &&
+              ((el.name
+                .toLowerCase()
+                .indexOf(this.findOrganization.toLowerCase()) !== -1 &&
+                el.name !== "") ||
+                (el.owner.surname
+                  .toLowerCase()
+                  .indexOf(this.findOrganization.toLowerCase()) !== -1 &&
+                  el.owner.surname !== "") ||
+                (el.owner.name
+                  .toLowerCase()
+                  .indexOf(this.findOrganization.toLowerCase()) !== -1 &&
+                  el.owner.name !== "") ||
+                (el.owner.patricity
+                  .toLowerCase()
+                  .indexOf(this.findOrganization.toLowerCase()) !== -1 &&
+                  el.owner.patricity !== ""))
+            );
           });
-        } else return this.organizations;
+        }
+        // Иначе (если организации пусты) выводить организации
+        else return this.organizations;
       }
     },
 

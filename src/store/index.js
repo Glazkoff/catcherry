@@ -84,7 +84,7 @@ const store = new Vuex.Store({
 
                 let route = localStorage.getItem("first-route");
                 if ("" + store.$app.$route.path != route) {
-                  store.$app.$router.push({ path: route });
+                  store.$app.$router.push({ path: route }).catch(() => {});
                   localStorage.removeItem("first-route");
                 }
 
