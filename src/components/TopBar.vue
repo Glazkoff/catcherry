@@ -96,6 +96,7 @@ import {
   ONE_USER_IN_TEAMS_QUERY,
   NOTIFICATIONS_FOR_USER_QUERY
 } from "@/graphql/queries";
+import gql from "graphql-tag";
 export default {
   name: "top-bar",
   components: {
@@ -132,6 +133,39 @@ export default {
         return {
           userId: this.$store.getters.decodedToken.id
         };
+      },
+      subscribeToMore: {
+        document: gql`
+          subscription notificationAdded {
+            notificationAdded {
+              id
+              authorId
+              userId
+              notificationAuthor {
+                id
+                name
+              }
+              ReadOrNot {
+                readOrNot
+              }
+              endTime
+              createdAt
+              body {
+                header
+                text
+              }
+            }
+          }
+        `,
+        updateQuery: (previousResult, { subscriptionData }) => {
+          // Обновляем старые значения
+          previousResult.notificationsForUser.push(
+            subscriptionData.data.notificationAdded
+          );
+
+          // Возвращаем обновлённые старые значения
+          return previousResult;
+        }
       }
     }
   },

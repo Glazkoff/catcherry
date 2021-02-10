@@ -17,7 +17,6 @@ module.exports = gql`
     errorStatus: Int!
     message: String!
   }
-
   type jwt {
     error: Error
     refreshToken: String

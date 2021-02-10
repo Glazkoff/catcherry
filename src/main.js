@@ -9,8 +9,12 @@ import { setContext } from "apollo-link-context";
 import { InMemoryCache } from "apollo-cache-inmemory";
 import { createHttpLink } from "apollo-link-http";
 import { i18n } from "./i18n/i18n";
-
 import { directive as onClickaway } from "vue-clickaway";
+
+import { split } from "apollo-link";
+import { WebSocketLink } from "apollo-link-ws";
+import { getMainDefinition } from "apollo-utilities";
+
 Vue.directive("on-clickaway", onClickaway);
 
 import FingerprintJS from "@fingerprintjs/fingerprintjs";
@@ -85,21 +89,43 @@ const customFetch = async (uri, options) => {
   return initialRequest;
 };
 
-// Создание ссылки для Apollo
-const link = new createHttpLink({
-  uri: process.env.VUE_APP_GRAPHQL_URL,
-  fetch: customFetch
-});
-
 // Кэш Apollo (Graphql)
 const cache = new InMemoryCache({
   addTypename: true
 });
 
+// Создание ссылки для Apollo
+const httpLink = new createHttpLink({
+  uri: process.env.VUE_APP_GRAPHQL_URL,
+  fetch: customFetch
+});
+
+// Создание websocket ссылки для Subscription
+const wsLink = new WebSocketLink({
+  uri: "ws://localhost:3000/graphql",
+  options: {
+    reconnect: true
+  }
+});
+
+const link = split(
+  // split based on operation type
+  ({ query }) => {
+    const definition = getMainDefinition(query);
+    return (
+      definition.kind === "OperationDefinition" &&
+      definition.operation === "subscription"
+    );
+  },
+  wsLink,
+  httpLink
+);
+
 // Клиент Apollo
 const apolloClient = new ApolloClient({
   link: authLink.concat(link),
-  cache
+  cache,
+  connectToDevTools: true
 });
 
 Vue.use(VueApollo);

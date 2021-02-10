@@ -557,7 +557,7 @@ module.exports = {
       // Проверяем через bcrypt пароль, не совпадает - ошибка
       if (!user) {
         return {
-          errror: {
+          error: {
             errorStatus: 401,
             message: "Incorrect login or password!"
           }
@@ -581,7 +581,7 @@ module.exports = {
         return tokens;
       } else {
         return {
-          errror: {
+          error: {
             errorStatus: 401,
             message: "Incorrect login or password!"
           }
@@ -1089,6 +1089,7 @@ module.exports = {
   },
   Subscription: {
     notificationAdded: {
+      // TODO: добавить фильтрацию
       subscribe: () => pubsub.asyncIterator([NOTIFICATION_ADDED])
     }
   }

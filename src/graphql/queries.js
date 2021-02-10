@@ -31,11 +31,7 @@ export const SIGN_UP = gql`
 `;
 
 export const LOG_IN = gql`
-  mutation(
-    $login: String!
-    $password: password_String_NotNull_minLength_6!
-    $fingerprint: String!
-  ) {
+  mutation($login: String!, $password: String!, $fingerprint: String!) {
     logIn(
       input: { login: $login, password: $password, fingerprint: $fingerprint }
     ) {

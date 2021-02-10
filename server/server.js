@@ -35,15 +35,14 @@ const {
 } = require("graphql-constraint-directive");
 const timeout = require("connect-timeout");
 
-const { execute, subscribe } = require("graphql");
 const { createServer } = require("http");
-const { SubscriptionServer } = require("subscriptions-transport-ws");
 
 // Схема GraphQL в форме строки
-const typeDefsString = require("./schema");
-const typeDefs = gql`
-  ${typeDefsString}
-`;
+// const typeDefsString = require("./schema");
+// const typeDefs = gql`
+//   ${typeDefsString}
+// `;
+const typeDefs = require("./schema");
 
 // Резолверы
 const resolvers = require("./resolvers");
@@ -69,9 +68,7 @@ const schema = makeExecutableSchema({
 
 // Инициализация express-приложения
 const app = express();
-const ws_app = express();
 const PORT = process.env.PORT || 3000;
-const WS_PORT = process.env.WS_PORT || 3001;
 
 // Использование сжатия gzip
 app.use(compression());
@@ -110,10 +107,8 @@ app.use(haltOnTimedout);
 const server = new ApolloServer({
   schema,
   playground: true,
-  context: {
-    req: express.Request,
-    res: express.Response,
-    db
+  context: ({ req, res }) => {
+    return { req, res, db };
   },
   subscriptions: {
     onConnect: () => {
@@ -133,6 +128,7 @@ server.installSubscriptionHandlers(httpServer);
 // const wsServer = createServer(ws_app);
 // server.installSubscriptionHandlers(wsServer);
 
+// TODO: разобраться с отдачей статики
 // Поддержка режима HTML5 History для SPA
 // Все указанные выше запросы обрабатываются без history
 app.use(history());
@@ -168,7 +164,7 @@ db.sequelize
         chalk.cyan(`http://localhost:${PORT}/public/...`)
       );
       console.log(
-        `🚀 Subscriptions ready at ws://localhost:${PORT}${server.subscriptionsPath}`
+        `Subscriptions доступны на ws://localhost:${PORT}${server.subscriptionsPath}`
       );
     });
     // const ws = createServer(ws_app);
