@@ -1,38 +1,40 @@
 <template>
   <div id="main-view">
-    <div id="side-bar">
-      <div class="logo-block">
-        <router-link :to="{ name: 'FeedOfPosts' }">
-          <FullLogo class="logo-img"></FullLogo>
-        </router-link>
-      </div>
-      <router-view name="sidebar" class="side-bar__inner"></router-view>
-      <div class="bottom-panel-list">
-        <div class="side-bar__locales">
-          <div class="locales">
-            <a @click="setLocale('en')">eng</a>
-            <a @click="setLocale('ru')">rus</a>
-          </div>
-        </div>
-        <div class="side-bar__nav-list">
-          <router-link to="/" :exact="true" active-class="nav-checked">
-            <div class="side-bar__nav-list__nav-element">
-              <div class="side-bar__nav-list__nav-element__icon">
-                <SettingsIcon></SettingsIcon>
-              </div>
-              <div class="side-bar__nav-list__nav-element__text">
-                {{ $t("sideBar.settings") }}
-              </div>
-            </div>
+    <transition name="slide-fade">
+      <div id="side-bar" v-if="show">
+        <div class="logo-block">
+          <router-link :to="{ name: 'FeedOfPosts' }">
+            <FullLogo class="logo-img"></FullLogo>
           </router-link>
         </div>
-        <button id="logOutBtn" class="btn btn-alternate" @click="logOut()">
-          {{ $t("sideBar.quit") }}
-        </button>
+        <router-view name="sidebar" class="side-bar__inner"></router-view>
+        <div class="bottom-panel-list">
+          <div class="side-bar__locales">
+            <div class="locales">
+              <a @click="setLocale('en')">eng</a>
+              <a @click="setLocale('ru')">rus</a>
+            </div>
+          </div>
+          <div class="side-bar__nav-list">
+            <router-link to="/" :exact="true" active-class="nav-checked">
+              <div class="side-bar__nav-list__nav-element">
+                <div class="side-bar__nav-list__nav-element__icon">
+                  <SettingsIcon></SettingsIcon>
+                </div>
+                <div class="side-bar__nav-list__nav-element__text">
+                  {{ $t("sideBar.settings") }}
+                </div>
+              </div>
+            </router-link>
+          </div>
+          <button id="logOutBtn" class="btn btn-alternate" @click="logOut()">
+            {{ $t("sideBar.quit") }}
+          </button>
+        </div>
       </div>
-    </div>
-    <div id="main-content">
-      <div id="top-bar"><TopBar></TopBar></div>
+    </transition>
+    <div id="main-content" @click.capture="hideMenu">
+      <div id="top-bar" @click="showMenu"><TopBar></TopBar></div>
       <router-view name="main" id="main-router-view"></router-view>
     </div>
   </div>
@@ -51,12 +53,32 @@ export default {
     FullLogo,
     SettingsIcon
   },
+  created() {
+    window.addEventListener("resize", this.updateMenu);
+    this.updateMenu;
+  },
+  data() {
+    return {
+      show: true
+    };
+  },
   methods: {
     logOut() {
       this.$store.dispatch("LOG_OUT");
     },
     setLocale(locale) {
       setI18nLanguage(locale);
+    },
+    updateMenu() {
+      if (window.innerWidth >= 420) {
+        this.show = true;
+      }
+    },
+    showMenu: function() {
+      this.show = true;
+    },
+    hideMenu: function() {
+      if (window.innerWidth < 420) this.show = false;
     }
   }
 };
@@ -81,6 +103,18 @@ export default {
     grid-area: 1/1/3/3 !important;
     width: 100vw !important;
     max-width: 100vw !important;
+  }
+
+  .slide-fade-enter-active {
+    transition: all 0.3s ease;
+  }
+  .slide-fade-leave-active {
+    transition: all 0.3s cubic-bezier(0.65, 0.05, 0.36, 1);
+  }
+  .slide-fade-enter, .slide-fade-leave-to
+/* .slide-fade-leave-active до версии 2.1.8 */ {
+    transform: translateX(-200px);
+    opacity: 0;
   }
 }
 #main-view {
@@ -131,6 +165,7 @@ export default {
   }
   .side-bar__inner {
     height: 60%;
+    overflow: scroll;
   }
 }
 .bottom-panel-list {
