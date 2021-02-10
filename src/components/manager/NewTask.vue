@@ -1,11 +1,11 @@
 <template>
-  <div class="container" v-if="!this.$apollo.loading">
+  <div class="container">
     <div class="row">
       <div class="col-12">
-        <breadcrumbs></breadcrumbs>
+        <BreadCrumbs></BreadCrumbs>
       </div>
     </div>
-    <div class="row">
+    <div class="row" v-if="!this.$apollo.loading">
       <div class="col-12">
         <form @submit.prevent="createTask()">
           <div class="form-group">
@@ -96,32 +96,34 @@
         </form>
       </div>
     </div>
-    <minialert v-if="isShowAlert">
+    <div v-else class="wrapOfLoader">
+      <Loader></Loader>
+    </div>
+    <Minialert v-if="isShowAlert">
       <p slot="title">
         {{ $t("taskConstructor.youHaveSuccessfullyCreatedNewTask") }}
       </p>
-    </minialert>
-    <minialert v-if="isShowAlertError">
+    </Minialert>
+    <Minialert v-if="isShowAlertError">
       <p slot="title">
         {{ $t("minialertError") }}
       </p>
-    </minialert>
+    </Minialert>
   </div>
-  <div v-else class="wrapOfLoader"><loader></loader></div>
 </template>
 
 <script>
 import { required, numeric } from "vuelidate/lib/validators";
-import minialert from "@/components/MiniAlert.vue";
-import breadcrumbs from "@/components/BreadCrumbs.vue";
-import loader from "@/components/Loader.vue";
+import Minialert from "@/components/MiniAlert.vue";
+import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import Loader from "@/components/Loader.vue";
 import {
   USERS_IN_TEAMS_QUERY,
   ADD_TASK_QUERY,
   ALL_TASKS_IN_TEAM_QUERY
 } from "@/graphql/queries";
 export default {
-  components: { minialert, breadcrumbs, loader },
+  components: { Minialert, BreadCrumbs, Loader },
   apollo: {
     usersInTeams: {
       query: USERS_IN_TEAMS_QUERY,
@@ -243,5 +245,14 @@ input::-webkit-inner-spin-button {
   border-bottom: 1px solid $bright_violet !important;
   box-shadow: 0px 0px 0px 0px !important;
   border-radius: 0px !important;
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>

@@ -26,7 +26,7 @@
       </div>
     </div>
   </div>
-  <div v-else>
+  <div v-else class="wrapOfLoader">
     <Loader></Loader>
   </div>
 </template>

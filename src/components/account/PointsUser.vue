@@ -1,5 +1,5 @@
 <template>
-  <div v-if="!this.$apollo.queries.loading">
+  <div>
     <div class="container">
       <div class="row">
         <div class="col-12">
@@ -7,11 +7,13 @@
         </div>
       </div>
     </div>
-    <PointQuantity class="sticky w-100"></PointQuantity>
-    <PointOperation :limit="0" ref="pOperation"></PointOperation>
-  </div>
-  <div v-else>
-    <Loader></Loader>
+    <div v-if="!this.$apollo.queries.loading">
+      <PointQuantity class="sticky w-100"></PointQuantity>
+      <PointOperation :limit="0" ref="pOperation"></PointOperation>
+    </div>
+    <div v-else class="wrapOfLoader">
+      <Loader></Loader>
+    </div>
   </div>
 </template>
 
@@ -48,5 +50,14 @@ export default {
   background-color: $dark_blue;
   z-index: 7000;
   top: $topBarHeight;
+}
+.wrapOfLoader {
+  overflow: hidden;
+  background: $dark_blue;
+  z-index: 99999;
+  width: 100%;
+  height: 40vh;
+  padding-top: calc(20vh - 100px);
+  position: relative;
 }
 </style>
