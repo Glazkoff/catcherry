@@ -24,7 +24,7 @@
         <!-- Кнопка для создания новой организации -->
         <!-- FIXME -->
         <div class="col-3">
-          <button class="btn btn-primary w-100">
+          <button class="btn btn-primary w-100" @click="onLink()">
             {{ $t("Organizations.CreateOrganization") }}
           </button>
         </div>
@@ -73,15 +73,8 @@
         <Stub>
           <div slot="body">
             <h3 class="mb-4">{{ $t("Organizations.noOrganizations") }}</h3>
-            <button class="btn btn-primary">
-              <router-link
-                :to="{
-                  name: 'NewOrganization'
-                }"
-                active-class="nav-checked"
-              >
-                {{ $t("Organizations.CreateOrganization") }}
-              </router-link>
+            <button class="btn btn-primary" @click="onLink()">
+              {{ $t("Organizations.CreateOrganization") }}
             </button>
           </div>
         </Stub>
@@ -133,6 +126,11 @@ export default {
           return el == id;
         });
       }
+    },
+
+    // Переход на страницу создания организации
+    onLink() {
+      this.$router.push({ name: "NewOrganization" });
     }
   },
 
