@@ -183,7 +183,8 @@
     "CreateOrganization": "Создать",
     "Owner": "Владелец",
     "leaveTeam": "Покинуть команду",
-    "noOrganizations": "Организации не найдены"
+    "noOrganizations": "Организации не найдены",
+    "UserStatus":"Принят | Не принят | Отклонен| -"
   },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",

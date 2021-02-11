@@ -12,13 +12,12 @@
             <a class="userFoto"></a>
             <a class="nav-name"
               ><p>{{ this.$store.getters.decodedToken.name }}</p>
-              <small v-if="roleUser == null">-</small>
-              <small v-if="roleUser != null">{{ roleUser }}</small>
+              <small>{{ roleUser }}</small>
             </a>
           </li>
           <li
             class="right icon-notificationTopBar"
-            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+            v-if="$store.getters.decodedToken.roleInSystem != 'Administration'"
           >
             <div class="notificationTopBar">
               <router-link
@@ -72,7 +71,7 @@
           </li>
           <li
             class="right"
-            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+            v-if="$store.getters.decodedToken.roleInSystem != 'Administration'"
           >
             <p class="emailCard centerAlignTopBar">
               <MailIcon></MailIcon>
@@ -80,7 +79,7 @@
           </li>
           <li
             class="right"
-            v-if="!$store.getters.decodedToken.roleInSystem == 'Administration'"
+            v-if="$store.getters.decodedToken.roleInSystem != 'Administration'"
           >
             <router-link to="/points" class="centerAlignTopBar">
               <p class="nav-point">
@@ -178,10 +177,10 @@ export default {
       }
     },
     roleUser() {
-      if (this.oneUserInTeams == undefined) {
-        return "-";
+      if (this.$store.getters.decodedToken.roleInSystem != null) {
+        return this.$store.getters.decodedToken.roleInSystem;
       } else {
-        return this.oneUserInTeams[1].role.name;
+        return "-";
       }
     },
     UserID() {

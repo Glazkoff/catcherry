@@ -183,7 +183,8 @@
     "CreateOrganization": "Create",
     "Owner": "Owner",
     "leaveTeam": "Leave team",
-    "noOrganizations": "Organizations not found"
+    "noOrganizations": "Organizations not found",
+    "UserStatus": "Accept | Do not accept | Reject| -"
   },
   "markRequiredField": "* - required field",
   "startMsg": "Hello, Polyweb!",

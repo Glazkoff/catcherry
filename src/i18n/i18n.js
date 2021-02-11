@@ -7,6 +7,8 @@ import { supportedLocalesInclude } from "@/i18n/supported-locales.js";
 import pluralizationRulesRu from "@/i18n/pluralizationrules/ru";
 import pluralizationRulesEn from "@/i18n/pluralizationrules/en";
 
+import UserStatusRules from "@/i18n/userstatusrules/alllanguages";
+
 Vue.use(VueI18n);
 
 function loadLocaleMessages() {
@@ -69,6 +71,14 @@ export const i18n = new VueI18n({
     },
     en: function(choice, choicesLength) {
       return pluralizationRulesEn(choice, choicesLength);
+    }
+  },
+  UserStatusRules: {
+    ru: function(status) {
+      return UserStatusRules(status);
+    },
+    en: function(status) {
+      return UserStatusRules(status);
     }
   },
   messages: loadLocaleMessages()
