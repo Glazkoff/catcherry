@@ -170,6 +170,8 @@
   },
   "Organizations": {
     "noTeamsInOrganization": "Команды не были найдены",
+    "userHasNotTeam": "Вы не состоите в организации",
+    "informationAboutTeams": "Информация о командах",
     "nameTeam": "Название",
     "statusUserInTeam": "Статус",
     "usersLimitInTeam": "Участники",

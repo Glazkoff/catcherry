@@ -215,17 +215,15 @@ const routes = [
             component: UserInOrganization,
             meta: {
               breadCrumb: i18n.t("router.userInOrg")
-            },
-            children: [
-              {
-                path: "create",
-                name: "NewOrganization",
-                component: NewOrganization,
-                meta: {
-                  breadCrumb: i18n.t("router.newOrg")
-                }
-              }
-            ]
+            }
+          },
+          {
+            path: "create-organization",
+            name: "NewOrganization",
+            component: NewOrganization,
+            meta: {
+              breadCrumb: i18n.t("router.newOrg")
+            }
           },
           {
             path: "list_req",

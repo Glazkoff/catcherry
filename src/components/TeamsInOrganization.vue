@@ -76,7 +76,7 @@
                     team.usersInTeam.length < team.maxUsersLimit
                 "
               >
-                <button class="btn btn-link" @click="requestInTeam(team.id)">
+                <button class="btn btn-link" @click="requestInTeam(team)">
                   {{ $t("Organizations.requestInTeam") }}
                 </button>
               </div>
@@ -99,7 +99,7 @@
               <div v-else-if="onCheckUserStatus(team.usersInTeam) == 'Reject'">
                 <button
                   class="btn btn-link white"
-                  @click="updateRequestInTeam(team.id)"
+                  @click="updateRequestInTeam(team)"
                 >
                   {{ $t("Organizations.addRequestAgain") }}
                 </button>
@@ -201,140 +201,146 @@ export default {
     },
 
     // Переподача отклоненной заявки
-    updateRequestInTeam(teamId) {
-      // Изменить статус заявки в локальном массиве статусов
-      if (this.oneUserInTeams != undefined) {
-        this.oneUserInTeams.forEach(el => {
-          if (el.status == "Reject" && el.team.id == teamId)
-            el.status == "Do not accept";
-        });
-      }
-
-      // Добавление id организации в информацию о пользователе, если организация еще не добавлена
-      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
-        this.addUsertoOrganization(this.organizationId);
-      }
-
-      // Выполнение запроса об изменении статуса
-      this.$apollo.mutate({
-        mutation: UPDATE_USER_IN_TEAM,
-        variables: {
-          userId: this.idUser,
-          teamId: +teamId,
-          status: "Do not accept"
-        },
-        update: cache => {
-          let data = cache.readQuery({
-            query: TEAM_IN_ORG_QUERY,
-            variables: {
-              organizationId: +this.organizationId
-            }
-          });
-          console.log(data.teamsInOrganization);
-          let indexTeam = data.teamsInOrganization.findIndex(
-            el => el.id == teamId
-          );
-          let indexUserInTeam = data.teamsInOrganization[
-            indexTeam
-          ].usersInTeam.findIndex(el => el.user.id == this.idUser);
-          if (
-            data.teamsInOrganization[indexTeam] != null &&
-            data.teamsInOrganization[indexTeam].usersInTeam[indexUserInTeam] !=
-              null
-          ) {
-            data.teamsInOrganization[indexTeam].usersInTeam[
-              indexUserInTeam
-            ].status = "Do not accept";
-          }
-          cache.writeQuery({
-            query: TEAM_IN_ORG_QUERY,
-            variables: {
-              organizationId: +this.organizationId
-            },
-            data
+    updateRequestInTeam(team) {
+      // Если в команде есть места...
+      if (team.maxUsersLimit > this.onCountTeamMember(team.usersInTeam)) {
+        // Изменить статус заявки в локальном массиве статусов
+        if (this.oneUserInTeams != undefined) {
+          this.oneUserInTeams.forEach(el => {
+            if (el.status == "Reject" && el.team.id == team.id)
+              el.status == "Do not accept";
           });
         }
-      });
 
-      // Обновление токена, если организации у пользователя еще не существует
-      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
-        this.updateTokens();
+        // Добавление id организации в информацию о пользователе, если организация еще не добавлена
+        if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+          this.addUsertoOrganization(this.organizationId);
+        }
+
+        // Выполнение запроса об изменении статуса
+        this.$apollo.mutate({
+          mutation: UPDATE_USER_IN_TEAM,
+          variables: {
+            userId: this.idUser,
+            teamId: +team.id,
+            status: "Do not accept"
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: TEAM_IN_ORG_QUERY,
+              variables: {
+                organizationId: +this.organizationId
+              }
+            });
+            let indexTeam = data.teamsInOrganization.findIndex(
+              el => el.id == team.id
+            );
+            let indexUserInTeam = data.teamsInOrganization[
+              indexTeam
+            ].usersInTeam.findIndex(el => el.user.id == this.idUser);
+            if (
+              data.teamsInOrganization[indexTeam] != null &&
+              data.teamsInOrganization[indexTeam].usersInTeam[
+                indexUserInTeam
+              ] != null
+            ) {
+              data.teamsInOrganization[indexTeam].usersInTeam[
+                indexUserInTeam
+              ].status = "Do not accept";
+            }
+            cache.writeQuery({
+              query: TEAM_IN_ORG_QUERY,
+              variables: {
+                organizationId: +this.organizationId
+              },
+              data
+            });
+          }
+        });
+
+        // Обновление токена, если организации у пользователя еще не существует
+        if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+          this.updateTokens();
+        }
+
+        // Появление окошка с информацией о создании заявки
+        this.showAlertAddRequest = true;
+        setTimeout(() => {
+          this.showAlertAddRequest = false;
+        }, 3000);
       }
-
-      // Появление окошка с информацией о создании заявки
-      this.showAlertAddRequest = true;
-      setTimeout(() => {
-        this.showAlertAddRequest = false;
-      }, 3000);
     },
 
     // Обработка добавление заявки в команду
-    requestInTeam(teamId) {
-      // Добавление id организации в информацию о пользователе, если организация еще не добавлена
-      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
-        this.addUsertoOrganization(this.organizationId);
-      }
+    requestInTeam(team) {
+      // Если в команде есть места...
+      if (team.maxUsersLimit > this.onCountTeamMember(team.usersInTeam)) {
+        // Добавление id организации в информацию о пользователе, если организация еще не добавлена
+        if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+          this.addUsertoOrganization(this.organizationId);
+        }
 
-      // Выполнение запроса по добавлению заявки в команду
-      this.$apollo.mutate({
-        mutation: CREATE_USER_IN_TEAM,
-        variables: {
-          userId: this.idUser,
-          teamId: +teamId,
-          status: "Do not accept",
-          roleId: 1 //FIXME: определить роли в командах
-        },
-        update: cache => {
-          let data = cache.readQuery({
-            query: TEAM_IN_ORG_QUERY,
-            variables: {
-              organizationId: +this.organizationId
+        // Выполнение запроса по добавлению заявки в команду
+        this.$apollo.mutate({
+          mutation: CREATE_USER_IN_TEAM,
+          variables: {
+            userId: this.idUser,
+            teamId: +team.id,
+            status: "Do not accept",
+            roleId: 1 //FIXME: определить роли в командах
+          },
+          update: cache => {
+            let data = cache.readQuery({
+              query: TEAM_IN_ORG_QUERY,
+              variables: {
+                organizationId: +this.organizationId
+              }
+            });
+            let indexTeam = data.teamsInOrganization.findIndex(
+              el => el.id === team.id
+            );
+            if (data.teamsInOrganization[indexTeam] != null) {
+              data.teamsInOrganization[indexTeam].usersInTeam.push({
+                status: "Do not accept",
+                user: {
+                  id: this.idUser,
+                  __typename: "User"
+                },
+                __typename: "UserInTeam",
+                createdAt: new Date()
+              });
             }
-          });
-          let indexTeam = data.teamsInOrganization.findIndex(
-            el => el.id === teamId
-          );
-          if (data.teamsInOrganization[indexTeam] != null) {
-            data.teamsInOrganization[indexTeam].usersInTeam.push({
-              status: "Do not accept",
-              user: {
-                id: this.idUser,
-                __typename: "User"
+            cache.writeQuery({
+              query: TEAM_IN_ORG_QUERY,
+              variables: {
+                organizationId: +this.organizationId
               },
-              __typename: "UserInTeam",
-              createdAt: new Date()
+              data
             });
           }
-          cache.writeQuery({
-            query: TEAM_IN_ORG_QUERY,
-            variables: {
-              organizationId: +this.organizationId
-            },
-            data
+        });
+
+        // Добавление информации о статусе заявки в локальный массив статусов пользователя
+        if (this.oneUserInTeams != undefined) {
+          this.oneUserInTeams.push({
+            status: "Do not accept",
+            team: {
+              id: team.id
+            }
           });
         }
-      });
 
-      // Добавление информации о статусе заявки в локальный массив статусов пользователя
-      if (this.oneUserInTeams != undefined) {
-        this.oneUserInTeams.push({
-          status: "Do not accept",
-          team: {
-            id: teamId
-          }
-        });
+        // Обновление токена, если организации у пользователя еще не существует
+        if (this.idUserOrganization == null || this.idUserOrganization == 0) {
+          this.updateTokens();
+        }
+
+        // Появление окошка с информацией о создании заявки
+        this.showAlertAddRequest = true;
+        setTimeout(() => {
+          this.showAlertAddRequest = false;
+        }, 3000);
       }
-
-      // Обновление токена, если организации у пользователя еще не существует
-      if (this.idUserOrganization == null || this.idUserOrganization == 0) {
-        this.updateTokens();
-      }
-
-      // Появление окошка с информацией о создании заявки
-      this.showAlertAddRequest = true;
-      setTimeout(() => {
-        this.showAlertAddRequest = false;
-      }, 3000);
     },
 
     // Обработка удаления заявки пользователя из команды

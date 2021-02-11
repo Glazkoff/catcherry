@@ -175,9 +175,15 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
 export const STATUS_USER_IN_TEAMS_QUERY = gql`
   query($userId: ID!) {
     oneUserInTeams(userId: $userId) {
+      id
       status
       team {
         id
+        name
+        organization {
+          id
+          name
+        }
       }
     }
   }

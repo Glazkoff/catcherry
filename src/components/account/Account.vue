@@ -101,12 +101,7 @@
           <div class="container">
             <div class="row">
               <div class="col-12">
-                <p>
-                  Lorem ipsum dolor sit amet, consectetur adipisicing elit. Quam
-                  provident cupiditate, a culpa adipisci laudantium repudiandae
-                  excepturi consequuntur architecto officiis ex, voluptatem est
-                  obcaecati odit ipsum? Necessitatibus placeat animi pariatur.
-                </p>
+                <TeamList ref="teamsList"></TeamList>
               </div>
             </div>
           </div>
@@ -315,6 +310,7 @@
 
 <script>
 import BreadCrumbs from "@/components/BreadCrumbs.vue";
+import TeamList from "@/components/TeamList.vue";
 import Popup from "@/components/Popup.vue";
 import MiniAlert from "@/components/MiniAlert.vue";
 import Edit from "@/assets/account_edit.svg?inline";
@@ -337,7 +333,8 @@ export default {
     BreadCrumbs,
     Loader,
     PointOperation,
-    PointQuantity
+    PointQuantity,
+    TeamList
   },
   apollo: {
     users: {
@@ -409,6 +406,9 @@ export default {
     next(vm => {
       if (vm.$refs.pOperation) {
         vm.$refs.pOperation.refreshQuery();
+      }
+      if (vm.$refs.teamsList) {
+        vm.$refs.teamsList.refreshQuery();
       }
       next();
     });
