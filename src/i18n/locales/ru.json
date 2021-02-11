@@ -168,6 +168,23 @@
     "surnamePlaceholder": "Введите фамилию",
     "surname": "Фамилия"
   },
+  "Organizations": {
+    "noTeamsInOrganization": "Команды не были найдены",
+    "nameTeam": "Название",
+    "statusUserInTeam": "Статус",
+    "usersLimitInTeam": "Участники",
+    "requestInTeam": "Подать заявку",
+    "addRequestAgain": "Подать заявку повторно",
+    "removeRequestInTeam": "Удалить заявку",
+    "noSeatsInTeam": "Нет мест",
+    "goodRequestInTeam": "Заявка в команду успешно подана",
+    "placeholderInSearchOrganization":"Введите название организации или имя ее владельца",
+    "placeholderInSearchTeam": "Введите название команды",
+    "CreateOrganization": "Создать",
+    "Owner": "Владелец",
+    "leaveTeam": "Покинуть команду",
+    "noOrganizations": "Организации не найдены"
+  },
   "markRequiredField": "* - обязательное поле",
   "startMsg": "Привет, Поливеб!",
   "router": {

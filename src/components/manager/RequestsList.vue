@@ -122,7 +122,7 @@ export default {
           mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
             id: id,
-            status: "Принят"
+            status: "Accept"
           },
           // Обновление кеша
           update: cache => {
@@ -145,7 +145,7 @@ export default {
                 teamId: this.$route.params.id
               }
             });
-            user.status = "Принят";
+            user.status = "Accept";
             data.usersInTeams.push(user);
             cache.writeQuery({
               query: USERS_IN_TEAMS_QUERY,
@@ -208,7 +208,7 @@ export default {
           mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
             id: id,
-            status: "Отклонен"
+            status: "Reject"
           },
           // Обновление кеша
           update: cache => {

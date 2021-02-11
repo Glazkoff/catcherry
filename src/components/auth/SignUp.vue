@@ -286,7 +286,11 @@ export default {
                   "SET_ACCESS_TOKEN",
                   resp.data.signUp.accessToken
                 );
-                this.$router.push({ name: "FeedOfPosts" });
+                if (this.roleInSystem == "Владелец системы") {
+                  this.$router.push({ name: "NewOrganization" });
+                } else {
+                  this.$router.push({ name: "FeedOfPosts" });
+                }
               } else {
                 // TODO: добавить обработку ошибок
                 console.error("ERROR");

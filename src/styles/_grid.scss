@@ -12,35 +12,41 @@ $m3: 12px;
 $m4: 16px;
 
 .mb {
+  &-0 {
+    margin-bottom: 0 !important;
+  }
   &-1 {
-    margin-bottom: $m1;
+    margin-bottom: $m1 !important;
   }
   &-2 {
-    margin-bottom: $m2;
+    margin-bottom: $m2 !important;
   }
   &-3 {
-    margin-bottom: $m3;
+    margin-bottom: $m3 !important;
   }
   &-4 {
-    margin-bottom: $m4;
+    margin-bottom: $m4 !important;
   }
 }
 
 .mt {
+  &-0 {
+    margin-top: 0 !important;
+  }
   &-1 {
-    margin-top: $m1;
+    margin-top: $m1 !important;
   }
 
   &-2 {
-    margin-top: $m2;
+    margin-top: $m2 !important;
   }
 
   &-3 {
-    margin-top: $m3;
+    margin-top: $m3 !important;
   }
 
   &-4 {
-    margin-top: $m4;
+    margin-top: $m4 !important;
   }
 }
 

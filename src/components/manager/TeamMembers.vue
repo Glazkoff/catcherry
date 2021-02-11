@@ -1,6 +1,6 @@
 <template>
   <div class="container">
-    uoghvgug{{ usersInTeams }} uvyuv
+    usersInTeams {{ usersInTeams }} usersInTeams
     <div class="row">
       <div class="col-12">
         <BreadCrumbs></BreadCrumbs>
@@ -199,7 +199,7 @@ export default {
           mutation: CHANGE_STATUS_REQUEST_QUERY,
           variables: {
             id: this.oneUser.id,
-            status: "Отклонен"
+            status: "Reject"
           },
           // Обновляем кеш
           update: cache => {

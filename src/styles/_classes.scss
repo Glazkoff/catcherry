@@ -64,6 +64,7 @@ a {
 .btn {
   display: block;
   border-radius: 8px;
+  outline:none;
   cursor: pointer;
   padding: 1rem 3rem;
   font-family: Roboto;
@@ -83,6 +84,10 @@ a {
     &:disabled {
       background: $violet;
       color: $gray;
+    }
+    & a {
+      color: $white;
+      text-decoration: none;
     }
   }
   &-alternate {

@@ -28,6 +28,7 @@ type User {
   login: String
   userPoints: PointsUser
   password: String
+  organizationId: Int
   createdAt: String
   updatedAt: String
   deletedAt: String
@@ -246,7 +247,6 @@ type Query {
 
   usersInTeams(teamId:ID!):[UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   oneUserInTeams(userId: ID!): [UserInTeam!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-  userInOneOrganization(userId: ID!): UserInTeam @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   raitingInTeams (teamId:ID!): [UserInTeam]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   personalUserStatistics(userId: Int!): PointsUser @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   teamsInOneOrganization(organizationId: ID!): [Team] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
@@ -265,8 +265,6 @@ type Query {
   statisticsNewOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsDeleteUsers: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   statisticsDeleteOrgs: Int @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
-
-  usersInNewTeams: Team @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
 
 }
 
@@ -327,11 +325,14 @@ type Mutation {
   deleteOrganization(id: ID!): Int!
   createOrganization(name: String!, ownerId: Int, organizationTypeId: Int, maxTeamsLimit: Int): Organization!
   
+  addUsertoOrganization(id: ID!, organizationId: Int): [Int]
+
   addUserInTeam(status: String!, id: ID!): [Int]!
+  updateUserInTeam(status: String!, teamId: ID!, userId: ID!): [Int]!
   createTeam(organizationId: Int, name: String!, description: String, maxUsersLimit: Int): Team!
   createUserInTeam(userId: ID!, teamId: ID!, status: String!, roleId: ID!): UserInTeam!
   deleteTeam(id: ID!): Int!
-  deleteUserInTeam(id: ID!): Int!
+  deleteUserInTeam(teamId: ID!,userId: ID!): Int!
   updateTeam(id:ID!, name: String, description:String, maxUsersLimit: Int):[Int]!
   
   changeStatusRequest(id: ID!, status: String): [Int]

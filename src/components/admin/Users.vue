@@ -291,15 +291,15 @@
           </p>
           <div class="btn-group">
             <button
-              v-if="team.status === 'Принят'"
-              @click="changeStatusInTeam(team, 'Не принят')"
+              v-if="team.status === 'Accept'"
+              @click="changeStatusInTeam(team, 'Do not accept')"
               class="btn btn-primary block"
             >
               {{ $t("deleteUserFromTeam") }}
             </button>
             <button
-              v-if="team.status !== 'Принят'"
-              @click="changeStatusInTeam(team, 'Принят')"
+              v-if="team.status !== 'Accept'"
+              @click="changeStatusInTeam(team, 'Accept')"
               class="btn btn-primary block"
             >
               {{ $t("addUserToTeam") }}
@@ -523,7 +523,7 @@ export default {
           //     variables: { userId: this.userId }
           //   });
           //   let newUserInTeam = {
-          //     status: "Принят",
+          //     status: "Accept",
           //     team: {
           //       name: this.teams.find(t => +t.id === +this.newTeam).name
           //     }

@@ -168,17 +168,13 @@ export const ONE_USER_IN_TEAMS_QUERY = gql`
     }
   }
 `;
-export const USER_IN_ONE_ORGANIZATION_QUERY = gql`
+
+export const STATUS_USER_IN_TEAMS_QUERY = gql`
   query($userId: ID!) {
-    userInOneOrganization(userId: $userId) {
-      id
+    oneUserInTeams(userId: $userId) {
+      status
       team {
         id
-        name
-        organization {
-          id
-          name
-        }
       }
     }
   }
@@ -341,6 +337,11 @@ export const TEAM_IN_ORG_QUERY = gql`
   }
 `;
 
+export const DELETE_USER_FROM_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!) {
+    deleteUserInTeam(userId: $userId, teamId: $teamId)
+  }
+`;
 export const TEAM_QUERY = gql`
   query($id: ID!) {
     oneTeam(id: $id) {
@@ -450,6 +451,12 @@ export const UPDATE_ORG_QUERY = gql`
   }
 `;
 
+export const ADD_USER_TO_ORGANIZATION = gql`
+  mutation($id: ID!, $organizationId: Int) {
+    addUsertoOrganization(id: $id, organizationId: $organizationId)
+  }
+`;
+
 export const DELETE_TEAM_QUERY = gql`
   mutation($id: ID!) {
     deleteTeam(id: $id)
@@ -470,6 +477,12 @@ export const UPDATE_TEAM_QUERY = gql`
 export const ADD_IN_TEAM_QUERY = gql`
   mutation($status: String!, $id: ID!) {
     addUserInTeam(status: $status, id: $id)
+  }
+`;
+
+export const UPDATE_USER_IN_TEAM = gql`
+  mutation($userId: ID!, $teamId: ID!, $status: String!) {
+    updateUserInTeam(status: $status, teamId: $teamId, userId: $userId)
   }
 `;
 

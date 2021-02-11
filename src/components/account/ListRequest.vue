@@ -13,7 +13,7 @@
         ><br />
         <button
           class="btn"
-          v-if="request.status === 'Не принят'"
+          v-if="request.status === 'Do not accept'"
           @click="deleteRequest(request.id)"
         >
           Отозвать
