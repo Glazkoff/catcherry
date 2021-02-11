@@ -549,6 +549,15 @@ export default {
 @import "@/styles/_dimensions.scss";
 @import "@/styles/_colors.scss";
 @import "@/styles/_grid.scss";
+@media screen and (max-device-width: 420px) {
+  .bigAvatar {
+    max-width: 150px !important;
+  }
+  .card {
+    margin-bottom: 1rem !important;
+  }
+}
+
 .flexCont {
   display: flex;
   padding: 3rem;

@@ -105,6 +105,10 @@ export default {
     max-width: 100vw !important;
   }
 
+  .side-bar__inner {
+    overflow: scroll;
+  }
+
   .slide-fade-enter-active {
     transition: all 0.3s ease;
   }
@@ -165,7 +169,6 @@ export default {
   }
   .side-bar__inner {
     height: 60%;
-    overflow: scroll;
   }
 }
 .bottom-panel-list {
