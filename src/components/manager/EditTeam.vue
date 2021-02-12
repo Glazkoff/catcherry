@@ -5,6 +5,7 @@
         <BreadCrumbs></BreadCrumbs>
       </div>
       <div v-if="!this.$apollo.loading">
+        {{ values }}
         <form @submit.prevent="editTeam()" class="col-12">
           <p class="gray mb-4">
             {{ $t("team.lastedited") }}: {{ $d(oneTeam.updatedAt, "long") }}
@@ -129,8 +130,10 @@ export default {
       }
     };
   },
-  mounted() {
-    this.setValues();
+  computed: {
+    values: function() {
+      return this.setValues();
+    }
   },
   components: {
     BreadCrumbs,
