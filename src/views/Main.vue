@@ -1,13 +1,16 @@
 <template>
   <div id="main-view">
     <transition name="slide-fade">
-      <div id="side-bar" v-if="show">
+      <div id="side-bar" v-if="show" @click.capture="hideMenu">
         <div class="logo-block">
           <router-link :to="{ name: 'FeedOfPosts' }">
             <FullLogo class="logo-img"></FullLogo>
           </router-link>
         </div>
-        <router-view name="sidebar" class="side-bar__inner"></router-view>
+        <router-view
+          name="sidebar"
+          class="side-bar__inner"
+        ></router-view>
         <div class="bottom-panel-list">
           <div class="side-bar__locales">
             <div class="locales">

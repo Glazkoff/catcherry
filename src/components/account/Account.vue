@@ -554,7 +554,14 @@ export default {
     max-width: 150px !important;
   }
   .card {
-    margin-bottom: 1rem !important;
+    margin: 1rem 0 !important;
+  }
+  .col-3 {
+    margin: 8px !important;
+  }
+  .col-4,
+  .col-5 {
+    margin: 0 8px !important;
   }
 }
 
