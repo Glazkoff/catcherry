@@ -84,9 +84,12 @@ export default {
     min-width: 95vw !important;
     display: block !important;
   }
-.infoContainer {
-  padding: 1.75rem 1.25rem !important;
-}
+  .infoContainer {
+    padding: 1.75rem 1.25rem !important;
+  }
+  .infoBody {
+    max-height: 100% !important;
+  }
   .imageContainer {
     height: 12rem !important;
     & img {

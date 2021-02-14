@@ -23,7 +23,7 @@
                   {{ post.body.header }}
                 </h2>
                 <small class="infoBody">
-                  {{ post.body.text }}
+                  <p>{{ post.body.text }}</p>
                 </small>
                 <small class="infoDate">
                   {{ $d(post.createdAt, "number") }}
@@ -187,6 +187,19 @@ export default {
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
 @import "@/styles/_grid.scss";
+@media screen and (max-device-width: 420px) {
+  .col-5 {
+    width: 100% !important;
+    & img {
+      border-top-right-radius: 0.625rem;
+      border-top-left-radius: 0.625rem;
+      max-width: 100% !important;
+    }
+  }
+  .infoBody {
+    width: 90%;
+  }
+}
 
 .wrap {
   background: $violet;
@@ -209,7 +222,7 @@ export default {
   & .infoDate {
     display: block;
     color: $light_grey;
-    margin-bottom: 0.5rem;
+    margin-bottom: 1.5rem;
   }
 }
 .iconContainer {

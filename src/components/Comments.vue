@@ -1,17 +1,24 @@
 <template>
-  <div class="postComments">
-    <h2 class="heading">Комментарии</h2>
-    <form @submit.prevent="onAddComment">
-      <textarea
-        v-model="message"
-        rows="3"
-        placeholder="Добавить комментарий"
-      ></textarea>
-      <input class="btn btn-secondary" type="submit" value="Добавить" />
-    </form>
-    <div class="oneComment" v-for="comment in comments" :key="comment.id">
-      <p class="authorOfComment">{{ comment.author }}</p>
-      <p class="bodyOfComment">{{ comment.body }}</p>
+  <div class="col-12">
+    <div class="col-12 postComments">
+      <h2 class="heading">Комментарии</h2>
+      <form @submit.prevent="onAddComment" class="form-group">
+        <div class="form-group">
+          <textarea
+            v-model="message"
+            rows="3"
+            class="form-control col-8 dark"
+            placeholder="Описание"
+          ></textarea>
+        </div>
+        <div class="form-group">
+          <button class="btn btn-alternate" type="submit">Добавить</button>
+        </div>
+      </form>
+      <div class="oneComment" v-for="comment in comments" :key="comment.id">
+        <h5>{{ comment.author }}</h5>
+        <p class="bodyOfComment">{{ comment.body }}</p>
+      </div>
     </div>
   </div>
 </template>
@@ -51,7 +58,10 @@ export default {
 };
 </script>
 
-<style scoped>
+<style scoped lang="scss">
+@import "@/styles/_colors.scss";
+@import "@/styles/_classes.scss";
+@import "@/styles/_grid.scss";
 textarea {
   width: 100%;
   background: #ffffff;
@@ -70,23 +80,15 @@ input.btn {
   outline: none;
 }
 .heading {
-  font-weight: bold;
-  font-size: 1.5rem;
   line-height: 2rem;
-  color: #613490;
-}
-
-.authorOfComment {
-  font-weight: bold;
-  font-size: 1rem;
-  line-height: 1.5rem;
-  margin-bottom: 0;
-  color: #4c235b;
 }
 .bodyOfComment {
   margin-top: 0.6rem;
+  color: $gray;
 }
 .oneComment {
-  margin-bottom: 1.5px;
+  margin-bottom: 1.5rem;
+  padding-bottom: 1rem;
+  border-bottom: 1px solid $bright_violet;
 }
 </style>
