@@ -79,7 +79,23 @@ export default {
 <style lang="scss" scoped>
 @import "@/styles/_colors.scss";
 @import "@/styles/_classes.scss";
-
+@media screen and (max-device-width: 420px) {
+  .wrap {
+    min-width: 95vw !important;
+    display: block !important;
+  }
+.infoContainer {
+  padding: 1.75rem 1.25rem !important;
+}
+  .imageContainer {
+    height: 12rem !important;
+    & img {
+      border-top-right-radius: 0.625rem;
+      border-bottom-left-radius: 0 !important;
+      height: 12rem !important;
+    }
+  }
+}
 .wrap {
   background: $violet;
   border-radius: 0.625rem;
