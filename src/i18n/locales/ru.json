@@ -170,6 +170,13 @@
   },
   "Organizations": {
     "noTeamsInOrganization": "Команды не были найдены",
+    "nameOrganization": "Название организации",
+    "requiredOrganization": "Название организации обязательно",
+    "alphabetСharactersOrganization": "Название организации должно содержать только буквы",
+    "typeOrganization": "Тип организации",
+    "limitTeams": "Необходимо ограничить количество команд",
+    "successCreateOrganization": "Вы успешно добавили организацию",
+    "countTeams": "Количество команд",
     "userHasNotTeam": "Вы не состоите в организации",
     "informationAboutTeams": "Информация о командах",
     "nameTeam": "Название",

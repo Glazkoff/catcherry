@@ -286,6 +286,15 @@ export const ORGS_QUERY = gql`
   }
 `;
 
+export const TYPES_ORGANIZATIONS_QUERY = gql`
+  {
+    organizationsTypes {
+      id
+      name
+    }
+  }
+`;
+
 export const USER_ORG_QUERY = gql`
   query($id: ID!) {
     userOrganization(id: $id) {

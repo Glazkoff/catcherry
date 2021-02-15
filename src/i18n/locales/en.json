@@ -170,6 +170,13 @@
   },
   "Organizations": {
     "noTeamsInOrganization": "Teams was not found",
+    "nameOrganization": "Name organization",
+    "requiredOrganization": "Organization name is required",
+    "alphabetСharactersOrganization": "Organization name accepts only alphabet characters",
+    "typeOrganization": "Type organization",
+    "countTeams": "Number of teams",
+    "limitTeams": "Limit of teams is required",
+    "successCreateOrganization": "You have successfully created an organization",
     "userHasNotTeam": "You don't consist in organization",
     "informationAboutTeams": "Information about teams",
     "nameTeam": "Name team",

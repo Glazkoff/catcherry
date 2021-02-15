@@ -211,7 +211,13 @@ module.exports = {
         ]
       });
     },
-    // Получаем тип организации по ее id
+
+    //Получение всех типов организации
+    organizationsTypes: (parent, args, { db }) =>
+      db.OrganizationsTypes.findAll({
+        order: [["id", "ASC"]]
+      }),
+    // Получаем все команды организации по ее id
     teamsInOneOrganization: (parent, args, { db }) => {
       return db.Teams.findAll({
         order: [["id", "ASC"]],

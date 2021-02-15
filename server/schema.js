@@ -226,6 +226,7 @@ type Query {
   organizations: [Organization!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   organization(id: ID!): Organization @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   userOrganization(id: ID!): Organization
+  organizationsTypes: [OrganizationType!] @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   
   notifications: [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")
   notificationsForUser(userId: ID!): [Notification]! @rateLimit(window: "1s", max: 5, message: "You are doing that too often.")

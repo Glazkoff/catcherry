@@ -2,9 +2,13 @@
   <div class="mainTopBar">
     <div id="topbar">
       <nav class="navtopbar d-block w-100">
-        <a class="icon right">☰</a>
         <ul class="m-0">
-          <input type="checkbox" id="gepleasurprised" style="display: none;" />
+          <label for="toggleButton">
+            <li class="icon right">
+              <a>Бургер</a>
+            </li>
+          </label>
+          <input type="checkbox" id="toggleButton" style="display: none;" />
           <li class="nav-logo d-block h-100">
             <h1 class="centerAlignTopBar">{{ routeTitle }}</h1>
           </li>
@@ -88,6 +92,9 @@
             ></router-link>
           </li>
           <li class="clearfix"></li>
+          <li></li>
+          <li></li>
+          <li></li>
         </ul>
       </nav>
     </div>
@@ -222,10 +229,6 @@ export default {
 
 #topbar ul li {
   float: left;
-  // transition: 0.7s;
-  // moz-transition: 0.7s;
-  // o-transition: 0.7s;
-  // webkit-transition: 0.7s;
 }
 
 #topbar ul .right {
@@ -254,11 +257,8 @@ export default {
   display: flex;
   align-items: center;
   height: $topBarHeight;
-  // height: auto;
   background: $dark_blue;
   justify-content: center;
-  // padding-top: 1rem;
-  // padding-bottom: 60px;
   border-bottom: 2px solid $violet_3;
 }
 
@@ -472,11 +472,8 @@ export default {
   background-color: $gray;
 }
 @media screen and (max-width: 1090px) {
-  nav ul li:not(:nth-child(1)) {
+  nav ul li:not(:nth-child(3)) {
     display: none;
-  }
-  nav ul .nav-logo {
-    display: inline-block !important;
   }
   nav ul li.icon {
     display: inline-block;
@@ -484,26 +481,72 @@ export default {
   label {
     cursor: pointer;
   }
-  #gepleasurprised:checked ~ li {
+  #toggleButton:checked ~ li {
     float: none;
+    display: inline;
+  }
+  #toggleButton:checked ~ li > a {
     display: block;
+    padding: 0em;
+    margin: 0em;
+    background: $dark_blue;
   }
-  .nav-exit {
-    margin-left: 0.8em;
-  }
-  #gepleasurprised:checked ~ li a.nav-name {
+  #toggleButton:checked ~ li > a.userFoto {
     display: none;
   }
-  .fas {
-    margin: 0px;
+  #toggleButton:checked ~ li > h1 {
+    padding-top: 120px;
   }
-  .number {
-    left: 20px;
+  nav ul li.right p.emailCard {
+    display: none;
   }
+  // .fas {
+  //   margin: 0px;
+  // }
+  // .number {
+  //   left: 20px;
+  // }
   .box {
-    left: 50px;
+    display: none;
+  }
+
+  nav ul li div.notificationTopBar {
+    display: none;
   }
 }
+// @media screen and (max-width: 1090px) {
+//   nav ul li:not(:nth-child(1)) {
+//     display: none;
+//   }
+//   nav ul .nav-logo {
+//     display: inline-block !important;
+//   }
+//   nav ul li.icon {
+//     display: inline-block;
+//   }
+//   label {
+//     cursor: pointer;
+//   }
+//   #gepleasurprised:checked ~ li {
+//     float: none;
+//     display: block;
+//   }
+//   .nav-exit {
+//     margin-left: 0.8em;
+//   }
+//   #gepleasurprised:checked ~ li a.nav-name {
+//     display: none;
+//   }
+//   .fas {
+//     margin: 0px;
+//   }
+//   .number {
+//     left: 20px;
+//   }
+//   .box {
+//     left: 50px;
+//   }
+// }
 @media screen and (max-width: 350px) {
   .nav-logo {
     font-size: 24px;

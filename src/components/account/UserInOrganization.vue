@@ -12,21 +12,13 @@
     <div class="container">
       <div class="row">
         <!-- Поиск по названию и владельцу организации -->
-        <div class="col-9">
+        <div class="col-12">
           <input
             v-model.trim="findOrganization"
             type="text"
             placeholder="Введите название организации или имя ее владельца"
             class="form-control block find dark"
           />
-        </div>
-
-        <!-- Кнопка для создания новой организации -->
-        <!-- FIXME -->
-        <div class="col-3">
-          <button class="btn btn-primary w-100" @click="onLink()">
-            {{ $t("Organizations.CreateOrganization") }}
-          </button>
         </div>
       </div>
 

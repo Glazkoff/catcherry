@@ -53,12 +53,6 @@
             <div class="col-3">
               <small class="gray">
                 {{ onCheckUserStatus(team.usersInTeam) }}
-                {{
-                  $tc(
-                    "Organizations.UserStatus",
-                    onCheckUserStatus(team.usersInTeam)
-                  )
-                }}
               </small>
             </div>
             <div class="col-3">
