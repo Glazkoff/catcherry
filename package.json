@@ -15,7 +15,7 @@
     "@fingerprintjs/fingerprintjs": "^3.0.0",
     "apollo-boost": "^0.4.9",
     "apollo-link-context": "^1.0.20",
-    "apollo-server-express": "^1.4.0",
+    "apollo-server-express": "^3.0.0",
     "bcrypt": "^5.0.0",
     "body-parser": "^1.19.0",
     "chalk": "^4.1.0",
