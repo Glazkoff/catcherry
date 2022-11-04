@@ -38,7 +38,7 @@
     "jsonwebtoken": "^8.5.1",
     "pg": "^8.3.3",
     "pg-hstore": "^2.3.3",
-    "resolve-url-loader": "^3.1.2",
+    "resolve-url-loader": "^4.0.0",
     "sequelize": "^6.3.4",
     "uuid": "^8.3.1",
     "vue": "^2.6.11",
