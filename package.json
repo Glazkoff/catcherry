@@ -41,7 +41,7 @@
     "resolve-url-loader": "^4.0.0",
     "sequelize": "^6.3.4",
     "uuid": "^8.3.1",
-    "vue": "^2.6.11",
+    "vue": "^3.0.0",
     "vue-apollo": "^3.0.4",
     "vue-chartjs": "^3.5.1",
     "vue-clickaway": "^2.2.2",
